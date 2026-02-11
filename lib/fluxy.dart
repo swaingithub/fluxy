@@ -1,43 +1,35 @@
 library fluxy;
 
-// Styles
+// Styles & Foundation
 export 'src/styles/style.dart';
+export 'src/dsl/fx.dart';
+export 'src/dsl/modifiers.dart';
 
-// DSL & Primitives
-export 'src/dsl/fluent_api.dart';
-export 'src/dsl/ui.dart';
+// Primary Widgets
 export 'src/widgets/box.dart';
 export 'src/widgets/flex_box.dart';
 export 'src/widgets/grid_box.dart';
 export 'src/widgets/stack_box.dart';
 export 'src/widgets/text_box.dart';
 
-// Engine
-export 'src/engine/layout_engine.dart';
-export 'src/engine/layout_node.dart';
-export 'src/engine/tree_builder.dart';
-export 'src/engine/flex_layout_solver.dart';
-export 'src/engine/grid_layout_solver.dart';
-export 'src/engine/style_resolver.dart';
-export 'src/engine/decoration_builder.dart';
-export 'src/engine/tailwind_parser.dart';
-export 'src/engine/diff_engine.dart';
-export 'src/engine/widget_cache_manager.dart';
-
-// Responsive
-export 'src/responsive/responsive_engine.dart';
-export 'src/responsive/breakpoint_resolver.dart';
-
-// Debug
-export 'src/debug/debug_config.dart';
-export 'src/debug/fluxy_inspector.dart';
-
-// Reactive & Patterns
+// Reactive Core
 export 'src/reactive/signal.dart';
 export 'src/reactive/async_signal.dart';
+
+// Infrastructure
 export 'src/di/fluxy_di.dart';
 export 'src/routing/fluxy_router.dart';
-export 'src/dsl/fx.dart';
+
+// Responsive & Layout Engines
+export 'src/responsive/responsive_engine.dart';
+export 'src/responsive/breakpoint_resolver.dart';
+export 'src/engine/style_resolver.dart';
+export 'src/engine/decoration_builder.dart';
+export 'src/engine/diff_engine.dart';
+
+// Debugging Tools
+export 'src/debug/debug_config.dart';
+export 'src/debug/fluxy_inspector.dart';
 
 import 'src/di/fluxy_di.dart';
 import 'src/routing/fluxy_router.dart';
@@ -45,8 +37,8 @@ import 'src/routing/fluxy_router.dart';
 /// The global entry point for the Fluxy framework.
 class Fluxy {
   // Navigation Shortcuts
-  static Future<T?> to<T>(String routeName, {Object? arguments}) => 
-      FluxyRouter.to<T>(routeName);
+  static Future<T?> to<T>(String routeName, {Map<String, dynamic>? arguments}) => 
+      FluxyRouter.to<T>(routeName, arguments: arguments);
   
   static void back<T>([T? result]) => FluxyRouter.back<T>(result);
 

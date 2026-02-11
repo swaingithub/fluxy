@@ -1,11 +1,14 @@
 import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart' show Container, Flexible, FlexFit, SizedBox;
 import '../styles/style.dart';
 import '../engine/style_resolver.dart';
 import '../engine/decoration_builder.dart';
+import '../dsl/modifiers.dart';
 
-class FlexBox extends StatelessWidget {
+class FlexBox extends StatelessWidget with FxModifier<FlexBox> {
   final Axis direction;
-  final Style? style;
+  @override
+  final Style style;
   final String? className;
   final ResponsiveStyle? responsive;
   final List<Widget> children;
@@ -13,11 +16,22 @@ class FlexBox extends StatelessWidget {
   const FlexBox({
     super.key,
     required this.direction,
-    this.style,
+    this.style = const Style(),
     this.className,
     this.responsive,
     required this.children,
   });
+
+  @override
+  FlexBox copyWith({Style? style, Axis? direction, String? className, ResponsiveStyle? responsive, List<Widget>? children}) {
+    return FlexBox(
+      direction: direction ?? this.direction,
+      style: this.style.copyWith(style),
+      className: className ?? this.className,
+      responsive: responsive ?? this.responsive,
+      children: children ?? this.children,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {

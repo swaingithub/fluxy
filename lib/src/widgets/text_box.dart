@@ -1,22 +1,35 @@
 import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart' show Container, Text, Flexible, FlexFit;
 import '../styles/style.dart';
 import '../engine/style_resolver.dart';
 import '../engine/decoration_builder.dart';
 import '../reactive/signal.dart';
+import '../dsl/modifiers.dart';
 
-class TextBox extends StatefulWidget {
+class TextBox extends StatefulWidget with FxModifier<TextBox> {
   final String data;
-  final Style? style;
+  @override
+  final Style style;
   final String? className;
   final ResponsiveStyle? responsive;
 
   const TextBox({
     super.key,
     required this.data,
-    this.style,
+    this.style = const Style(),
     this.className,
     this.responsive,
   });
+
+  @override
+  TextBox copyWith({Style? style, String? data, String? className, ResponsiveStyle? responsive}) {
+    return TextBox(
+      data: data ?? this.data,
+      style: this.style.copyWith(style),
+      className: className ?? this.className,
+      responsive: responsive ?? this.responsive,
+    );
+  }
 
   @override
   State<TextBox> createState() => _TextBoxState();

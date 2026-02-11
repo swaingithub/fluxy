@@ -37,6 +37,11 @@ class FluxyRouter {
     return navigatorKey.currentState!.pushReplacementNamed<T, TO>(routeName, result: result, arguments: arguments);
   }
 
+  /// Clears the navigation stack and pushes a new route.
+  static Future<T?> offAll<T>(String routeName, {Map<String, dynamic>? arguments}) {
+    return navigatorKey.currentState!.pushNamedAndRemoveUntil<T>(routeName, (route) => false, arguments: arguments);
+  }
+
   /// Goes back to previous page.
   static void back<T>([T? result]) {
     navigatorKey.currentState!.pop<T>(result);

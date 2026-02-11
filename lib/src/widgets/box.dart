@@ -1,18 +1,19 @@
 import 'dart:ui';
 import 'package:flutter/widgets.dart';
-import 'package:flutter/material.dart' show Colors, MaterialColor, Icons, MouseRegion, GestureDetector, Expanded, Flexible, Positioned, SystemMouseCursors, ClipRRect, BackdropFilter, AnimatedContainer, Container, Column, SizedBox, MainAxisAlignment, CrossAxisAlignment, MainAxisSize, Flex, Axis, FlexFit, BuildContext, State, StatefulWidget;
+import 'package:flutter/material.dart' show MouseRegion, GestureDetector, Flexible, Positioned, SystemMouseCursors, ClipRRect, BackdropFilter, AnimatedContainer, Container, Flex, SizedBox;
 import '../styles/style.dart';
 import '../engine/style_resolver.dart';
 import '../engine/decoration_builder.dart';
 import '../engine/diff_engine.dart';
 import '../reactive/signal.dart';
-import '../debug/debug_config.dart';
+import '../dsl/modifiers.dart';
 
 /// The foundational building block of Fluxy.
 /// Similar to a <div> in web development.
-class Box extends StatefulWidget {
+class Box extends StatefulWidget with FxModifier<Box> {
   final String? id; 
-  final Style? style;
+  @override
+  final Style style;
   final String? className;
   final ResponsiveStyle? responsive;
   final Widget? child;
@@ -22,13 +23,26 @@ class Box extends StatefulWidget {
   const Box({
     super.key,
     this.id,
-    this.style,
+    this.style = const Style(),
     this.className,
     this.responsive,
     this.child,
     this.children,
     this.onTap,
   });
+
+  @override
+  Box copyWith({Style? style, String? className, ResponsiveStyle? responsive, Widget? child, List<Widget>? children, VoidCallback? onTap}) {
+    return Box(
+      id: id,
+      style: this.style.copyWith(style),
+      className: className ?? this.className,
+      responsive: responsive ?? this.responsive,
+      child: child ?? this.child,
+      children: children ?? this.children,
+      onTap: onTap ?? this.onTap,
+    );
+  }
 
   @override
   State<Box> createState() => _BoxState();
