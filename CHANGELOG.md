@@ -1,4 +1,4 @@
-## 0.0.1
+## 1.0.0-alpha.1
 
 * Initial alpha release of Fluxy Framework.
 * Implemented core reactive engine with signals and computed values.
