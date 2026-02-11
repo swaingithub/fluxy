@@ -1,215 +1,277 @@
-# Fluxy
+# Fluxy — Reactive UI + State + Fluent DSL for Flutter
 
-**The High-Performance Reactive UI Engine for Flutter.**
+**Build Flutter apps with SwiftUI-like syntax, fine-grained reactivity, and zero boilerplate.**
 
-Fluxy is a revolutionary framework designed to bring **SwiftUI-style declarativeness** and **Tailwind-style styling velocity** to Flutter. It eliminates deep widget nesting and manual state management, allowing you to build stunning, responsive UIs with pure, expressive code.
+Fluxy is a next-generation reactive UI engine for Flutter that unifies **declarative layouts**, **signals-based state management**, and **utility-first styling** into a single, elegant developer experience.
 
 [![Pub Version](https://img.shields.io/pub/v/fluxy?color=blue)](https://pub.dev/packages/fluxy)
+[![Pub Likes](https://img.shields.io/pub/likes/fluxy)](https://pub.dev/packages/fluxy)
+[![Pub Popularity](https://img.shields.io/pub/popularity/fluxy)](https://pub.dev/packages/fluxy)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ---
 
-## Table of Contents
-1. [Core Features](#core-features)
-2. [Installation](#installation)
-3. [The Fx DSL (Building UI)](#the-fx-dsl-building-ui)
-4. [Reactive State Management (Signals)](#reactive-state-management-signals)
-5. [The Power of Modifiers (Styling)](#the-power-of-modifiers-styling)
-6. [Responsive Design (Mobile-First)](#responsive-design-mobile-first)
-7. [Navigation & Dependency Injection](#navigation--dependency-injection)
-8. [Full API Reference](#full-api-reference)
+## Why Fluxy?
+
+Flutter is powerful, but as applications scale, developers often face:
+
+* Deep widget nesting
+* Excessive boilerplate
+* Complex state wiring
+* Heavy reliance on `BuildContext`
+
+Fluxy solves these problems by introducing a **modern reactive architecture inspired by SwiftUI, SolidJS, and Tailwind CSS**, while remaining fully compatible with Flutter’s rendering engine.
+
+Fluxy enables developers to write **clean, expressive UI code**, manage state with **atomic reactivity**, and style interfaces with **fluent, chainable APIs**.
 
 ---
 
-## Core Features
+## Minimal Example
 
-- **Signals**: Zero-boilerplate reactivity. Update only what changes.
-- **Fluent API**: Chain styles like `.pad(16).bg(Colors.blue).radius(12)`.
-- **Modern Layout**: Built-in support for `gap`, `grid`, and `stack`.
-- **Breakpoint Sensitive**: Responsive styles built directly into every widget.
-- **Zero-Context Navigation**: Navigate easily with `Fx.go()`.
+```dart
+final count = flux(0);
+
+Fx.column(
+  Fx.text(() => "Count: ${count.value}").font(32).bold(),
+  Fx.button("+", onTap: () => count.value++)
+      .bg(Colors.blue)
+      .radius(12)
+      .pad(12)
+)
+.center()
+.pad(24);
+```
+
+**No `setState`, no builders, no boilerplate. Just reactive UI.**
+
+---
+
+## Core Advantages
+
+* **Signals-Based Reactivity**
+  Reactive state powered by dependency tracking. UI updates automatically when data changes.
+
+* **Atomic UI Rebuilds**
+  Only the widgets directly dependent on changed state are rebuilt, resulting in smoother animations and lower CPU usage.
+
+* **Fluent Styling API**
+  Chainable modifiers like `.bg().radius().pad()` eliminate verbose `BoxDecoration` code.
+
+* **Declarative Layout DSL**
+  Readable layout primitives such as `Fx.column`, `Fx.row`, and `Fx.stack`.
+
+* **Utility-First Styling**
+  Tailwind-inspired `className` system for rapid UI construction.
+
+* **Zero Boilerplate State**
+  No providers, no context lookups, no event classes.
+
+---
+
+## Flutter vs Fluxy
+
+| Feature        | Standard Flutter           | Fluxy                     |
+| -------------- | -------------------------- | ------------------------- |
+| Syntax         | Nested widgets             | Fluent chaining           |
+| State          | setState / Provider / BLoC | Signals (`flux()`)        |
+| Rebuild Scope  | Widget-level               | **Atomic micro-rebuilds** |
+| Boilerplate    | High                       | **Minimal**               |
+| Styling        | BoxDecoration              | Utility + modifiers       |
+| Learning Curve | Medium                     | **Low**                   |
 
 ---
 
 ## Installation
 
-Add Fluxy to your `pubspec.yaml`:
-
 ```yaml
 dependencies:
-  fluxy: ^1.0.0-alpha.3
+  fluxy: ^1.0.0-alpha.4
 ```
 
 ---
 
-## The Fx DSL (Building UI)
+## Quick Start
 
-Fluxy replaces complex Flutter widgets with simple `Fx` methods.
+### Reactive Counter
 
-### 1. Basic Layouts
 ```dart
-// Vertical Layout (Column)
-Fx.column(
-  gap: 16, // Consistent spacing between items
-  children: [
-    Fx.text("Welcome"),
-    Fx.button(onTap: () {}, child: "Get Started"),
-  ],
-)
+final count = flux(0);
 
-// Horizontal Layout (Row)
-Fx.row(
-  children: [
-    Fx.box().size(40, 40).bg(Colors.red),
-    Fx.text("Side by side"),
-  ],
-)
-```
+class CounterApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Fx.column(
+      children: [
+        Fx.text(() => "Count: ${count.value}")
+            .font(42)
+            .bold(),
 
-### 2. Smart Components
-- **`Fx.card()`**: A pre-styled container with shadow and padding.
-- **`Fx.button()`**: A responsive button with hover and press effects.
-- **`Fx.container()`**: A flexible box (alias for `Fx.box`).
-
----
-
-## Reactive State Management (Signals)
-
-Fluxy uses **Signals** for state. They are faster than `setState` and easier than `Provider`.
-
-### `flux(value)` - Primitive State
-```dart
-final count = flux(0); 
-
-// Usage in UI:
-Fx.text(() => "Current: ${count.value}") // Automatically updates when value changes
-```
-
-### `computed(() => ...)` - Derived State
-```dart
-final firstName = flux("John");
-final fullName = computed(() => "${firstName.value} Doe");
-```
-
-### `Fx.async` - Handling API Calls
-```dart
-final data = asyncFlux(() => api.fetchData());
-
-Fx.async(
-  data,
-  loading: () => CircularProgressIndicator(),
-  error: (err) => Fx.text("Error!"),
-  data: (val) => Fx.text("Result: $val"),
-)
+        Fx.button(
+          "+",
+          onTap: () => count.value++,
+        ).bg(Colors.indigo).radius(16).pad(12),
+      ],
+    ).center();
+  }
+}
 ```
 
 ---
 
-## The Power of Modifiers (Styling)
+## Reactive Engine
 
-Instead of wrapping widgets in 10 different containers, use **dot notation**.
+Fluxy is built on a **fine-grained reactivity graph** that tracks dependencies at the signal level.
 
-### Layout & Sizing
-- `.pad(16)` / `.padX(12)` / `.padY(8)`
-- `.margin(10)`
-- `.width(200)` / `.height(50)` / `.size(50, 50)`
-- `.center()` / `.align(Alignment.bottomRight)`
+### Signals
 
-### Visuals
-- `.bg(Colors.blue)`
-- `.radius(12)`
-- `.shadow()` / `.border(color: Colors.black)`
-- `.opacity(0.8)`
-- `.glass(10)` (Apply blur effect)
+```dart
+final username = flux("Guest");
 
-### Interactive
-- `.pointer()` (Show hand cursor)
-- `.onTap(() => print("Clicked"))`
-
-### Text Specific
-- `.font(18)` / `.bold()` / `.color(Colors.white)`
-- `.maxLines(2)` / `.overflow(TextOverflow.ellipsis)`
+username.value = "John"; // UI updates instantly
+```
 
 ---
 
-## Responsive Design (Mobile-First)
+### Computed Signals
 
-Fluxy handles different screen sizes effortlessly.
+```dart
+final a = flux(10);
+final b = flux(20);
 
-### Breakpoint Overrides
+final total = computed(() => a.value + b.value);
+```
+
+---
+
+### Effects
+
+```dart
+effect(() {
+  print("Count changed → ${count.value}");
+});
+```
+
+---
+
+## Fluent UI Styling
+
+### Modifiers
+
+```dart
+Fx.box()
+  .size(120, 120)
+  .bg(Colors.teal)
+  .radius(20)
+  .shadow(blur: 16)
+  .center()
+  .child(Fx.text("Fluxy").color(Colors.white));
+```
+
+---
+
+### Utility Classes
+
+```dart
+Fx.box(
+  className: "px-6 py-4 bg-slate-900 rounded-2xl items-center",
+  child: Fx.text("Utility Styling").color(Colors.white),
+);
+```
+
+---
+
+## Responsive Design
+
 ```dart
 Fx.box(
   responsive: FxResponsiveStyle(
-    xs: FxStyle(padding: EdgeInsets.all(8)),   // Phone
-    md: FxStyle(padding: EdgeInsets.all(24)),  // Tablet
-    lg: FxStyle(padding: EdgeInsets.all(40)),  // Desktop
+    xs: FxStyle(padding: EdgeInsets.all(8)),
+    md: FxStyle(padding: EdgeInsets.all(24)),
+    lg: FxStyle(padding: EdgeInsets.all(48)),
   ),
-  child: myContent,
-)
-```
-
-### Conditional Widgets
-```dart
-Fx.responsive(
-  mobile: MobileWidget(),
-  desktop: DesktopSidebar(),
-)
+);
 ```
 
 ---
 
 ## Navigation & Dependency Injection
 
-### Navigation
-Navigate from anywhere—no `context` needed!
 ```dart
-Fx.go('/dashboard');
-Fx.back();
-Fx.offAll('/login'); // Move to page and clear history
-```
+Fx.go("/dashboard");
 
-### Dependency Injection (DI)
-```dart
-// Register
-Fluxy.put(MyService());
-
-// Find anywhere
-final service = Fluxy.find<MyService>();
+final api = Fluxy.find<ApiService>();
 ```
 
 ---
 
-## Full API Reference
+## Internal Architecture
 
-### Layout
-| Method | Description |
-| :--- | :--- |
-| `Fx.box()` | The fundamental <div> equivalent. |
-| `Fx.column()` | Vertical flex layout. |
-| `Fx.row()` | Horizontal flex layout. |
-| `Fx.grid()` | Modern grid layout. |
-| `Fx.stack()` | Layered positioning. |
-| `Fx.gap(v)` | A spacer between items. |
+Fluxy consists of four tightly integrated subsystems:
 
-### Styling Categories
-1. **Dimensions**: `width`, `height`, `size`, `aspectRatio`.
-2. **Spacing**: `pad`, `padX`, `padY`, `margin`, `marginX`, `marginY`.
-3. **Decoration**: `bg`, `radius`, `shadow`, `border`, `glass`, `opacity`.
-4. **Text**: `font`, `bold`, `weight`, `color`, `textAlign`, `maxLines`.
-5. **Flexbox**: `flex`, `fit`, `expanded`, `space`.
+1. **Reactivity Graph**
+   Tracks relationships between signals and widgets.
+
+2. **Diff Engine**
+   Calculates minimal UI changes to avoid redundant rebuilds.
+
+3. **Style Resolver**
+   Merges className utilities, inline styles, and responsive rules.
+
+4. **Decoration Mapper**
+   Converts Fluxy styles into native Flutter render objects.
 
 ---
 
-## 👋 Build the Future
+## Performance Philosophy
 
-Fluxy is designed for speed. Check the `/example` folder for 5 full-screen templates including:
-- Responsive Dashboard
-- Login & Auth
-- User Profiles
-- Project Management
-- Settings Interface
+Fluxy is designed around:
 
-**Build fast. Build beautiful.**
+* Minimal widget rebuilds
+* Batched state propagation
+* GPU-friendly rendering paths
+* Zero unnecessary layout recalculations
 
-- **Issues**: [GitHub](https://github.com/swaingithub/fluxy/issues)
-- **License**: MIT
+This results in **smoother animations, faster rebuilds, and lower power consumption**.
+
+---
+
+## Roadmap
+
+* [ ] Fluxy CLI
+* [ ] DevTools & State Inspector
+* [ ] Motion Engine (`.animate()`)
+* [ ] Reactive Layout Transitions
+* [ ] Theme Orchestration System
+* [ ] Desktop & Web Optimization Layer
+
+---
+
+## Who Should Use Fluxy?
+
+* Flutter developers seeking SwiftUI-style development
+* Teams building high-performance dashboards
+* Startups optimizing iteration speed
+* Engineers tired of widget boilerplate
+
+---
+
+## Community & Support
+
+* GitHub Issues: [https://github.com/swaingithub/fluxy/issues](https://github.com/swaingithub/fluxy/issues)
+* Discussions: [https://github.com/swaingithub/fluxy/discussions](https://github.com/swaingithub/fluxy/discussions)
+
+---
+
+## License
+
+MIT License
+Copyright © 2026
+
+---
+
+# Final Note
+
+Fluxy is not just a UI helper.
+It is an **entire rethinking of Flutter application architecture.**
+
+**Build faster. Write cleaner. Scale confidently.**
