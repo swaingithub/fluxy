@@ -85,7 +85,7 @@ Fx.column(
 
 ```yaml
 dependencies:
-  fluxy: ^1.0.0-alpha.4
+  fluxy: ^0.0.3
 ```
 
 ---

@@ -8,7 +8,7 @@ class AsyncSignal<T> extends Signal<T?> {
   AsyncStatus _status = AsyncStatus.idling;
   Object? _error;
 
-  AsyncSignal(T? initialValue) : super(initialValue);
+  AsyncSignal(super.initialValue);
 
   AsyncStatus get status {
     // Register dependency

@@ -75,7 +75,7 @@ class _FluxyInspectorState extends State<FluxyInspector> {
         Switch(
           value: value,
           onChanged: onChanged,
-          activeColor: Colors.blueAccent,
+          activeThumbColor: Colors.blueAccent,
           materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
         ),
       ],

@@ -52,7 +52,7 @@ class FxStyle {
   final TextOverflow? overflow;
   final int? maxLines;
   final double? letterSpacing;
-  final double? height_multiplier; // line-height
+  final double? lineHeight; // line-height
 
   // Interactive Styles
   final FxStyle? hover;
@@ -100,7 +100,7 @@ class FxStyle {
     this.overflow,
     this.maxLines,
     this.letterSpacing,
-    this.height_multiplier,
+    this.lineHeight,
     this.hover,
     this.pressed,
     this.transition,
@@ -153,7 +153,7 @@ class FxStyle {
     TextOverflow? overflow,
     int? maxLines,
     double? letterSpacing,
-    double? height_multiplier,
+    double? lineHeight,
     FxStyle? hover,
     FxStyle? pressed,
     Duration? transition,
@@ -199,7 +199,7 @@ class FxStyle {
       overflow: overflow ?? this.overflow,
       maxLines: maxLines ?? this.maxLines,
       letterSpacing: letterSpacing ?? this.letterSpacing,
-      height_multiplier: height_multiplier ?? this.height_multiplier,
+      lineHeight: lineHeight ?? this.lineHeight,
       hover: hover ?? this.hover,
       pressed: pressed ?? this.pressed,
       transition: transition ?? this.transition,
@@ -250,7 +250,7 @@ class FxStyle {
       overflow: other.overflow,
       maxLines: other.maxLines,
       letterSpacing: other.letterSpacing,
-      height_multiplier: other.height_multiplier,
+      lineHeight: other.lineHeight,
       hover: other.hover,
       pressed: other.pressed,
       transition: other.transition,
@@ -300,7 +300,7 @@ class FxStyle {
           overflow == other.overflow &&
           maxLines == other.maxLines &&
           letterSpacing == other.letterSpacing &&
-          height_multiplier == other.height_multiplier &&
+          lineHeight == other.lineHeight &&
           hover == other.hover &&
           pressed == other.pressed &&
           transition == other.transition &&
@@ -347,7 +347,7 @@ class FxStyle {
       overflow.hashCode ^
       maxLines.hashCode ^
       letterSpacing.hashCode ^
-      height_multiplier.hashCode ^
+      lineHeight.hashCode ^
       hover.hashCode ^
       pressed.hashCode ^
       transition.hashCode ^

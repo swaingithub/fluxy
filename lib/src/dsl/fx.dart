@@ -1,5 +1,4 @@
 import 'package:flutter/widgets.dart';
-import 'package:flutter/material.dart' show Color, SizedBox;
 import '../styles/style.dart';
 import '../widgets/box.dart';
 import '../widgets/text_box.dart';
@@ -92,10 +91,10 @@ class Fx extends StatefulWidget {
   }) {
     return FlexBox(
       direction: Axis.horizontal,
-      children: children,
       style: style.merge(FxStyle(gap: gap)),
       className: className,
       responsive: responsive,
+      children: children,
     );
   }
 
@@ -109,10 +108,10 @@ class Fx extends StatefulWidget {
   }) {
     return FlexBox(
       direction: Axis.vertical,
-      children: children,
       style: style.merge(FxStyle(gap: gap)),
       className: className,
       responsive: responsive,
+      children: children,
     );
   }
 
@@ -124,10 +123,10 @@ class Fx extends StatefulWidget {
     FxResponsiveStyle? responsive,
   }) {
     return GridBox(
-      children: children,
       style: style,
       className: className,
       responsive: responsive,
+      children: children,
     );
   }
 
@@ -139,10 +138,10 @@ class Fx extends StatefulWidget {
     FxResponsiveStyle? responsive,
   }) {
     return StackBox(
-      children: children,
       style: style,
       className: className,
       responsive: responsive,
+      children: children,
     );
   }
 

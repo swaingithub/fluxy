@@ -1,6 +1,5 @@
 import 'dart:ui';
 import 'package:flutter/widgets.dart';
-import 'package:flutter/material.dart' show MouseRegion, GestureDetector, Flexible, Positioned, SystemMouseCursors, ClipRRect, BackdropFilter, AnimatedContainer, Container, Flex, SizedBox;
 import '../styles/style.dart';
 import '../engine/style_resolver.dart';
 import '../engine/decoration_builder.dart';

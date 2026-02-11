@@ -1,5 +1,4 @@
 import 'package:flutter/widgets.dart';
-import 'package:flutter/material.dart' show Color, FontWeight, TextAlign, TextOverflow, MouseCursor, SystemMouseCursors, BoxShadow, Border, EdgeInsets, AlignmentGeometry, Alignment, FlexFit;
 import '../styles/style.dart';
 import '../widgets/box.dart';
 import '../widgets/text_box.dart';
@@ -144,11 +143,11 @@ extension FluxyWidgetExtension on Widget {
   Widget space(double value) => _applyStyle(FxStyle(gap: value));
 
   Widget font(double size) => _applyStyle(FxStyle(fontSize: size));
-  Widget bold() => _applyStyle(FxStyle(fontWeight: FontWeight.bold));
+  Widget bold() => _applyStyle(const FxStyle(fontWeight: FontWeight.bold));
   Widget weight(FontWeight weight) => _applyStyle(FxStyle(fontWeight: weight));
   Widget color(Color color) => _applyStyle(FxStyle(color: color));
   Widget lSpacing(double value) => _applyStyle(FxStyle(letterSpacing: value));
-  Widget lHeight(double value) => _applyStyle(FxStyle(height_multiplier: value));
+  Widget lHeight(double value) => _applyStyle(FxStyle(lineHeight: value));
   Widget maxLines(int value) => _applyStyle(FxStyle(maxLines: value));
   Widget overflow(TextOverflow value) => _applyStyle(FxStyle(overflow: value));
   Widget centerText() => _applyStyle(const FxStyle(textAlign: TextAlign.center));
