@@ -31,3 +31,30 @@ export 'src/responsive/breakpoint_resolver.dart';
 // Debug
 export 'src/debug/debug_config.dart';
 export 'src/debug/fluxy_inspector.dart';
+
+// Reactive & Patterns
+export 'src/reactive/signal.dart';
+export 'src/reactive/async_signal.dart';
+export 'src/di/fluxy_di.dart';
+export 'src/routing/fluxy_router.dart';
+export 'src/dsl/fx.dart';
+
+import 'src/di/fluxy_di.dart';
+import 'src/routing/fluxy_router.dart';
+
+/// The global entry point for the Fluxy framework.
+class Fluxy {
+  // Navigation Shortcuts
+  static Future<T?> to<T>(String routeName, {Object? arguments}) => 
+      FluxyRouter.to<T>(routeName);
+  
+  static void back<T>([T? result]) => FluxyRouter.back<T>(result);
+
+  // DI Shortcuts
+  static T find<T>({String? tag}) => FluxyDI.find<T>(tag: tag);
+  
+  static void put<T>(T instance, {String? tag}) => FluxyDI.put<T>(instance, tag: tag);
+
+  static void lazyPut<T>(T Function() factory, {String? tag}) => 
+      FluxyDI.lazyPut<T>(factory, tag: tag);
+}

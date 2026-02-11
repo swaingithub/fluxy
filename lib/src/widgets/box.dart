@@ -1,15 +1,17 @@
 import 'dart:ui';
 import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart' show Colors, MaterialColor, Icons, MouseRegion, GestureDetector, Expanded, Flexible, Positioned, SystemMouseCursors, ClipRRect, BackdropFilter, AnimatedContainer, Container, Column, SizedBox, MainAxisAlignment, CrossAxisAlignment, MainAxisSize, Flex, Axis, FlexFit, BuildContext, State, StatefulWidget;
 import '../styles/style.dart';
 import '../engine/style_resolver.dart';
 import '../engine/decoration_builder.dart';
-
 import '../engine/diff_engine.dart';
+import '../reactive/signal.dart';
+import '../debug/debug_config.dart';
 
 /// The foundational building block of Fluxy.
 /// Similar to a <div> in web development.
 class Box extends StatefulWidget {
-  final String? id; // Optional ID for caching
+  final String? id; 
   final Style? style;
   final String? className;
   final ResponsiveStyle? responsive;
@@ -32,47 +34,65 @@ class Box extends StatefulWidget {
   State<Box> createState() => _BoxState();
 }
 
-class _BoxState extends State<Box> {
+class _BoxState extends State<Box> implements FluxySubscriber {
   bool _isHovered = false;
   bool _isPressed = false;
   
   // Cache the resolved style and built widget
   Style? _lastResolvedBase;
   Widget? _cachedWidget;
+
+  @override
+  void notify() {
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
+  @override
+  void dispose() {
+    // Note: In a full implementation, we would track which signals
+    // this box subscribed to and remove it from their subscriber lists here.
+    super.dispose();
+  }
   
   @override
   Widget build(BuildContext context) {
-    // 1. Resolve base style
-    final base = StyleResolver.resolve(
-      context, 
-      style: widget.style, 
-      className: widget.className,
-      responsive: widget.responsive
-    );
+    // 1. Start tracking dependencies
+    FluxyReactiveContext.push(this);
+    
+    try {
+      // 2. Resolve base style
+      final base = StyleResolver.resolve(
+        context, 
+        style: widget.style, 
+        className: widget.className,
+        responsive: widget.responsive
+      );
 
-    // 2. Diff detection: Skip building if nothing changed
-    final shouldRebuild = _cachedWidget == null || 
-                         DiffEngine.shouldRebuild(
-                           oldStyle: _lastResolvedBase, 
-                           newStyle: base,
-                           oldClassName: null, // StyleResolver already incorporates className
-                           newClassName: null,
-                           structuralChange: DiffEngine.hasTreeChanged(
-                             widget.children ?? [], 
-                             [] // Comparison logic would go here
-                           ),
-                         );
+      // 3. Diff detection: Skip building if nothing changed
+      final shouldRebuild = _cachedWidget == null || 
+                           DiffEngine.shouldRebuild(
+                             oldStyle: _lastResolvedBase, 
+                             newStyle: base,
+                             oldClassName: null, 
+                             newClassName: null,
+                             structuralChange: false,
+                           );
 
-    _lastResolvedBase = base;
+      _lastResolvedBase = base;
 
-    // 3. Resolve interactive states (always applied)
-    final s = StyleResolver.resolveInteractive(base, isHovered: _isHovered, isPressed: _isPressed);
+      // 4. Resolve interactive states (always applied)
+      final s = StyleResolver.resolveInteractive(base, isHovered: _isHovered, isPressed: _isPressed);
 
-    if (shouldRebuild || _isHovered || _isPressed) {
-      _cachedWidget = _buildContent(s);
+      if (shouldRebuild || _isHovered || _isPressed) {
+        _cachedWidget = _buildContent(s);
+      }
+
+      return _cachedWidget!;
+    } finally {
+      FluxyReactiveContext.pop();
     }
-
-    return _cachedWidget!;
   }
 
   Widget _buildContent(Style s) {
