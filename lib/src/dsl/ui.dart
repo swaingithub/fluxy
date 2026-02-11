@@ -18,7 +18,7 @@ class UI {
     List<Widget>? children,
     VoidCallback? onTap,
   }) => Box(
-    style: style,
+    style: style ?? const Style(),
     className: className,
     responsive: responsive,
     child: child,
@@ -34,7 +34,7 @@ class UI {
     required List<Widget> children,
   }) => FlexBox(
     direction: Axis.horizontal,
-    style: style,
+    style: style ?? const Style(),
     className: className,
     responsive: responsive,
     children: children,
@@ -48,7 +48,7 @@ class UI {
     required List<Widget> children,
   }) => FlexBox(
     direction: Axis.vertical,
-    style: style,
+    style: style ?? const Style(),
     className: className,
     responsive: responsive,
     children: children,
@@ -63,7 +63,7 @@ class UI {
     required List<Widget> children,
   }) => FlexBox(
     direction: direction,
-    style: style,
+    style: style ?? const Style(),
     className: className,
     responsive: responsive,
     children: children,
@@ -76,7 +76,7 @@ class UI {
     ResponsiveStyle? responsive,
     required List<Widget> children,
   }) => GridBox(
-    style: style,
+    style: style ?? const Style(),
     className: className,
     responsive: responsive,
     children: children,
@@ -89,7 +89,7 @@ class UI {
     ResponsiveStyle? responsive,
     required List<Widget> children,
   }) => StackBox(
-    style: style,
+    style: style ?? const Style(),
     className: className,
     responsive: responsive,
     children: children,
@@ -103,7 +103,7 @@ class UI {
     ResponsiveStyle? responsive,
   }) => TextBox(
     data: data,
-    style: style,
+    style: style ?? const Style(),
     className: className,
     responsive: responsive,
   );

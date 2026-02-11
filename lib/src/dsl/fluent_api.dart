@@ -20,7 +20,7 @@ class Fluxy {
     List<Widget>? children,
   }) {
     return Box(
-      style: style,
+      style: style ?? const Style(),
       child: child,
       children: children,
     );
@@ -31,8 +31,7 @@ class Fluxy {
     required List<Widget> children,
   }) {
     return Box(
-      style: style?.copyWith(const Style(justifyContent: MainAxisAlignment.start)) ?? 
-             const Style(justifyContent: MainAxisAlignment.start),
+      style: (style ?? const Style()).copyWith(const Style(justifyContent: MainAxisAlignment.start)),
       children: children,
     );
   }
