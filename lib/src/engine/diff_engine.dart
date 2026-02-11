@@ -6,8 +6,8 @@ import '../styles/style.dart';
 class DiffEngine {
   /// Returns true if the style or structure has changed enough to require a rebuild.
   static bool shouldRebuild({
-    Style? oldStyle,
-    Style? newStyle,
+    FxStyle? oldStyle,
+    FxStyle? newStyle,
     String? oldClassName,
     String? newClassName,
     bool? structuralChange,
@@ -19,8 +19,7 @@ class DiffEngine {
     return false;
   }
 
-  /// Calculates the difference between two LayoutNode trees.
-  /// (Simplified version for this DSL)
+  /// Calculates the difference between two groups of children.
   static bool hasTreeChanged(List<Widget> oldChildren, List<Widget> newChildren) {
     if (oldChildren.length != newChildren.length) return true;
     

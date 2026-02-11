@@ -21,10 +21,10 @@ class Fx extends StatefulWidget {
   State<Fx> createState() => _FxState();
 
   /// A reactive text element. 
-  static TextBox text(dynamic data, {Style? style, String? className, ResponsiveStyle? responsive}) {
+  static TextBox text(dynamic data, {FxStyle? style, String? className, FxResponsiveStyle? responsive}) {
     return TextBox(
       data: data is Function ? data().toString() : data.toString(),
-      style: style ?? const Style(),
+      style: style ?? FxStyle.none,
       className: className,
       responsive: responsive,
     );
@@ -32,15 +32,15 @@ class Fx extends StatefulWidget {
 
   /// A reactive container.
   static Box box({
-    Style? style,
+    FxStyle? style,
     String? className,
-    ResponsiveStyle? responsive,
+    FxResponsiveStyle? responsive,
     Widget? child,
     List<Widget>? children,
     VoidCallback? onTap,
   }) {
     return Box(
-      style: style ?? const Style(),
+      style: style ?? FxStyle.none,
       className: className,
       responsive: responsive,
       child: child,
@@ -51,9 +51,9 @@ class Fx extends StatefulWidget {
 
   /// Alias for box.
   static Box container({
-    Style? style,
+    FxStyle? style,
     String? className,
-    ResponsiveStyle? responsive,
+    FxResponsiveStyle? responsive,
     Widget? child,
     List<Widget>? children,
     VoidCallback? onTap,
@@ -63,16 +63,16 @@ class Fx extends StatefulWidget {
   static Box button({
     required dynamic child,
     required VoidCallback onTap,
-    Style? style,
+    FxStyle? style,
     String? className,
   }) {
     return Box(
       onTap: onTap,
       className: "px-6 py-3 bg-blue-600 rounded-xl items-center justify-center $className",
-      style: const Style(
+      style: const FxStyle(
         transition: Duration(milliseconds: 150),
-        hover: Style(backgroundColor: Color(0xFF2563EB)), 
-        pressed: Style(glass: 0.1),
+        hover: FxStyle(backgroundColor: Color(0xFF2563EB)), 
+        pressed: FxStyle(opacity: 0.7),
       ).copyWith(style),
       child: child is String ? text(child, className: "text-white font-bold") : child,
     );
@@ -81,15 +81,15 @@ class Fx extends StatefulWidget {
   /// Horizontal layout.
   static FlexBox row({
     required List<Widget> children,
-    Style? style,
+    FxStyle? style,
     String? className,
-    ResponsiveStyle? responsive,
+    FxResponsiveStyle? responsive,
     double? gap,
   }) {
     return FlexBox(
       direction: Axis.horizontal,
       children: children,
-      style: (style ?? const Style()).copyWith(Style(gap: gap)),
+      style: (style ?? FxStyle.none).copyWith(FxStyle(gap: gap)),
       className: className,
       responsive: responsive,
     );
@@ -98,15 +98,15 @@ class Fx extends StatefulWidget {
   /// Vertical layout.
   static FlexBox column({
     required List<Widget> children,
-    Style? style,
+    FxStyle? style,
     String? className,
-    ResponsiveStyle? responsive,
+    FxResponsiveStyle? responsive,
     double? gap,
   }) {
     return FlexBox(
       direction: Axis.vertical,
       children: children,
-      style: (style ?? const Style()).copyWith(Style(gap: gap)),
+      style: (style ?? FxStyle.none).copyWith(FxStyle(gap: gap)),
       className: className,
       responsive: responsive,
     );
@@ -115,13 +115,13 @@ class Fx extends StatefulWidget {
   /// Grid layout.
   static GridBox grid({
     required List<Widget> children,
-    Style? style,
+    FxStyle? style,
     String? className,
-    ResponsiveStyle? responsive,
+    FxResponsiveStyle? responsive,
   }) {
     return GridBox(
       children: children,
-      style: style ?? const Style(),
+      style: style ?? FxStyle.none,
       className: className,
       responsive: responsive,
     );
@@ -130,13 +130,13 @@ class Fx extends StatefulWidget {
   /// Stack layout.
   static StackBox stack({
     required List<Widget> children,
-    Style? style,
+    FxStyle? style,
     String? className,
-    ResponsiveStyle? responsive,
+    FxResponsiveStyle? responsive,
   }) {
     return StackBox(
       children: children,
-      style: style ?? const Style(),
+      style: style ?? FxStyle.none,
       className: className,
       responsive: responsive,
     );
@@ -182,9 +182,9 @@ class Fx extends StatefulWidget {
   // --- Smart UI Presets ---
 
   /// A modern card preset.
-  static Box card({required Widget child, Style? style, String? className}) {
+  static Box card({required Widget child, FxStyle? style, String? className}) {
     return box(
-      style: const Style(
+      style: const FxStyle(
         backgroundColor: Color(0xFFFFFFFF),
         borderRadius: BorderRadius.all(Radius.circular(12)),
         padding: EdgeInsets.all(16),
@@ -200,7 +200,7 @@ class Fx extends StatefulWidget {
     return column(
       gap: 16,
       children: [
-        text(title, style: const Style(fontSize: 18, fontWeight: FontWeight.bold)),
+        text(title, style: const FxStyle(fontSize: 18, fontWeight: FontWeight.bold)),
         column(gap: gap, children: children),
       ],
     );

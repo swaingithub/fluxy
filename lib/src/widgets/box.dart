@@ -13,9 +13,9 @@ import '../dsl/modifiers.dart';
 class Box extends StatefulWidget with FxModifier<Box> {
   final String? id; 
   @override
-  final Style style;
+  final FxStyle style;
   final String? className;
-  final ResponsiveStyle? responsive;
+  final FxResponsiveStyle? responsive;
   final Widget? child;
   final List<Widget>? children;
   final VoidCallback? onTap;
@@ -23,7 +23,7 @@ class Box extends StatefulWidget with FxModifier<Box> {
   const Box({
     super.key,
     this.id,
-    this.style = const Style(),
+    this.style = FxStyle.none,
     this.className,
     this.responsive,
     this.child,
@@ -32,7 +32,7 @@ class Box extends StatefulWidget with FxModifier<Box> {
   });
 
   @override
-  Box copyWith({Style? style, String? className, ResponsiveStyle? responsive, Widget? child, List<Widget>? children, VoidCallback? onTap}) {
+  Box copyWith({FxStyle? style, String? className, FxResponsiveStyle? responsive, Widget? child, List<Widget>? children, VoidCallback? onTap}) {
     return Box(
       id: id,
       style: this.style.copyWith(style),
@@ -53,7 +53,7 @@ class _BoxState extends State<Box> implements FluxySubscriber {
   bool _isPressed = false;
   
   // Cache the resolved style and built widget
-  Style? _lastResolvedBase;
+  FxStyle? _lastResolvedBase;
   Widget? _cachedWidget;
 
   @override
@@ -65,39 +65,31 @@ class _BoxState extends State<Box> implements FluxySubscriber {
 
   @override
   void dispose() {
-    // Note: In a full implementation, we would track which signals
-    // this box subscribed to and remove it from their subscriber lists here.
     super.dispose();
   }
   
   @override
   Widget build(BuildContext context) {
-    // 1. Start tracking dependencies
     FluxyReactiveContext.push(this);
     
     try {
-      // 2. Resolve base style
-      final base = StyleResolver.resolve(
+      final base = FxStyleResolver.resolve(
         context, 
         style: widget.style, 
         className: widget.className,
         responsive: widget.responsive
       );
 
-      // 3. Diff detection: Skip building if nothing changed
       final shouldRebuild = _cachedWidget == null || 
                            DiffEngine.shouldRebuild(
                              oldStyle: _lastResolvedBase, 
                              newStyle: base,
-                             oldClassName: null, 
-                             newClassName: null,
                              structuralChange: false,
                            );
 
       _lastResolvedBase = base;
 
-      // 4. Resolve interactive states (always applied)
-      final s = StyleResolver.resolveInteractive(base, isHovered: _isHovered, isPressed: _isPressed);
+      final s = FxStyleResolver.resolveInteractive(base, isHovered: _isHovered, isPressed: _isPressed);
 
       if (shouldRebuild || _isHovered || _isPressed) {
         _cachedWidget = _buildContent(s);
@@ -109,8 +101,13 @@ class _BoxState extends State<Box> implements FluxySubscriber {
     }
   }
 
-  Widget _buildContent(Style s) {
+  Widget _buildContent(FxStyle s) {
     Widget current = widget.child ?? (widget.children != null ? _buildChildren(s) : const SizedBox.shrink());
+
+    // Apply Opacity
+    if (s.opacity != null) {
+      current = Opacity(opacity: s.opacity!, child: current);
+    }
 
     // Apply Glassmorphism
     if (s.glass != null && s.glass! > 0) {
@@ -123,7 +120,12 @@ class _BoxState extends State<Box> implements FluxySubscriber {
       );
     }
 
-    // Apply Visuals using DecorationBuilder
+    // Apply Aspect Ratio
+    if (s.aspectRatio != null) {
+      current = AspectRatio(aspectRatio: s.aspectRatio!, child: current);
+    }
+
+    // Apply Visuals using FxDecorationBuilder
     if (s.transition != null) {
       current = AnimatedContainer(
         duration: s.transition!,
@@ -133,7 +135,7 @@ class _BoxState extends State<Box> implements FluxySubscriber {
         margin: s.margin,
         alignment: s.alignment,
         clipBehavior: s.clipBehavior ?? Clip.none,
-        decoration: DecorationBuilder.build(s),
+        decoration: FxDecorationBuilder.build(s),
         child: current,
       );
     } else {
@@ -144,16 +146,16 @@ class _BoxState extends State<Box> implements FluxySubscriber {
         margin: s.margin,
         alignment: s.alignment,
         clipBehavior: s.clipBehavior ?? Clip.none,
-        decoration: DecorationBuilder.build(s),
+        decoration: FxDecorationBuilder.build(s),
         child: current,
       );
     }
 
-    // 5. Wrap with Interaction Handlers
+    // Wrap with Interaction Handlers
     current = MouseRegion(
       onEnter: (_) => setState(() => _isHovered = true),
       onExit: (_) => setState(() => _isHovered = false),
-      cursor: (widget.onTap != null || s.hover != null) ? SystemMouseCursors.click : SystemMouseCursors.basic,
+      cursor: s.cursor ?? ((widget.onTap != null || s.hover != null) ? SystemMouseCursors.click : SystemMouseCursors.basic),
       child: GestureDetector(
         onTapDown: (_) => setState(() => _isPressed = true),
         onTapUp: (_) => setState(() => _isPressed = false),
@@ -163,7 +165,7 @@ class _BoxState extends State<Box> implements FluxySubscriber {
       ),
     );
 
-    // 6. Apply Flex/Stack wrappers LAST (They must be direct children of Flex/Stack)
+    // Apply Flex/Stack wrappers LAST (They must be direct children of Flex/Stack)
     if (s.flex != null) {
       current = Flexible(
         flex: s.flex!,
@@ -185,7 +187,7 @@ class _BoxState extends State<Box> implements FluxySubscriber {
     return current;
   }
 
-  Widget _buildChildren(Style style) {
+  Widget _buildChildren(FxStyle style) {
     return Flex(
       direction: style.direction ?? Axis.vertical,
       mainAxisAlignment: style.justifyContent ?? MainAxisAlignment.start,

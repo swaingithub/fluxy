@@ -2,8 +2,9 @@ import 'package:flutter/widgets.dart';
 import '../responsive/responsive_engine.dart';
 import '../responsive/breakpoint_resolver.dart';
 
-/// A production-grade styling system inspired by CSS.
-class Style {
+/// The core styling system for Fluxy.
+/// Inspired by CSS/Tailwind, designed for Flutter.
+class FxStyle {
   final double? width;
   final double? height;
   final EdgeInsets? padding;
@@ -15,6 +16,7 @@ class Style {
   final BorderRadius? borderRadius;
   final BoxBorder? border;
   
+  // Layout direction
   final Axis? direction;
   
   // Flexbox Properties
@@ -39,6 +41,7 @@ class Style {
   final double? right;
   final double? bottom;
   final double? left;
+  final double? zIndex;
 
   // Text Properties
   final Color? color;
@@ -48,12 +51,20 @@ class Style {
   final String? fontFamily;
   final TextOverflow? overflow;
   final int? maxLines;
+  final double? letterSpacing;
+  final double? height_multiplier; // line-height
 
   // Interactive Styles
-  final Style? hover;
-  final Style? pressed;
+  final FxStyle? hover;
+  final FxStyle? pressed;
+  final Duration? transition;
 
-  const Style({
+  // Utilities
+  final MouseCursor? cursor;
+  final double? opacity;
+  final double? aspectRatio;
+
+  const FxStyle({
     this.width,
     this.height,
     this.padding,
@@ -80,6 +91,7 @@ class Style {
     this.right,
     this.bottom,
     this.left,
+    this.zIndex,
     this.color,
     this.fontSize,
     this.fontWeight,
@@ -87,20 +99,25 @@ class Style {
     this.fontFamily,
     this.overflow,
     this.maxLines,
+    this.letterSpacing,
+    this.height_multiplier,
     this.hover,
     this.pressed,
     this.transition,
     this.flexFit,
     this.direction,
+    this.cursor,
+    this.opacity,
+    this.aspectRatio,
   });
 
-  // Animation
-  final Duration? transition;
+  /// An empty style object.
+  static const none = FxStyle();
 
-  /// Merges this style with another.
-  Style copyWith(Style? other) {
+  /// Merges this style with another FxStyle.
+  FxStyle copyWith(FxStyle? other) {
     if (other == null) return this;
-    return Style(
+    return FxStyle(
       width: other.width ?? width,
       height: other.height ?? height,
       padding: other.padding ?? padding,
@@ -129,6 +146,7 @@ class Style {
       right: other.right ?? right,
       bottom: other.bottom ?? bottom,
       left: other.left ?? left,
+      zIndex: other.zIndex ?? zIndex,
       color: other.color ?? color,
       fontSize: other.fontSize ?? fontSize,
       fontWeight: other.fontWeight ?? fontWeight,
@@ -136,16 +154,21 @@ class Style {
       fontFamily: other.fontFamily ?? fontFamily,
       overflow: other.overflow ?? overflow,
       maxLines: other.maxLines ?? maxLines,
+      letterSpacing: other.letterSpacing ?? letterSpacing,
+      height_multiplier: other.height_multiplier ?? height_multiplier,
       hover: other.hover ?? hover,
       pressed: other.pressed ?? pressed,
       transition: other.transition ?? transition,
+      cursor: other.cursor ?? cursor,
+      opacity: other.opacity ?? opacity,
+      aspectRatio: other.aspectRatio ?? aspectRatio,
     );
   }
 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is Style &&
+      other is FxStyle &&
           runtimeType == other.runtimeType &&
           width == other.width &&
           height == other.height &&
@@ -173,6 +196,7 @@ class Style {
           right == other.right &&
           bottom == other.bottom &&
           left == other.left &&
+          zIndex == other.zIndex &&
           color == other.color &&
           fontSize == other.fontSize &&
           fontWeight == other.fontWeight &&
@@ -180,11 +204,16 @@ class Style {
           fontFamily == other.fontFamily &&
           overflow == other.overflow &&
           maxLines == other.maxLines &&
+          letterSpacing == other.letterSpacing &&
+          height_multiplier == other.height_multiplier &&
           hover == other.hover &&
           pressed == other.pressed &&
           transition == other.transition &&
           flexFit == other.flexFit &&
-          direction == other.direction;
+          direction == other.direction &&
+          cursor == other.cursor &&
+          opacity == other.opacity &&
+          aspectRatio == other.aspectRatio;
 
   @override
   int get hashCode =>
@@ -214,6 +243,7 @@ class Style {
       right.hashCode ^
       bottom.hashCode ^
       left.hashCode ^
+      zIndex.hashCode ^
       color.hashCode ^
       fontSize.hashCode ^
       fontWeight.hashCode ^
@@ -221,22 +251,27 @@ class Style {
       fontFamily.hashCode ^
       overflow.hashCode ^
       maxLines.hashCode ^
+      letterSpacing.hashCode ^
+      height_multiplier.hashCode ^
       hover.hashCode ^
       pressed.hashCode ^
       transition.hashCode ^
       flexFit.hashCode ^
-      direction.hashCode;
+      direction.hashCode ^
+      cursor.hashCode ^
+      opacity.hashCode ^
+      aspectRatio.hashCode;
 }
 
 /// A container for responsive styles.
-class ResponsiveStyle {
-  final Style xs;
-  final Style? sm;
-  final Style? md;
-  final Style? lg;
-  final Style? xl;
+class FxResponsiveStyle {
+  final FxStyle xs;
+  final FxStyle? sm;
+  final FxStyle? md;
+  final FxStyle? lg;
+  final FxStyle? xl;
 
-  const ResponsiveStyle({
+  const FxResponsiveStyle({
     required this.xs,
     this.sm,
     this.md,
@@ -244,7 +279,7 @@ class ResponsiveStyle {
     this.xl,
   });
 
-  Style resolve(BuildContext context) {
+  FxStyle resolve(BuildContext context) {
     final breakpoint = ResponsiveEngine.of(context);
     return BreakpointResolver.resolve(this, breakpoint);
   }

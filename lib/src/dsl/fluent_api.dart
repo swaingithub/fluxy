@@ -4,7 +4,7 @@ import '../widgets/box.dart';
 
 /// Extension to provide a fluent DSL experience.
 extension FluxyWidgetExtension on Widget {
-  Widget styled(Style style) {
+  Widget styled(FxStyle style) {
     return Box(
       style: style,
       child: this,
@@ -15,23 +15,23 @@ extension FluxyWidgetExtension on Widget {
 /// A functional approach to building Fluxy layouts.
 class Fluxy {
   static Widget div({
-    Style? style,
+    FxStyle? style,
     Widget? child,
     List<Widget>? children,
   }) {
     return Box(
-      style: style ?? const Style(),
+      style: style ?? FxStyle.none,
       child: child,
       children: children,
     );
   }
 
   static Widget row({
-    Style? style,
+    FxStyle? style,
     required List<Widget> children,
   }) {
     return Box(
-      style: (style ?? const Style()).copyWith(const Style(justifyContent: MainAxisAlignment.start)),
+      style: (style ?? FxStyle.none).copyWith(const FxStyle(justifyContent: MainAxisAlignment.start)),
       children: children,
     );
   }

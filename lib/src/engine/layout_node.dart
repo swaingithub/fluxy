@@ -16,7 +16,7 @@ class LayoutNode {
   final String id;
   final NodeType type;
   final Axis? direction;
-  final Style style;
+  final FxStyle style;
   final List<LayoutNode> children;
   
   // Computed layout data (caching)
@@ -38,6 +38,7 @@ class LayoutNode {
     return LayoutNode(
       id: id,
       type: type,
+      direction: direction,
       style: style,
       children: children.map((c) => c.clone()).toList(),
     );

@@ -1,19 +1,18 @@
 import 'package:flutter/widgets.dart';
 import '../styles/style.dart';
-
 import 'tailwind_parser.dart';
 
-/// StyleResolver is responsible for merging and resolving the final 
+/// FxStyleResolver is responsible for merging and resolving the final 
 /// computed style of a Fluxy widget.
-class StyleResolver {
+class FxStyleResolver {
   /// Resolves the final style from a widget's static style and responsive options.
-  static Style resolve(BuildContext context, {
-    Style? style,
+  static FxStyle resolve(BuildContext context, {
+    FxStyle? style,
     String? className,
-    ResponsiveStyle? responsive,
-    List<Style>? baseStyles,
+    FxResponsiveStyle? responsive,
+    List<FxStyle>? baseStyles,
   }) {
-    Style finalStyle = const Style();
+    FxStyle finalStyle = FxStyle.none;
 
     // 1. Apply base styles (like global CSS defaults)
     if (baseStyles != null) {
@@ -41,11 +40,11 @@ class StyleResolver {
   }
 
   /// Resolves the final style considering interactive states.
-  static Style resolveInteractive(Style base, {
+  static FxStyle resolveInteractive(FxStyle base, {
     required bool isHovered,
     required bool isPressed,
   }) {
-    Style finalStyle = base;
+    FxStyle finalStyle = base;
     if (isHovered && base.hover != null) {
       finalStyle = finalStyle.copyWith(base.hover);
     }
@@ -56,8 +55,8 @@ class StyleResolver {
   }
 
   /// Merges a list of styles with right-to-left precedence.
-  static Style merge(List<Style?> styles) {
-    Style finalStyle = const Style();
+  static FxStyle merge(List<FxStyle?> styles) {
+    FxStyle finalStyle = FxStyle.none;
     for (var s in styles) {
       if (s != null) {
         finalStyle = finalStyle.copyWith(s);

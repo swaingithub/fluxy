@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:fluxy/fluxy.dart';
 
+import 'screens/login_screen.dart';
+import 'screens/profile_screen.dart';
+import 'screens/settings_screen.dart';
+import 'screens/projects_screen.dart';
+
 void main() {
   runApp(const FluxyDemo());
 }
@@ -20,12 +25,19 @@ class _FluxyDemoState extends State<FluxyDemo> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: isDarkMode ? ThemeData.dark() : ThemeData.light(),
-      navigatorKey: FluxyRouter.navigatorKey, // Setup router
+      navigatorKey: FluxyRouter.navigatorKey,
       onGenerateRoute: FluxyRouter.onGenerateRoute,
-      home: DashboardPage(
-        isDarkMode: isDarkMode,
-        onThemeToggle: () => setState(() => isDarkMode = !isDarkMode),
-      ),
+      routes: {
+        '/login': (context) => const LoginScreen(),
+        '/dashboard': (context) => DashboardPage(
+          isDarkMode: isDarkMode,
+          onThemeToggle: () => setState(() => isDarkMode = !isDarkMode),
+        ),
+        '/profile': (context) => const ProfileScreen(),
+        '/settings': (context) => const SettingsScreen(),
+        '/projects': (context) => const ProjectsScreen(),
+      },
+      home: LoginScreen(), // Start with login
     );
   }
 }
@@ -45,54 +57,41 @@ class DashboardPage extends StatelessWidget {
     final bgColor = isDarkMode ? const Color(0xFF0F172A) : const Color(0xFFF8FAFC);
     final textColor = isDarkMode ? Colors.white : const Color(0xFF1E293B);
 
-    final count = flux(0); // Reactive state
+    final count = flux(0);
 
     return Scaffold(
       backgroundColor: bgColor,
       body: Fx.row(
         children: [
-          // 1. Sidebar (Visible on MD+)
+          // Sidebar
           Fx.responsive(
             mobile: const SizedBox.shrink(),
             tablet: _buildSidebar(context, isDarkMode),
           ),
 
-          // 2. Main Content
+          // Main Content
           Fx.column(
             children: [
-              // Header
               _buildHeader(context, isDarkMode, onThemeToggle),
-
-              // Scrollable Body
               Expanded(
                 child: SingleChildScrollView(
                   padding: const EdgeInsets.all(24),
                   child: Fx.column(
                     gap: 32,
                     children: [
-                      // Welcome Text
                       Fx.column(
                         gap: 4,
                         children: [
-                          Fx.text("Fluxy Framework v1.0 💎")
-                            .font(28)
-                            .bold()
-                            .color(textColor),
-                          Fx.text("The SwiftUI + Tailwind equivalent for Flutter.")
-                            .font(14)
-                            .color(textColor.withOpacity(0.6)),
+                          Fx.text("Fluxy v1.0 💎").font(32).bold().color(textColor),
+                          Fx.text("High-performance reactive engine for Flutter.").font(16).color(textColor.withOpacity(0.6)),
                         ],
                       ),
 
-                      // Fluent Modifier Demo
                       Fx.card(
                         child: Fx.column(
                           gap: 16,
                           children: [
-                            Fx.text(() => "Reactive Count: ${count.value}")
-                              .font(24)
-                              .bold()
-                              .center(),
+                            Fx.text(() => "Reactive Count: ${count.value}").font(24).bold().center(),
                             Fx.row(
                               gap: 12,
                               children: [
@@ -108,16 +107,15 @@ class DashboardPage extends StatelessWidget {
                             ),
                           ],
                         ),
-                      ).pad(8),
+                      ),
 
-                      // Stats Grid
                       Fx.grid(
-                        style: const Style(gap: 16),
+                        style: const FxStyle(gap: 16),
                         children: [
-                          _buildStatCard("Revenue", "\$54K", Icons.payments, Colors.green),
-                          _buildStatCard("Users", "1.2K", Icons.people, Colors.blue),
+                          _buildStatCard("Revenue", "\$54,230", Icons.payments, Colors.green),
+                          _buildStatCard("Active Users", "1,240", Icons.people, Colors.blue),
+                          _buildStatCard("Conversion", "3.2%", Icons.trending_up, Colors.purple),
                           _buildStatCard("Tasks", "12", Icons.assignment, Colors.orange),
-                          _buildStatCard("Uptime", "99.9%", Icons.dns, Colors.purple),
                         ],
                       ).fit(FlexFit.loose),
                     ],
@@ -139,13 +137,8 @@ class DashboardPage extends StatelessWidget {
         Fx.row(
           gap: 12,
           children: [
-            Fx.box()
-              .size(40, 40)
-              .bg(Colors.blue)
-              .radius(12)
-              .center()
-              .copyWith(child: const Icon(Icons.bolt, color: Colors.white)),
-            Fx.text("Fluxy App").font(20).bold().color(textColor),
+            Fx.box().size(40, 40).bg(Colors.blue).radius(12).center().copyWith(child: const Icon(Icons.bolt, color: Colors.white)),
+            Fx.text("Fluxy App").font(20).bold(),
           ],
         ),
         Fx.column(
@@ -159,44 +152,31 @@ class DashboardPage extends StatelessWidget {
         ),
       ],
     )
-    .width(280)
-    .expanded()
-    .bg(dark ? Colors.black.withOpacity(0.2) : Colors.white)
-    .pad(24)
-    .border(color: textColor.withOpacity(0.05), width: 1);
+    .width(280).expanded().bg(dark ? Colors.black.withOpacity(0.2) : Colors.white)
+    .pad(24).border(color: textColor.withOpacity(0.05));
   }
 
   Widget _buildSidebarItem(String label, IconData icon, bool active, bool dark) {
-    final activeColor = Colors.blueAccent;
-    final idleColor = dark ? Colors.white54 : const Color(0xFF64748B);
-    
     return Fx.row(
       gap: 12,
       children: [
-        Icon(icon, color: active ? activeColor : idleColor, size: 20),
-        Fx.text(label).color(active ? activeColor : idleColor).expanded(),
+        Icon(icon, color: active ? Colors.blue : (dark ? Colors.white54 : Colors.black45), size: 20),
+        Fx.text(label).expanded().color(active ? Colors.blue : (dark ? Colors.white54 : Colors.black45)),
       ],
-    )
-    .pad(12)
-    .radius(12)
-    .bg(active ? activeColor.withOpacity(0.1) : Colors.transparent);
+    ).pad(12).radius(12).bg(active ? Colors.blue.withOpacity(0.1) : Colors.transparent);
   }
 
   Widget _buildHeader(BuildContext context, bool dark, VoidCallback onToggle) {
-    final textColor = dark ? Colors.white : const Color(0xFF1E293B);
     return Fx.row(
       children: [
         Fx.text("Search...").color(Colors.grey).pad(12).bg(Colors.grey.withOpacity(0.1)).radius(8).expanded(),
         Fx.gap(16),
         Fx.button(
           onTap: onToggle,
-          child: Icon(dark ? Icons.light_mode : Icons.dark_mode, size: 20, color: textColor),
+          child: Icon(dark ? Icons.light_mode : Icons.dark_mode, size: 20),
         ).size(40, 40).bg(Colors.transparent).radius(20).center(),
       ],
-    )
-    .height(80)
-    .padX(24)
-    .border(color: textColor.withOpacity(0.05));
+    ).height(80).padX(24).border(color: (dark ? Colors.white : Colors.black).withOpacity(0.05));
   }
 
   Widget _buildStatCard(String label, String value, IconData icon, Color color) {
@@ -204,8 +184,7 @@ class DashboardPage extends StatelessWidget {
       child: Fx.column(
         gap: 12,
         children: [
-          Fx.box().size(48, 48).bg(color.withOpacity(0.1)).radius(12).center()
-            .copyWith(child: Icon(icon, color: color)),
+          Fx.box().size(48, 48).bg(color.withOpacity(0.1)).radius(12).center().copyWith(child: Icon(icon, color: color)),
           Fx.column(
             children: [
               Fx.text(label).font(12).color(Colors.grey),

@@ -7,21 +7,21 @@ import '../dsl/modifiers.dart';
 
 class StackBox extends StatelessWidget with FxModifier<StackBox> {
   @override
-  final Style style;
+  final FxStyle style;
   final String? className;
-  final ResponsiveStyle? responsive;
+  final FxResponsiveStyle? responsive;
   final List<Widget> children;
 
   const StackBox({
     super.key,
-    this.style = const Style(),
+    this.style = FxStyle.none,
     this.className,
     this.responsive,
     required this.children,
   });
 
   @override
-  StackBox copyWith({Style? style, String? className, ResponsiveStyle? responsive, List<Widget>? children}) {
+  StackBox copyWith({FxStyle? style, String? className, FxResponsiveStyle? responsive, List<Widget>? children}) {
     return StackBox(
       style: this.style.copyWith(style),
       className: className ?? this.className,
@@ -32,7 +32,7 @@ class StackBox extends StatelessWidget with FxModifier<StackBox> {
 
   @override
   Widget build(BuildContext context) {
-    final s = StyleResolver.resolve(
+    final s = FxStyleResolver.resolve(
       context, 
       style: style, 
       className: className,
@@ -45,13 +45,13 @@ class StackBox extends StatelessWidget with FxModifier<StackBox> {
       children: children,
     );
 
-    if (DecorationBuilder.hasVisuals(s) || s.width != null || s.height != null || s.padding != null || s.margin != null) {
+    if (FxDecorationBuilder.hasVisuals(s) || s.width != null || s.height != null || s.padding != null || s.margin != null) {
       current = Container(
         width: s.width,
         height: s.height,
         padding: s.padding,
         margin: s.margin,
-        decoration: DecorationBuilder.build(s),
+        decoration: FxDecorationBuilder.build(s),
         child: current,
       );
     }

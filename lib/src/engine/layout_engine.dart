@@ -44,8 +44,8 @@ class LayoutEngine {
     // This is where web-style "fit-content" behavior would be implemented.
   }
 
-  /// Resolves the final constraints for a Fluxy Style.
-  static BoxConstraints _resolveConstraints(Style style, BoxConstraints constraints) {
+  /// Resolves the final constraints for a Fluxy FxStyle.
+  static BoxConstraints _resolveConstraints(FxStyle style, BoxConstraints constraints) {
     double minWidth = 0;
     double maxWidth = constraints.maxWidth;
     double minHeight = 0;

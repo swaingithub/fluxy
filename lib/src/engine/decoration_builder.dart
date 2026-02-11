@@ -2,10 +2,10 @@ import 'package:flutter/widgets.dart';
 import '../styles/style.dart';
 import '../debug/debug_config.dart';
 
-/// DecorationBuilder converts a Fluxy Style into optimized Flutter visual objects.
-class DecorationBuilder {
-  /// Builds a BoxDecoration from a Fluxy Style.
-  static BoxDecoration build(Style style) {
+/// FxDecorationBuilder converts a Fluxy FxStyle into optimized Flutter visual objects.
+class FxDecorationBuilder {
+  /// Builds a BoxDecoration from a Fluxy FxStyle.
+  static BoxDecoration build(FxStyle style) {
     BoxBorder? border = style.border;
     
     // Inject debug border if active
@@ -23,21 +23,24 @@ class DecorationBuilder {
   }
 
   /// Extracts textual styling.
-  static TextStyle textStyle(Style style) {
+  static TextStyle textStyle(FxStyle style) {
     return TextStyle(
       color: style.color,
       fontSize: style.fontSize,
       fontWeight: style.fontWeight,
       fontFamily: style.fontFamily,
+      letterSpacing: style.letterSpacing,
+      height: style.height_multiplier,
     );
   }
 
   /// Determines if a style requires a Container/Decoration wrapper.
-  static bool hasVisuals(Style style) {
+  static bool hasVisuals(FxStyle style) {
     return style.backgroundColor != null ||
            style.gradient != null ||
            style.shadows != null ||
            style.borderRadius != null ||
-           style.border != null;
+           style.border != null ||
+           style.opacity != null;
   }
 }

@@ -5,8 +5,8 @@ import 'responsive_engine.dart';
 class BreakpointResolver {
   /// Resolves the effective style for the current breakpoint using a cascade approach.
   /// (sm inherits from xs, md from sm, and so on).
-  static Style resolve(ResponsiveStyle responsive, Breakpoint current) {
-    Style effective = responsive.xs;
+  static FxStyle resolve(FxResponsiveStyle responsive, Breakpoint current) {
+    FxStyle effective = responsive.xs;
 
     if (current == Breakpoint.xs) return effective;
 

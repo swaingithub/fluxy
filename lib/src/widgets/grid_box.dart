@@ -8,21 +8,21 @@ import '../dsl/modifiers.dart';
 
 class GridBox extends StatelessWidget with FxModifier<GridBox> {
   @override
-  final Style style;
+  final FxStyle style;
   final String? className;
-  final ResponsiveStyle? responsive;
+  final FxResponsiveStyle? responsive;
   final List<Widget> children;
 
   const GridBox({
     super.key,
-    this.style = const Style(),
+    this.style = FxStyle.none,
     this.className,
     this.responsive,
     required this.children,
   });
 
   @override
-  GridBox copyWith({Style? style, String? className, ResponsiveStyle? responsive, List<Widget>? children}) {
+  GridBox copyWith({FxStyle? style, String? className, FxResponsiveStyle? responsive, List<Widget>? children}) {
     return GridBox(
       style: this.style.copyWith(style),
       className: className ?? this.className,
@@ -33,7 +33,7 @@ class GridBox extends StatelessWidget with FxModifier<GridBox> {
 
   @override
   Widget build(BuildContext context) {
-    final s = StyleResolver.resolve(
+    final s = FxStyleResolver.resolve(
       context, 
       style: style, 
       className: className,
@@ -57,12 +57,12 @@ class GridBox extends StatelessWidget with FxModifier<GridBox> {
       children: children,
     );
 
-    if (DecorationBuilder.hasVisuals(s) || s.width != null || s.height != null || s.margin != null) {
+    if (FxDecorationBuilder.hasVisuals(s) || s.width != null || s.height != null || s.margin != null) {
       current = Container(
         width: s.width,
         height: s.height,
         margin: s.margin,
-        decoration: DecorationBuilder.build(s),
+        decoration: FxDecorationBuilder.build(s),
         child: current,
       );
     }

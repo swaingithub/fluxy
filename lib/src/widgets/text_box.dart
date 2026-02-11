@@ -9,20 +9,20 @@ import '../dsl/modifiers.dart';
 class TextBox extends StatefulWidget with FxModifier<TextBox> {
   final String data;
   @override
-  final Style style;
+  final FxStyle style;
   final String? className;
-  final ResponsiveStyle? responsive;
+  final FxResponsiveStyle? responsive;
 
   const TextBox({
     super.key,
     required this.data,
-    this.style = const Style(),
+    this.style = FxStyle.none,
     this.className,
     this.responsive,
   });
 
   @override
-  TextBox copyWith({Style? style, String? data, String? className, ResponsiveStyle? responsive}) {
+  TextBox copyWith({FxStyle? style, String? data, String? className, FxResponsiveStyle? responsive}) {
     return TextBox(
       data: data ?? this.data,
       style: this.style.copyWith(style),
@@ -48,7 +48,7 @@ class _TextBoxState extends State<TextBox> implements FluxySubscriber {
     FluxyReactiveContext.push(this);
     
     try {
-      final s = StyleResolver.resolve(
+      final s = FxStyleResolver.resolve(
         context, 
         style: widget.style, 
         className: widget.className,
@@ -60,17 +60,17 @@ class _TextBoxState extends State<TextBox> implements FluxySubscriber {
         textAlign: s.textAlign,
         overflow: s.overflow,
         maxLines: s.maxLines,
-        style: DecorationBuilder.textStyle(s),
+        style: FxDecorationBuilder.textStyle(s),
       );
 
-      if (DecorationBuilder.hasVisuals(s) || s.width != null || s.height != null || s.padding != null || s.margin != null) {
+      if (FxDecorationBuilder.hasVisuals(s) || s.width != null || s.height != null || s.padding != null || s.margin != null) {
         current = Container(
           width: s.width,
           height: s.height,
           padding: s.padding,
           margin: s.margin,
           alignment: s.alignment,
-          decoration: DecorationBuilder.build(s),
+          decoration: FxDecorationBuilder.build(s),
           child: current,
         );
       }

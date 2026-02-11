@@ -8,22 +8,22 @@ import '../dsl/modifiers.dart';
 class FlexBox extends StatelessWidget with FxModifier<FlexBox> {
   final Axis direction;
   @override
-  final Style style;
+  final FxStyle style;
   final String? className;
-  final ResponsiveStyle? responsive;
+  final FxResponsiveStyle? responsive;
   final List<Widget> children;
 
   const FlexBox({
     super.key,
     required this.direction,
-    this.style = const Style(),
+    this.style = FxStyle.none,
     this.className,
     this.responsive,
     required this.children,
   });
 
   @override
-  FlexBox copyWith({Style? style, Axis? direction, String? className, ResponsiveStyle? responsive, List<Widget>? children}) {
+  FlexBox copyWith({FxStyle? style, Axis? direction, String? className, FxResponsiveStyle? responsive, List<Widget>? children}) {
     return FlexBox(
       direction: direction ?? this.direction,
       style: this.style.copyWith(style),
@@ -35,7 +35,7 @@ class FlexBox extends StatelessWidget with FxModifier<FlexBox> {
 
   @override
   Widget build(BuildContext context) {
-    final s = StyleResolver.resolve(
+    final s = FxStyleResolver.resolve(
       context, 
       style: style, 
       className: className,
@@ -51,13 +51,13 @@ class FlexBox extends StatelessWidget with FxModifier<FlexBox> {
     );
 
     // Apply container styles if any
-    if (DecorationBuilder.hasVisuals(s) || s.width != null || s.height != null || s.padding != null || s.margin != null) {
+    if (FxDecorationBuilder.hasVisuals(s) || s.width != null || s.height != null || s.padding != null || s.margin != null) {
       current = Container(
         width: s.width,
         height: s.height,
         padding: s.padding,
         margin: s.margin,
-        decoration: DecorationBuilder.build(s),
+        decoration: FxDecorationBuilder.build(s),
         child: current,
       );
     }

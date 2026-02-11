@@ -1,81 +1,99 @@
-# Fluxy 🌊
+# 💎 Fluxy
 
-A production-grade, declarative UI DSL for Flutter that brings a web-style layout experience with native performance.
+**The High-Performance Reactive UI Engine for Flutter.**
 
-## 🏗 Architecture
+Fluxy is a revolutionary framework that brings the development speed of **SwiftUI** and the styling flexibility of **Tailwind CSS** to the Flutter ecosystem. No more deep widget nesting. No more boilerplate `setState` or `Provider`. Just pure, expressive code.
 
-Fluxy is built on a layered architecture:
+---
 
-1.  **DSL Layer**: A fluent, declarative API for building widgets.
-2.  **Style System**: A CSS-inspired property system (`Style` class).
-3.  **Layout Engine**: Modular engine that resolves CSS constraints into Flutter layout.
-4.  **Responsive Layer**: Built-in breakpoint system for adaptive UIs.
+## 🚀 Why Fluxy?
 
-## 🚀 Getting Started
+- **Zero-Boilerplate Reactivity**: Use `flux()` signals that automatically update only the widgets that depend on them.
+- **Fluent Modifier API**: Style your widgets using chainable methods like `.pad(16).bg(Colors.blue).radius(12)`.
+- **Hybrid Styling**: Mix inline modifiers with Tailwind-style utility classes (`Fx.box(className: "p-4 bg-slate-100")`).
+- **Web-First Layout**: Native support for `gap`, `flex`, and `grid` systems that behave like modern CSS.
+- **Zero-Context Navigation**: Navigate anywhere with `Fx.go('/home')` without passing `BuildContext`.
 
-### Installation
+---
 
-Add `fluxy` to your `pubspec.yaml`:
+## 📦 Installation
+
+Add Fluxy to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  fluxy:
-    path: ./ # during development
+  fluxy: ^1.0.0-alpha.1
 ```
 
-### Basic Usage
+---
+
+## 🛠️ Quick Start
+
+### 1. The Reactive Counter
 
 ```dart
-import 'package:flutter/material.dart';
-import 'package:fluxy/fluxy.dart';
+final count = flux(0); // Create a signal
 
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        body: Box(
-          style: Style(
-            backgroundColor: Colors.grey[200],
-            padding: const EdgeInsets.all(20),
-            justifyContent: MainAxisAlignment.center,
-            alignItems: CrossAxisAlignment.center,
-          ),
-          children: [
-            const Text("Welcome to Fluxy").styled(const Style(
-              width: 200,
-              backgroundColor: Colors.blue,
-              borderRadius: BorderRadius.all(Radius.circular(8)),
-            )),
-            Box(
-              style: const Style(gap: 10),
-              children: [
-                const Text("Subheading"),
-                const Text("Description goes here..."),
-              ],
-            ),
-          ],
-        ),
+Widget build(BuildContext context) {
+  return Fx.column(
+    gap: 20,
+    children: [
+      Fx.text(() => "Count is: ${count.value}").font(24).bold(),
+      Fx.button(
+        onTap: () => count.value++,
+        child: "Increment",
       ),
-    );
-  }
+    ],
+  ).center();
 }
 ```
 
-## 🔧 Core Components
+### 2. Modern Components
 
-- **Box**: The fundamental building block (like `<div>`).
-- **Style**: Define layout, spacing, and appearance.
-- **FluxyResponsive**: Handle breakpoints with ease.
+```dart
+Fx.card(
+  child: Fx.row(
+    gap: 12,
+    children: [
+      Fx.box().size(48, 48).bg(Colors.blue).radius(12).center()
+        .child(Icon(Icons.bolt, color: Colors.white)),
+      Fx.column(
+        children: [
+          Fx.text("Fluxy v1.0").bold(),
+          Fx.text("SwiftUI for Flutter").color(Colors.grey),
+        ],
+      ),
+    ],
+  ),
+).pad(16);
+```
 
-## 🧬 Principles
+### 3. Responsive Layouts
 
-- **Maintainability**: Clear separation between styling and structure.
-- **Performance**: Minimizes layout passes by leveraging Flutter's optimization.
-- **Extensibility**: Easily add new layout rules to the engine.
+```dart
+Fx.responsive(
+  mobile: Fx.text("Compact View"),
+  tablet: Fx.row(children: [...]),
+  desktop: MyComplexDashboard(),
+);
+```
+
+---
+
+## 🎨 Design System
+
+Fluxy comes with a powerful `FxStyle` engine that powers the fluent API:
+
+- **Layout**: `pad`, `margin`, `width`, `height`, `size`, `align`, `center`, `spacer`
+- **Flex**: `flex`, `flexGrow`, `flexShrink`, `gap`, `expanded`
+- **Visuals**: `bg`, `radius`, `shadow`, `border`, `opacity`, `glass`
+- **Text**: `font`, `bold`, `color`, `weight`, `lSpacing`, `lHeight`, `maxLines`
+
+---
+
+## 👋 Community & Support
+
+- **Bugs/Features**: Open an issue on [GitHub](https://github.com/fluxy/fluxy/issues).
+- **Discussions**: Join our developer community on Discord.
+
+Fluxy is built for developers who care about **Performance** and **Velocity**. Join the revolution. 🚀
