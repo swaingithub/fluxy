@@ -12,6 +12,8 @@ import '../routing/fluxy_router.dart';
 
 /// The hyper-minimal Fx API for Fluxy.
 /// Designed for maximum builder velocity and zero boilerplate reactivity.
+  /// The hyper-minimal Fx API for Fluxy.
+/// Designed for maximum builder velocity and zero boilerplate reactivity.
 class Fx extends StatefulWidget {
   final Widget Function() builder;
 
@@ -21,26 +23,26 @@ class Fx extends StatefulWidget {
   State<Fx> createState() => _FxState();
 
   /// A reactive text element. 
-  static TextBox text(dynamic data, {FxStyle? style, String? className, FxResponsiveStyle? responsive}) {
+  static Widget text(dynamic data, {FxStyle style = FxStyle.none, String? className, FxResponsiveStyle? responsive}) {
     return TextBox(
-      data: data is Function ? data().toString() : data.toString(),
-      style: style ?? FxStyle.none,
+      data: data,
+      style: style,
       className: className,
       responsive: responsive,
     );
   }
 
   /// A reactive container.
-  static Box box({
-    FxStyle? style,
+  static Widget box({
+    FxStyle style = FxStyle.none,
     String? className,
     FxResponsiveStyle? responsive,
-    Widget? child,
-    List<Widget>? children,
+    Widget child = const SizedBox.shrink(),
+    List<Widget> children = const [],
     VoidCallback? onTap,
   }) {
     return Box(
-      style: style ?? FxStyle.none,
+      style: style,
       className: className,
       responsive: responsive,
       child: child,
@@ -50,38 +52,40 @@ class Fx extends StatefulWidget {
   }
 
   /// Alias for box.
-  static Box container({
-    FxStyle? style,
+  static Widget container({
+    FxStyle style = FxStyle.none,
     String? className,
     FxResponsiveStyle? responsive,
-    Widget? child,
-    List<Widget>? children,
+    Widget child = const SizedBox.shrink(),
+    List<Widget> children = const [],
     VoidCallback? onTap,
   }) => box(style: style, className: className, responsive: responsive, child: child, children: children, onTap: onTap);
 
   /// A physical button with default semantics and styles.
-  static Box button({
+  static Widget button({
     required dynamic child,
     required VoidCallback onTap,
-    FxStyle? style,
+    FxStyle style = FxStyle.none,
     String? className,
   }) {
-    return Box(
-      onTap: onTap,
-      className: "px-6 py-3 bg-blue-600 rounded-xl items-center justify-center $className",
-      style: const FxStyle(
+    final decorationStyle = const FxStyle(
         transition: Duration(milliseconds: 150),
         hover: FxStyle(backgroundColor: Color(0xFF2563EB)), 
         pressed: FxStyle(opacity: 0.7),
-      ).copyWith(style),
-      child: child is String ? text(child, className: "text-white font-bold") : child,
+      ).merge(style);
+
+    return Box(
+      onTap: onTap,
+      className: "px-6 py-3 bg-blue-600 rounded-xl items-center justify-center $className",
+      style: decorationStyle,
+      child: child is String ? text(child, className: "text-white font-bold") : (child as Widget),
     );
   }
 
   /// Horizontal layout.
-  static FlexBox row({
+  static Widget row({
     required List<Widget> children,
-    FxStyle? style,
+    FxStyle style = FxStyle.none,
     String? className,
     FxResponsiveStyle? responsive,
     double? gap,
@@ -89,16 +93,16 @@ class Fx extends StatefulWidget {
     return FlexBox(
       direction: Axis.horizontal,
       children: children,
-      style: (style ?? FxStyle.none).copyWith(FxStyle(gap: gap)),
+      style: style.merge(FxStyle(gap: gap)),
       className: className,
       responsive: responsive,
     );
   }
 
   /// Vertical layout.
-  static FlexBox column({
+  static Widget column({
     required List<Widget> children,
-    FxStyle? style,
+    FxStyle style = FxStyle.none,
     String? className,
     FxResponsiveStyle? responsive,
     double? gap,
@@ -106,37 +110,37 @@ class Fx extends StatefulWidget {
     return FlexBox(
       direction: Axis.vertical,
       children: children,
-      style: (style ?? FxStyle.none).copyWith(FxStyle(gap: gap)),
+      style: style.merge(FxStyle(gap: gap)),
       className: className,
       responsive: responsive,
     );
   }
 
   /// Grid layout.
-  static GridBox grid({
+  static Widget grid({
     required List<Widget> children,
-    FxStyle? style,
+    FxStyle style = FxStyle.none,
     String? className,
     FxResponsiveStyle? responsive,
   }) {
     return GridBox(
       children: children,
-      style: style ?? FxStyle.none,
+      style: style,
       className: className,
       responsive: responsive,
     );
   }
 
   /// Stack layout.
-  static StackBox stack({
+  static Widget stack({
     required List<Widget> children,
-    FxStyle? style,
+    FxStyle style = FxStyle.none,
     String? className,
     FxResponsiveStyle? responsive,
   }) {
     return StackBox(
       children: children,
-      style: style ?? FxStyle.none,
+      style: style,
       className: className,
       responsive: responsive,
     );
@@ -182,21 +186,21 @@ class Fx extends StatefulWidget {
   // --- Smart UI Presets ---
 
   /// A modern card preset.
-  static Box card({required Widget child, FxStyle? style, String? className}) {
+  static Widget card({required Widget child, FxStyle style = FxStyle.none, String? className}) {
     return box(
       style: const FxStyle(
         backgroundColor: Color(0xFFFFFFFF),
         borderRadius: BorderRadius.all(Radius.circular(12)),
         padding: EdgeInsets.all(16),
         shadows: [BoxShadow(color: Color(0x0D000000), blurRadius: 10, offset: Offset(0, 4))],
-      ).copyWith(style),
+      ).merge(style),
       className: className,
       child: child,
     );
   }
 
   /// A section with a title and children.
-  static FlexBox section({required String title, required List<Widget> children, double gap = 8}) {
+  static Widget section({required String title, required List<Widget> children, double gap = 8}) {
     return column(
       gap: 16,
       children: [
@@ -212,10 +216,16 @@ class Fx extends StatefulWidget {
   static void offAll(String route) => FluxyRouter.offAll(route);
 }
 
-class _FxState extends State<Fx> implements FluxySubscriber {
+class _FxState extends State<Fx> with ReactiveSubscriberMixin {
   @override
   void notify() {
     if (mounted) setState(() {});
+  }
+
+  @override
+  void dispose() {
+    clearDependencies();
+    super.dispose();
   }
 
   @override

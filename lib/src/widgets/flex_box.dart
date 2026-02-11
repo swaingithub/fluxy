@@ -3,11 +3,9 @@ import 'package:flutter/material.dart' show Container, Flexible, FlexFit, SizedB
 import '../styles/style.dart';
 import '../engine/style_resolver.dart';
 import '../engine/decoration_builder.dart';
-import '../dsl/modifiers.dart';
 
-class FlexBox extends StatelessWidget with FxModifier<FlexBox> {
+class FlexBox extends StatelessWidget {
   final Axis direction;
-  @override
   final FxStyle style;
   final String? className;
   final FxResponsiveStyle? responsive;
@@ -22,11 +20,10 @@ class FlexBox extends StatelessWidget with FxModifier<FlexBox> {
     required this.children,
   });
 
-  @override
   FlexBox copyWith({FxStyle? style, Axis? direction, String? className, FxResponsiveStyle? responsive, List<Widget>? children}) {
     return FlexBox(
       direction: direction ?? this.direction,
-      style: this.style.copyWith(style),
+      style: style ?? this.style,
       className: className ?? this.className,
       responsive: responsive ?? this.responsive,
       children: children ?? this.children,
@@ -51,7 +48,7 @@ class FlexBox extends StatelessWidget with FxModifier<FlexBox> {
     );
 
     // Apply container styles if any
-    if (FxDecorationBuilder.hasVisuals(s) || s.width != null || s.height != null || s.padding != null || s.margin != null) {
+    if (FxDecorationBuilder.hasVisuals(s) || s.width != null || s.height != null || s.padding != EdgeInsets.zero || s.margin != EdgeInsets.zero) {
       current = Container(
         width: s.width,
         height: s.height,

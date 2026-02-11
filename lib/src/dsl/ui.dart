@@ -11,14 +11,14 @@ import '../widgets/text_box.dart';
 class UI {
   /// Basic box container (like a div).
   static Widget box({
-    FxStyle? style,
+    FxStyle style = FxStyle.none,
     String? className,
     FxResponsiveStyle? responsive,
-    Widget? child,
-    List<Widget>? children,
+    Widget child = const SizedBox.shrink(),
+    List<Widget> children = const [],
     VoidCallback? onTap,
   }) => Box(
-    style: style ?? FxStyle.none,
+    style: style,
     className: className,
     responsive: responsive,
     child: child,
@@ -28,13 +28,13 @@ class UI {
 
   /// Horizontal layout (flex-direction: row).
   static Widget row({
-    FxStyle? style,
+    FxStyle style = FxStyle.none,
     String? className,
     FxResponsiveStyle? responsive,
     required List<Widget> children,
   }) => FlexBox(
     direction: Axis.horizontal,
-    style: style ?? FxStyle.none,
+    style: style,
     className: className,
     responsive: responsive,
     children: children,
@@ -42,13 +42,13 @@ class UI {
 
   /// Vertical layout (flex-direction: column).
   static Widget column({
-    FxStyle? style,
+    FxStyle style = FxStyle.none,
     String? className,
     FxResponsiveStyle? responsive,
     required List<Widget> children,
   }) => FlexBox(
     direction: Axis.vertical,
-    style: style ?? FxStyle.none,
+    style: style,
     className: className,
     responsive: responsive,
     children: children,
@@ -57,13 +57,13 @@ class UI {
   /// Flexible layout with custom direction.
   static Widget flex({
     required Axis direction,
-    FxStyle? style,
+    FxStyle style = FxStyle.none,
     String? className,
     FxResponsiveStyle? responsive,
     required List<Widget> children,
   }) => FlexBox(
     direction: direction,
-    style: style ?? FxStyle.none,
+    style: style,
     className: className,
     responsive: responsive,
     children: children,
@@ -71,12 +71,12 @@ class UI {
 
   /// Grid layout (display: grid).
   static Widget grid({
-    FxStyle? style,
+    FxStyle style = FxStyle.none,
     String? className,
     FxResponsiveStyle? responsive,
     required List<Widget> children,
   }) => GridBox(
-    style: style ?? FxStyle.none,
+    style: style,
     className: className,
     responsive: responsive,
     children: children,
@@ -84,12 +84,12 @@ class UI {
 
   /// Overlay layout (position: absolute/relative).
   static Widget stack({
-    FxStyle? style,
+    FxStyle style = FxStyle.none,
     String? className,
     FxResponsiveStyle? responsive,
     required List<Widget> children,
   }) => StackBox(
-    style: style ?? FxStyle.none,
+    style: style,
     className: className,
     responsive: responsive,
     children: children,
@@ -98,12 +98,12 @@ class UI {
   /// Styled text component.
   static Widget text(
     String data, {
-    FxStyle? style,
+    FxStyle style = FxStyle.none,
     String? className,
     FxResponsiveStyle? responsive,
   }) => TextBox(
     data: data,
-    style: style ?? FxStyle.none,
+    style: style,
     className: className,
     responsive: responsive,
   );

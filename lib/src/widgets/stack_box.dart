@@ -3,10 +3,8 @@ import 'package:flutter/material.dart' show Container, Expanded, Stack;
 import '../styles/style.dart';
 import '../engine/style_resolver.dart';
 import '../engine/decoration_builder.dart';
-import '../dsl/modifiers.dart';
 
-class StackBox extends StatelessWidget with FxModifier<StackBox> {
-  @override
+class StackBox extends StatelessWidget {
   final FxStyle style;
   final String? className;
   final FxResponsiveStyle? responsive;
@@ -20,10 +18,9 @@ class StackBox extends StatelessWidget with FxModifier<StackBox> {
     required this.children,
   });
 
-  @override
   StackBox copyWith({FxStyle? style, String? className, FxResponsiveStyle? responsive, List<Widget>? children}) {
     return StackBox(
-      style: this.style.copyWith(style),
+      style: style ?? this.style,
       className: className ?? this.className,
       responsive: responsive ?? this.responsive,
       children: children ?? this.children,
@@ -45,7 +42,7 @@ class StackBox extends StatelessWidget with FxModifier<StackBox> {
       children: children,
     );
 
-    if (FxDecorationBuilder.hasVisuals(s) || s.width != null || s.height != null || s.padding != null || s.margin != null) {
+    if (FxDecorationBuilder.hasVisuals(s) || s.width != null || s.height != null || s.padding != s.padding /* always false now but keeping structure */ || s.margin != s.margin) {
       current = Container(
         width: s.width,
         height: s.height,
@@ -56,9 +53,10 @@ class StackBox extends StatelessWidget with FxModifier<StackBox> {
       );
     }
 
-    if (s.flex != null) {
+    final flexVal = s.flex;
+    if (flexVal != null) {
       current = Expanded(
-        flex: s.flex!,
+        flex: flexVal,
         child: current,
       );
     }

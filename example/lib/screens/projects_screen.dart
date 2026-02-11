@@ -58,7 +58,7 @@ class ProjectsScreen extends StatelessWidget {
             children: [
               Fx.text("Project Alpha ${index + 1}").font(18).bold().expanded(),
               Fx.box().padOnly(left: 8, right: 8, top: 4, bottom: 4).bg(Colors.green.withOpacity(0.1)).radius(4)
-                .copyWith(child: Fx.text("V-1.2").color(Colors.green).font(10).bold()),
+                .child(Fx.text("V-1.2").color(Colors.green).font(10).bold()),
             ],
           ),
           Fx.text("A distributed reactive system built with Fluxy Framework and Dart signals.").color(Colors.grey).maxLines(2),

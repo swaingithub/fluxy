@@ -137,7 +137,7 @@ class DashboardPage extends StatelessWidget {
         Fx.row(
           gap: 12,
           children: [
-            Fx.box().size(40, 40).bg(Colors.blue).radius(12).center().copyWith(child: const Icon(Icons.bolt, color: Colors.white)),
+            Fx.box().size(40, 40).bg(Colors.blue).radius(12).center().child(const Icon(Icons.bolt, color: Colors.white)),
             Fx.text("Fluxy App").font(20).bold(),
           ],
         ),
@@ -184,7 +184,7 @@ class DashboardPage extends StatelessWidget {
       child: Fx.column(
         gap: 12,
         children: [
-          Fx.box().size(48, 48).bg(color.withOpacity(0.1)).radius(12).center().copyWith(child: Icon(icon, color: color)),
+          Fx.box().size(48, 48).bg(color.withOpacity(0.1)).radius(12).center().child(Icon(icon, color: color)),
           Fx.column(
             children: [
               Fx.text(label).font(12).color(Colors.grey),

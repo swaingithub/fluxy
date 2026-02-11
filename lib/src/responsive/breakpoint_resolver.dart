@@ -12,25 +12,25 @@ class BreakpointResolver {
 
     // sm
     if (responsive.sm != null) {
-      effective = effective.copyWith(responsive.sm);
+      effective = effective.merge(responsive.sm);
     }
     if (current == Breakpoint.sm) return effective;
 
     // md
     if (responsive.md != null) {
-      effective = effective.copyWith(responsive.md);
+      effective = effective.merge(responsive.md);
     }
     if (current == Breakpoint.md) return effective;
 
     // lg
     if (responsive.lg != null) {
-      effective = effective.copyWith(responsive.lg);
+      effective = effective.merge(responsive.lg);
     }
     if (current == Breakpoint.lg) return effective;
 
     // xl
     if (responsive.xl != null) {
-      effective = effective.copyWith(responsive.xl);
+      effective = effective.merge(responsive.xl);
     }
     
     return effective;

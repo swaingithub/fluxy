@@ -4,10 +4,8 @@ import '../styles/style.dart';
 import '../engine/style_resolver.dart';
 import '../engine/decoration_builder.dart';
 import '../engine/grid_layout_solver.dart';
-import '../dsl/modifiers.dart';
 
-class GridBox extends StatelessWidget with FxModifier<GridBox> {
-  @override
+class GridBox extends StatelessWidget {
   final FxStyle style;
   final String? className;
   final FxResponsiveStyle? responsive;
@@ -21,10 +19,9 @@ class GridBox extends StatelessWidget with FxModifier<GridBox> {
     required this.children,
   });
 
-  @override
   GridBox copyWith({FxStyle? style, String? className, FxResponsiveStyle? responsive, List<Widget>? children}) {
     return GridBox(
-      style: this.style.copyWith(style),
+      style: style ?? this.style,
       className: className ?? this.className,
       responsive: responsive ?? this.responsive,
       children: children ?? this.children,
@@ -53,11 +50,11 @@ class GridBox extends StatelessWidget with FxModifier<GridBox> {
       childAspectRatio: s.childAspectRatio ?? 1.0,
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      padding: s.padding ?? EdgeInsets.zero,
+      padding: s.padding,
       children: children,
     );
 
-    if (FxDecorationBuilder.hasVisuals(s) || s.width != null || s.height != null || s.margin != null) {
+    if (FxDecorationBuilder.hasVisuals(s) || s.width != null || s.height != null || s.margin != EdgeInsets.zero) {
       current = Container(
         width: s.width,
         height: s.height,

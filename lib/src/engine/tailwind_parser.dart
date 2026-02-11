@@ -15,7 +15,7 @@ class Tailwind {
 
     for (var part in parts) {
       if (part.isEmpty) continue;
-      finalStyle = finalStyle.copyWith(_parseUtility(part));
+      finalStyle = finalStyle.merge(_parseUtility(part));
     }
 
     _cache[classes] = finalStyle;

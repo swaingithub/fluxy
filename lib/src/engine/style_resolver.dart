@@ -17,23 +17,23 @@ class FxStyleResolver {
     // 1. Apply base styles (like global CSS defaults)
     if (baseStyles != null) {
       for (var s in baseStyles) {
-        finalStyle = finalStyle.copyWith(s);
+        finalStyle = finalStyle.merge(s);
       }
     }
 
     // 2. Apply utility classes (Tailwind style)
     if (className != null) {
-      finalStyle = finalStyle.copyWith(Tailwind.parse(className));
+      finalStyle = finalStyle.merge(Tailwind.parse(className));
     }
 
     // 3. Apply responsive style if present
     if (responsive != null) {
-      finalStyle = finalStyle.copyWith(responsive.resolve(context));
+      finalStyle = finalStyle.merge(responsive.resolve(context));
     }
 
     // 4. Apply the specific style (inline style override)
     if (style != null) {
-      finalStyle = finalStyle.copyWith(style);
+      finalStyle = finalStyle.merge(style);
     }
 
     return finalStyle;
@@ -46,10 +46,10 @@ class FxStyleResolver {
   }) {
     FxStyle finalStyle = base;
     if (isHovered && base.hover != null) {
-      finalStyle = finalStyle.copyWith(base.hover);
+      finalStyle = finalStyle.merge(base.hover);
     }
     if (isPressed && base.pressed != null) {
-      finalStyle = finalStyle.copyWith(base.pressed);
+      finalStyle = finalStyle.merge(base.pressed);
     }
     return finalStyle;
   }
@@ -59,7 +59,7 @@ class FxStyleResolver {
     FxStyle finalStyle = FxStyle.none;
     for (var s in styles) {
       if (s != null) {
-        finalStyle = finalStyle.copyWith(s);
+        finalStyle = finalStyle.merge(s);
       }
     }
     return finalStyle;

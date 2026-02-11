@@ -37,7 +37,7 @@ Add Fluxy to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  fluxy: ^1.0.0-alpha.1
+  fluxy: ^1.0.0-alpha.3
 ```
 
 ---

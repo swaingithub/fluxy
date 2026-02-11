@@ -78,7 +78,7 @@ class ProfileScreen extends StatelessWidget {
       gap: 16,
       children: [
         Fx.box().size(40, 40).bg(color.withOpacity(0.1)).radius(10).center()
-          .copyWith(child: Icon(icon, color: color, size: 20)),
+          .child(Icon(icon, color: color, size: 20)),
         Fx.text(label).expanded().font(16).weight(FontWeight.w500),
         const Icon(Icons.chevron_right, color: Colors.grey),
       ],

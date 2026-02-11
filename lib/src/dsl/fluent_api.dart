@@ -2,36 +2,26 @@ import 'package:flutter/widgets.dart';
 import '../styles/style.dart';
 import '../widgets/box.dart';
 
-/// Extension to provide a fluent DSL experience.
-extension FluxyWidgetExtension on Widget {
-  Widget styled(FxStyle style) {
-    return Box(
-      style: style,
-      child: this,
-    );
-  }
-}
-
 /// A functional approach to building Fluxy layouts.
 class Fluxy {
   static Widget div({
-    FxStyle? style,
-    Widget? child,
-    List<Widget>? children,
+    FxStyle style = FxStyle.none,
+    Widget child = const SizedBox.shrink(),
+    List<Widget> children = const [],
   }) {
     return Box(
-      style: style ?? FxStyle.none,
+      style: style,
       child: child,
       children: children,
     );
   }
 
   static Widget row({
-    FxStyle? style,
+    FxStyle style = FxStyle.none,
     required List<Widget> children,
   }) {
     return Box(
-      style: (style ?? FxStyle.none).copyWith(const FxStyle(justifyContent: MainAxisAlignment.start)),
+      style: style.merge(const FxStyle(justifyContent: MainAxisAlignment.start)),
       children: children,
     );
   }

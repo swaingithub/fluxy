@@ -4,11 +4,9 @@ import '../styles/style.dart';
 import '../engine/style_resolver.dart';
 import '../engine/decoration_builder.dart';
 import '../reactive/signal.dart';
-import '../dsl/modifiers.dart';
 
-class TextBox extends StatefulWidget with FxModifier<TextBox> {
-  final String data;
-  @override
+class TextBox extends StatefulWidget {
+  final dynamic data;
   final FxStyle style;
   final String? className;
   final FxResponsiveStyle? responsive;
@@ -21,11 +19,10 @@ class TextBox extends StatefulWidget with FxModifier<TextBox> {
     this.responsive,
   });
 
-  @override
-  TextBox copyWith({FxStyle? style, String? data, String? className, FxResponsiveStyle? responsive}) {
+  TextBox copyWith({FxStyle? style, dynamic data, String? className, FxResponsiveStyle? responsive}) {
     return TextBox(
       data: data ?? this.data,
-      style: this.style.copyWith(style),
+      style: style ?? this.style,
       className: className ?? this.className,
       responsive: responsive ?? this.responsive,
     );
@@ -35,12 +32,18 @@ class TextBox extends StatefulWidget with FxModifier<TextBox> {
   State<TextBox> createState() => _TextBoxState();
 }
 
-class _TextBoxState extends State<TextBox> implements FluxySubscriber {
+class _TextBoxState extends State<TextBox> with ReactiveSubscriberMixin {
   @override
   void notify() {
     if (mounted) {
       setState(() {});
     }
+  }
+
+  @override
+  void dispose() {
+    clearDependencies();
+    super.dispose();
   }
 
   @override
@@ -55,15 +58,17 @@ class _TextBoxState extends State<TextBox> implements FluxySubscriber {
         responsive: widget.responsive
       );
 
+      final String displayData = widget.data is Function ? widget.data().toString() : widget.data.toString();
+
       Widget current = Text(
-        widget.data,
+        displayData,
         textAlign: s.textAlign,
         overflow: s.overflow,
         maxLines: s.maxLines,
         style: FxDecorationBuilder.textStyle(s),
       );
 
-      if (FxDecorationBuilder.hasVisuals(s) || s.width != null || s.height != null || s.padding != null || s.margin != null) {
+      if (FxDecorationBuilder.hasVisuals(s) || s.width != null || s.height != null || s.padding != s.padding /* always false now but keeping structure */ || s.margin != s.margin) {
         current = Container(
           width: s.width,
           height: s.height,
@@ -75,9 +80,10 @@ class _TextBoxState extends State<TextBox> implements FluxySubscriber {
         );
       }
 
-      if (s.flex != null) {
+      final flexVal = s.flex;
+      if (flexVal != null) {
         current = Flexible(
-          flex: s.flex!,
+          flex: flexVal,
           fit: s.flexFit ?? FlexFit.tight,
           child: current,
         );

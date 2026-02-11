@@ -6,18 +6,16 @@ import '../engine/style_resolver.dart';
 import '../engine/decoration_builder.dart';
 import '../engine/diff_engine.dart';
 import '../reactive/signal.dart';
-import '../dsl/modifiers.dart';
 
 /// The foundational building block of Fluxy.
 /// Similar to a <div> in web development.
-class Box extends StatefulWidget with FxModifier<Box> {
+class Box extends StatefulWidget {
   final String? id; 
-  @override
   final FxStyle style;
   final String? className;
   final FxResponsiveStyle? responsive;
-  final Widget? child;
-  final List<Widget>? children;
+  final dynamic child;
+  final dynamic children;
   final VoidCallback? onTap;
 
   const Box({
@@ -26,16 +24,15 @@ class Box extends StatefulWidget with FxModifier<Box> {
     this.style = FxStyle.none,
     this.className,
     this.responsive,
-    this.child,
-    this.children,
+    this.child = const SizedBox.shrink(),
+    this.children = const [],
     this.onTap,
   });
 
-  @override
-  Box copyWith({FxStyle? style, String? className, FxResponsiveStyle? responsive, Widget? child, List<Widget>? children, VoidCallback? onTap}) {
+  Box copyWith({FxStyle? style, String? className, FxResponsiveStyle? responsive, dynamic child, dynamic children, VoidCallback? onTap}) {
     return Box(
       id: id,
-      style: this.style.copyWith(style),
+      style: style ?? this.style,
       className: className ?? this.className,
       responsive: responsive ?? this.responsive,
       child: child ?? this.child,
@@ -48,7 +45,7 @@ class Box extends StatefulWidget with FxModifier<Box> {
   State<Box> createState() => _BoxState();
 }
 
-class _BoxState extends State<Box> implements FluxySubscriber {
+class _BoxState extends State<Box> with ReactiveSubscriberMixin {
   bool _isHovered = false;
   bool _isPressed = false;
   
@@ -65,9 +62,10 @@ class _BoxState extends State<Box> implements FluxySubscriber {
 
   @override
   void dispose() {
+    clearDependencies();
     super.dispose();
   }
-  
+
   @override
   Widget build(BuildContext context) {
     FluxyReactiveContext.push(this);
@@ -95,40 +93,47 @@ class _BoxState extends State<Box> implements FluxySubscriber {
         _cachedWidget = _buildContent(s);
       }
 
-      return _cachedWidget!;
+      return _cachedWidget ?? const SizedBox.shrink();
     } finally {
       FluxyReactiveContext.pop();
     }
   }
 
   Widget _buildContent(FxStyle s) {
-    Widget current = widget.child ?? (widget.children != null ? _buildChildren(s) : const SizedBox.shrink());
+    final List<Widget> resolvedChildren = widget.children is Function ? (widget.children as Function)() : (widget.children is List<Widget> ? widget.children : []);
+    final Widget resolvedChild = widget.child is Function ? (widget.child as Function)() : (widget.child is Widget ? widget.child : const SizedBox.shrink());
+
+    Widget current = resolvedChildren.isNotEmpty ? _buildChildren(s, resolvedChildren) : resolvedChild;
 
     // Apply Opacity
-    if (s.opacity != null) {
-      current = Opacity(opacity: s.opacity!, child: current);
+    final opacityVal = s.opacity;
+    if (opacityVal != null) {
+      current = Opacity(opacity: opacityVal, child: current);
     }
 
     // Apply Glassmorphism
-    if (s.glass != null && s.glass! > 0) {
+    final glassVal = s.glass;
+    if (glassVal != null && glassVal > 0) {
       current = ClipRRect(
         borderRadius: s.borderRadius ?? BorderRadius.zero,
         child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: s.glass!, sigmaY: s.glass!),
+          filter: ImageFilter.blur(sigmaX: glassVal, sigmaY: glassVal),
           child: current,
         ),
       );
     }
 
     // Apply Aspect Ratio
-    if (s.aspectRatio != null) {
-      current = AspectRatio(aspectRatio: s.aspectRatio!, child: current);
+    final aspectVal = s.aspectRatio;
+    if (aspectVal != null) {
+      current = AspectRatio(aspectRatio: aspectVal, child: current);
     }
 
     // Apply Visuals using FxDecorationBuilder
-    if (s.transition != null) {
+    final transitionVal = s.transition;
+    if (transitionVal != null) {
       current = AnimatedContainer(
-        duration: s.transition!,
+        duration: transitionVal,
         width: s.width,
         height: s.height,
         padding: s.padding,
@@ -166,9 +171,10 @@ class _BoxState extends State<Box> implements FluxySubscriber {
     );
 
     // Apply Flex/Stack wrappers LAST (They must be direct children of Flex/Stack)
-    if (s.flex != null) {
+    final flexVal = s.flex;
+    if (flexVal != null) {
       current = Flexible(
-        flex: s.flex!,
+        flex: flexVal,
         fit: s.flexFit ?? FlexFit.tight,
         child: current,
       );
@@ -187,7 +193,7 @@ class _BoxState extends State<Box> implements FluxySubscriber {
     return current;
   }
 
-  Widget _buildChildren(FxStyle style) {
+  Widget _buildChildren(FxStyle style, List<Widget> resolvedChildren) {
     return Flex(
       direction: style.direction ?? Axis.vertical,
       mainAxisAlignment: style.justifyContent ?? MainAxisAlignment.start,
@@ -195,9 +201,9 @@ class _BoxState extends State<Box> implements FluxySubscriber {
       mainAxisSize: style.mainAxisSize ?? MainAxisSize.max,
       children: [
         if (style.gap != null)
-          ..._addGaps(widget.children!, style.gap!, style.direction ?? Axis.vertical)
+          ..._addGaps(resolvedChildren, style.gap!, style.direction ?? Axis.vertical)
         else
-          ...widget.children!,
+          ...resolvedChildren,
       ],
     );
   }
