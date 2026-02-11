@@ -1,6 +1,6 @@
 name: fluxy
 description: "High-performance reactive UI framework for Flutter. SwiftUI-like syntax with zero-boilerplate signals, Tailwind-inspired styling, and fluent modifiers."
-version: 1.0.0-alpha.1
+version: 0.0.1
 homepage: https://github.com/fluxy/fluxy
 repository: https://github.com/fluxy/fluxy
 issue_tracker: https://github.com/fluxy/fluxy/issues
