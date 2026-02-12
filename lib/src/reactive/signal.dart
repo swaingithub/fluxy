@@ -160,7 +160,6 @@ class Signal<T> {
 class Computed<T> extends Signal<T> with ReactiveSubscriberMixin {
   final T Function() _compute;
   final void Function(Object error, StackTrace stack)? _onError;
-  final bool _validate;
   
   bool _isDirty = true;
   bool _isComputing = false;
@@ -172,7 +171,6 @@ class Computed<T> extends Signal<T> with ReactiveSubscriberMixin {
     void Function(Object error, StackTrace stack)? onError,
     bool validate = false,
   })  : _onError = onError,
-        _validate = validate,
         super._internal();
 
   @override

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../fluxy.dart';
 import 'style_parser.dart';
-import 'fluxy_remote.dart';
+
 
 /// Renders Fluxy Widgets from JSON Schemas.
 class FluxyRenderer {
@@ -15,7 +15,6 @@ class FluxyRenderer {
     
     final String type = json['type'] ?? 'box';
     final FxStyle style = FluxyStyleParser.parse(json['style']);
-    final Map<String, dynamic> props = json['props'] ?? {};
     final String? action = json['onTap'] ?? json['action'];
 
     switch (type) {
