@@ -1,3 +1,4 @@
+// ignore_for_file: deprecated_member_use
 import 'package:flutter/material.dart';
 import 'dart:async';
 import '../reactive/signal.dart';
@@ -80,7 +81,6 @@ class _FluxyDevToolsState extends State<FluxyDevTools> {
 
   Widget _buildOverlay() {
     return Material(
-      // ignore: deprecated_member_use
       color: Colors.black.withOpacity(0.9),
       child: SafeArea(
         child: Column(
@@ -170,7 +170,6 @@ class _FluxyDevToolsState extends State<FluxyDevTools> {
           margin: const EdgeInsets.only(bottom: 8),
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            // ignore: deprecated_member_use
             color: Colors.white.withOpacity(0.05),
             borderRadius: BorderRadius.circular(8),
             border: Border.all(color: isComputed ? Colors.purpleAccent.withOpacity(0.3) : Colors.blueAccent.withOpacity(0.3)),

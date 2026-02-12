@@ -4,7 +4,7 @@ import 'package:path/path.dart' as p;
 
 import 'package:fluxy/src/cli/cloud.dart';
 
-const String version = '0.0.5';
+const String version = '0.0.9';
 
 void main(List<String> arguments) async {
   final parser = ArgParser()
@@ -94,7 +94,7 @@ Future<void> _handleInit(List<String> args) async {
   print('🚀 Creating Fluxy project: $projectName...');
 
   // 1. Flutter Create
-  final result = await Process.run('flutter', ['create', projectName]);
+  final result = await Process.run('flutter', ['create', projectName], runInShell: true);
   if (result.exitCode != 0) {
     print('Error creating Flutter project:');
     print(result.stderr);
@@ -113,7 +113,8 @@ Future<void> _handleInit(List<String> args) async {
   final pubResult = await Process.run(
     'flutter', 
     ['pub', 'add', 'fluxy', 'provider', 'shared_preferences', 'flutter_secure_storage'], 
-    workingDirectory: projectDir.path
+    workingDirectory: projectDir.path,
+    runInShell: true,
   );
   
   if (pubResult.exitCode != 0) {
@@ -136,7 +137,7 @@ Future<void> _handleInit(List<String> args) async {
 Future<void> _handleRun(List<String> args) async {
   print('🚀 Launching Fluxy App...');
   // Wrap flutter run
-  final process = await Process.start('flutter', ['run', ...args], mode: ProcessStartMode.inheritStdio);
+  final process = await Process.start('flutter', ['run', ...args], mode: ProcessStartMode.inheritStdio, runInShell: true);
   final exitCode = await process.exitCode;
   if (exitCode != 0) exit(exitCode);
 }
@@ -146,7 +147,7 @@ Future<void> _handleDoctor() async {
   print('Fluxy CLI Version: $version');
   
   print('\nChecking Flutter...');
-  final flutterResult = await Process.run('flutter', ['--version']);
+  final flutterResult = await Process.run('flutter', ['--version'], runInShell: true);
   if (flutterResult.exitCode == 0) {
     print(flutterResult.stdout);
   } else {
@@ -154,7 +155,7 @@ Future<void> _handleDoctor() async {
   }
   
   print('\nChecking Doctor...');
-  final process = await Process.start('flutter', ['doctor'], mode: ProcessStartMode.inheritStdio);
+  final process = await Process.start('flutter', ['doctor'], mode: ProcessStartMode.inheritStdio, runInShell: true);
   await process.exitCode;
 }
 
@@ -177,7 +178,7 @@ Future<void> _handleBuild(List<String> args) async {
     // buildArgs.add('--split-debug-info=./debug-info');
   }
 
-  final process = await Process.start('flutter', buildArgs, mode: ProcessStartMode.inheritStdio);
+  final process = await Process.start('flutter', buildArgs, mode: ProcessStartMode.inheritStdio, runInShell: true);
   final exitCode = await process.exitCode;
   if (exitCode != 0) exit(exitCode);
   

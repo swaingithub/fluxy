@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../fluxy.dart';
-import 'style_parser.dart';
+
 
 
 /// Renders Fluxy Widgets from JSON Schemas.
