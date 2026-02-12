@@ -1,15 +1,18 @@
 # Fluxy — Reactive UI + State + Fluent DSL for Flutter
 
-**Build Flutter apps with SwiftUI-like syntax, fine-grained reactivity, and zero boilerplate.**
+**The Modern Standard for Flutter Development. One Engine. Infinite Possibilities.**
 
-Fluxy is a next-generation reactive UI engine for Flutter that unifies **declarative layouts**, **signals-based state management**, and **utility-first styling** into a single, elegant developer experience.
+Fluxy is a complete Flutter development platform that unifies **reactive state**, **declarative UI**, **styling**, **animation**, **routing**, and **tooling** into a single cohesive engine — enabling developers to build production-grade apps faster, cleaner, and at scale.
 
 [![Pub Version](https://img.shields.io/pub/v/fluxy?color=blue)](https://pub.dev/packages/fluxy)
 [![Pub Likes](https://img.shields.io/pub/likes/fluxy)](https://pub.dev/packages/fluxy)
 [![Pub Popularity](https://img.shields.io/pub/popularity/fluxy)](https://pub.dev/packages/fluxy)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Documentation](https://img.shields.io/badge/Docs-Vercel-success)](https://fluxy-doc.vercel.app/)
 
 ---
+
+[**📚 Read the Official Documentation**](https://fluxy-doc.vercel.app/)
 
 ## Why Fluxy?
 
@@ -85,7 +88,7 @@ Fx.column(
 
 ```yaml
 dependencies:
-  fluxy: ^0.0.3
+  fluxy: ^0.0.4
 ```
 
 ---

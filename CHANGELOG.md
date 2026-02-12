@@ -1,3 +1,19 @@
+## 0.0.5
+
+* **Production Protection**: Added global error boundaries to `FluxyApp` to prevent crashes in production.
+* **CLI Power**: Introduced `fluxy` CLI for project initialization and module generation (Next.js style).
+* **Enhanced DevTools**: Added Signal Graph Inspector and Timeline Logs for visual debugging.
+* **Refined Inputs**: Rewrote `FxTextField` for better memory management and two-way binding stability.
+* **Stability Audit**: Resolved several potential null-safety issues and navigation edge cases.
+
+## 0.0.4
+
+* **Motion Engine**: Implemented a fluent physics-based animation DSL (`.animate().spring()`).
+* **Staggered Animations**: Added `Fx.stagger()` for easy sequential entrance effects.
+* **Tab Navigation Stacks**: Introduced `FxTabScaffold` and `FxNestedStack` for independent navigation histories.
+* **Router 2.0**: Added custom page transitions (fade, slide, zoom) and route grouping.
+* **Fluent Extensions**: Added `.obs` support for Lists, Maps, and primitive types.
+
 ## 0.0.3
 
 * **High-Fidelity Reactive Engine**: Implemented a fine-grained reactivity graph with atomic micro-rebuilds and transparent dependency tracking.

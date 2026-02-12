@@ -1,8 +1,14 @@
 library fluxy;
 
+import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
+import 'src/devtools/fluxy_devtools.dart';
+
 // Styles & Foundation
 export 'src/styles/style.dart';
 export 'src/dsl/fx.dart';
+export 'src/motion/fx_motion.dart';
+export 'src/devtools/fluxy_devtools.dart';
 export 'src/dsl/modifiers.dart';
 
 // Primary Widgets
@@ -11,10 +17,13 @@ export 'src/widgets/flex_box.dart';
 export 'src/widgets/grid_box.dart';
 export 'src/widgets/stack_box.dart';
 export 'src/widgets/text_box.dart';
+export 'src/widgets/tab_stack.dart';
 
 // Reactive Core
 export 'src/reactive/signal.dart';
 export 'src/reactive/async_signal.dart';
+export 'src/reactive/collections.dart';
+export 'src/reactive/forms.dart';
 
 // Infrastructure
 export 'src/di/fluxy_di.dart';
@@ -39,6 +48,12 @@ class Fluxy {
   // Navigation Shortcuts
   static Future<T?> to<T>(String routeName, {Map<String, dynamic>? arguments}) => 
       FluxyRouter.to<T>(routeName, arguments: arguments);
+
+  static Future<T?> off<T, TO>(String routeName, {TO? result, Map<String, dynamic>? arguments}) => 
+      FluxyRouter.off<T, TO>(routeName, result: result, arguments: arguments);
+
+  static Future<T?> offAll<T>(String routeName, {Map<String, dynamic>? arguments}) => 
+      FluxyRouter.offAll<T>(routeName, arguments: arguments);
   
   static void back<T>([T? result]) => FluxyRouter.back<T>(result);
 
@@ -49,4 +64,120 @@ class Fluxy {
 
   static void lazyPut<T>(T Function() factory, {String? tag}) => 
       FluxyDI.lazyPut<T>(factory, tag: tag);
+
+  /// Enables the Fluxy Debug Inspector overlay.
+  static Widget debug({required Widget child}) => FluxyDevTools(child: child);
+}
+
+/// A pre-configured MaterialApp for Fluxy projects.
+/// Automatically hooks up routing, navigation keys, and observers.
+class FluxyApp extends StatelessWidget {
+  final String title;
+  final FxRoute? initialRoute;
+  final List<FxRoute> routes;
+  final FxRoute? unknownRoute;
+  final ThemeData? theme;
+  final ThemeData? darkTheme;
+  final ThemeMode? themeMode;
+  final bool debugShowCheckedModeBanner;
+  final List<NavigatorObserver>? observers;
+  final Widget Function(BuildContext, Widget?)? builder;
+
+  const FluxyApp({
+    super.key,
+    this.title = 'Fluxy App',
+    this.initialRoute,
+    this.routes = const [],
+    this.unknownRoute,
+    this.theme,
+    this.darkTheme,
+    this.themeMode,
+    this.debugShowCheckedModeBanner = false,
+    this.observers,
+    this.builder,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    // Initialize the router
+    FluxyRouter.setRoutes(routes, unknownRoute: unknownRoute);
+    if (observers != null) {
+      for (var obs in observers!) {
+        FluxyRouter.addObserver(obs);
+      }
+    }
+
+    return MaterialApp(
+      title: title,
+      navigatorKey: FluxyRouter.navigatorKey,
+      onGenerateRoute: FluxyRouter.onGenerateRoute,
+      initialRoute: initialRoute?.path ?? '/',
+      theme: theme,
+      darkTheme: darkTheme,
+      themeMode: themeMode,
+      debugShowCheckedModeBanner: debugShowCheckedModeBanner,
+      navigatorObservers: FluxyRouter.observers,
+      builder: (context, child) {
+        // Global Error Boundary - Senior Level Production Protection
+        ErrorWidget.builder = (FlutterErrorDetails details) {
+          return Material(
+            child: Container(
+              color: Colors.black,
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                   const Icon(Icons.error_outline, color: Colors.redAccent, size: 48),
+                   const SizedBox(height: 16),
+                   const Text(
+                     "A production error occurred",
+                     style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
+                   ),
+                   const SizedBox(height: 8),
+                   Text(
+                     details.exception.toString(),
+                     textAlign: TextAlign.center,
+                      // ignore: deprecated_member_use
+                      style: TextStyle(color: Colors.redAccent.withOpacity(0.9), fontSize: 12, fontFamily: 'monospace'),
+                   ),
+                   if (!kReleaseMode) ...[
+                     const SizedBox(height: 16),
+                     Expanded(
+                       child: SingleChildScrollView(
+                         child: Text(
+                           details.stack.toString(),
+                            // ignore: deprecated_member_use
+                            style: TextStyle(color: Colors.white.withOpacity(0.5), fontSize: 10, fontFamily: 'monospace'),
+                         ),
+                       ),
+                     ),
+                   ],
+                ],
+              ),
+            ),
+          );
+        };
+        
+        return builder?.call(context, child) ?? child!;
+      },
+    );
+  }
+}
+
+/// Extensions on BuildContext to provide easy access to Fluxy services.
+extension FluxyContextExtension on BuildContext {
+  /// Navigates to a new page.
+  Future<T?> to<T>(String route, {Map<String, dynamic>? arguments}) => FluxyRouter.to<T>(route, arguments: arguments);
+
+  /// Replaces current page.
+  Future<T?> off<T, TO>(String route, {TO? result, Map<String, dynamic>? arguments}) => FluxyRouter.off<T, TO>(route, result: result, arguments: arguments);
+
+  /// Clears stack and navigates.
+  Future<T?> offAll<T>(String route, {Map<String, dynamic>? arguments}) => FluxyRouter.offAll<T>(route, arguments: arguments);
+
+  /// Goes back.
+  void back<T>([T? result]) => FluxyRouter.back<T>(result);
+
+  /// Finds a dependency.
+  T find<T>({String? tag}) => FluxyDI.find<T>(tag: tag);
 }

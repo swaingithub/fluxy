@@ -1,8 +1,9 @@
 name: fluxy
-description: "High-performance reactive UI framework for Flutter. SwiftUI-like syntax with zero-boilerplate signals, Tailwind-inspired styling, and fluent modifiers."
-version: 0.0.3
+description: "A complete Flutter platform unifying reactive state, declarative UI, styling, animation, routing, and tooling. Build production-grade apps faster and at scale."
+version: 0.0.5
 homepage: https://github.com/swaingithub/fluxy
 repository: https://github.com/swaingithub/fluxy
+documentation: https://fluxy-doc.vercel.app/
 issue_tracker: https://github.com/swaingithub/fluxy/issues
 
 environment:
@@ -12,6 +13,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  shared_preferences: ^2.2.0
+  flutter_secure_storage: ^9.0.0
 
 dev_dependencies:
   flutter_test:

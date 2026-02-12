@@ -1,4 +1,4 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import '../styles/style.dart';
 import '../widgets/box.dart';
 import '../widgets/text_box.dart';
@@ -7,11 +7,11 @@ import '../widgets/grid_box.dart';
 import '../widgets/stack_box.dart';
 import '../reactive/signal.dart';
 import '../reactive/async_signal.dart';
+import '../widgets/inputs.dart';
+import '../motion/fx_motion.dart';
 import '../routing/fluxy_router.dart';
 
 /// The hyper-minimal Fx API for Fluxy.
-/// Designed for maximum builder velocity and zero boilerplate reactivity.
-  /// The hyper-minimal Fx API for Fluxy.
 /// Designed for maximum builder velocity and zero boilerplate reactivity.
 class Fx extends StatefulWidget {
   final Widget Function() builder;
@@ -24,7 +24,7 @@ class Fx extends StatefulWidget {
   /// A reactive text element. 
   static Widget text(dynamic data, {FxStyle style = FxStyle.none, String? className, FxResponsiveStyle? responsive}) {
     return TextBox(
-      data: data,
+      data: data ?? '',
       style: style,
       className: className,
       responsive: responsive,
@@ -145,8 +145,71 @@ class Fx extends StatefulWidget {
     );
   }
 
+  /// Staggers a list of widgets with a delay.
+  static List<Widget> stagger(List<Widget> children, {double interval = 0.05, double initialDelay = 0}) {
+    return children.asMap().entries.map((entry) {
+      final child = entry.value;
+      final index = entry.key;
+      
+      if (child is FxMotion) {
+        final m = child;
+        return FxMotion(
+          duration: m.duration,
+          curve: m.curve,
+          spring: m.spring,
+          delay: (m.delay ?? 0) + initialDelay + (index * interval),
+          autoStart: m.autoStart,
+          fade: m.fade,
+          slide: m.slide,
+          scale: m.scale,
+          rotate: m.rotate,
+          child: m.child,
+        );
+      }
+      return child;
+    }).toList();
+  }
+
   /// Spacer for layouts.
   static Widget gap(double value) => SizedBox(width: value, height: value);
+
+  /// A flexible spacer that expands to fill available space.
+  static Widget spacer() => const Spacer();
+
+  /// A modern horizontal divider.
+  static Widget divider({Color? color, double thickness = 1, double indent = 0}) {
+    return Divider(color: color, thickness: thickness, indent: indent, endIndent: indent);
+  }
+
+  /// A reactive image loader.
+  static Widget image(String url, {double? width, double? height, BoxFit fit = BoxFit.cover, double radius = 0}) {
+    final imageWidget = Image.network(
+      url,
+      width: width,
+      height: height,
+      fit: fit,
+      errorBuilder: (_, __, ___) => box(
+        style: FxStyle(backgroundColor: const Color(0xFFF3F4F6), width: width, height: height, borderRadius: BorderRadius.circular(radius)),
+        child: const Icon(Icons.broken_image, color: Colors.grey),
+      ),
+    );
+
+    if (radius > 0) {
+      return ClipRRect(borderRadius: BorderRadius.circular(radius), child: imageWidget);
+    }
+    return imageWidget;
+  }
+
+  /// A centered loading indicator.
+  static Widget loader({Color? color, double size = 24}) {
+    return Center(
+      child: SizedBox(
+        width: size,
+        height: size,
+        child: CircularProgressIndicator(strokeWidth: 2, valueColor: AlwaysStoppedAnimation(color ?? const Color(0xFF2563EB))),
+      ),
+    );
+  }
 
   /// Async UI Builder
   static Widget async<T>(
@@ -155,12 +218,54 @@ class Fx extends StatefulWidget {
     required Widget Function(Object error) error,
     required Widget Function(T data) data,
   }) {
-    return Fx(() {
-      if (signal.isLoading) return loading();
-      if (signal.hasError) return error(signal.error!);
-      if (signal.hasData) return data(signal.value as T);
-      return const SizedBox.shrink();
-    });
+    return signal.on(loading: loading, data: data, error: error);
+  }
+
+  // --- Input Widgets ---
+
+  /// A reactive text field.
+  static Widget textField({
+    required Signal<String> signal,
+    String? placeholder,
+    InputDecoration? decoration,
+    TextStyle? style,
+    bool obscureText = false,
+  }) {
+    return FxTextField(
+      signal: signal,
+      placeholder: placeholder,
+      decoration: decoration,
+      style: style,
+      obscureText: obscureText,
+    );
+  }
+
+  /// A reactive checkbox.
+  static Widget checkbox({
+    required Signal<bool> signal,
+    Color? activeColor,
+  }) {
+    return FxCheckbox(
+      signal: signal,
+      activeColor: activeColor,
+    );
+  }
+
+  /// A reactive slider.
+  static Widget slider({
+    required Signal<double> signal,
+    double min = 0,
+    double max = 100,
+    int? divisions,
+    Color? activeColor,
+  }) {
+    return FxSlider(
+      signal: signal,
+      min: min,
+      max: max,
+      divisions: divisions,
+      activeColor: activeColor,
+    );
   }
 
   // Conditional Rendering
@@ -210,9 +315,10 @@ class Fx extends StatefulWidget {
   }
 
   // Navigation
-  static void go(String route) => FluxyRouter.to(route);
-  static void back() => FluxyRouter.back();
-  static void offAll(String route) => FluxyRouter.offAll(route);
+  static Future<T?> go<T>(String route, {Map<String, dynamic>? arguments}) => FluxyRouter.to<T>(route, arguments: arguments);
+  static Future<T?> off<T, TO>(String route, {TO? result, Map<String, dynamic>? arguments}) => FluxyRouter.off<T, TO>(route, result: result, arguments: arguments);
+  static Future<T?> offAll<T>(String route, {Map<String, dynamic>? arguments}) => FluxyRouter.offAll<T>(route, arguments: arguments);
+  static void back<T>([T? result]) => FluxyRouter.back<T>(result);
 }
 
 class _FxState extends State<Fx> with ReactiveSubscriberMixin {
