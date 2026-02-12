@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'dart:async';
 import '../di/fluxy_di.dart';
 
 part 'persistence.dart';
@@ -100,11 +101,15 @@ class Signal<T> {
 
   Signal(T initialValue, {this.label}) 
     : _value = initialValue,
-      id = 'sig_${DateTime.now().microsecondsSinceEpoch}_${initialValue.hashCode}';
+      id = 'sig_${DateTime.now().microsecondsSinceEpoch}_${initialValue.hashCode}' {
+    SignalRegistry.register(this);
+  }
 
   /// Internal constructor for Computed that allows lazy initialization
   Signal._internal({this.label}) 
-    : id = 'comp_${DateTime.now().microsecondsSinceEpoch}';
+    : id = 'comp_${DateTime.now().microsecondsSinceEpoch}' {
+    SignalRegistry.register(this);
+  }
 
   T get value {
     final current = FluxyReactiveContext.current;
@@ -115,6 +120,7 @@ class Signal<T> {
     FluxyReactiveContext.onSignalRead?.call(this);
     return _value as T;
   }
+
 
   set value(T newValue) {
     if (_deepEquals(_value, newValue)) return;
@@ -153,10 +159,21 @@ class Signal<T> {
 /// A derived signal that automatically updates when its dependencies change.
 class Computed<T> extends Signal<T> with ReactiveSubscriberMixin {
   final T Function() _compute;
+  final void Function(Object error, StackTrace stack)? _onError;
+  final bool _validate;
+  
   bool _isDirty = true;
   bool _isComputing = false;
+  Object? _lastError;
 
-  Computed(this._compute, {super.label}) : super._internal();
+  Computed(
+    this._compute, {
+    super.label,
+    void Function(Object error, StackTrace stack)? onError,
+    bool validate = false,
+  })  : _onError = onError,
+        _validate = validate,
+        super._internal();
 
   @override
   T get value {
@@ -170,12 +187,23 @@ class Computed<T> extends Signal<T> with ReactiveSubscriberMixin {
     if (_isDirty) {
       _reevaluate();
     }
+    
+    // If there was an error and no fallback value, rethrow
+    if (_lastError != null && _value == null) {
+      throw _lastError!;
+    }
+    
     return _value as T;
   }
 
   void _reevaluate() {
-    if (_isComputing) return;
+    if (_isComputing) {
+      debugPrint('Fluxy [Computed] Warning: Reentrant computation detected for ${label ?? id}');
+      return;
+    }
+    
     _isComputing = true;
+    final startTime = DateTime.now();
     
     clearDependencies();
 
@@ -183,20 +211,35 @@ class Computed<T> extends Signal<T> with ReactiveSubscriberMixin {
     try {
       final newValue = _compute();
       
-      // Memoization
+      // Memoization - only notify if value actually changed
       final hasChanged = !_deepEquals(_value, newValue);
       
       _value = newValue;
       _isDirty = false;
+      _lastError = null;
 
       if (hasChanged) {
         notifySubscribers();
       }
+      
+      // Record performance metrics
+      final duration = DateTime.now().difference(startTime);
+      if (duration.inMicroseconds > 1000) { // Only log if > 1ms
+        debugPrint('Fluxy [Computed] ${label ?? id} took ${duration.inMilliseconds}ms');
+      }
     } catch (e, stack) {
-      debugPrint('Fluxy [Computed] Error during evaluation: $e\n$stack');
-      // We don't want to crash the whole app, but we also can't return a "default" T safely.
-      // So we rethrow to let the UI builder handle it (e.g. error boundary).
-      rethrow;
+      _lastError = e;
+      _isDirty = false; // Don't keep retrying on every access
+      
+      debugPrint('Fluxy [Computed] Error in ${label ?? id}: $e');
+      
+      // Call error handler if provided
+      _onError?.call(e, stack);
+      
+      // If we have a previous value, keep it; otherwise rethrow
+      if (_value == null) {
+        rethrow;
+      }
     } finally {
       FluxyReactiveContext.pop();
       _isComputing = false;
@@ -211,11 +254,23 @@ class Computed<T> extends Signal<T> with ReactiveSubscriberMixin {
     }
   }
 
+  /// Forces recomputation on next access.
+  void invalidate() {
+    _isDirty = true;
+  }
+
+  /// Returns true if this computed has an error.
+  bool get hasError => _lastError != null;
+  
+  /// Returns the last error, if any.
+  Object? get error => _lastError;
+
   void dispose() {
     clearDependencies();
     _subscribers.clear();
   }
 }
+
 
 /// A persistent side-effect that runs whenever its dependencies change.
 class Effect with ReactiveSubscriberMixin {
@@ -261,7 +316,13 @@ Signal<T> flux<T>(T initialValue, {String? persistKey, bool secure = false, Stri
 }
 
 /// Creates a derived signal computed from other signals.
-Computed<T> computed<T>(T Function() fn, {String? label}) => Computed<T>(fn, label: label);
+Computed<T> computed<T>(
+  T Function() fn, {
+  String? label,
+  void Function(Object error, StackTrace stack)? onError,
+  bool validate = false,
+}) => Computed<T>(fn, label: label, onError: onError, validate: validate);
+
 
 /// Registers a side-effect that tracks its dependencies.
 Effect effect(VoidCallback fn) => Effect(fn);
@@ -332,3 +393,34 @@ extension FluxyPrimitiveExtension<T> on T {
 /// DI Shorthands
 T use<T>({String? tag}) => FluxyDI.find<T>(tag: tag);
 void inject<T>(T instance, {String? tag}) => FluxyDI.put<T>(instance, tag: tag);
+
+/// Tracks all active signals for debugging and devtools integration.
+class SignalRegistry {
+  static final List<WeakReference<Signal>> _signals = [];
+
+  static void register(Signal signal) {
+    if (_signals.length % 50 == 0) _prune();
+    _signals.add(WeakReference(signal));
+  }
+
+  static void _prune() {
+    _signals.removeWhere((ref) => ref.target == null);
+  }
+
+  static List<Signal> get all {
+    _prune();
+    return _signals.map((ref) => ref.target).whereType<Signal>().toList();
+  }
+  
+  static Signal? find(String id) {
+    _prune();
+    try {
+      return _signals
+          .map((ref) => ref.target)
+          .whereType<Signal>()
+          .firstWhere((s) => s.id == id);
+    } catch (_) {
+      return null;
+    }
+  }
+}

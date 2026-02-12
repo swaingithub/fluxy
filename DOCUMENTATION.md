@@ -1,10 +1,38 @@
-# Fluxy Documentation
+# Fluxy Documentation (v0.0.5)
 
-This guide provides a detailed look at how to use Fluxy's UI components, state management, and styling systems.
+This guide provides a detailed look at how to use Fluxy's highly efficient development engine.
 
 ---
 
-## 1. Core UI Components
+## 1. CLI & Project Setup 🚀 (New in v0.0.5)
+
+Fluxy now includes a powerful CLI to scaffold projects and generate modules instantly, similar to Next.js or Expo.
+
+### Activation
+```bash
+dart pub global activate fluxy
+```
+
+### Commands
+- **Initialize Project**: Sets up a scalable folder structure (routes, modules, data, theme).
+  ```bash
+  fluxy init
+  ```
+
+- **Generate Page**: Creates a reactive page and registers it automatically.
+  ```bash
+  fluxy gen:page Home
+  ```
+  *(Creates `lib/app/modules/home/home_page.dart` and `home_controller.dart`)*
+
+- **Generate Controller**: Creates a standalone reactive controller with lifecycle hooks.
+  ```bash
+  fluxy gen:controller Auth
+  ```
+
+---
+
+## 2. Core UI Components
 
 Fluxy simplifies Flutter widgets into a clean API called `Fx`.
 
@@ -32,23 +60,23 @@ For building responsive grids.
 - **`crossAxisCount`**: How many columns you want.
 - **`minColumnWidth`**: If you set this (e.g., 200), Fluxy will automatically choose the number of columns that fit the screen.
 
-### Fx.stack()
-For placing items on top of each other. Use it with `.top()`, `.bottom()`, `.left()`, and `.right()` mods on children for absolute positioning.
+### Fx.stack() & Fx.positioned()
+For absolute positioning. Use `.top()`, `.left()` modifiers on children.
 
 ---
 
-## 2. Reactive UI (Signals)
+## 3. Reactive UI (Signals)
 
 Fluxy makes your UI "smart" using **Signals**. When a signal changes, **only the specific widget using it rebuilds**.
 
 ### Creating State
 ```dart
-final count = flux(0); // A signal holding an integer
-final name = flux("Alice"); // A signal holding a string
+final count = flux(0); // Atomic integer signal
+final user = flux(User(name: "Alice")); // Complex object signal
 ```
 
 ### Displaying State
-Wrap your data access in an anonymous function `() =>` so Fluxy can track it.
+Wrap your data access in `Fx()` or `Fx.text()` to track it automatically.
 ```dart
 Fx.text(() => "Count is: ${count.value}")
 ```
@@ -63,111 +91,80 @@ Fx.button(
 
 ---
 
-## 3. The Modifier System (Styling)
+## 4. Fluxy DevTools 🛠️ (New in v0.0.5)
 
-Modifiers are chainable methods that style your widget. They replace the complex `BoxDecoration` and `Padding` widgets.
+Inspect your state changes in real-time with the built-in debugger.
 
-### Most Common Modifiers:
+### Enable DevTools
+Wrap your app root:
+```dart
+void main() {
+  runApp(
+    Fluxy.debug(
+      child: MyApp(),
+    ),
+  );
+}
+```
 
-#### Spacing & Alignment
-- **`.pad(20)`**: Adds 20px padding on all sides.
-- **`.padX(10)`**: Adds 10px padding to left and right only.
-- **`.center()`**: Centers the widget child.
-- **`.align(Alignment.topRight)`**: Positions the child at the top right.
-
-#### Visuals
-- **`.bg(Colors.blue)`**: Sets the background color.
-- **`.radius(15)`**: Rounds the corners.
-- **`.border(color: Colors.black, width: 2)`**: Adds a stroke.
-- **`.shadow()`**: Adds a soft shadow effect.
-- **`.glass(10)`**: Adds a modern blur effect (Glassmorphism).
-
-#### Text Styling
-- **`.font(18)`**: Sets the font size.
-- **`.bold()`**: Makes text bold.
-- **`.color(Colors.white)`**: Sets text color.
-- **`.maxLines(1)`**: Limits text to one line and adds "..." if it overflows.
+### Features
+- **Signal Graph**: Visualize all active signals and their values.
+- **Timeline Logs**: See a history of state changes as they happen.
+- **Floating Inspector**: Toggle the overlay with a floating button.
 
 ---
 
-## 4. Responsive Design
+## 5. Production Stability (New in v0.0.5)
 
-Fluxy handles screen sizes automatically using a **mobile-first** approach. Use `FxResponsiveStyle` to change how a widget looks on different devices.
+### Global Error Boundary
+FluxyApp now automatically catches exceptions in the widget tree to prevent "Red Screen of Death" crashes in production.
 
-- **`xs`**: Phone (Default)
-- **`sm`**: Tablet Portrait
-- **`md`**: Tablet Landscape
-- **`lg`**: Desktop
-- **`xl`**: Large Monitor
-
-**Example**:
 ```dart
-Fx.box(
-  responsive: FxResponsiveStyle(
-    xs: FxStyle(width: 100), // Small on phone
-    md: FxStyle(width: 500), // Huge on tablet
-  ),
-  child: myContent,
+FluxyApp(
+  home: HomePage(),
+  // In release mode, users see a polished error screen.
+  // In debug mode, you see the full stack trace.
+);
+```
+
+### Input Safety
+`FxTextField` has been rewritten for robustness. It now correctly disposes of controllers and supports two-way binding.
+
+```dart
+final email = flux("");
+
+FxTextField(
+  signal: email,
+  placeholder: "Enter email",
 )
 ```
 
 ---
 
-## 5. Navigation & D.I.
+## 6. The Modifier System (Styling)
 
-### Navigation
-Navigate between screens without needing `context`.
-- `Fx.go('/route')`: Go to a new screen.
-- `Fx.back()`: Go back to the previous screen.
-- `Fx.offAll('/route')`: Close all screens and open a new one (useful for Logout).
+Modifiers are chainable methods that style your widget. They replace complex wrappers.
 
-### Dependency Injection (D.I.)
-Store your services and controllers globally.
-- `Fluxy.put(MyController())`: Register your service.
-- `Fluxy.find<MyController>()`: Get your service anywhere in the app.
+- **`.pad(20)`**: Adds padding.
+- **`.center()`**: Centers the child.
+- **`.bg(Colors.blue)`**: Sets background.
+- **`.radius(15)`**: Rounds corners.
+- **`.shadow(blur: 10)`**: Adds shadow.
+- **`.animate()`**: Adds motion effects (fade, slide, scale).
 
 ---
 
-## 6. Full Example (One Page)
+## 7. Navigation & D.I.
 
-```dart
-class MyPage extends StatelessWidget {
-  final name = flux("User");
+### Navigation
+Navigate without context.
+- `Fx.go('/home')`
+- `Fx.back()`
+- `FluxyRouter.to('/details', arguments: {'id': 1})`
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Fx.column(
-        gap: 20,
-        children: [
-          // A styled card
-          Fx.card(
-            child: Fx.row(
-              gap: 12,
-              children: [
-                Fx.box().size(50, 50).bg(Colors.blue).radius(25).center()
-                  .child(const Icon(Icons.person, color: Colors.white)),
-                Fx.column(
-                  children: [
-                    Fx.text(() => "Hello, ${name.value}").bold().font(18),
-                    Fx.text("Welcome back to Fluxy!").color(Colors.grey),
-                  ],
-                ),
-              ],
-            ),
-          ).pad(16),
-
-          // An interactive button
-          Fx.button(
-            onTap: () => name.value = "Super User",
-            child: "Become Admin",
-          ).marginX(16),
-        ],
-      ).center(),
-    );
-  }
-}
-```
+### Dependency Injection
+- `Fluxy.put(MyController())`
+- `Fluxy.find<MyController>()`
 
 ---
 

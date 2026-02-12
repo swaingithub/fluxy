@@ -39,20 +39,33 @@ export 'src/engine/diff_engine.dart';
 // Debugging Tools
 export 'src/debug/debug_config.dart';
 export 'src/debug/fluxy_inspector.dart';
+export 'src/debug/fluxy_debug.dart';
+
+// Internationalization
+export 'src/i18n/fluxy_i18n.dart';
+// OTA
+export 'src/ota/fluxy_remote.dart';
+export 'src/ota/sdui_renderer.dart';
+export 'src/ota/style_parser.dart';
 
 import 'src/di/fluxy_di.dart';
 import 'src/routing/fluxy_router.dart';
+import 'src/i18n/fluxy_i18n.dart';
+import 'src/ota/fluxy_remote.dart';
 
 /// The global entry point for the Fluxy framework.
 class Fluxy {
+  // OTA Shortcuts
+  static Future<void> update(String manifestUrl) => FluxyRemote.update(manifestUrl);
+
   // Navigation Shortcuts
-  static Future<T?> to<T>(String routeName, {Map<String, dynamic>? arguments}) => 
+  static Future<T?> to<T>(String routeName, {Object? arguments}) => 
       FluxyRouter.to<T>(routeName, arguments: arguments);
 
-  static Future<T?> off<T, TO>(String routeName, {TO? result, Map<String, dynamic>? arguments}) => 
+  static Future<T?> off<T, TO>(String routeName, {TO? result, Object? arguments}) => 
       FluxyRouter.off<T, TO>(routeName, result: result, arguments: arguments);
 
-  static Future<T?> offAll<T>(String routeName, {Map<String, dynamic>? arguments}) => 
+  static Future<T?> offAll<T>(String routeName, {Object? arguments}) => 
       FluxyRouter.offAll<T>(routeName, arguments: arguments);
   
   static void back<T>([T? result]) => FluxyRouter.back<T>(result);
@@ -64,10 +77,14 @@ class Fluxy {
 
   static void lazyPut<T>(T Function() factory, {String? tag}) => 
       FluxyDI.lazyPut<T>(factory, tag: tag);
+  
+  // I18n Shortcuts
+  static void setLocale(Locale locale) => FluxyI18n.setLocale(locale);
 
   /// Enables the Fluxy Debug Inspector overlay.
   static Widget debug({required Widget child}) => FluxyDevTools(child: child);
 }
+
 
 /// A pre-configured MaterialApp for Fluxy projects.
 /// Automatically hooks up routing, navigation keys, and observers.

@@ -3,6 +3,8 @@ import 'signal.dart';
 
 /// A reactive list that automatically triggers updates when its contents change.
 class FluxList<T> extends Signal<List<T>> with ListMixin<T> {
+  bool _isBatching = false;
+  
   FluxList(super.initialValue);
 
   @override
@@ -13,7 +15,7 @@ class FluxList<T> extends Signal<List<T>> with ListMixin<T> {
   @override
   set length(int newLength) {
     value.length = newLength;
-    notifySubscribers();
+    _notifyIfNotBatching();
   }
 
   @override
@@ -24,25 +26,25 @@ class FluxList<T> extends Signal<List<T>> with ListMixin<T> {
   @override
   void operator []=(int index, T newValue) {
     value[index] = newValue;
-    notifySubscribers();
+    _notifyIfNotBatching();
   }
 
   @override
   void add(T element) {
     value.add(element);
-    notifySubscribers();
+    _notifyIfNotBatching();
   }
 
   @override
   void addAll(Iterable<T> iterable) {
     value.addAll(iterable);
-    notifySubscribers();
+    _notifyIfNotBatching();
   }
 
   @override
   bool remove(Object? element) {
     final result = value.remove(element);
-    if (result) notifySubscribers();
+    if (result) _notifyIfNotBatching();
     return result;
   }
 
@@ -50,20 +52,20 @@ class FluxList<T> extends Signal<List<T>> with ListMixin<T> {
   void clear() {
     if (value.isNotEmpty) {
       value.clear();
-      notifySubscribers();
+      _notifyIfNotBatching();
     }
   }
 
   @override
   void insert(int index, T element) {
     value.insert(index, element);
-    notifySubscribers();
+    _notifyIfNotBatching();
   }
 
   @override
   T removeAt(int index) {
     final result = value.removeAt(index);
-    notifySubscribers();
+    _notifyIfNotBatching();
     return result;
   }
 
@@ -71,10 +73,60 @@ class FluxList<T> extends Signal<List<T>> with ListMixin<T> {
   List<T> operator +(List<T> other) {
     return value + other;
   }
+
+  /// Updates an item at the given index using a transformer function.
+  void update(int index, T Function(T current) transformer) {
+    if (index >= 0 && index < value.length) {
+      value[index] = transformer(value[index]);
+      _notifyIfNotBatching();
+    }
+  }
+
+  /// Updates all items that match the predicate using a transformer function.
+  void updateWhere(bool Function(T item) predicate, T Function(T current) transformer) {
+    bool hasChanges = false;
+    for (int i = 0; i < value.length; i++) {
+      if (predicate(value[i])) {
+        value[i] = transformer(value[i]);
+        hasChanges = true;
+      }
+    }
+    if (hasChanges) _notifyIfNotBatching();
+  }
+
+  /// Updates the first item that matches the predicate.
+  void updateFirst(bool Function(T item) predicate, T Function(T current) transformer) {
+    for (int i = 0; i < value.length; i++) {
+      if (predicate(value[i])) {
+        value[i] = transformer(value[i]);
+        _notifyIfNotBatching();
+        return;
+      }
+    }
+  }
+
+  /// Performs multiple operations in a batch, triggering only one notification.
+  void batchUpdate(void Function() operations) {
+    _isBatching = true;
+    try {
+      operations();
+    } finally {
+      _isBatching = false;
+      notifySubscribers();
+    }
+  }
+
+  void _notifyIfNotBatching() {
+    if (!_isBatching) {
+      notifySubscribers();
+    }
+  }
 }
 
 /// A reactive map that automatically triggers updates when its contents change.
 class FluxMap<K, V> extends Signal<Map<K, V>> with MapMixin<K, V> {
+  bool _isBatching = false;
+  
   FluxMap(super.initialValue);
 
   @override
@@ -85,14 +137,14 @@ class FluxMap<K, V> extends Signal<Map<K, V>> with MapMixin<K, V> {
   @override
   void operator []=(K key, V newValue) {
     value[key] = newValue;
-    notifySubscribers();
+    _notifyIfNotBatching();
   }
 
   @override
   void clear() {
     if (value.isNotEmpty) {
       value.clear();
-      notifySubscribers();
+      _notifyIfNotBatching();
     }
   }
 
@@ -105,10 +157,64 @@ class FluxMap<K, V> extends Signal<Map<K, V>> with MapMixin<K, V> {
   V? remove(Object? key) {
     if (value.containsKey(key)) {
       final res = value.remove(key);
-      notifySubscribers();
+      _notifyIfNotBatching();
       return res;
     }
     return null;
+  }
+
+  /// Updates a value at the given key using a transformer function.
+  /// If the key doesn't exist, does nothing.
+  void updateValue(K key, V Function(V current) transformer) {
+    if (value.containsKey(key)) {
+      value[key] = transformer(value[key] as V);
+      _notifyIfNotBatching();
+    }
+  }
+
+  /// Updates a value at the given key, or inserts it if it doesn't exist.
+  void updateOrInsert(K key, V Function(V? current) transformer) {
+    value[key] = transformer(value[key]);
+    _notifyIfNotBatching();
+  }
+
+  /// Updates all values that match the predicate using a transformer function.
+  void updateWhere(
+    bool Function(K key, V value) predicate,
+    V Function(V current) transformer,
+  ) {
+    bool hasChanges = false;
+    final keysToUpdate = <K>[];
+    
+    for (final entry in value.entries) {
+      if (predicate(entry.key, entry.value)) {
+        keysToUpdate.add(entry.key);
+      }
+    }
+    
+    for (final key in keysToUpdate) {
+      value[key] = transformer(value[key] as V);
+      hasChanges = true;
+    }
+    
+    if (hasChanges) _notifyIfNotBatching();
+  }
+
+  /// Performs multiple operations in a batch, triggering only one notification.
+  void batchUpdate(void Function() operations) {
+    _isBatching = true;
+    try {
+      operations();
+    } finally {
+      _isBatching = false;
+      notifySubscribers();
+    }
+  }
+
+  void _notifyIfNotBatching() {
+    if (!_isBatching) {
+      notifySubscribers();
+    }
   }
 }
 
@@ -126,3 +232,4 @@ extension FluxyListExtension<T> on List<T> {
 extension FluxyMapExtension<K, V> on Map<K, V> {
   FluxMap<K, V> get obs => FluxMap<K, V>(this);
 }
+

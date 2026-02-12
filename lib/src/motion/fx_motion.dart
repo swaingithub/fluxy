@@ -1,32 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/physics.dart';
 
-/// Supported animation types in Fluxy.
-enum FxMotionType { fade, slide, scale, rotate }
-
 /// Physics configuration for spring animations.
-class FxSpring {
+/// Designed to feel "alive" and responsive.
+class Spring {
   final double mass;
   final double stiffness;
   final double damping;
 
-  const FxSpring({
+  const Spring({
     this.mass = 1.0,
-    this.stiffness = 180.0,
-    this.damping = 20.0,
+    required this.stiffness,
+    required this.damping,
   });
 
-  static const gentle = FxSpring(stiffness: 120, damping: 14);
-  static const bouncy = FxSpring(stiffness: 300, damping: 15);
-  static const stiff = FxSpring(stiffness: 210, damping: 20);
+  /// A snappy, responsive spring. Good for UI toggles.
+  static const fast = Spring(stiffness: 1000, damping: 60);
 
-  SpringDescription toSpringDescription() {
-    return SpringDescription(
-      mass: mass,
-      stiffness: stiffness,
-      damping: damping,
-    );
-  }
+  /// A standard, smooth spring. Good for page transitions.
+  static const smooth = Spring(stiffness: 350, damping: 30);
+
+  /// A bouncy, playful spring. Good for attention-grabbing elements.
+  static const bouncy = Spring(stiffness: 300, damping: 15);
+  
+  /// A gentle, slow spring. Good for background ambiance.
+  static const gentle = Spring(stiffness: 120, damping: 14);
+
+  SpringDescription get description => SpringDescription(
+        mass: mass,
+        stiffness: stiffness,
+        damping: damping,
+      );
 }
 
 /// A wrapper widget that provides the Motion DSL context.
@@ -34,11 +38,13 @@ class FxMotion extends StatefulWidget {
   final Widget child;
   final Duration duration;
   final Curve curve;
-  final FxSpring? spring;
+  final Spring? spring;
   final double? delay;
   final bool autoStart;
 
-  // Animation values
+  // Animation values (Begin -> End is always "Natural")
+  // e.g. fade: 0.0 -> 1.0
+  // e.g. slide: Offset(0, 100) -> Offset.zero
   final double? fade;
   final Offset? slide;
   final double? scale;
@@ -64,19 +70,19 @@ class FxMotion extends StatefulWidget {
 
 class _FxMotionState extends State<FxMotion> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
-  late Animation<double> _animation;
-
+  // We use a separate curved animation because the controller might be linear (if spring)
+  // Actually if spring, controller follows spring. If duration, we wrap curved.
+  
   @override
   void initState() {
     super.initState();
     _controller = AnimationController(
       vsync: this,
       duration: widget.duration,
-    );
-
-    _animation = CurvedAnimation(
-      parent: _controller,
-      curve: widget.curve,
+      // If spring is used, duration is technically driven by physics, 
+      // but providing a fallback upper bound is good practice, 
+      // though animateWith ignores it.
+      upperBound: 1.0, 
     );
 
     if (widget.autoStart) {
@@ -93,10 +99,10 @@ class _FxMotionState extends State<FxMotion> with SingleTickerProviderStateMixin
   void _start() {
     if (widget.spring != null) {
       final simulation = SpringSimulation(
-        widget.spring!.toSpringDescription(),
-        0.0,
-        1.0,
-        0.0,
+        widget.spring!.description,
+        0.0, // start
+        1.0, // end
+        0.0, // velocity
       );
       _controller.animateWith(simulation);
     } else {
@@ -112,35 +118,41 @@ class _FxMotionState extends State<FxMotion> with SingleTickerProviderStateMixin
 
   @override
   Widget build(BuildContext context) {
+    // If spring, curve is integrated into physics. 
+    // If duration, apply global Curve.
+    final anim = widget.spring != null 
+        ? _controller 
+        : CurvedAnimation(parent: _controller, curve: widget.curve);
+
     return AnimatedBuilder(
-      animation: _animation,
+      animation: anim,
       builder: (context, child) {
         Widget result = child!;
 
         if (widget.fade != null) {
           result = Opacity(
-            opacity: Tween<double>(begin: widget.fade, end: 1.0).evaluate(_animation),
+            opacity: Tween<double>(begin: widget.fade, end: 1.0).evaluate(anim),
             child: result,
           );
         }
 
         if (widget.slide != null) {
           result = Transform.translate(
-            offset: Tween<Offset>(begin: widget.slide, end: Offset.zero).evaluate(_animation),
+            offset: Tween<Offset>(begin: widget.slide, end: Offset.zero).evaluate(anim),
             child: result,
           );
         }
 
         if (widget.scale != null) {
           result = Transform.scale(
-            scale: Tween<double>(begin: widget.scale, end: 1.0).evaluate(_animation),
+            scale: Tween<double>(begin: widget.scale, end: 1.0).evaluate(anim),
             child: result,
           );
         }
 
         if (widget.rotate != null) {
           result = Transform.rotate(
-            angle: Tween<double>(begin: widget.rotate, end: 0.0).evaluate(_animation),
+            angle: Tween<double>(begin: widget.rotate, end: 0.0).evaluate(anim),
             child: result,
           );
         }
@@ -152,68 +164,67 @@ class _FxMotionState extends State<FxMotion> with SingleTickerProviderStateMixin
   }
 }
 
-/// Extension to provide Fluent UI Animation DSL.
+/// Unified Animation DSL Extension
 extension FxMotionExtension on Widget {
-  /// Animates the widget.
-  FxMotion animate({
-    Duration duration = const Duration(milliseconds: 400),
-    Curve curve = Curves.easeOutCubic,
-    double? delay,
+  /// Declarative animation entry point.
+  /// 
+  /// Usage:
+  /// ```dart
+  /// Fx.text('Hello').animate(
+  ///   fade: 0.0, 
+  ///   slide: Offset(0, 20),
+  ///   spring: Spring.bouncy
+  /// )
+  /// ```
+  Widget animate({
+    Duration? duration,
+    Curve? curve,
+    Spring? spring,
+    double? delay, // Seconds
+    bool autoStart = true,
+    
+    // Effects (Begin Values -> End is Natural)
+    double? fade,
+    Offset? slide,
+    double? scale,
+    double? rotate,
   }) {
     return FxMotion(
-      duration: duration,
-      curve: curve,
+      duration: duration ?? const Duration(milliseconds: 400),
+      curve: curve ?? Curves.easeOutCubic,
+      spring: spring,
       delay: delay,
+      autoStart: autoStart,
+      fade: fade,
+      slide: slide,
+      scale: scale,
+      rotate: rotate,
       child: this,
     );
   }
 }
 
-extension FxMotionWrapperExtension on FxMotion {
-  /// Adds a fade effect.
-  FxMotion fade({double start = 0.0}) {
-    return _copyWith(fade: start);
-  }
+/// Helper for Hero Animations
+class FxHero extends StatelessWidget {
+  final String tag;
+  final Widget child;
+  final bool flightShuttleBuilder; // Customizable? For now simple.
 
-  /// Adds a slide effect.
-  FxMotion slide({Offset start = const Offset(0, 20)}) {
-    return _copyWith(slide: start);
-  }
+  const FxHero({
+    super.key,
+    required this.tag,
+    required this.child,
+    this.flightShuttleBuilder = false,
+  });
 
-  /// Adds a scale effect.
-  FxMotion scale({double start = 0.0}) {
-    return _copyWith(scale: start);
-  }
-
-  /// Adds a rotation effect.
-  FxMotion rotate({double start = 0.1}) {
-    return _copyWith(rotate: start);
-  }
-
-  /// Applies spring physics.
-  FxMotion spring([FxSpring spring = FxSpring.bouncy]) {
-    return _copyWith(spring: spring);
-  }
-
-  /// Internal helper to update properties.
-  FxMotion _copyWith({
-    double? fade,
-    Offset? slide,
-    double? scale,
-    double? rotate,
-    FxSpring? spring,
-  }) {
-    return FxMotion(
-      duration: duration,
-      curve: curve,
-      spring: spring ?? this.spring,
-      delay: delay,
-      autoStart: autoStart,
-      fade: fade ?? this.fade,
-      slide: slide ?? this.slide,
-      scale: scale ?? this.scale,
-      rotate: rotate ?? this.rotate,
-      child: child,
+  @override
+  Widget build(BuildContext context) {
+    return Hero(
+      tag: tag,
+      child: Material(
+        type: MaterialType.transparency,
+        child: child,
+      ),
     );
   }
 }

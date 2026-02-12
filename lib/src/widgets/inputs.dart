@@ -3,12 +3,17 @@ import '../reactive/signal.dart';
 import '../dsl/fx.dart';
 
 /// Reactive TextField that binds directly to a Signal<String>.
+import '../reactive/forms.dart';
+
 class FxTextField extends StatefulWidget {
   final Signal<String> signal;
   final String? placeholder;
   final InputDecoration? decoration;
   final TextStyle? style;
   final bool obscureText;
+  final TextInputType? keyboardType;
+  final int? maxLines;
+  final VoidCallback? onSubmitted;
 
   const FxTextField({
     super.key,
@@ -17,6 +22,9 @@ class FxTextField extends StatefulWidget {
     this.decoration,
     this.style,
     this.obscureText = false,
+    this.keyboardType,
+    this.maxLines = 1,
+    this.onSubmitted,
   });
 
   @override
@@ -25,40 +33,91 @@ class FxTextField extends StatefulWidget {
 
 class _FxTextFieldState extends State<FxTextField> {
   late TextEditingController _controller;
+  Effect? _subscription;
 
   @override
   void initState() {
     super.initState();
     _controller = TextEditingController(text: widget.signal.value);
     
-    // Listen to signal changes from outside (e.g. signal.value = "")
-    widget.signal.listen((val) {
-      if (_controller.text != val) {
-        _controller.text = val;
+    // Efficiently bind signal updates to controller
+    // Only update controller if value is actually different to avoid cursor jumps
+    _subscription = effect(() {
+      final newVal = widget.signal.value;
+      if (_controller.text != newVal) {
+        _controller.value = _controller.value.copyWith(
+          text: newVal,
+          selection: TextSelection.collapsed(offset: newVal.length),
+          composing: TextRange.empty,
+        );
       }
     });
+
+    _controller.addListener(_onChanged);
+  }
+
+  void _onChanged() {
+    final val = _controller.text;
+    if (widget.signal.value != val) {
+      widget.signal.value = val;
+    }
   }
 
   @override
   void dispose() {
+    _subscription?.dispose();
+    _controller.removeListener(_onChanged);
     _controller.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
-      controller: _controller,
-      onChanged: (text) => widget.signal.value = text,
-      obscureText: widget.obscureText,
-      style: widget.style,
-      decoration: widget.decoration ?? InputDecoration(
+    // Reactive build wrapper to listen for validation state
+    return Fx(() {
+      String? errorText;
+      
+      // Auto-validation integration
+      if (widget.signal is FluxField<String>) {
+        final field = widget.signal as FluxField<String>;
+        // Show error only if field is touched or dirty
+        if (field.isTouched || field.isDirty) {
+          errorText = field.error;
+        }
+      }
+
+      final defaultDecoration = InputDecoration(
         hintText: widget.placeholder,
         border: const OutlineInputBorder(),
-      ),
-    );
+        errorText: errorText,
+      );
+
+      return TextField(
+        controller: _controller,
+        obscureText: widget.obscureText,
+        style: widget.style,
+        keyboardType: widget.keyboardType,
+        maxLines: widget.maxLines,
+        decoration: widget.decoration?.copyWith(errorText: errorText) ?? defaultDecoration,
+        onSubmitted: (_) {
+          // If it's a form field, mark as touched on submit
+           if (widget.signal is FluxField) {
+             (widget.signal as FluxField).touch();
+           }
+           widget.onSubmitted?.call();
+        },
+        onTapOutside: (_) {
+           // Mark as touched on blur
+           if (widget.signal is FluxField) {
+             (widget.signal as FluxField).touch();
+           }
+           FocusScope.of(context).unfocus();
+        },
+      );
+    });
   }
 }
+
 
 /// Reactive Checkbox that binds directly to a Signal<bool>.
 class FxCheckbox extends StatelessWidget {

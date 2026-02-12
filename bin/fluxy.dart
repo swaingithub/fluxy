@@ -1,148 +1,248 @@
-// ignore_for_file: avoid_print
 import 'dart:io';
+import 'package:args/args.dart';
+import 'package:path/path.dart' as p;
 
-void main(List<String> args) async {
-  if (args.isEmpty) {
-    _printUsage();
+import 'package:fluxy/src/cli/cloud.dart';
+
+const String version = '0.0.5';
+
+void main(List<String> arguments) async {
+  final parser = ArgParser()
+    ..addCommand('init')
+    ..addCommand('run')
+    ..addCommand('doctor')
+    ..addCommand('build')
+    ..addCommand('deploy')
+    ..addCommand('cloud');
+
+  // Handle flags
+  parser.addFlag('help', abbr: 'h', negatable: false, help: 'Show usage information.');
+  parser.addFlag('version', abbr: 'v', negatable: false, help: 'Show version.');
+
+  ArgResults argResults;
+  try {
+    argResults = parser.parse(arguments);
+  } catch (e) {
+    print('Error: $e');
+    printUsage(parser);
+    exit(1);
+  }
+
+  if (argResults['help']) {
+    printUsage(parser);
     return;
   }
 
-  final command = args[0];
+  if (argResults['version']) {
+    print('Fluxy CLI v$version');
+    return;
+  }
 
-  switch (command) {
+  final command = argResults.command;
+  if (command == null) {
+    printUsage(parser);
+    return;
+  }
+
+  switch (command.name) {
     case 'init':
-      await _handleInit();
+      await _handleInit(command.rest);
       break;
-    case 'gen:page':
-      if (args.length < 2) {
-        print("❌ Please provide a page name: fluxy gen:page Home");
-        return;
-      }
-      await _handleGenPage(args[1]);
+    case 'run':
+      await _handleRun(command.rest);
       break;
-    case 'gen:controller':
-      if (args.length < 2) {
-        print("❌ Please provide a controller name: fluxy gen:controller Auth");
-        return;
-      }
-      await _handleGenController(args[1]);
+    case 'doctor':
+      await _handleDoctor();
+      break;
+    case 'build':
+      await _handleBuild(command.rest);
+      break;
+    case 'deploy':
+      await _handleDeploy();
+      break;
+    case 'cloud':
+      await FluxyCloud.handle(command.rest);
       break;
     default:
-      print("❌ Unknown command: $command");
-      _printUsage();
+      print('Unknown command: ${command.name}');
+      printUsage(parser);
   }
 }
 
-void _printUsage() {
-  print("🚀 Fluxy Framework CLI");
-  print("Usage: dart run fluxy <command> [arguments]");
-  print("");
-  print("Commands:");
-  print("  init              Initialize Fluxy project structure");
-  print("  gen:page <name>   Generate a new reactive page and route");
-  print("  gen:controller <name>  Generate a new reactive controller");
+void printUsage(ArgParser parser) {
+  print('Fluxy CLI - The Ultimate Flutter Framework Tool\n');
+  print('Usage: fluxy <command> [arguments]\n');
+  print('Commands:');
+  print('  init <name>   Create a new Fluxy project.');
+  print('  run           Run the app (wraps flutter run).');
+  print('  build         Build the app (wraps flutter build).');
+  print('  doctor        Check environment status.');
+  print('  deploy        Deploy the app (manual).');
+  print('  cloud         Manage cloud builds (GitHub Actions).');
+  print('\nOptions:');
+  print(parser.usage);
 }
 
-Future<void> _handleInit() async {
-  print("🏗️ Initializing Fluxy Project Structure...");
+Future<void> _handleInit(List<String> args) async {
+  if (args.isEmpty) {
+    print('Error: Please provide a project name.');
+    print('Usage: fluxy init <project_name>');
+    exit(1);
+  }
+
+  final projectName = args.first;
+  print('🚀 Creating Fluxy project: $projectName...');
+
+  // 1. Flutter Create
+  final result = await Process.run('flutter', ['create', projectName]);
+  if (result.exitCode != 0) {
+    print('Error creating Flutter project:');
+    print(result.stderr);
+    exit(1);
+  }
+  print('✅ Basic Flutter scaffold created.');
+
+  final projectDir = Directory(projectName);
+  if (!projectDir.existsSync()) {
+    print('Error: Project directory not found.');
+    exit(1);
+  }
+
+  // 2. Add Fluxy Dependency
+  print('📦 Adding fluxy dependency...');
+  final pubResult = await Process.run(
+    'flutter', 
+    ['pub', 'add', 'fluxy', 'provider', 'shared_preferences', 'flutter_secure_storage'], 
+    workingDirectory: projectDir.path
+  );
   
-  final folders = [
-    'lib/app/modules',
-    'lib/app/data/services',
-    'lib/app/data/models',
-    'lib/app/routes',
-    'lib/app/core/theme',
-  ];
-
-  for (var folder in folders) {
-    await Directory(folder).create(recursive: true);
-    print("  ✅ Created $folder");
+  if (pubResult.exitCode != 0) {
+    print('Warning: Failed to add dependencies automatically. You may need to add "fluxy" manually.');
+    print(pubResult.stderr);
   }
 
-  // Create standard routes file
-  final routesFile = File('lib/app/routes/app_routes.dart');
-  if (!await routesFile.exists()) {
-    await routesFile.writeAsString("""
-import 'package:fluxy/fluxy.dart';
-import '../modules/home/home_page.dart';
-
-class AppPages {
-  static final routes = [
-    FxRoute(
-      path: '/',
-      builder: (p, a) => const HomePage(),
-    ),
-  ];
-}
-""");
+  // 3. Replace main.dart with Fluxy Template
+  final mainFile = File(p.join(projectDir.path, 'lib', 'main.dart'));
+  if (mainFile.existsSync()) {
+    mainFile.writeAsStringSync(_fluxyStarterTemplate);
+    print('✨ Fluxy starter template applied.');
   }
 
-  print("\n🎉 Fluxy Project Ready! Next step: Define your routes in lib/app/routes/app_routes.dart");
+  print('\n🎉 Success! Project $projectName is ready.');
+  print('cd $projectName');
+  print('fluxy run');
 }
 
-Future<void> _handleGenPage(String name) async {
-  final className = name[0].toUpperCase() + name.substring(1);
-  final fileName = name.toLowerCase();
-  final dirPath = 'lib/app/modules/$fileName';
+Future<void> _handleRun(List<String> args) async {
+  print('🚀 Launching Fluxy App...');
+  // Wrap flutter run
+  final process = await Process.start('flutter', ['run', ...args], mode: ProcessStartMode.inheritStdio);
+  final exitCode = await process.exitCode;
+  if (exitCode != 0) exit(exitCode);
+}
 
-  await Directory(dirPath).create(recursive: true);
+Future<void> _handleDoctor() async {
+  print('🩺 Fluxy Doctor\n');
+  print('Fluxy CLI Version: $version');
+  
+  print('\nChecking Flutter...');
+  final flutterResult = await Process.run('flutter', ['--version']);
+  if (flutterResult.exitCode == 0) {
+    print(flutterResult.stdout);
+  } else {
+    print('❌ Flutter not found or error executing.');
+  }
+  
+  print('\nChecking Doctor...');
+  final process = await Process.start('flutter', ['doctor'], mode: ProcessStartMode.inheritStdio);
+  await process.exitCode;
+}
 
-  // Generate Page
-  final pageFile = File('$dirPath/${fileName}_page.dart');
-  await pageFile.writeAsString("""
+Future<void> _handleBuild(List<String> args) async {
+  if (args.isEmpty) {
+    print('Usage: fluxy build <apk|ios|web|appbundle> [args]');
+    return;
+  }
+  
+  final target = args.first;
+  print('🏗️ Building for $target...');
+  
+  final buildArgs = ['build', target, ...args.skip(1)];
+  
+  // Add optimization flags automatically if release
+  if (!args.contains('--debug') && !args.contains('--profile')) {
+    if (!buildArgs.contains('--release')) buildArgs.add('--release');
+    // Obfuscation recommendations
+    // buildArgs.add('--obfuscate');
+    // buildArgs.add('--split-debug-info=./debug-info');
+  }
+
+  final process = await Process.start('flutter', buildArgs, mode: ProcessStartMode.inheritStdio);
+  final exitCode = await process.exitCode;
+  if (exitCode != 0) exit(exitCode);
+  
+  print('✅ Build Complete!');
+}
+
+Future<void> _handleDeploy() async {
+  print('🚀 Deployment integrations (Firebase, TestFlight, Play Store) are coming in Phase 5!');
+  print('For now, use manual upload of the artifacts generated in "build".');
+}
+
+// --- Templates ---
+
+const String _fluxyStarterTemplate = '''
 import 'package:flutter/material.dart';
 import 'package:fluxy/fluxy.dart';
-import '${fileName}_controller.dart';
 
-class ${className}Page extends StatelessWidget {
-  const ${className}Page({super.key});
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await FluxyPersistence.init(); // Initialize Persistence
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final controller = context.find<${className}Controller>();
+    return FluxyApp(
+      title: 'Fluxy Starter',
+      theme: ThemeData.light(useMaterial3: true),
+      darkTheme: ThemeData.dark(useMaterial3: true),
+      initialRoute: FxRoute(path: '/', builder: (_, __) => const HomePage()),
+      routes: [
+        FxRoute(path: '/', builder: (_, __) => const HomePage()),
+      ],
+    );
+  }
+}
 
+class HomePage extends StatelessWidget {
+  const HomePage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final counter = flux(0); // Reactive Signal
+    
     return Scaffold(
-      appBar: AppBar(title: const Text("$className Page")),
+      appBar: AppBar(title: const Text('Fluxy Starter')),
       body: Center(
-        child: Fx.text("$className Module is working!"),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Fx.text('Hello Fluxy! 🚀', style: const FxStyle(fontSize: 24, fontWeight: FontWeight.bold))
+              .animate(fade: 0.0, slide: const Offset(0, -20), spring: Spring.bouncy),
+            const SizedBox(height: 20),
+            Fx.text(() => 'Count: \${counter.value}', style: const FxStyle(fontSize: 18)),
+          ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => counter.value++,
+        child: const Icon(Icons.add),
       ),
     );
   }
 }
-""");
-
-  // Generate Controller
-  await _handleGenController(name, path: dirPath);
-
-  print("✅ Generated Page and Controller for $className in $dirPath");
-  print("👉 Don't forget to register it in AppPages!");
-}
-
-Future<void> _handleGenController(String name, {String? path}) async {
-  final className = name[0].toUpperCase() + name.substring(1);
-  final fileName = name.toLowerCase();
-  final dirPath = path ?? 'lib/app/data/services';
-
-  await Directory(dirPath).create(recursive: true);
-
-  final controllerFile = File('$dirPath/${fileName}_controller.dart');
-  await controllerFile.writeAsString("""
-import 'package:fluxy/fluxy.dart';
-
-class ${className}Controller extends FluxyController {
-  final count = 0.obs;
-
-  @override
-  void onInit() {
-    super.onInit();
-    print("${className}Controller initialized");
-  }
-
-  void increment() => count.value++;
-}
-""");
-
-  if (path == null) {
-    print("✅ Generated Controller: $dirPath/${fileName}_controller.dart");
-  }
-}
+''';

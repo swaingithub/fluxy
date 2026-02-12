@@ -1,18 +1,24 @@
 import 'signal.dart';
 
-typedef Validator = String? Function(String value);
+typedef Validator<T> = String? Function(T value);
 
-/// A signal specifically for form fields with validation support.
-class FormFieldSignal<T> extends Signal<T> {
-  final List<String? Function(T)> _validators = [];
+/// A reactive form field with validation capabilities.
+class FluxField<T> extends Signal<T> {
+  final List<Validator<T>> _validators = [];
   final Signal<String?> _error = flux(null);
+  final Signal<bool> _isDirty = flux(false);
+  final Signal<bool> _isTouched = flux(false);
 
-  FormFieldSignal(super.initialValue);
+  FluxField(super.initialValue);
 
+  // Status Getters
   String? get error => _error.value;
   bool get hasError => _error.value != null;
   bool get isValid => validate() == null;
+  bool get isDirty => _isDirty.value;
+  bool get isTouched => _isTouched.value;
 
+  /// Validates the field against all rules.
   String? validate() {
     for (final validator in _validators) {
       final res = validator(value);
@@ -25,29 +31,59 @@ class FormFieldSignal<T> extends Signal<T> {
     return null;
   }
 
-  void addValidator(String? Function(T) validator) {
+  /// Adds a validator rule.
+  FluxField<T> addRule(Validator<T> validator) {
     _validators.add(validator);
+    return this;
   }
 
-  void clearError() => _error.value = null;
+  /// Resets the field state (error, dirty, touched).
+  void reset([T? newValue]) {
+    if (newValue != null) value = newValue;
+    _error.value = null;
+    _isDirty.value = false;
+    _isTouched.value = false;
+  }
+
+  /// Marks field as touched.
+  void touch() => _isTouched.value = true;
+
+  /// Marks field as dirty.
+  void markDirty() => _isDirty.value = true;
+
+  @override
+  set value(T newValue) {
+    if (super.value != newValue) {
+      super.value = newValue;
+      _isDirty.value = true;
+      if (_isTouched.value) validate();
+    }
+  }
 }
 
-/// A reactive form that aggregates multiple signals and manages validation.
+/// A reactive form container.
 class FluxForm {
-  final Map<String, FormFieldSignal> fields;
+  final Map<String, FluxField> fields;
 
   FluxForm(this.fields);
 
-  bool get isValid => fields.values.every((f) => f.isValid);
-  
-  Map<String, String?> get errors => {
-    for (final entry in fields.entries)
-      if (entry.value.hasError) entry.key: entry.value.error
-  };
+  /// Gets a field by key.
+  FluxField<T> field<T>(String key) => fields[key] as FluxField<T>;
 
+  /// Access field via bracket operator.
+  FluxField operator [](String key) => fields[key]!;
+
+  /// Checks if entire form is valid.
+  bool get isValid => fields.values.every((f) => f.isValid);
+
+  /// Checks if any field is dirty.
+  bool get isDirty => fields.values.any((f) => f.isDirty);
+
+  /// validates all fields.
   bool validate() {
     bool allValid = true;
     for (final field in fields.values) {
+      field.touch();
       if (field.validate() != null) {
         allValid = false;
       }
@@ -55,42 +91,52 @@ class FluxForm {
     return allValid;
   }
 
+  /// Resets all fields.
   void reset() {
     for (final field in fields.values) {
-      field.clearError();
+      field.reset();
     }
   }
-}
-
-/// Extension to add common validators to String signals.
-extension StringValidators on Signal<String> {
-  FormFieldSignal<String> _asField() {
-    if (this is FormFieldSignal<String>) return this as FormFieldSignal<String>;
-    return FormFieldSignal<String>(value);
-  }
-
-  FormFieldSignal<String> required([String message = "This field is required"]) {
-    return _asField()..addValidator((v) => v.isEmpty ? message : null);
-  }
-
-  FormFieldSignal<String> email([String message = "Invalid email address"]) {
-    return _asField()..addValidator((v) {
-      final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
-      return !emailRegex.hasMatch(v) ? message : null;
-    });
-  }
-
-  FormFieldSignal<String> min(int length, [String? message]) {
-    return _asField()..addValidator((v) => v.length < length ? (message ?? "Minimum $length characters required") : null);
-  }
-
-  FormFieldSignal<String> max(int length, [String? message]) {
-    return _asField()..addValidator((v) => v.length > length ? (message ?? "Maximum $length characters allowed") : null);
+  
+  /// Gets all current errors.
+  Map<String, String> get errors {
+    final Map<String, String> errs = {};
+    for (final entry in fields.entries) {
+      if (entry.value.hasError) {
+        errs[entry.key] = entry.value.error!;
+      }
+    }
+    return errs;
   }
 }
 
-/// Helper to create reactive form signals.
-FormFieldSignal<T> fluxField<T>(T initialValue) => FormFieldSignal<T>(initialValue);
+/// Fluent validation rules for String fields.
+extension StringFieldExtensions on FluxField<String> {
+  FluxField<String> required([String message = "Required"]) {
+    return addRule((v) => v.trim().isEmpty ? message : null);
+  }
 
-/// Creates a new reactive form.
-FluxForm fluxForm(Map<String, FormFieldSignal> fields) => FluxForm(fields);
+  FluxField<String> email([String message = "Invalid email"]) {
+    final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+    return addRule((v) => v.isNotEmpty && !emailRegex.hasMatch(v) ? message : null);
+  }
+
+  FluxField<String> minLength(int length, [String? message]) {
+    return addRule((v) => v.length < length ? (message ?? "Min $length chars") : null);
+  }
+
+  FluxField<String> maxLength(int length, [String? message]) {
+    return addRule((v) => v.length > length ? (message ?? "Max $length chars") : null);
+  }
+  
+  FluxField<String> match(String pattern, [String message = "Format invalid"]) {
+    return addRule((v) => !RegExp(pattern).hasMatch(v) ? message : null);
+  }
+}
+
+/// Helper to create a specialized field.
+FluxField<T> fluxField<T>(T initialValue) => FluxField<T>(initialValue);
+
+/// Helper to create a form.
+FluxForm fluxForm(Map<String, FluxField> fields) => FluxForm(fields);
+

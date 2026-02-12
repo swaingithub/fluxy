@@ -200,6 +200,16 @@ class Fx extends StatefulWidget {
     return imageWidget;
   }
 
+  /// A Hero component for shared element transitions.
+  /// 
+  /// Automatically wraps child in a Material transparency to avoid "yellow text" flight issues.
+  static Widget hero({
+    required String tag,
+    required Widget child,
+  }) {
+    return FxHero(tag: tag, child: child);
+  }
+
   /// A centered loading indicator.
   static Widget loader({Color? color, double size = 24}) {
     return Center(
@@ -315,10 +325,11 @@ class Fx extends StatefulWidget {
   }
 
   // Navigation
-  static Future<T?> go<T>(String route, {Map<String, dynamic>? arguments}) => FluxyRouter.to<T>(route, arguments: arguments);
-  static Future<T?> off<T, TO>(String route, {TO? result, Map<String, dynamic>? arguments}) => FluxyRouter.off<T, TO>(route, result: result, arguments: arguments);
-  static Future<T?> offAll<T>(String route, {Map<String, dynamic>? arguments}) => FluxyRouter.offAll<T>(route, arguments: arguments);
-  static void back<T>([T? result]) => FluxyRouter.back<T>(result);
+  static Future<T?> to<T>(String route, {Object? arguments, String? scope}) => FluxyRouter.to<T>(route, arguments: arguments, scope: scope);
+  static Future<T?> go<T>(String route, {Object? arguments, String? scope}) => FluxyRouter.to<T>(route, arguments: arguments, scope: scope);
+  static Future<T?> off<T, TO>(String route, {TO? result, Object? arguments, String? scope}) => FluxyRouter.off<T, TO>(route, result: result, arguments: arguments, scope: scope);
+  static Future<T?> offAll<T>(String route, {Object? arguments, String? scope}) => FluxyRouter.offAll<T>(route, arguments: arguments, scope: scope);
+  static void back<T>([T? result, String? scope]) => FluxyRouter.back<T>(result, scope);
 }
 
 class _FxState extends State<Fx> with ReactiveSubscriberMixin {
