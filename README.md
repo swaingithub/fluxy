@@ -72,6 +72,8 @@ dependencies:
 
 ## ⚡ Quick Start
 
+For a detailed walkthrough, see the **[Official Guide](./GUIDE.md)**.
+
 ### Create a new project
 ```bash
 # Install CLI
@@ -84,7 +86,8 @@ fluxy run
 ```
 
 ### Debugging
-Enable the powerful in-app inspector:
+Disable debug mode in production!
+Enable the powerful in-app inspector only during development:
 ```dart
 void main() {
   FluxyDebug.init();

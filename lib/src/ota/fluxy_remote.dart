@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
-import 'package:http/http.dart' as http;
+
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -38,10 +38,17 @@ class FluxyRemote {
     try {
       await init();
       debugPrint('[FluxyRemote] Checking for updates...');
-      final response = await http.get(Uri.parse(manifestUrl));
-      if (response.statusCode != 200) throw HttpException('Failed to fetch manifest: ${response.statusCode}');
+      
+      final client = HttpClient();
+      final request = await client.getUrl(Uri.parse(manifestUrl));
+      final response = await request.close();
 
-      final Map<String, dynamic> manifest = jsonDecode(response.body);
+      if (response.statusCode != 200) {
+        throw HttpException('Failed to fetch manifest: ${response.statusCode}');
+      }
+
+      final body = await response.transform(utf8.decoder).join();
+      final Map<String, dynamic> manifest = jsonDecode(body);
       final int newVersion = manifest['version'] ?? 0;
       
       final prefs = await SharedPreferences.getInstance();
@@ -57,22 +64,25 @@ class FluxyRemote {
       }
     } catch (e) {
       debugPrint('[FluxyRemote] Update failed: $e');
-      // Non-blocking, just log
     }
   }
 
   static Future<void> _downloadAssets(Map<String, dynamic>? assets) async {
     if (assets == null) return;
+    final client = HttpClient();
     
     for (final entry in assets.entries) {
       final String filename = entry.key;
       final String url = entry.value;
       
       try {
-        final response = await http.get(Uri.parse(url));
+        final request = await client.getUrl(Uri.parse(url));
+        final response = await request.close();
+        
         if (response.statusCode == 200) {
+          final bytes = await response.fold<List<int>>([], (a, b) => a..addAll(b));
           final file = File('${_assetsDir!.path}/$filename');
-          await file.writeAsBytes(response.bodyBytes);
+          await file.writeAsBytes(bytes);
           debugPrint('[FluxyRemote] Downloaded $filename');
         } else {
            debugPrint('[FluxyRemote] Failed to download $filename: ${response.statusCode}');

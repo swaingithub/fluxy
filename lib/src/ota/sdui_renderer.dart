@@ -120,6 +120,7 @@ class FluxyRenderer {
   }
 
   String _interpolate(String text) {
+    if (!text.contains('{')) return text;
     return text.replaceAllMapped(RegExp(r'\{(\w+(?:\.\w+)*)\}'), (match) {
       final key = match.group(1)!;
       return _getValue(key)?.toString() ?? match.group(0)!;

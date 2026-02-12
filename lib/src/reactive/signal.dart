@@ -361,6 +361,7 @@ bool deepEquals(dynamic a, dynamic b) {
 
 bool _deepEquals(dynamic a, dynamic b) {
   if (identical(a, b)) return true;
+  if (a == b) return true; // Fast path for primitives
   if (a is List && b is List) {
     if (a.length != b.length) return false;
     for (int i = 0; i < a.length; i++) {
