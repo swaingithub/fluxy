@@ -35,8 +35,8 @@ class FluxyRemote {
   /// }
   /// ```
   static Future<void> update(String manifestUrl) async {
-    await init();
     try {
+      await init();
       debugPrint('[FluxyRemote] Checking for updates...');
       final response = await http.get(Uri.parse(manifestUrl));
       if (response.statusCode != 200) throw HttpException('Failed to fetch manifest: ${response.statusCode}');

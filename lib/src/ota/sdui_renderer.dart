@@ -85,7 +85,10 @@ class FluxyRenderer {
 
   List<Widget> _renderChildren(Map<String, dynamic> json) {
     if (json['children'] is List) {
-      return (json['children'] as List).map((e) => render(e)).toList();
+      return (json['children'] as List)
+          .whereType<Map<String, dynamic>>()
+          .map((e) => render(e))
+          .toList();
     }
     return [];
   }
