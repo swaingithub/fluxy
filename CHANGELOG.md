@@ -1,3 +1,17 @@
+## 0.1.1
+
+* **Atomic Styling DSL**: Introduced a comprehensive suite of fluent modifiers for widgets, including expressive shorthands for layout and spacing:
+    * **Padding**: `.p()`, `.px()`, `.py()`, `.pt()`, `.pb()`, etc.
+    * **Margin**: `.m()`, `.mx()`, `.my()`, `.mt()`, `.mb()`, etc.
+    * **Dimensions**: `.w()`, `.h()`, `.size()`, `.square()`.
+    * **Interactions**: `.onHover()`, `.onPressed()`, `.pointer()`.
+* **Functional Modifiers**: Added `FluxyStyleFluentExtension` for expressive style transformations in state callbacks (hover, pressed).
+* **Advanced UI Components**: Introduced `FxAvatar` for smart profile image management and `FxBadge` for notification overlays.
+* **Web-Style Dropdown**: Re-engineered `FxDropdown` using an Overlay-based implementation to achieve modern "web-select" behavior with custom slide animations.
+* **Reactive Dropdown**: Added native `Signal` support to the dropdown API for zero-boilerplate state synchronization.
+* **Custom Bottom Bar**: Launched `FxBottomBar`, a unique pill-style navigation experience with smooth physics-based selection tracking.
+* **Performance Polish**: Optimized the responsive styling engine and resolved potential circular dependencies in widget definitions.
+
 ## 0.1.0
 
 * **Dependency Modernization**: Upgraded all core dependencies to their latest stable versions, including a major upgrade to `flutter_secure_storage` (v10.0.0).
