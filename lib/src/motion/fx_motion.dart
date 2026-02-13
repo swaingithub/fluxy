@@ -177,7 +177,7 @@ extension FxMotionExtension on Widget {
   /// )
   /// ```
   Widget animate({
-    Duration? duration,
+    Object? duration, // Can be Duration or num (seconds)
     Curve? curve,
     Spring? spring,
     double? delay, // Seconds
@@ -189,8 +189,75 @@ extension FxMotionExtension on Widget {
     double? scale,
     double? rotate,
   }) {
+    final self = this;
+
+    // --- Structural Recursion for ParentDataWidgets ---
+    if (self is Expanded) {
+      return Expanded(
+        flex: self.flex,
+        child: self.child.animate(
+          duration: duration,
+          curve: curve,
+          spring: spring,
+          delay: delay,
+          autoStart: autoStart,
+          fade: fade,
+          slide: slide,
+          scale: scale,
+          rotate: rotate,
+        ),
+      );
+    }
+
+    if (self is Flexible) {
+      return Flexible(
+        flex: self.flex,
+        fit: self.fit,
+        child: self.child.animate(
+          duration: duration,
+          curve: curve,
+          spring: spring,
+          delay: delay,
+          autoStart: autoStart,
+          fade: fade,
+          slide: slide,
+          scale: scale,
+          rotate: rotate,
+        ),
+      );
+    }
+
+    if (self is Positioned) {
+      return Positioned(
+        left: self.left,
+        top: self.top,
+        right: self.right,
+        bottom: self.bottom,
+        width: self.width,
+        height: self.height,
+        child: self.child.animate(
+          duration: duration,
+          curve: curve,
+          spring: spring,
+          delay: delay,
+          autoStart: autoStart,
+          fade: fade,
+          slide: slide,
+          scale: scale,
+          rotate: rotate,
+        ),
+      );
+    }
+
+    Duration? actualDuration;
+    if (duration is Duration) {
+      actualDuration = duration;
+    } else if (duration is num) {
+      actualDuration = Duration(milliseconds: (duration * 1000).toInt());
+    }
+
     return FxMotion(
-      duration: duration ?? const Duration(milliseconds: 400),
+      duration: actualDuration ?? const Duration(milliseconds: 400),
       curve: curve ?? Curves.easeOutCubic,
       spring: spring,
       delay: delay,

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../fluxy.dart';
+import '../dsl/fx.dart';
+import '../reactive/signal.dart';
+import '../routing/fluxy_router.dart';
 
 /// A widget that manages a nested navigation stack, typically used for Tab views.
 class FxNestedStack extends StatelessWidget {

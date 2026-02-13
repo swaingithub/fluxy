@@ -177,7 +177,7 @@ class WalletDashboard extends StatelessWidget {
             // Example Button as requested
             Fx.button("Add New Card", onTap: () {})
                 .fullWidth()
-                .sizeLarge()
+                .sizeLg()
                 .shadowMedium(),
 
             const SizedBox(height: 48),
@@ -247,7 +247,7 @@ class WalletDashboard extends StatelessWidget {
             
             const SizedBox(height: 32),
             Fx.button("View Full Layout Demo", onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const LayoutShowcase())))
-                .secondary().fullWidth(),
+                .secondary.fullWidth(),
             
             const SizedBox(height: 100), // Bottom padding
           ],
@@ -275,7 +275,7 @@ class WalletDashboard extends StatelessWidget {
         const SizedBox(height: 8),
         Fx.text(label).fontSize(12).semiBold().color(Colors.grey[700]!)
       ]),
-    ).onPressed((s) => s.op(0.7)); 
+    ).pointer(); 
   }
 
 

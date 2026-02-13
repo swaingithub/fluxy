@@ -1,3 +1,12 @@
+## 0.1.3
+
+* **Built-in Theme Management**: Added `FxTheme` and methods like `Fx.toggleTheme()` for zero-boilerplate dark mode support.
+* **Advanced Layouts**: Introduced `Fx.layout` builder and `Fx.grid` for cleaner responsive designs.
+* **Premium Data Tables**: Added `Fx.table` component with responsive scrolling, striped rows, and hover effects.
+* **Unified Form System**: Launched `Fx.form` and `Fx.input` with built-in validation support.
+* **Responsive Modifiers**: Added `asRow`, `asCol`, `justify`, `items`, and `gap` modifiers for fluent layout control.
+* **Framework Polish**: Responsive updates for `Fx.snack` and `Fx.modal`, plus structural fixes for layout modifiers.
+
 ## 0.1.2
 
 * **Proxy-based Styling DSL**: Introduced a new, intuitive way to apply styles using chained properties (e.g., `.bg.white`, `.width.full`, `.weight.bold`).

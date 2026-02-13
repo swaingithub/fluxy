@@ -21,6 +21,10 @@ import '../widgets/badge.dart';
 // Re-export specific styles/tokens for easy access if needed
 export '../styles/style.dart';
 export 'modifiers.dart';
+import '../styles/fx_theme.dart';
+import '../widgets/grid_box.dart';
+import '../widgets/table.dart';
+import '../reactive/forms.dart';
 
 /// The hyper-minimal Fx API for Fluxy.
 /// Designed for maximum builder velocity and zero boilerplate reactivity.
@@ -38,6 +42,60 @@ class Fx extends StatefulWidget {
   static const radius = FxTokens.radius;
   static const font = FxTokens.font;
   static const shadow = FxTokens.shadow;
+
+  // --- Theme Management ---
+  
+  /// Toggles between light and dark mode.
+  static void toggleTheme() => FxTheme.toggle();
+  
+  /// Checks if the current theme is dark.
+  static bool get isDarkMode => FxTheme.isDarkMode;
+
+  /// Sets the theme mode.
+  static void setThemeMode(ThemeMode mode) => FxTheme.setMode(mode);
+
+  // --- Responsive Layouts ---
+
+  /// Builds a widget based on screen size breakpoints.
+  static Widget responsive({
+    required WidgetBuilder mobile,
+    WidgetBuilder? tablet,
+    WidgetBuilder? desktop,
+  }) {
+    return Builder(builder: (context) {
+      final width = MediaQuery.of(context).size.width;
+      if (width >= 1024 && desktop != null) return desktop(context);
+      if (width >= 600 && tablet != null) return tablet(context);
+      return mobile(context);
+    });
+  }
+
+  /// A structured layout helper for responsive designs.
+  /// Similar to responsive() but with semantic names.
+  static Widget layout({
+    required WidgetBuilder mobile,
+    WidgetBuilder? desktop,
+  }) => responsive(mobile: mobile, tablet: desktop, desktop: desktop);
+
+  /// Advanced Grid Layout.
+  static Widget grid({
+    required List<Widget> children,
+    int? columns,
+    double gap = 0,
+    FxStyle style = FxStyle.none,
+    FxResponsiveStyle? responsive,
+  }) {
+    // Note: GridBox implementation handles responsive columns natively via style
+    return GridBox(
+      children: children,
+      style: style.merge(FxStyle(gap: gap)),
+      responsive: responsive,
+      // If explicit columns provided, we might need to handle it or rely on style.
+      // GridBox currently relies on style.gridCols. 
+      // We can map `columns` to a style override if needed, 
+      // but standard usage is .gridCols(3).
+    );
+  }
 
   // --- Core Primitives ---
 
@@ -142,6 +200,21 @@ class Fx extends StatefulWidget {
     return StackBox(
       style: style.merge(FxStyle(alignment: alignment)),
       children: children,
+    );
+  }
+
+  /// Data Table.
+  static Widget table<T>({
+    required List<T> data,
+    required List<FxTableColumn<T>> columns,
+    bool striped = true,
+    VoidCallback? onRowTap,
+  }) {
+    return FxTable<T>(
+      data: data,
+      columns: columns,
+      striped: striped,
+      onRowTap: onRowTap,
     );
   }
 
@@ -265,10 +338,13 @@ class Fx extends StatefulWidget {
   // --- Overlays & Feedback ---
 
   /// Shows a modal dialog.
+  /// Shows a modal dialog.
+  /// Automatically constrains width on desktop/tablet for a better UX.
   static Future<T?> modal<T>(BuildContext context, {
     required Widget child,
     bool barrierDismissible = true,
     Color? barrierColor,
+    double? maxWidth, // Responsive constraint
   }) {
     return showDialog<T>(
       context: context,
@@ -276,8 +352,13 @@ class Fx extends StatefulWidget {
       barrierColor: barrierColor,
       builder: (context) => Dialog(
         backgroundColor: Colors.transparent,
-        insetPadding: EdgeInsets.all(16),
-        child: child,
+        insetPadding: const EdgeInsets.all(16),
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            maxWidth: maxWidth ?? 500, // Default to 500px max on wide screens
+          ),
+          child: child,
+        ),
       ),
     );
   }
@@ -307,19 +388,40 @@ class Fx extends StatefulWidget {
   }
 
   /// Shows a snackbar / toast.
+  /// Shows a snackbar / toast.
+  /// Automatically becomes floating and width-constrained on larger screens.
   static void snack(BuildContext context, String message, {
     Color? backgroundColor, 
     Color? textColor,
     Duration duration = const Duration(seconds: 3),
     SnackBarAction? action,
+    double? width, // Explicit width
+    EdgeInsetsGeometry? margin, // Explicit margin
   }) {
+    // Responsive Default:
+    // If Desktop/Tablet (>600px): strictly limit width to 400px (floating).
+    // If Mobile: use full width (standard).
+    
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isDesktop = screenWidth > 600;
+    
+    // Auto-calculate width for desktop if not provided
+    final effectiveWidth = width ?? (isDesktop ? 400.0 : null);
+    
+    // If we have a width, we MUST use floating behavior
+    final behavior = (effectiveWidth != null || margin != null) 
+        ? SnackBarBehavior.floating 
+        : SnackBarBehavior.fixed;
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message, style: TextStyle(color: textColor ?? Colors.white)),
         backgroundColor: backgroundColor ?? const Color(0xFF1E293B),
         duration: duration,
         action: action,
-        behavior: SnackBarBehavior.floating,
+        behavior: behavior,
+        width: effectiveWidth,
+        margin: effectiveWidth == null ? margin : null, // Apply margin only if no width
       ),
     );
   }
@@ -436,7 +538,15 @@ class Fx extends StatefulWidget {
     required Signal<String> signal,
     String? placeholder,
     bool obscureText = false,
+    List<Validator<String>>? validators, // New validators support
   }) {
+    // Attach validators if provided
+    if (validators != null && signal is FluxField<String>) {
+      for (final v in validators) {
+        signal.addRule(v);
+      }
+    }
+    
     return FxTextField(
       signal: signal,
       placeholder: placeholder,
@@ -447,6 +557,23 @@ class Fx extends StatefulWidget {
         contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
       ),
     );
+  }
+
+  /// Form container for grouping inputs.
+  static Widget form({
+    required Widget child,
+    FluxForm? form, // Optional binding to a FluxForm
+    VoidCallback? onSubmit,
+  }) {
+    return Builder(builder: (context) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          child,
+          // We could auto-inject a submit button or handle enter key globally here
+        ],
+      );
+    });
   }
   
   static Widget password({

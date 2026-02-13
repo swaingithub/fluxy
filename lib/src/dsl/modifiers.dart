@@ -15,6 +15,33 @@ extension FluxyWidgetExtension on Widget {
   /// Internal helper to apply style to any supported widget or wrap in Box.
   Widget _applyGenericStyle(FxStyle style) {
     final self = this;
+
+    // --- Structural Recursion for ParentDataWidgets ---
+    if (self is Expanded) {
+      return Expanded(
+        flex: self.flex,
+        child: self.child._applyGenericStyle(style),
+      );
+    }
+    if (self is Flexible) {
+      return Flexible(
+        flex: self.flex,
+        fit: self.fit,
+        child: self.child._applyGenericStyle(style),
+      );
+    }
+    if (self is Positioned) {
+      return Positioned(
+        left: self.left,
+        top: self.top,
+        right: self.right,
+        bottom: self.bottom,
+        width: self.width,
+        height: self.height,
+        child: self.child._applyGenericStyle(style),
+      );
+    }
+
     if (self is Box) return self.copyWith(style: self.style.merge(style));
     if (self is TextBox) return self.copyWith(style: self.style.merge(style));
     if (self is FlexBox) return self.copyWith(style: self.style.merge(style));
@@ -32,6 +59,33 @@ extension FluxyWidgetExtension on Widget {
   /// Internal helper to apply responsive style.
   Widget _applyResponsive(FxResponsiveStyle responsive) {
     final self = this;
+
+    // --- Structural Recursion for ParentDataWidgets ---
+    if (self is Expanded) {
+      return Expanded(
+        flex: self.flex,
+        child: self.child._applyResponsive(responsive),
+      );
+    }
+    if (self is Flexible) {
+      return Flexible(
+        flex: self.flex,
+        fit: self.fit,
+        child: self.child._applyResponsive(responsive),
+      );
+    }
+    if (self is Positioned) {
+      return Positioned(
+        left: self.left,
+        top: self.top,
+        right: self.right,
+        bottom: self.bottom,
+        width: self.width,
+        height: self.height,
+        child: self.child._applyResponsive(responsive),
+      );
+    }
+
     if (self is Box) return self.copyWith(responsive: self.responsive?.merge(responsive) ?? responsive);
     if (self is TextBox) return self.copyWith(responsive: self.responsive?.merge(responsive) ?? responsive);
     if (self is FlexBox) return self.copyWith(responsive: self.responsive?.merge(responsive) ?? responsive);
@@ -137,6 +191,32 @@ extension FluxyWidgetExtension on Widget {
   Widget semiBold() => fontWeight(FontWeight.w600);
   Widget medium() => fontWeight(FontWeight.w500);
   Widget light() => fontWeight(FontWeight.w300);
+
+  // --- Flex Layout Modifiers ---
+
+  Widget justify(MainAxisAlignment value) => _applyGenericStyle(FxStyle(justifyContent: value));
+  Widget items(CrossAxisAlignment value) => _applyGenericStyle(FxStyle(alignItems: value));
+  Widget gap(double value) => _applyGenericStyle(FxStyle(gap: value));
+
+  /// Justify Shorthands
+  Widget justifyStart() => justify(MainAxisAlignment.start);
+  Widget justifyCenter() => justify(MainAxisAlignment.center);
+  Widget justifyEnd() => justify(MainAxisAlignment.end);
+  Widget justifyBetween() => justify(MainAxisAlignment.spaceBetween);
+  Widget justifyAround() => justify(MainAxisAlignment.spaceAround);
+  Widget justifyEvenly() => justify(MainAxisAlignment.spaceEvenly);
+
+  /// Items Shorthands (Cross Axis)
+  Widget itemsStart() => items(CrossAxisAlignment.start);
+  Widget itemsCenter() => items(CrossAxisAlignment.center);
+  Widget itemsEnd() => items(CrossAxisAlignment.end);
+  Widget itemsStretch() => items(CrossAxisAlignment.stretch);
+  Widget itemsBaseline() => items(CrossAxisAlignment.baseline);
+
+  /// Direction Switching (Responsive Row/Col)
+  Widget direction(Axis value) => _applyGenericStyle(FxStyle(direction: value));
+  Widget asRow() => direction(Axis.horizontal);
+  Widget asCol() => direction(Axis.vertical);
 
   // --- Advanced Modifiers ---
   
@@ -283,4 +363,10 @@ extension FluxyStyleFluentExtension on FxStyle {
   FxStyle wFull() => copyWith(width: double.infinity);
   FxStyle hFull() => copyWith(height: double.infinity);
   FxStyle op(double value) => copyWith(opacity: value);
+
+  // Flex Fluent
+  FxStyle justify(MainAxisAlignment val) => copyWith(justifyContent: val);
+  FxStyle items(CrossAxisAlignment val) => copyWith(alignItems: val);
+  FxStyle gap(double val) => copyWith(gap: val);
+  FxStyle direction(Axis val) => copyWith(direction: val);
 }

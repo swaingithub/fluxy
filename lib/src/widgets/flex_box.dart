@@ -42,15 +42,17 @@ class FlexBox extends StatelessWidget {
       responsive: responsive
     );
 
+    final actualDirection = s.direction ?? direction;
+
     Widget current = Flex(
-      direction: direction,
+      direction: actualDirection,
       mainAxisAlignment: s.justifyContent ?? MainAxisAlignment.start,
       crossAxisAlignment: s.alignItems ?? CrossAxisAlignment.center,
       mainAxisSize: s.mainAxisSize ?? MainAxisSize.max,
-      children: s.gap != null ? _addGaps(children, s.gap!) : children,
+      children: s.gap != null ? _addGaps(children, s.gap!, actualDirection) : children,
     );
 
-    // Apply container styles if any
+    // Apply container styles if any (Width, Height, Padding, Decoration)
     if (FxDecorationBuilder.hasVisuals(s) || s.width != null || s.height != null || s.padding != EdgeInsets.zero || s.margin != EdgeInsets.zero) {
       current = Container(
         width: s.width,
@@ -70,18 +72,22 @@ class FlexBox extends StatelessWidget {
       );
     }
 
-    return onTap != null ? GestureDetector(onTap: onTap, child: current) : current;
+    return onTap != null ? GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: onTap, 
+      child: current
+    ) : current;
   }
 
-  List<Widget> _addGaps(List<Widget> items, double gap) {
+  List<Widget> _addGaps(List<Widget> items, double gap, Axis dir) {
     if (items.isEmpty) return [];
     final List<Widget> spaced = [];
     for (var i = 0; i < items.length; i++) {
       spaced.add(items[i]);
       if (i < items.length - 1) {
         spaced.add(SizedBox(
-          width: direction == Axis.horizontal ? gap : 0,
-          height: direction == Axis.vertical ? gap : 0,
+          width: dir == Axis.horizontal ? gap : 0,
+          height: dir == Axis.vertical ? gap : 0,
         ));
       }
     }

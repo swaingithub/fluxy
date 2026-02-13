@@ -3,9 +3,12 @@ library fluxy;
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'src/devtools/fluxy_devtools.dart';
+import 'src/dsl/fx.dart'; // Import for usage
+import 'src/styles/fx_theme.dart'; // Import for usage
 
 // Styles & Foundation
 export 'src/styles/style.dart';
+export 'src/styles/fx_theme.dart';
 export 'src/dsl/fx.dart';
 export 'src/motion/fx_motion.dart';
 export 'src/devtools/fluxy_devtools.dart';
@@ -22,6 +25,7 @@ export 'src/widgets/dropdown.dart';
 export 'src/widgets/bottom_bar.dart';
 export 'src/widgets/avatar.dart';
 export 'src/widgets/badge.dart';
+export 'src/widgets/table.dart';
 
 // Reactive Core
 export 'src/reactive/signal.dart';
@@ -128,14 +132,14 @@ class FluxyApp extends StatelessWidget {
       }
     }
 
-    return MaterialApp(
+    return Fx(() => MaterialApp(
       title: title,
       navigatorKey: FluxyRouter.navigatorKey,
       onGenerateRoute: FluxyRouter.onGenerateRoute,
       initialRoute: initialRoute?.path ?? '/',
       theme: theme,
       darkTheme: darkTheme,
-      themeMode: themeMode,
+      themeMode: themeMode ?? FxTheme.mode, // Use internal theme if not provided
       debugShowCheckedModeBanner: debugShowCheckedModeBanner,
       navigatorObservers: FluxyRouter.observers,
       builder: (context, child) {
@@ -179,7 +183,7 @@ class FluxyApp extends StatelessWidget {
         
         return builder?.call(context, child) ?? child!;
       },
-    );
+    ));
   }
 }
 
