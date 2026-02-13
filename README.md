@@ -41,7 +41,7 @@ Add Fluxy to your `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  fluxy: ^0.1.1
+  fluxy: ^0.1.2
 ```
 
 Then, activate the Fluxy CLI globally for project orchestration:
@@ -54,21 +54,24 @@ dart pub global activate fluxy
 
 ## Core Framework Usage
 
-### Atomic Styling DSL (New in 0.1.1)
+### Atomic Styling DSL (New in 0.1.2)
 
-Fluxy 0.1.1 introduces **Atomic Modifiers**, allowing you to style any widget fluently.
+Fluxy 0.1.1 introduced **Atomic Modifiers**, and 0.1.2 brings a more intuitive **Proxy-based DSL** for even cleaner syntax.
 
 ```dart
 Fx.column(
   gap: 12,
   children: [
     Fx.avatar(fallback: "JD").size(FxAvatarSize.xl),
-    Fx.text("John Doe").bold().fontSize(24).mt(4),
+    Fx.text("John Doe")
+        .weight.bold     // New Proxy Syntax
+        .textLg()        // Semantic Sizing
+        .mt(4),
     Fx.button("Follow", onTap: () {})
         .p(16)
         .px(32)
-        .bg(Colors.blue)
-        .shadowXL()
+        .bg.blue500      // New Proxy Syntax
+        .shadowMedium()  // Semantic Shadows
   ]
 ).center().p(24);
 ```
@@ -121,10 +124,10 @@ Fluxy is designed with a "Payload-First" philosophy:
 
 ---
 
-## Roadmap and Release Status (v0.1.1 Alpha)
+## Roadmap and Release Status (v0.1.2 Alpha)
 
 - **Signals & State Engine**: Production Ready
-- **Atomic DSL & Modifiers**: Production Ready
+- **Atomic DSL & Modifiers**: Production Ready (Proxy-based DSL)
 - **Premium Widget Suite**: Production Ready
 - **Fluxy CLI & Cloud Sync**: Production Ready
 - **Over-The-Air Distribution**: Production Ready

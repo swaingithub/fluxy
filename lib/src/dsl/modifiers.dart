@@ -7,429 +7,280 @@ import '../widgets/text_box.dart';
 import '../widgets/flex_box.dart';
 import '../widgets/grid_box.dart';
 import '../widgets/stack_box.dart';
+import '../widgets/button.dart';
 
 /// Extension to provide a fluent DSL experience for any Widget.
 extension FluxyWidgetExtension on Widget {
   
   /// Internal helper to apply style to any supported widget or wrap in Box.
   Widget _applyGenericStyle(FxStyle style) {
-    if (this is Box) return (this as Box).copyWith(style: (this as Box).style.merge(style));
-    if (this is TextBox) return (this as TextBox).copyWith(style: (this as TextBox).style.merge(style));
-    if (this is FlexBox) return (this as FlexBox).copyWith(style: (this as FlexBox).style.merge(style));
-    if (this is GridBox) return (this as GridBox).copyWith(style: (this as GridBox).style.merge(style));
-    if (this is StackBox) return (this as StackBox).copyWith(style: (this as StackBox).style.merge(style));
+    final self = this;
+    if (self is Box) return self.copyWith(style: self.style.merge(style));
+    if (self is TextBox) return self.copyWith(style: self.style.merge(style));
+    if (self is FlexBox) return self.copyWith(style: self.style.merge(style));
+    if (self is GridBox) return self.copyWith(style: self.style.merge(style));
+    if (self is StackBox) return self.copyWith(style: self.style.merge(style));
+    if (self is FxButton) return self.copyWith(style: self.style.merge(style));
     
     // Wrap generic widget
     return Box(
       style: style,
-      child: this,
+      child: self,
     );
   }
 
   /// Internal helper to apply responsive style.
   Widget _applyResponsive(FxResponsiveStyle responsive) {
-    if (this is Box) return (this as Box).copyWith(responsive: responsive);
-    if (this is TextBox) return (this as TextBox).copyWith(responsive: responsive);
-    if (this is FlexBox) return (this as FlexBox).copyWith(responsive: responsive);
-    if (this is GridBox) return (this as GridBox).copyWith(responsive: responsive);
-    if (this is StackBox) return (this as StackBox).copyWith(responsive: responsive);
+    final self = this;
+    if (self is Box) return self.copyWith(responsive: self.responsive?.merge(responsive) ?? responsive);
+    if (self is TextBox) return self.copyWith(responsive: self.responsive?.merge(responsive) ?? responsive);
+    if (self is FlexBox) return self.copyWith(responsive: self.responsive?.merge(responsive) ?? responsive);
+    if (self is GridBox) return self.copyWith(responsive: self.responsive?.merge(responsive) ?? responsive);
+    if (self is StackBox) return self.copyWith(responsive: self.responsive?.merge(responsive) ?? responsive);
     
     // Wrap generic widget
     return Box(
       responsive: responsive,
-      child: this,
+      child: self,
     );
   }
 
-  // --- Utility Modifiers ---
+  // --- Proxy Properties for New Syntax ---
 
-  /// Conditionally show/hide the widget.
-  /// Usage: .show(someBoolean) or .hide(someBoolean)
-  Widget show(bool condition) => condition ? this : const SizedBox.shrink();
-  
-  /// Conditionally hide the widget.
-  Widget hide(bool condition) => condition ? const SizedBox.shrink() : this;
+  /// Background styling proxy: .bg.white, .bg.color(Colors.blue)
+  FxBgProxy get bg => FxBgProxy(this);
 
-  /// Implicitly animates changes to the widget's style.
-  /// Usage: .animate(duration: 300.ms, curve: Curves.easeOut)
-  Widget animate({Duration duration = const Duration(milliseconds: 300), Curve curve = Curves.easeInOut}) => 
-      _applyGenericStyle(FxStyle(transition: duration)); // Box checks transition property
+  /// Width styling proxy: .width(100), .width.full
+  FxWidthProxy get width => FxWidthProxy(this);
 
-  // --- Interaction Modifiers ---
+  /// Height styling proxy: .height(100), .height.full
+  FxHeightProxy get height => FxHeightProxy(this);
 
-  /// Applies styles on hover state.
-  /// Usage: .onHover((s) => s.scale(1.05).shadowMd())
-  Widget onHover(FxStyle Function(FxStyle s) builder) {
-    final s = builder(FxStyle.none);
-    return _applyGenericStyle(FxStyle(hover: s));
-  }
+  /// Weight styling proxy: .weight.bold, .weight.medium
+  FxWeightProxy get weight => FxWeightProxy(this);
 
-  /// Applies styles on pressed state.
-  Widget onPressed(FxStyle Function(FxStyle s) builder) {
-    final s = builder(FxStyle.none);
-    return _applyGenericStyle(FxStyle(pressed: s));
-  }
+  // --- Spacing Modifiers ---
 
-  // --- Spacing Modifiers (Phase 2 & 3) ---
-
-  /// Applies padding to all sides.
-  /// Usage: .padding(16) or .padding(FxTokens.space.md)
   Widget padding(double value) => _applyGenericStyle(FxStyle(padding: EdgeInsets.all(value)));
-  
-  /// Applies horizontal padding.
   Widget paddingX(double value) => _applyGenericStyle(FxStyle(padding: EdgeInsets.symmetric(horizontal: value)));
-  
-  /// Applies vertical padding.
   Widget paddingY(double value) => _applyGenericStyle(FxStyle(padding: EdgeInsets.symmetric(vertical: value)));
   
-  Widget paddingTop(double value) => _applyGenericStyle(FxStyle(padding: EdgeInsets.only(top: value)));
-  Widget paddingBottom(double value) => _applyGenericStyle(FxStyle(padding: EdgeInsets.only(bottom: value)));
-  Widget paddingLeft(double value) => _applyGenericStyle(FxStyle(padding: EdgeInsets.only(left: value)));
-  Widget paddingRight(double value) => _applyGenericStyle(FxStyle(padding: EdgeInsets.only(right: value)));
-  Widget paddingOnly({double left = 0, double top = 0, double right = 0, double bottom = 0}) => 
-      _applyGenericStyle(FxStyle(padding: EdgeInsets.only(left: left, top: top, right: right, bottom: bottom)));
-  
-  // -- Aliases for Padding --
-  Widget pad(double value) => padding(value);
-  Widget p(double value) => padding(value);
-  Widget px(double value) => paddingX(value);
-  Widget py(double value) => paddingY(value);
-  Widget pt(double value) => paddingTop(value);
-  Widget pb(double value) => paddingBottom(value);
-  Widget pl(double value) => paddingLeft(value);
-  Widget pr(double value) => paddingRight(value);
+  /// Aliases
+  Widget p(double v) => padding(v);
+  Widget px(double v) => paddingX(v);
+  Widget py(double v) => paddingY(v);
+  Widget pad(double v) => padding(v);
 
-  /// Applies margin to all sides.
   Widget margin(double value) => _applyGenericStyle(FxStyle(margin: EdgeInsets.all(value)));
-  
   Widget marginX(double value) => _applyGenericStyle(FxStyle(margin: EdgeInsets.symmetric(horizontal: value)));
   Widget marginY(double value) => _applyGenericStyle(FxStyle(margin: EdgeInsets.symmetric(vertical: value)));
-  
-  Widget marginTop(double value) => _applyGenericStyle(FxStyle(margin: EdgeInsets.only(top: value)));
-  Widget marginBottom(double value) => _applyGenericStyle(FxStyle(margin: EdgeInsets.only(bottom: value)));
-  Widget marginLeft(double value) => _applyGenericStyle(FxStyle(margin: EdgeInsets.only(left: value)));
-  Widget marginRight(double value) => _applyGenericStyle(FxStyle(margin: EdgeInsets.only(right: value)));
 
-  // -- Aliases for Margin --
-  Widget m(double value) => margin(value);
-  Widget mx(double value) => marginX(value);
-  Widget my(double value) => marginY(value);
-  Widget mt(double value) => marginTop(value);
-  Widget mb(double value) => marginBottom(value);
-  Widget ml(double value) => marginLeft(value);
-  Widget mr(double value) => marginRight(value);
+  /// Aliases
+  Widget m(double v) => margin(v);
+  Widget mx(double v) => marginX(v);
+  Widget my(double v) => marginY(v);
+  Widget mb(double value) => _applyGenericStyle(FxStyle(margin: EdgeInsets.only(bottom: value)));
+  Widget mt(double value) => _applyGenericStyle(FxStyle(margin: EdgeInsets.only(top: value)));
+  Widget ml(double value) => _applyGenericStyle(FxStyle(margin: EdgeInsets.only(left: value)));
+  Widget mr(double value) => _applyGenericStyle(FxStyle(margin: EdgeInsets.only(right: value)));
 
-  /// Applies gap (for Flex/Grid layouts).
-  Widget gap(double value) => _applyGenericStyle(FxStyle(gap: value));
+  Widget radius(double value) => _applyGenericStyle(FxStyle(borderRadius: BorderRadius.circular(value)));
+  Widget rounded(double value) => radius(value);
+  Widget borderRadius(double value) => radius(value);
+  Widget roundedFull() => radius(999);
 
   // --- Dimension Modifiers ---
-  
-  Widget width(double value) => _applyGenericStyle(FxStyle(width: value));
-  Widget height(double value) => _applyGenericStyle(FxStyle(height: value));
-  Widget size(double w, double h) => _applyGenericStyle(FxStyle(width: w, height: h));
-  Widget square(double value) => _applyGenericStyle(FxStyle(width: value, height: value));
-  
-  // -- Aliases for Dimensions --
-  Widget w(double value) => width(value);
-  Widget h(double value) => height(value);
+
+  Widget w(double value) => _applyGenericStyle(FxStyle(width: value));
+  Widget h(double value) => _applyGenericStyle(FxStyle(height: value));
+  Widget fullWidth() => _applyGenericStyle(const FxStyle(width: double.infinity));
+  Widget fullHeight() => _applyGenericStyle(const FxStyle(height: double.infinity));
   Widget wFull() => fullWidth();
   Widget hFull() => fullHeight();
   
-  /// Expands width to max available.
-  Widget fullWidth() => _applyGenericStyle(const FxStyle(width: double.infinity));
-  
-  /// Expands height to max available.
-  Widget fullHeight() => _applyGenericStyle(const FxStyle(height: double.infinity));
-
-  // --- Content Modifiers ---
-
-  /// Adds a child to the widget (if supported, e.g. Box).
-  Widget child(Widget child) {
-    if (this is Box) return (this as Box).copyWith(child: child);
-    if (this is StackBox) return (this as StackBox).copyWith(children: [...(this as StackBox).children, child]);
-    // Potentially support others or warn
-    return this;
+  Widget size(double w, [double? h]) {
+    if (h == null) {
+      if (this is TextBox) return _applyGenericStyle(FxStyle(fontSize: w));
+      return _applyGenericStyle(FxStyle(width: w, height: w));
+    }
+    return _applyGenericStyle(FxStyle(width: w, height: h));
   }
-
-  
-  /// Expands to fill available space in flex container.
-  Widget expand({int flex = 1}) => _applyGenericStyle(FxStyle(flex: flex, flexFit: FlexFit.tight));
 
   // --- Styling Modifiers ---
 
-  /// Sets the background color.
-  /// Usage: .background(Colors.red)
   Widget background(Color color) => _applyGenericStyle(FxStyle(backgroundColor: color));
-  
-  /// Shortcut for white background.
   Widget backgroundWhite() => background(const Color(0xFFFFFFFF));
-  
-  /// Shortcut for black background.
   Widget backgroundBlack() => background(const Color(0xFF000000));
-
-  // -- Aliases for Background --
-  Widget bg(Color color) => background(color);
-
-  /// Helper for linear gradient.
-  /// Usage: .linearGradient([Colors.red, Colors.blue])
-  Widget linearGradient(List<Color> colors, {Alignment begin = Alignment.topLeft, Alignment end = Alignment.bottomRight}) =>
-      _applyGenericStyle(FxStyle(gradient: LinearGradient(colors: colors, begin: begin, end: end)));
-
-  Widget radialGradient(List<Color> colors) => 
-      _applyGenericStyle(FxStyle(gradient: RadialGradient(colors: colors)));
-
-  /// Sets border radius.
-  Widget borderRadius(double value) => _applyGenericStyle(FxStyle(borderRadius: BorderRadius.circular(value)));
   
-  /// Semantic radius shortcuts (Phase 3).
-  Widget radiusSmall() => borderRadius(FxTokens.radius.sm);
-  Widget radiusMedium() => borderRadius(FxTokens.radius.md);
-  Widget radiusLarge() => borderRadius(FxTokens.radius.lg);
-  Widget radiusXLarge() => borderRadius(FxTokens.radius.xl);
-  Widget radiusFull() => borderRadius(FxTokens.radius.full);
-
-  // -- Aliases for Border Radius --
-  Widget radius(double value) => borderRadius(value);
-  Widget rounded(double value) => borderRadius(value);
-  Widget roundedFull() => radiusFull();
-
-  /// Sets border.
-  Widget border({Color color = const Color(0xFF000000), double width = 1}) => 
-      _applyGenericStyle(FxStyle(border: Border.all(color: color, width: width)));
-  
-  /// Sets shadow.
   Widget shadow({Color color = const Color(0x1F000000), double blur = 4, Offset offset = const Offset(0, 2)}) => 
       _applyGenericStyle(FxStyle(shadows: [BoxShadow(color: color, blurRadius: blur, offset: offset)]));
-  
-  /// Semantic shadow shortcuts (Phase 3).
+
   Widget shadowSmall() => _applyGenericStyle(FxStyle(shadows: FxTokens.shadow.sm));
   Widget shadowMedium() => _applyGenericStyle(FxStyle(shadows: FxTokens.shadow.md));
   Widget shadowLarge() => _applyGenericStyle(FxStyle(shadows: FxTokens.shadow.lg));
-  Widget shadowXL() => _applyGenericStyle(FxStyle(shadows: FxTokens.shadow.xl));
 
-  /// Opacity
-  Widget opacity(double value) => _applyGenericStyle(FxStyle(opacity: value));
-
-  // --- Text Modifiers ---
-  
-  Widget textColor(Color color) => _applyGenericStyle(FxStyle(color: color));
-  /// Alias for textColor
-  Widget color(Color color) => textColor(color);
+  // --- Typography ---
 
   Widget fontSize(double size) => _applyGenericStyle(FxStyle(fontSize: size));
   Widget fontWeight(FontWeight weight) => _applyGenericStyle(FxStyle(fontWeight: weight));
-  Widget fontFamily(String font) => _applyGenericStyle(FxStyle(fontFamily: font));
+  Widget color(Color value) => _applyGenericStyle(FxStyle(color: value));
   Widget textAlign(TextAlign align) => _applyGenericStyle(FxStyle(textAlign: align));
   Widget textCenter() => textAlign(TextAlign.center);
 
-  // -- Aliases for Typography --
-  Widget font(double size) => fontSize(size);
-  Widget fs(double size) => fontSize(size);
-  Widget fw(FontWeight w) => fontWeight(w);
-  Widget tc(Color c) => textColor(c);
-
-  // Semantic Font Sizes
   Widget textXs() => fontSize(FxTokens.font.xs);
   Widget textSm() => fontSize(FxTokens.font.sm);
   Widget textBase() => fontSize(FxTokens.font.md);
   Widget textLg() => fontSize(FxTokens.font.lg);
   Widget textXl() => fontSize(FxTokens.font.xl);
-  Widget text2Xl() => fontSize(FxTokens.font.xxl);
-  Widget text3Xl() => fontSize(FxTokens.font.xxxl);
 
   Widget bold() => fontWeight(FontWeight.bold);
   Widget semiBold() => fontWeight(FontWeight.w600);
-  Widget fontLight() => fontWeight(FontWeight.w300);
-  /// Alias for fontWeight
-  Widget weight(FontWeight w) => fontWeight(w);
+  Widget medium() => fontWeight(FontWeight.w500);
+  Widget light() => fontWeight(FontWeight.w300);
 
-  // --- Alignment ---
+  // --- Advanced Modifiers ---
   
+  Widget pack() => _applyGenericStyle(const FxStyle(mainAxisSize: MainAxisSize.min));
+  Widget stretch() => _applyGenericStyle(const FxStyle(mainAxisSize: MainAxisSize.max));
+  Widget expand({int flex = 1}) => _applyGenericStyle(FxStyle(flex: flex, flexFit: FlexFit.tight));
+  Widget flexible({int flex = 1}) => _applyGenericStyle(FxStyle(flex: flex, flexFit: FlexFit.loose));
+
+  Widget show(bool condition) => condition ? this : const SizedBox.shrink();
+  Widget hide(bool condition) => condition ? const SizedBox.shrink() : this;
+  
+  Widget onPressed(FxStyle Function(FxStyle s) builder) {
+    final s = builder(FxStyle.none);
+    return _applyGenericStyle(FxStyle(pressed: s));
+  }
+  
+  Widget onHover(FxStyle Function(FxStyle s) builder) {
+    final s = builder(FxStyle.none);
+    return _applyGenericStyle(FxStyle(hover: s));
+  }
+
   Widget align(AlignmentGeometry alignment) => _applyGenericStyle(FxStyle(alignment: alignment));
   Widget center() => align(Alignment.center);
-  Widget alignTopLeft() => align(Alignment.topLeft);
-  Widget alignTopRight() => align(Alignment.topRight);
-  Widget alignBottomLeft() => align(Alignment.bottomLeft);
-  Widget alignBottomRight() => align(Alignment.bottomRight);
-
-  // --- Layout Behavior Modifiers ---
-  
-  /// Sets MainAxisSize to min (shrinks to fit children).
-  Widget pack() => _applyGenericStyle(const FxStyle(mainAxisSize: MainAxisSize.min));
-  
-  /// Sets MainAxisSize to max (expands to fill space).
-  Widget stretch() => _applyGenericStyle(const FxStyle(mainAxisSize: MainAxisSize.max));
-
-  // --- Start Interaction Modifiers ---
   Widget pointer() => _applyGenericStyle(const FxStyle(cursor: SystemMouseCursors.click));
-  
-  /// Tap gesture handler.
+
+  Widget paddingOnly({double left = 0, double top = 0, double right = 0, double bottom = 0}) => 
+      _applyGenericStyle(FxStyle(padding: EdgeInsets.only(left: left, top: top, right: right, bottom: bottom)));
+  Widget marginOnly({double left = 0, double top = 0, double right = 0, double bottom = 0}) => 
+      _applyGenericStyle(FxStyle(margin: EdgeInsets.only(left: left, top: top, right: right, bottom: bottom)));
+
+  Widget child(Widget childWidget) {
+    final self = this;
+    if (self is Box) return self.copyWith(child: childWidget);
+    if (self is FlexBox) return self.copyWith(children: [childWidget]);
+    if (self is GridBox) return self.copyWith(children: [childWidget]);
+    if (self is StackBox) return self.copyWith(children: [childWidget]);
+    return Box(child: childWidget);
+  }
+
+  /// Responsive styling modifier.
+  Widget responsive({
+    Widget Function(Widget w)? sm,
+    Widget Function(Widget w)? md,
+    Widget Function(Widget w)? lg,
+    Widget Function(Widget w)? xl,
+  }) {
+    return _applyResponsive(FxResponsiveStyle(
+      xs: FxStyle.none,
+      sm: sm != null ? _extractStyle(sm(this)) : null,
+      md: md != null ? _extractStyle(md(this)) : null,
+      lg: lg != null ? _extractStyle(lg(this)) : null,
+      xl: xl != null ? _extractStyle(xl(this)) : null,
+    ));
+  }
+
+  FxStyle _extractStyle(Widget w) {
+    if (w is Box) return w.style;
+    if (w is TextBox) return w.style;
+    if (w is FlexBox) return w.style;
+    if (w is GridBox) return w.style;
+    if (w is StackBox) return w.style;
+    if (w is FxButton) return w.style;
+    return FxStyle.none;
+  }
+
   Widget onTap(VoidCallback callback) {
-    if (this is Box) return (this as Box).copyWith(onTap: callback);
-    if (this is FlexBox) return (this as FlexBox).copyWith(onTap: callback);
-    if (this is GridBox) return (this as GridBox).copyWith(onTap: callback);
-    if (this is StackBox) return (this as StackBox).copyWith(onTap: callback);
-    return GestureDetector(onTap: callback, child: this);
+    final self = this;
+    if (self is Box) return self.copyWith(onTap: callback);
+    if (self is FlexBox) return self.copyWith(onTap: callback);
+    if (self is GridBox) return self.copyWith(onTap: callback);
+    if (self is StackBox) return self.copyWith(onTap: callback);
+    if (self is FxButton) return self.copyWith(onTap: callback);
+    return GestureDetector(onTap: callback, child: self);
   }
+}
 
-  // --- Responsive Breakpoints (Phase 4) ---
+// --- Proxy Classes ---
 
-  /// Applies styles only on XS screens and up.
-  Widget onXs(FxStyle Function(FxStyle s) builder) {
-    final s = builder(FxStyle.none);
-    return _applyResponsive(FxResponsiveStyle(xs: s));
-  }
+class FxBgProxy {
+  final Widget _widget;
+  FxBgProxy(this._widget);
 
-  /// Applies styles only on SM screens and up (Tablet Portrait).
-  Widget onSm(FxStyle Function(FxStyle s) builder) {
-    final s = builder(FxStyle.none);
-    return _applyResponsive(FxResponsiveStyle(xs: FxStyle.none, sm: s)); // Base is none, override at sm
-  }
+  Widget call(Color value) => _widget.background(value);
 
-  /// Applies styles only on MD screens and up (Tablet Landscape / Small Laptop).
-  Widget onMd(FxStyle Function(FxStyle s) builder) {
-    final s = builder(FxStyle.none);
-    return _applyResponsive(FxResponsiveStyle(xs: FxStyle.none, md: s));
-  }
-
-  /// Applies styles only on LG screens and up (Desktop).
-  Widget onLg(FxStyle Function(FxStyle s) builder) {
-    final s = builder(FxStyle.none);
-    return _applyResponsive(FxResponsiveStyle(xs: FxStyle.none, lg: s));
-  }
-
-  /// Applies styles only on XL screens and up (Large Desktop).
-  Widget onXl(FxStyle Function(FxStyle s) builder) {
-    final s = builder(FxStyle.none);
-    return _applyResponsive(FxResponsiveStyle(xs: FxStyle.none, xl: s));
-  }
-
-  // --- Deprecated / Legacy Support (Phase 8 - partial) ---
-  // To keep "Pad(12)" working for now if strictly required, but Prompt says "Replace".
-  // I will optionally add them if I want max compat, but User asked primarily for New Syntax.
-  // I'll stick to the clean API for optimal "Expo" feel as requested.
+  Widget get white => _widget.background(const Color(0xFFFFFFFF));
+  Widget get black => _widget.background(const Color(0xFF000000));
+  Widget get transparent => _widget.background(const Color(0x00000000));
+  Widget get slate50 => _widget.background(FxTokens.colors.slate50);
+  Widget get slate100 => _widget.background(FxTokens.colors.slate100);
+  Widget get slate800 => _widget.background(FxTokens.colors.slate800);
+  Widget get blue500 => _widget.background(FxTokens.colors.blue500);
   
-  // Actually, to chain builders inside the responsive callback .onMd((s) => s.padding(10)),
-  // FxStyle itself needs methods... OR we use a builder helper.
-  // The current FxStyle is immutable data. modifying it is tricky via chaining unless we wrap it.
-  // 
-  // Wait, `builder(FxStyle.none)`:
-  // If I do `s.padding(10)`, `s` is FxStyle. FxStyle doesn't have methods "padding". 
-  // I need a StyleBuilder class or extension on FxStyle to support this syntax `s.padding(10)`.
-  //
-  // Let's add an extension on FxStyle to support fluent building returning FxStyle!
+  Widget color(Color value) => _widget.background(value);
+}
+
+class FxWidthProxy {
+  final Widget _widget;
+  FxWidthProxy(this._widget);
+
+  Widget call(double value) => _widget.w(value);
+  Widget get full => _widget.fullWidth();
+}
+
+class FxHeightProxy {
+  final Widget _widget;
+  FxHeightProxy(this._widget);
+
+  Widget call(double value) => _widget.h(value);
+  Widget get full => _widget.fullHeight();
+}
+
+class FxWeightProxy {
+  final Widget _widget;
+  FxWeightProxy(this._widget);
+
+  Widget call(FontWeight value) => _widget.fontWeight(value);
+  Widget get bold => _widget.fontWeight(FontWeight.bold);
+  Widget get semiBold => _widget.fontWeight(FontWeight.w600);
+  Widget get medium => _widget.fontWeight(FontWeight.w500);
+  Widget get normal => _widget.fontWeight(FontWeight.normal);
+  Widget get light => _widget.fontWeight(FontWeight.w300);
 }
 
 /// Extensions on FxStyle to allow fluent composition in callbacks.
-/// e.g. (s) => s.padding(12).background(Colors.red)
 extension FluxyStyleFluentExtension on FxStyle {
   FxStyle padding(double value) => copyWith(padding: EdgeInsets.all(value));
   FxStyle paddingX(double value) => copyWith(padding: EdgeInsets.symmetric(horizontal: value));
   FxStyle paddingY(double value) => copyWith(padding: EdgeInsets.symmetric(vertical: value));
-  FxStyle paddingTop(double value) => copyWith(padding: EdgeInsets.only(top: value));
-  FxStyle paddingBottom(double value) => copyWith(padding: EdgeInsets.only(bottom: value));
-  FxStyle paddingLeft(double value) => copyWith(padding: EdgeInsets.only(left: value));
-  FxStyle paddingRight(double value) => copyWith(padding: EdgeInsets.only(right: value));
-
-  // -- Aliases for Padding --
-  FxStyle pad(double value) => padding(value);
-  FxStyle p(double value) => padding(value);
-  FxStyle px(double value) => paddingX(value);
-  FxStyle py(double value) => paddingY(value);
-  FxStyle pt(double value) => paddingTop(value);
-  FxStyle pb(double value) => paddingBottom(value);
-  FxStyle pl(double value) => paddingLeft(value);
-  FxStyle pr(double value) => paddingRight(value);
-
+  
   FxStyle margin(double value) => copyWith(margin: EdgeInsets.all(value));
   FxStyle marginX(double value) => copyWith(margin: EdgeInsets.symmetric(horizontal: value));
   FxStyle marginY(double value) => copyWith(margin: EdgeInsets.symmetric(vertical: value));
-  FxStyle marginTop(double value) => copyWith(margin: EdgeInsets.only(top: value));
-  FxStyle marginBottom(double value) => copyWith(margin: EdgeInsets.only(bottom: value));
-  FxStyle marginLeft(double value) => copyWith(margin: EdgeInsets.only(left: value));
-  FxStyle marginRight(double value) => copyWith(margin: EdgeInsets.only(right: value));
 
-  // -- Aliases for Margin --
-  FxStyle m(double value) => margin(value);
-  FxStyle mx(double value) => marginX(value);
-  FxStyle my(double value) => marginY(value);
-  FxStyle mt(double value) => marginTop(value);
-  FxStyle mb(double value) => marginBottom(value);
-  FxStyle ml(double value) => marginLeft(value);
-  FxStyle mr(double value) => marginRight(value);
-
-  FxStyle setWidth(double value) => copyWith(width: value);
-  FxStyle setHeight(double value) => copyWith(height: value);
-  FxStyle widthFull() => copyWith(width: double.infinity);
-  FxStyle heightFull() => copyWith(height: double.infinity);
-  FxStyle size(double w, double h) => copyWith(width: w, height: h);
-  FxStyle square(double value) => copyWith(width: value, height: value);
+  FxStyle radius(double value) => copyWith(borderRadius: BorderRadius.circular(value));
   
-  // -- Aliases for Dimensions --
-  FxStyle w(double value) => setWidth(value);
-  FxStyle h(double value) => setHeight(value);
-  FxStyle wFull() => widthFull();
-  FxStyle hFull() => heightFull();
+  FxStyle bg(Color color) => copyWith(backgroundColor: color);
+  FxStyle color(Color color) => copyWith(color: color);
   
-  FxStyle background(Color color) => copyWith(backgroundColor: color);
-  FxStyle backgroundWhite() => copyWith(backgroundColor: Color(0xFFFFFFFF));
-  FxStyle backgroundBlack() => copyWith(backgroundColor: Color(0xFF000000));
+  FxStyle size(double value) => copyWith(fontSize: value);
+  FxStyle weight(FontWeight weight) => copyWith(fontWeight: weight);
   
-  // -- Aliases for Background --
-  FxStyle bg(Color color) => background(color);
-
-  FxStyle linearGradient(List<Color> colors, {Alignment begin = Alignment.topLeft, Alignment end = Alignment.bottomRight}) =>
-      copyWith(gradient: LinearGradient(colors: colors, begin: begin, end: end));
-  
-  FxStyle radialGradient(List<Color> colors) => copyWith(gradient: RadialGradient(colors: colors));
-  
-  FxStyle setBorderRadius(double value) => copyWith(borderRadius: BorderRadius.circular(value));
-  FxStyle radiusSmall() => setBorderRadius(FxTokens.radius.sm);
-  FxStyle radiusMedium() => setBorderRadius(FxTokens.radius.md);
-  FxStyle radiusLarge() => setBorderRadius(FxTokens.radius.lg);
-  FxStyle radiusFull() => setBorderRadius(FxTokens.radius.full);
-
-  // -- Aliases for Radius --
-  FxStyle radius(double value) => setBorderRadius(value);
-  FxStyle rounded(double value) => setBorderRadius(value);
-  FxStyle roundedFull() => radiusFull();
-
-  FxStyle shadow({Color color = const Color(0x1F000000), double blur = 4, Offset offset = const Offset(0, 2)}) => 
-      copyWith(shadows: [BoxShadow(color: color, blurRadius: blur, offset: offset)]);
-  
-  FxStyle shadowSmall() => copyWith(shadows: FxTokens.shadow.sm);
-  FxStyle shadowMedium() => copyWith(shadows: FxTokens.shadow.md);
-  FxStyle shadowLarge() => copyWith(shadows: FxTokens.shadow.lg);
-
-  FxStyle withBorder({Color color = const Color(0xFF000000), double width = 1}) => 
-      copyWith(border: Border.all(color: color, width: width));
-      
-  FxStyle withGap(double value) => copyWith(gap: value);
-
-  FxStyle setFontSize(double size) => copyWith(fontSize: size);
-  FxStyle setFontWeight(FontWeight weight) => copyWith(fontWeight: weight);
-  FxStyle textColor(Color color) => copyWith(color: color);
-  FxStyle setTextAlign(TextAlign align) => copyWith(textAlign: align);
-  
-  FxStyle textBase() => setFontSize(FxTokens.font.md);
-  FxStyle textLg() => setFontSize(FxTokens.font.lg);
-  FxStyle textXl() => setFontSize(FxTokens.font.xl);
-  FxStyle bold() => setFontWeight(FontWeight.bold);
-
-  // -- Aliases for Typography --
-  FxStyle font(double size) => setFontSize(size);
-  FxStyle fs(double size) => setFontSize(size);
-  FxStyle fw(FontWeight weight) => setFontWeight(weight);
-  FxStyle tc(Color color) => textColor(color);
-  
-  FxStyle align(AlignmentGeometry alignment) => copyWith(alignment: alignment);
-  FxStyle center() => copyWith(alignment: Alignment.center);
-  
-  /// Sets opacity (renamed to avoid collision with opacity getter).
-  FxStyle withOpacity(double value) => copyWith(opacity: value);
+  FxStyle width(double value) => copyWith(width: value);
+  FxStyle height(double value) => copyWith(height: value);
+  FxStyle wFull() => copyWith(width: double.infinity);
+  FxStyle hFull() => copyWith(height: double.infinity);
   FxStyle op(double value) => copyWith(opacity: value);
-  
-  // -- Layout Behavior --
-  FxStyle pack() => copyWith(mainAxisSize: MainAxisSize.min);
-  FxStyle stretch() => copyWith(mainAxisSize: MainAxisSize.max);
 }

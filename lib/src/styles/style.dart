@@ -367,7 +367,7 @@ class FxResponsiveStyle {
   final FxStyle? xl;
 
   const FxResponsiveStyle({
-    required this.xs,
+    this.xs = FxStyle.none,
     this.sm,
     this.md,
     this.lg,
@@ -388,6 +388,23 @@ class FxResponsiveStyle {
       md: md?.merge(other.md) ?? other.md ?? md,
       lg: lg?.merge(other.lg) ?? other.lg ?? lg,
       xl: xl?.merge(other.xl) ?? other.xl ?? xl,
+    );
+  }
+
+  /// Creates a responsive style from individual builders.
+  factory FxResponsiveStyle.from({
+    FxStyle Function(FxStyle s)? xs,
+    FxStyle Function(FxStyle s)? sm,
+    FxStyle Function(FxStyle s)? md,
+    FxStyle Function(FxStyle s)? lg,
+    FxStyle Function(FxStyle s)? xl,
+  }) {
+    return FxResponsiveStyle(
+      xs: xs != null ? xs(FxStyle.none) : FxStyle.none,
+      sm: sm != null ? sm(FxStyle.none) : null,
+      md: md != null ? md(FxStyle.none) : null,
+      lg: lg != null ? lg(FxStyle.none) : null,
+      xl: xl != null ? xl(FxStyle.none) : null,
     );
   }
 }

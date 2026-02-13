@@ -1,6 +1,4 @@
-
 import 'package:flutter/material.dart';
-import '../styles/style.dart';
 import '../styles/tokens.dart';
 import '../dsl/fx.dart';
 
@@ -120,7 +118,6 @@ class FxButton extends StatelessWidget {
         padding = const EdgeInsets.symmetric(horizontal: 24, vertical: 12);
         break;  
       case FxButtonSize.md:
-      default:
         fontSize = 14;
         padding = const EdgeInsets.symmetric(horizontal: 16, vertical: 8);
         break;

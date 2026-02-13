@@ -1,3 +1,12 @@
+## 0.1.2
+
+* **Proxy-based Styling DSL**: Introduced a new, intuitive way to apply styles using chained properties (e.g., `.bg.white`, `.width.full`, `.weight.bold`).
+* **Consolidated Animation DSL**: Resolved a naming conflict by merging all `.animate()` modifiers into a single, high-performance extension in `FxMotion`.
+* **Enhanced Proxy Support**: Proxy classes for Background, Width, Height, and Font Weight are now callable as both getters and methods for maximum flexibility.
+* **Unified UI Resolution**: Improved the internal style resolution engine to better handle mixed legacy and proxy-based styling chains.
+* **Performance Optimizations**: Cleaned up various redundant imports and consolidated internal helper methods for faster build times.
+* **CLI Version Synchronization**: Updated the Fluxy CLI to match the framework's version 0.1.2.
+
 ## 0.1.1
 
 * **Atomic Styling DSL**: Introduced a comprehensive suite of fluent modifiers for widgets, including expressive shorthands for layout and spacing:
