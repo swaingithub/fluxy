@@ -1,3 +1,9 @@
+## 0.1.0
+
+* **Dependency Modernization**: Upgraded all core dependencies to their latest stable versions, including a major upgrade to `flutter_secure_storage` (v10.0.0).
+* **Code Quality Audit**: Performed a comprehensive linting sweep of the `FluxyDebug` module, ensuring strict adherence to `curly_braces_in_flow_control_structures` and other best practices.
+* **Refined Tooling**: Optimized service extension registration in DevTools for better reliability.
+
 ## 0.0.9
 
 * **Maintenance & Polish**: Conducted a full framework-wide analysis audit. Resolved all remaining lint warnings and strictly addressed Flutter 3.x deprecations.
