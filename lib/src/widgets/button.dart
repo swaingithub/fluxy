@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import '../styles/style.dart';
 import '../styles/tokens.dart';
 import '../dsl/fx.dart';
-import '../dsl/modifiers.dart';
 
 enum FxButtonVariant { primary, secondary, text }
 enum FxButtonSize { sm, md, lg }
@@ -103,7 +102,7 @@ class FxButton extends StatelessWidget {
 
     // Outline Logic
     if (isOutline) {
-      borderColor = (variant == FxButtonVariant.text) ?  primaryColor : (bgColor ?? primaryColor);
+      borderColor = (variant == FxButtonVariant.text) ?  primaryColor : bgColor;
       textColor = borderColor;
       bgColor = Colors.transparent;
     }

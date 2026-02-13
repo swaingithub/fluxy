@@ -1,4 +1,3 @@
-// ignore_for_file: deprecated_member_use
 import 'package:flutter/material.dart';
 import 'dart:async';
 import '../reactive/signal.dart';
@@ -81,7 +80,7 @@ class _FluxyDevToolsState extends State<FluxyDevTools> {
 
   Widget _buildOverlay() {
     return Material(
-      color: Colors.black.withOpacity(0.9),
+      color: Colors.black.withValues(alpha: 0.9),
       child: SafeArea(
         child: Column(
           children: [
@@ -170,9 +169,9 @@ class _FluxyDevToolsState extends State<FluxyDevTools> {
           margin: const EdgeInsets.only(bottom: 8),
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.05),
+            color: Colors.white.withValues(alpha: 0.05),
             borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: isComputed ? Colors.purpleAccent.withOpacity(0.3) : Colors.blueAccent.withOpacity(0.3)),
+            border: Border.all(color: isComputed ? Colors.purpleAccent.withValues(alpha: 0.3) : Colors.blueAccent.withValues(alpha: 0.3)),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -190,7 +189,7 @@ class _FluxyDevToolsState extends State<FluxyDevTools> {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                     decoration: BoxDecoration(
-                      color: (isComputed ? Colors.purple : Colors.blue).withOpacity(0.2),
+                      color: (isComputed ? Colors.purple : Colors.blue).withValues(alpha: 0.2),
                       borderRadius: BorderRadius.circular(4),
                     ),
                     child: Text(

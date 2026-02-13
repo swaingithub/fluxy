@@ -1,4 +1,4 @@
-// ignore_for_file: deprecated_member_use, prefer_const_constructors, prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 import 'package:flutter/material.dart';
 import 'package:fluxy/fluxy.dart';
 
@@ -76,41 +76,17 @@ class _FluxyFintechAppState extends State<FluxyFintechApp> {
   }
 
   Widget _buildPremiumNav() {
-    return Fx.box(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          _navItem(Icons.grid_view_rounded, 0),
-          _navItem(Icons.auto_graph_rounded, 1),
-          _navItem(Icons.account_balance_wallet_rounded, 2),
-          _navItem(Icons.person_rounded, 3),
-        ],
-      ),
-    )
-    .height(100)
-    .background(Colors.white)
-    .shadow(color: Colors.black.withOpacity(0.04), blur: 40);
-  }
-
-  Widget _navItem(IconData icon, int index) {
-    final active = _activePage == index;
-    return GestureDetector(
-      onTap: () => setState(() => _activePage = index),
-      behavior: HitTestBehavior.opaque,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 350),
-        curve: Curves.easeOutQuart,
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-        decoration: BoxDecoration(
-          color: active ? const Color(0xFF6366F1).withOpacity(0.12) : Colors.transparent,
-          borderRadius: BorderRadius.circular(24),
-        ),
-        child: Icon(
-          icon, 
-          color: active ? const Color(0xFF6366F1) : const Color(0xFF94A3B8), 
-          size: 26
-        ),
-      ),
+    return FxBottomBar(
+      currentIndex: _activePage,
+      onTap: (i) => setState(() => _activePage = i),
+      activeColor: const Color(0xFF6366F1),
+      baseColor: const Color(0xFF94A3B8),
+      items: const [
+        FxBottomBarItem(icon: Icons.grid_view_rounded, label: "Home"),
+        FxBottomBarItem(icon: Icons.auto_graph_rounded, label: "Stats"),
+        FxBottomBarItem(icon: Icons.account_balance_wallet_rounded, label: "Wallet"),
+        FxBottomBarItem(icon: Icons.person_rounded, label: "Profile"),
+      ],
     );
   }
 }
@@ -142,7 +118,7 @@ class WalletDashboard extends StatelessWidget {
                   shape: FxAvatarShape.rounded,
                   onTap: () => Fx.toast(context, "Profile tapped"),
                 ).shadow(
-                  color: const Color(0xFF6366F1).withOpacity(0.3),
+                  color: const Color(0xFF6366F1).withValues(alpha: 0.3),
                   blur: 20
                 ),
               ],
@@ -160,7 +136,7 @@ class WalletDashboard extends StatelessWidget {
                       const Spacer(),
                       Fx.box(
                         child: const Icon(Icons.nfc_rounded, color: Colors.white, size: 20)
-                      ).size(36, 36).background(Colors.white.withOpacity(0.1)).borderRadius(10).center(),
+                      ).size(36, 36).background(Colors.white.withValues(alpha: 0.1)).borderRadius(10).center(),
                     ],
                   ),
                   const SizedBox(height: 12),
@@ -182,7 +158,7 @@ class WalletDashboard extends StatelessWidget {
             .background(const Color(0xFF1E293B))
             .borderRadius(36)
             .padding(24) // Reduced from 32
-            .shadow(color: const Color(0xFF000000).withOpacity(0.15), blur: 40),
+            .shadow(color: const Color(0xFF000000).withValues(alpha: 0.15), blur: 40),
             
             const SizedBox(height: 36),
 
@@ -319,7 +295,7 @@ class WalletDashboard extends StatelessWidget {
       children: [
         Fx.box(
           child: Icon(icon, color: color, size: 28)
-        ).size(68, 68).background(Colors.white).borderRadius(22).shadow(color: Colors.black.withOpacity(0.03), blur: 15).center().pointer(),
+        ).size(68, 68).background(Colors.white).borderRadius(22).shadow(color: Colors.black.withValues(alpha: 0.03), blur: 15).center().pointer(),
         Fx.text(label).fontSize(13).bold().color(const Color(0xFF64748B)),
       ],
     ).expand();
@@ -332,7 +308,7 @@ class WalletDashboard extends StatelessWidget {
             children: [
               Fx.box(
                 child: Icon(icon, color: col, size: 26)
-              ).size(54, 54).background(col.withOpacity(0.12)).borderRadius(18).center(),
+              ).size(54, 54).background(col.withValues(alpha: 0.12)).borderRadius(18).center(),
               const SizedBox(width: 18),
               Fx.column(
                 gap: 4,
@@ -351,7 +327,7 @@ class WalletDashboard extends StatelessWidget {
         .background(Colors.white)
         .borderRadius(28)
         .padding(18)
-        .shadow(color: Colors.black.withOpacity(0.02), blur: 10).mb(12);
+        .shadow(color: Colors.black.withValues(alpha: 0.02), blur: 10).mb(12);
   }
 }
 
@@ -444,7 +420,7 @@ class PortfolioStats extends StatelessWidget {
                       const SizedBox(width: 12),
                       Fx.box(
                         child: Fx.text("↑ 14.2%").color(const Color(0xFF10B981)).fontSize(12).bold()
-                      ).background(const Color(0xFF10B981).withOpacity(0.1)).borderRadius(8).paddingX(8).paddingY(4),
+                      ).background(const Color(0xFF10B981).withValues(alpha: 0.1)).borderRadius(8).paddingX(8).paddingY(4),
                     ],
                   ),
                   const Spacer(),
@@ -462,7 +438,7 @@ class PortfolioStats extends StatelessWidget {
             .background(Colors.white)
             .borderRadius(36)
             .padding(28)
-            .shadow(color: Colors.black.withOpacity(0.04), blur: 30),
+            .shadow(color: Colors.black.withValues(alpha: 0.04), blur: 30),
 
             const SizedBox(height: 40),
 
@@ -480,14 +456,14 @@ class PortfolioStats extends StatelessWidget {
                       Fx.box(
                         onTap: () => balance.value -= 500,
                         child: const Icon(Icons.remove_rounded, color: Colors.white, size: 28),
-                      ).background(const Color(0xFF1E293B)).size(56, 56).borderRadius(18).shadow(color: Colors.black.withOpacity(0.2), blur: 15).pointer(),
+                      ).background(const Color(0xFF1E293B)).size(56, 56).borderRadius(18).shadow(color: Colors.black.withValues(alpha: 0.2), blur: 15).pointer(),
                       
                       Fx.text(() => "₹ ${balance.value.toInt()}").fontSize(28).bold().color(const Color(0xFF0F172A)),
                       
                       Fx.box(
                         onTap: () => balance.value += 500,
                         child: const Icon(Icons.add_rounded, color: Colors.white, size: 28),
-                      ).background(const Color(0xFF6366F1)).size(56, 56).borderRadius(18).shadow(color: const Color(0xFF6366F1).withOpacity(0.4), blur: 20).pointer(),
+                      ).background(const Color(0xFF6366F1)).size(56, 56).borderRadius(18).shadow(color: const Color(0xFF6366F1).withValues(alpha: 0.4), blur: 20).pointer(),
                     ],
                   ).center(),
                 ],
@@ -516,7 +492,7 @@ class PortfolioStats extends StatelessWidget {
         )
     )
     .height(height)
-    .background(const Color(0xFF6366F1).withOpacity(0.1))
+    .background(const Color(0xFF6366F1).withValues(alpha: 0.1))
     .borderRadius(8)
     .expand();
   }
@@ -527,7 +503,7 @@ class PortfolioStats extends StatelessWidget {
         children: [
           Fx.box(
             child: Icon(icon, color: accent, size: 28)
-          ).size(50, 50).background(accent.withOpacity(0.1)).borderRadius(16).center(),
+          ).size(50, 50).background(accent.withValues(alpha: 0.1)).borderRadius(16).center(),
           const SizedBox(width: 20),
           Fx.column(
             gap: 4,
@@ -543,7 +519,7 @@ class PortfolioStats extends StatelessWidget {
     .background(Colors.white)
     .borderRadius(28)
     .padding(24)
-    .shadow(color: Colors.black.withOpacity(0.03), blur: 20);
+    .shadow(color: Colors.black.withValues(alpha: 0.03), blur: 20);
   }
 }
 
@@ -578,3 +554,4 @@ class _AnimBarState extends State<AnimBar> {
     );
   }
 }
+

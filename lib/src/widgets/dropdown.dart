@@ -137,10 +137,10 @@ class _FxDropdownState<T> extends State<FxDropdown<T>> with SingleTickerProvider
                         final isSelected = item == _currentValue;
                         return InkWell(
                           onTap: () => _handleSelect(item),
-                          hoverColor: Colors.grey.withOpacity(0.05),
+                          hoverColor: Colors.grey.withValues(alpha: 0.05),
                           child: Container(
                             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                            color: isSelected ? Colors.blue.withOpacity(0.08) : Colors.transparent,
+                            color: isSelected ? Colors.blue.withValues(alpha: 0.08) : Colors.transparent,
                             child: widget.itemBuilder != null
                               ? widget.itemBuilder!(item)
                               : Text(

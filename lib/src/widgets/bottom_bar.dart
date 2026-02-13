@@ -32,7 +32,7 @@ class FxBottomBar extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
         backgroundColor: Colors.white,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-        shadows: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 20, offset: const Offset(0, -5))],
+        shadows: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 20, offset: const Offset(0, -5))],
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -51,7 +51,7 @@ class FxBottomBar extends StatelessWidget {
                   ? const EdgeInsets.symmetric(horizontal: 16, vertical: 8)
                   : const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               decoration: BoxDecoration(
-                color: isActive ? effectiveActive.withOpacity(0.1) : Colors.transparent,
+                color: isActive ? effectiveActive.withValues(alpha: 0.1) : Colors.transparent,
                 borderRadius: BorderRadius.circular(100),
               ),
               child: Row(

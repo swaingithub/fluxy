@@ -158,8 +158,7 @@ class FluxyApp extends StatelessWidget {
                    Text(
                      details.exception.toString(),
                      textAlign: TextAlign.center,
-                      // ignore: deprecated_member_use
-                      style: TextStyle(color: Colors.redAccent.withOpacity(0.9), fontSize: 12, fontFamily: 'monospace'),
+                       style: TextStyle(color: Colors.redAccent.withValues(alpha: 0.9), fontSize: 12, fontFamily: 'monospace'),
                    ),
                    if (!kReleaseMode) ...[
                      const SizedBox(height: 16),
@@ -167,8 +166,7 @@ class FluxyApp extends StatelessWidget {
                        child: SingleChildScrollView(
                          child: Text(
                            details.stack.toString(),
-                            // ignore: deprecated_member_use
-                            style: TextStyle(color: Colors.white.withOpacity(0.5), fontSize: 10, fontFamily: 'monospace'),
+                             style: TextStyle(color: Colors.white.withValues(alpha: 0.5), fontSize: 10, fontFamily: 'monospace'),
                          ),
                        ),
                      ),
