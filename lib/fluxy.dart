@@ -18,6 +18,10 @@ export 'src/widgets/grid_box.dart';
 export 'src/widgets/stack_box.dart';
 export 'src/widgets/text_box.dart';
 export 'src/widgets/tab_stack.dart';
+export 'src/widgets/dropdown.dart';
+export 'src/widgets/bottom_bar.dart';
+export 'src/widgets/avatar.dart';
+export 'src/widgets/badge.dart';
 
 // Reactive Core
 export 'src/reactive/signal.dart';

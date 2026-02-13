@@ -378,4 +378,16 @@ class FxResponsiveStyle {
     final breakpoint = ResponsiveEngine.of(context);
     return BreakpointResolver.resolve(this, breakpoint);
   }
+
+  /// Merges this responsive style with another.
+  FxResponsiveStyle merge(FxResponsiveStyle? other) {
+    if (other == null) return this;
+    return FxResponsiveStyle(
+      xs: xs.merge(other.xs),
+      sm: sm?.merge(other.sm) ?? other.sm ?? sm,
+      md: md?.merge(other.md) ?? other.md ?? md,
+      lg: lg?.merge(other.lg) ?? other.lg ?? lg,
+      xl: xl?.merge(other.xl) ?? other.xl ?? xl,
+    );
+  }
 }

@@ -1,15 +1,26 @@
+
 import 'package:flutter/material.dart';
 import '../styles/style.dart';
+import '../styles/tokens.dart'; // Tokens
+import 'modifiers.dart'; // Extension
 import '../widgets/box.dart';
 import '../widgets/text_box.dart';
 import '../widgets/flex_box.dart';
-import '../widgets/grid_box.dart';
 import '../widgets/stack_box.dart';
 import '../reactive/signal.dart';
 import '../reactive/async_signal.dart';
-import '../widgets/inputs.dart';
+import '../widgets/inputs.dart'; // Existing FxTextField
+import '../widgets/button.dart'; // FxButton
 import '../motion/fx_motion.dart';
 import '../routing/fluxy_router.dart';
+import '../widgets/dropdown.dart';
+import '../widgets/bottom_bar.dart';
+import '../widgets/avatar.dart';
+import '../widgets/badge.dart';
+
+// Re-export specific styles/tokens for easy access if needed
+export '../styles/style.dart';
+export 'modifiers.dart';
 
 /// The hyper-minimal Fx API for Fluxy.
 /// Designed for maximum builder velocity and zero boilerplate reactivity.
@@ -21,7 +32,17 @@ class Fx extends StatefulWidget {
   @override
   State<Fx> createState() => _FxState();
 
+  // --- Design Tokens ---
+  // Expose global design scale: Fx.space.sm
+  static const space = FxTokens.space;
+  static const radius = FxTokens.radius;
+  static const font = FxTokens.font;
+  static const shadow = FxTokens.shadow;
+
+  // --- Core Primitives ---
+
   /// A reactive text element. 
+  /// Supports: Fx.text("Hello").font.lg.bold
   static Widget text(dynamic data, {FxStyle style = FxStyle.none, String? className, FxResponsiveStyle? responsive}) {
     return TextBox(
       data: data ?? '',
@@ -32,6 +53,7 @@ class Fx extends StatefulWidget {
   }
 
   /// A reactive container.
+  /// Supports: Fx.box(child: ...).pad.md
   static Widget box({
     FxStyle style = FxStyle.none,
     String? className,
@@ -50,100 +72,443 @@ class Fx extends StatefulWidget {
     );
   }
 
-  /// Alias for box.
-  static Widget container({
-    FxStyle style = FxStyle.none,
-    String? className,
-    FxResponsiveStyle? responsive,
-    Widget child = const SizedBox.shrink(),
-    List<Widget> children = const [],
-    VoidCallback? onTap,
-  }) => box(style: style, className: className, responsive: responsive, child: child, children: children, onTap: onTap);
+  // --- Layout Primitives ---
 
-  /// A physical button with default semantics and styles.
-  static Widget button({
-    required dynamic child,
-    required VoidCallback onTap,
-    FxStyle style = FxStyle.none,
-    String? className,
-  }) {
-    final decorationStyle = const FxStyle(
-        transition: Duration(milliseconds: 150),
-        hover: FxStyle(backgroundColor: Color(0xFF2563EB)), 
-        pressed: FxStyle(opacity: 0.7),
-      ).merge(style);
-
-    return Box(
-      onTap: onTap,
-      className: "px-6 py-3 bg-blue-600 rounded-xl items-center justify-center $className",
-      style: decorationStyle,
-      child: child is String ? text(child, className: "text-white font-bold") : (child as Widget),
-    );
-  }
-
-  /// Horizontal layout.
+  /// Horizontal layout (Row).
+  /// Supports: Fx.row(children: [...]).gap.md
   static Widget row({
     required List<Widget> children,
     FxStyle style = FxStyle.none,
     String? className,
     FxResponsiveStyle? responsive,
     double? gap,
+    MainAxisAlignment mainAxisAlignment = MainAxisAlignment.start,
+    CrossAxisAlignment crossAxisAlignment = CrossAxisAlignment.center,
   }) {
     return FlexBox(
       direction: Axis.horizontal,
-      style: style.merge(FxStyle(gap: gap)),
+      style: style.merge(FxStyle(gap: gap, justifyContent: mainAxisAlignment, alignItems: crossAxisAlignment)),
       className: className,
       responsive: responsive,
       children: children,
     );
   }
 
-  /// Vertical layout.
+  /// Vertical layout (Column).
+  /// Supports: Fx.col(children: [...]).gap.md
+  static Widget col({
+    required List<Widget> children,
+    FxStyle style = FxStyle.none,
+    String? className,
+    FxResponsiveStyle? responsive,
+    double? gap,
+    MainAxisAlignment mainAxisAlignment = MainAxisAlignment.start,
+    CrossAxisAlignment crossAxisAlignment = CrossAxisAlignment.center,
+  }) {
+    return FlexBox(
+      direction: Axis.vertical,
+      style: style.merge(FxStyle(gap: gap, justifyContent: mainAxisAlignment, alignItems: crossAxisAlignment)),
+      className: className,
+      responsive: responsive,
+      children: children,
+    );
+  }
+
+  /// Alias for col
   static Widget column({
     required List<Widget> children,
     FxStyle style = FxStyle.none,
     String? className,
     FxResponsiveStyle? responsive,
     double? gap,
-  }) {
-    return FlexBox(
-      direction: Axis.vertical,
-      style: style.merge(FxStyle(gap: gap)),
-      className: className,
-      responsive: responsive,
-      children: children,
-    );
-  }
-
-  /// Grid layout.
-  static Widget grid({
-    required List<Widget> children,
-    FxStyle style = FxStyle.none,
-    String? className,
-    FxResponsiveStyle? responsive,
-  }) {
-    return GridBox(
-      style: style,
-      className: className,
-      responsive: responsive,
-      children: children,
-    );
-  }
-
+    MainAxisAlignment mainAxisAlignment = MainAxisAlignment.start,
+    CrossAxisAlignment crossAxisAlignment = CrossAxisAlignment.center,
+  }) => col(
+    children: children,
+    style: style,
+    className: className,
+    responsive: responsive,
+    gap: gap,
+    mainAxisAlignment: mainAxisAlignment,
+    crossAxisAlignment: crossAxisAlignment,
+  );
+  
   /// Stack layout.
   static Widget stack({
     required List<Widget> children,
     FxStyle style = FxStyle.none,
-    String? className,
-    FxResponsiveStyle? responsive,
+    AlignmentGeometry? alignment,
   }) {
     return StackBox(
-      style: style,
-      className: className,
-      responsive: responsive,
+      style: style.merge(FxStyle(alignment: alignment)),
       children: children,
     );
   }
+
+  /// Center layout.
+  static Widget center({required Widget child}) {
+    return Center(child: child);
+  }
+
+  /// Expanded layout.
+  static Widget expand({required Widget child, int flex = 1}) {
+    return Expanded(flex: flex, child: child);
+  }
+  
+  /// Wrap layout.
+  static Widget wrap({
+    required List<Widget> children,
+    double spacing = 0,
+    double runSpacing = 0,
+    Axis direction = Axis.horizontal,
+  }) {
+    return Wrap(
+      spacing: spacing,
+      runSpacing: runSpacing,
+      direction: direction,
+      children: children,
+    );
+  }
+
+  /// Scrollable container (SingleChildScrollView).
+  static Widget scroll({
+    required Widget child, 
+    Axis direction = Axis.vertical,
+    FxStyle style = FxStyle.none,
+  }) {
+    return Box(
+      style: style,
+      child: SingleChildScrollView(
+        scrollDirection: direction,
+        child: child,
+      ),
+    );
+  }
+
+  /// Icon primitive.
+  static Widget icon(IconData icon, {
+    Color? color,
+    double? size,
+    VoidCallback? onTap,
+  }) {
+    final i = Icon(icon, color: color, size: size);
+    if (onTap != null) {
+      return GestureDetector(onTap: onTap, child: i);
+    }
+    return i;
+  }
+
+  /// Image primitive.
+  static Widget image(String src, {
+    double? width,
+    double? height,
+    BoxFit fit = BoxFit.cover,
+    double radius = 0,
+    String? semanticLabel,
+  }) {
+    final img = Image.network(
+      src,
+      width: width,
+      height: height,
+      fit: fit,
+      semanticLabel: semanticLabel,
+      errorBuilder: (c, o, s) => Container(
+        width: width,
+        height: height,
+        color: Colors.grey[200],
+        child: const Icon(Icons.broken_image, color: Colors.grey),
+      ),
+    );
+    
+    if (radius > 0) {
+      return ClipRRect(borderRadius: BorderRadius.circular(radius), child: img);
+    }
+    return img;
+  }
+  
+  /// Hero primitive.
+  static Widget hero({
+    required String tag,
+    required Widget child,
+  }) {
+    return Hero(tag: tag, child: child);
+  }
+
+  // --- Buttons (Phase 5) ---
+
+  static FxButton button(String label, {VoidCallback? onTap}) => primaryButton(label, onTap: onTap);
+
+  static FxButton primaryButton(String label, {VoidCallback? onTap}) {
+    return FxButton(
+      label: label,
+      onTap: onTap,
+      variant: FxButtonVariant.primary,
+    );
+  }
+
+  static FxButton secondaryButton(String label, {VoidCallback? onTap}) {
+    return FxButton(
+      label: label,
+      onTap: onTap,
+      variant: FxButtonVariant.secondary,
+    );
+  }
+
+  static FxButton textButton(String label, {VoidCallback? onTap}) {
+    return FxButton(
+      label: label,
+      onTap: onTap,
+      variant: FxButtonVariant.text,
+    );
+  }
+
+  // --- Overlays & Feedback ---
+
+  /// Shows a modal dialog.
+  static Future<T?> modal<T>(BuildContext context, {
+    required Widget child,
+    bool barrierDismissible = true,
+    Color? barrierColor,
+  }) {
+    return showDialog<T>(
+      context: context,
+      barrierDismissible: barrierDismissible,
+      barrierColor: barrierColor,
+      builder: (context) => Dialog(
+        backgroundColor: Colors.transparent,
+        insetPadding: EdgeInsets.all(16),
+        child: child,
+      ),
+    );
+  }
+  
+  /// Aliases for modal
+  static Future<T?> dialog<T>(BuildContext context, {required Widget child}) => modal(context, child: child);
+
+  /// Shows a bottom sheet.
+  static Future<T?> bottomSheet<T>(BuildContext context, {
+    required Widget child,
+    bool isScrollControlled = true,
+    Color backgroundColor = Colors.white,
+    double radius = 16,
+  }) {
+    return showModalBottomSheet<T>(
+      context: context,
+      isScrollControlled: isScrollControlled,
+      backgroundColor: Colors.transparent,
+      builder: (context) => Container(
+        decoration: BoxDecoration(
+          color: backgroundColor,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(radius)),
+        ),
+        child: child,
+      ),
+    );
+  }
+
+  /// Shows a snackbar / toast.
+  static void snack(BuildContext context, String message, {
+    Color? backgroundColor, 
+    Color? textColor,
+    Duration duration = const Duration(seconds: 3),
+    SnackBarAction? action,
+  }) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message, style: TextStyle(color: textColor ?? Colors.white)),
+        backgroundColor: backgroundColor ?? const Color(0xFF1E293B),
+        duration: duration,
+        action: action,
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
+  }
+  
+  /// Alias for snack
+  static void toast(BuildContext context, String message) => snack(context, message);
+
+  // --- Complex Structure Widgets ---
+
+  /// App Bar wrapper.
+  static PreferredSizeWidget appBar({
+    String? title,
+    Widget? titleWidget,
+    List<Widget>? actions,
+    Widget? leading,
+    Color? backgroundColor,
+    Color? foregroundColor,
+    double? elevation,
+    bool centerTitle = true,
+  }) {
+    return AppBar(
+      title: titleWidget ?? (title != null ? Text(title, style: const TextStyle(fontWeight: FontWeight.w600)) : null),
+      actions: actions,
+      leading: leading,
+      backgroundColor: backgroundColor ?? Colors.white,
+      foregroundColor: foregroundColor ?? Colors.black,
+      elevation: elevation ?? 0,
+      centerTitle: centerTitle,
+      scrolledUnderElevation: 0,
+    );
+  }
+
+  /// Custom Bottom Navigation Bar.
+  /// Uses FxBottomBar for a unique pill-style animated design.
+  static Widget bottomNav({
+    required int currentIndex,
+    required ValueChanged<int> onTap,
+    required List<BottomNavigationBarItem> items,
+    Color? selectedItemColor,
+    Color? unselectedItemColor,
+    Color? backgroundColor,
+    double? elevation,
+    FxStyle? containerStyle, // New parameter for custom styling
+  }) {
+    // Map standard items to custom items
+    final customItems = items.map((item) {
+      if (item.icon is Icon) {
+        return FxBottomBarItem(
+          icon: (item.icon as Icon).icon,
+          activeIcon: (item.activeIcon is Icon) ? (item.activeIcon as Icon).icon : null,
+          label: item.label ?? '',
+        );
+      }
+      return FxBottomBarItem(
+        iconWidget: item.icon,
+        activeIconWidget: item.activeIcon,
+        label: item.label ?? '',
+      );
+    }).toList();
+
+    return FxBottomBar(
+      currentIndex: currentIndex,
+      onTap: onTap,
+      items: customItems,
+      activeColor: selectedItemColor,
+      baseColor: unselectedItemColor,
+      containerStyle: containerStyle,
+    );
+  }
+  
+  /// Custom Sidebar / Drawer wrapper.
+  static Widget drawer({
+    required Widget child,
+    double width = 304,
+    Color? backgroundColor,
+  }) {
+    return Drawer(
+      width: width,
+      backgroundColor: backgroundColor ?? Colors.white,
+      child: child,
+    );
+  }
+  
+  /// Custom Dropdown.
+  static Widget dropdown<T>({
+    T? value,
+    Signal<T>? signal,
+    required List<T> items,
+    ValueChanged<T?>? onChanged,
+    String Function(T)? itemLabel,
+    Widget Function(T)? itemBuilder,
+    String? placeholder,
+    FxStyle style = FxStyle.none,
+    FxStyle dropdownStyle = FxStyle.none,
+    Color? iconColor,
+  }) {
+    return FxDropdown<T>(
+      value: value,
+      signal: signal,
+      items: items,
+      onChanged: onChanged,
+      itemLabel: itemLabel,
+      itemBuilder: itemBuilder,
+      placeholder: placeholder,
+      style: style,
+      dropdownStyle: dropdownStyle,
+      iconColor: iconColor,
+    );
+  }
+
+  // --- Inputs (Phase 5) ---
+
+  static Widget input({
+    required Signal<String> signal,
+    String? placeholder,
+    bool obscureText = false,
+  }) {
+    return FxTextField(
+      signal: signal,
+      placeholder: placeholder,
+      obscureText: obscureText,
+      decoration: InputDecoration(
+        hintText: placeholder,
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+        contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+      ),
+    );
+  }
+  
+  static Widget password({
+    required Signal<String> signal,
+    String? placeholder = "Password",
+  }) {
+    return input(signal: signal, placeholder: placeholder, obscureText: true);
+  }
+
+  static Widget checkbox({
+    required Signal<bool> signal,
+    String? label,
+  }) {
+    final cb = FxCheckbox(signal: signal);
+    if (label != null) {
+      return row(children: [cb, text(label).textSm()], gap: 8);
+    }
+    return cb;
+  }
+  
+  static Widget switcher({
+    required Signal<bool> signal,
+  }) {
+    return Fx(() => Switch(
+      value: signal.value, 
+      onChanged: (v) => signal.value = v
+    ));
+  }
+
+  // --- Avatars & Badges ---
+
+  static Widget avatar({
+    String? image,
+    String? fallback,
+    FxAvatarSize size = FxAvatarSize.md,
+    FxAvatarShape shape = FxAvatarShape.circle,
+    VoidCallback? onTap,
+  }) {
+    return FxAvatar(
+      image: image,
+      fallback: fallback,
+      size: size,
+      shape: shape,
+      onTap: onTap,
+    );
+  }
+
+  static Widget badge({
+    required Widget child,
+    String? label,
+    Color? color,
+    Offset offset = const Offset(-4, -4),
+  }) {
+    return FxBadge(
+      child: child,
+      label: label,
+      color: color,
+      offset: offset,
+    );
+  }
+
+  // --- Utilities ---
 
   /// Staggers a list of widgets with a delay.
   static List<Widget> stagger(List<Widget> children, {double interval = 0.05, double initialDelay = 0}) {
@@ -169,58 +534,7 @@ class Fx extends StatefulWidget {
       return child;
     }).toList();
   }
-
-  /// Spacer for layouts.
-  static Widget gap(double value) => SizedBox(width: value, height: value);
-
-  /// A flexible spacer that expands to fill available space.
-  static Widget spacer() => const Spacer();
-
-  /// A modern horizontal divider.
-  static Widget divider({Color? color, double thickness = 1, double indent = 0}) {
-    return Divider(color: color, thickness: thickness, indent: indent, endIndent: indent);
-  }
-
-  /// A reactive image loader.
-  static Widget image(String url, {double? width, double? height, BoxFit fit = BoxFit.cover, double radius = 0}) {
-    final imageWidget = Image.network(
-      url,
-      width: width,
-      height: height,
-      fit: fit,
-      errorBuilder: (_, __, ___) => box(
-        style: FxStyle(backgroundColor: const Color(0xFFF3F4F6), width: width, height: height, borderRadius: BorderRadius.circular(radius)),
-        child: const Icon(Icons.broken_image, color: Colors.grey),
-      ),
-    );
-
-    if (radius > 0) {
-      return ClipRRect(borderRadius: BorderRadius.circular(radius), child: imageWidget);
-    }
-    return imageWidget;
-  }
-
-  /// A Hero component for shared element transitions.
-  /// 
-  /// Automatically wraps child in a Material transparency to avoid "yellow text" flight issues.
-  static Widget hero({
-    required String tag,
-    required Widget child,
-  }) {
-    return FxHero(tag: tag, child: child);
-  }
-
-  /// A centered loading indicator.
-  static Widget loader({Color? color, double size = 24}) {
-    return Center(
-      child: SizedBox(
-        width: size,
-        height: size,
-        child: CircularProgressIndicator(strokeWidth: 2, valueColor: AlwaysStoppedAnimation(color ?? const Color(0xFF2563EB))),
-      ),
-    );
-  }
-
+  
   /// Async UI Builder
   static Widget async<T>(
     AsyncSignal<T> signal, {
@@ -230,105 +544,10 @@ class Fx extends StatefulWidget {
   }) {
     return signal.on(loading: loading, data: data, error: error);
   }
-
-  // --- Input Widgets ---
-
-  /// A reactive text field.
-  static Widget textField({
-    required Signal<String> signal,
-    String? placeholder,
-    InputDecoration? decoration,
-    TextStyle? style,
-    bool obscureText = false,
-  }) {
-    return FxTextField(
-      signal: signal,
-      placeholder: placeholder,
-      decoration: decoration,
-      style: style,
-      obscureText: obscureText,
-    );
-  }
-
-  /// A reactive checkbox.
-  static Widget checkbox({
-    required Signal<bool> signal,
-    Color? activeColor,
-  }) {
-    return FxCheckbox(
-      signal: signal,
-      activeColor: activeColor,
-    );
-  }
-
-  /// A reactive slider.
-  static Widget slider({
-    required Signal<double> signal,
-    double min = 0,
-    double max = 100,
-    int? divisions,
-    Color? activeColor,
-  }) {
-    return FxSlider(
-      signal: signal,
-      min: min,
-      max: max,
-      divisions: divisions,
-      activeColor: activeColor,
-    );
-  }
-
-  // Conditional Rendering
-  static Widget showIf(bool condition, Widget child) => condition ? child : const SizedBox.shrink();
-  static Widget visible(bool condition, Widget child) => Visibility(visible: condition, child: child);
-
-  static Widget responsive({
-    required Widget mobile,
-    Widget? tablet,
-    Widget? desktop,
-  }) {
-    return Fx(() {
-      final context = FluxyRouter.navigatorKey.currentState?.context;
-      if (context == null) return mobile;
-      final width = MediaQuery.of(context).size.width;
-      if (width >= 1024) return desktop ?? tablet ?? mobile;
-      if (width >= 600) return tablet ?? mobile;
-      return mobile;
-    });
-  }
-
-  // --- Smart UI Presets ---
-
-  /// A modern card preset.
-  static Widget card({required Widget child, FxStyle style = FxStyle.none, String? className}) {
-    return box(
-      style: const FxStyle(
-        backgroundColor: Color(0xFFFFFFFF),
-        borderRadius: BorderRadius.all(Radius.circular(12)),
-        padding: EdgeInsets.all(16),
-        shadows: [BoxShadow(color: Color(0x0D000000), blurRadius: 10, offset: Offset(0, 4))],
-      ).merge(style),
-      className: className,
-      child: child,
-    );
-  }
-
-  /// A section with a title and children.
-  static Widget section({required String title, required List<Widget> children, double gap = 8}) {
-    return column(
-      gap: 16,
-      children: [
-        text(title, style: const FxStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-        column(gap: gap, children: children),
-      ],
-    );
-  }
-
+  
   // Navigation
   static Future<T?> to<T>(String route, {Object? arguments, String? scope}) => FluxyRouter.to<T>(route, arguments: arguments, scope: scope);
   static Future<T?> go<T>(String route, {Object? arguments, String? scope}) => FluxyRouter.to<T>(route, arguments: arguments, scope: scope);
-  static Future<T?> off<T, TO>(String route, {TO? result, Object? arguments, String? scope}) => FluxyRouter.off<T, TO>(route, result: result, arguments: arguments, scope: scope);
-  static Future<T?> offAll<T>(String route, {Object? arguments, String? scope}) => FluxyRouter.offAll<T>(route, arguments: arguments, scope: scope);
   static void back<T>([T? result, String? scope]) => FluxyRouter.back<T>(result, scope);
 }
 

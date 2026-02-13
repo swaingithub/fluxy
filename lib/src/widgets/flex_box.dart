@@ -17,15 +17,19 @@ class FlexBox extends StatelessWidget {
     this.className,
     this.responsive,
     required this.children,
+    this.onTap,
   });
 
-  FlexBox copyWith({FxStyle? style, Axis? direction, String? className, FxResponsiveStyle? responsive, List<Widget>? children}) {
+  final VoidCallback? onTap;
+
+  FlexBox copyWith({FxStyle? style, Axis? direction, String? className, FxResponsiveStyle? responsive, List<Widget>? children, VoidCallback? onTap}) {
     return FlexBox(
       direction: direction ?? this.direction,
       style: style ?? this.style,
       className: className ?? this.className,
       responsive: responsive ?? this.responsive,
       children: children ?? this.children,
+      onTap: onTap ?? this.onTap,
     );
   }
 
@@ -66,7 +70,7 @@ class FlexBox extends StatelessWidget {
       );
     }
 
-    return current;
+    return onTap != null ? GestureDetector(onTap: onTap, child: current) : current;
   }
 
   List<Widget> _addGaps(List<Widget> items, double gap) {

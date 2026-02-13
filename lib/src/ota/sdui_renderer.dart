@@ -37,7 +37,7 @@ class FluxyRenderer {
         return textWidget;
       
       case 'button':
-        return Fx.button(
+        return Fx.box(
           onTap: () => _handleAction(action ?? ''),
           style: style,
           child: _renderSingleChild(json) ?? Fx.text(_interpolate(json['label'] ?? 'Click')),

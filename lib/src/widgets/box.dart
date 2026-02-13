@@ -155,19 +155,23 @@ class _BoxState extends State<Box> with ReactiveSubscriberMixin {
       );
     }
 
-    // Wrap with Interaction Handlers
-    current = MouseRegion(
-      onEnter: (_) => setState(() => _isHovered = true),
-      onExit: (_) => setState(() => _isHovered = false),
-      cursor: s.cursor ?? ((widget.onTap != null || s.hover != null) ? SystemMouseCursors.click : SystemMouseCursors.basic),
-      child: GestureDetector(
-        onTapDown: (_) => setState(() => _isPressed = true),
-        onTapUp: (_) => setState(() => _isPressed = false),
-        onTapCancel: () => setState(() => _isPressed = false),
-        onTap: widget.onTap,
-        child: current,
-      ),
-    );
+    // Interaction Detection
+    final isInteractive = widget.onTap != null || s.hover != null || s.pressed != null || s.cursor != null;
+
+    if (isInteractive) {
+      current = MouseRegion(
+        onEnter: (_) => setState(() => _isHovered = true),
+        onExit: (_) => setState(() => _isHovered = false),
+        cursor: s.cursor ?? SystemMouseCursors.click,
+        child: GestureDetector(
+          onTapDown: (_) => setState(() => _isPressed = true),
+          onTapUp: (_) => setState(() => _isPressed = false),
+          onTapCancel: () => setState(() => _isPressed = false),
+          onTap: widget.onTap,
+          child: current,
+        ),
+      );
+    }
 
     // Apply Flex/Stack wrappers LAST (They must be direct children of Flex/Stack)
     final flexVal = s.flex;

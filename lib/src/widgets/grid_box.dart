@@ -16,14 +16,18 @@ class GridBox extends StatelessWidget {
     this.className,
     this.responsive,
     required this.children,
+    this.onTap,
   });
+  
+  final VoidCallback? onTap;
 
-  GridBox copyWith({FxStyle? style, String? className, FxResponsiveStyle? responsive, List<Widget>? children}) {
+  GridBox copyWith({FxStyle? style, String? className, FxResponsiveStyle? responsive, List<Widget>? children, VoidCallback? onTap}) {
     return GridBox(
       style: style ?? this.style,
       className: className ?? this.className,
       responsive: responsive ?? this.responsive,
       children: children ?? this.children,
+      onTap: onTap ?? this.onTap,
     );
   }
 
@@ -70,6 +74,6 @@ class GridBox extends StatelessWidget {
       );
     }
 
-    return current;
+    return onTap != null ? GestureDetector(onTap: onTap, child: current) : current;
   }
 }
