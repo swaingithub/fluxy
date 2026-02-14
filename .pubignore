@@ -1,12 +1,5 @@
-# Exclude temporary analysis and dry-run logs
-analysis.txt
-analysis_ascii.txt
-dry_run_ascii.txt
-dry_run_verbose.txt
-analysis_ascii.txt
-MIGRATION_0.1.6.md
-IMPLEMENTATION_PLAN.md
-GUIDE.md
+# Temporary files
+*.txt
 
 # Flutter / Dart defaults
 .dart_tool/
