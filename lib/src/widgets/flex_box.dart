@@ -22,7 +22,14 @@ class FlexBox extends StatelessWidget {
 
   final VoidCallback? onTap;
 
-  FlexBox copyWith({FxStyle? style, Axis? direction, String? className, FxResponsiveStyle? responsive, List<Widget>? children, VoidCallback? onTap}) {
+  FlexBox copyWith({
+    FxStyle? style,
+    Axis? direction,
+    String? className,
+    FxResponsiveStyle? responsive,
+    List<Widget>? children,
+    VoidCallback? onTap,
+  }) {
     return FlexBox(
       direction: direction ?? this.direction,
       style: style ?? this.style,
@@ -36,10 +43,10 @@ class FlexBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final s = FxStyleResolver.resolve(
-      context, 
-      style: style, 
+      context,
+      style: style,
       className: className,
-      responsive: responsive
+      responsive: responsive,
     );
 
     final actualDirection = s.direction ?? direction;
@@ -49,11 +56,17 @@ class FlexBox extends StatelessWidget {
       mainAxisAlignment: s.justifyContent ?? MainAxisAlignment.start,
       crossAxisAlignment: s.alignItems ?? CrossAxisAlignment.center,
       mainAxisSize: s.mainAxisSize ?? MainAxisSize.max,
-      children: s.gap != null ? _addGaps(children, s.gap!, actualDirection) : children,
+      children: s.gap != null
+          ? _addGaps(children, s.gap!, actualDirection)
+          : children,
     );
 
     // Apply container styles if any (Width, Height, Padding, Decoration)
-    if (FxDecorationBuilder.hasVisuals(s) || s.width != null || s.height != null || s.padding != EdgeInsets.zero || s.margin != EdgeInsets.zero) {
+    if (FxDecorationBuilder.hasVisuals(s) ||
+        s.width != null ||
+        s.height != null ||
+        s.padding != EdgeInsets.zero ||
+        s.margin != EdgeInsets.zero) {
       current = Container(
         width: s.width,
         height: s.height,
@@ -72,11 +85,13 @@ class FlexBox extends StatelessWidget {
       );
     }
 
-    return onTap != null ? GestureDetector(
-      behavior: HitTestBehavior.opaque,
-      onTap: onTap, 
-      child: current
-    ) : current;
+    return onTap != null
+        ? GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: onTap,
+            child: current,
+          )
+        : current;
   }
 
   List<Widget> _addGaps(List<Widget> items, double gap, Axis dir) {
@@ -85,10 +100,12 @@ class FlexBox extends StatelessWidget {
     for (var i = 0; i < items.length; i++) {
       spaced.add(items[i]);
       if (i < items.length - 1) {
-        spaced.add(SizedBox(
-          width: dir == Axis.horizontal ? gap : 0,
-          height: dir == Axis.vertical ? gap : 0,
-        ));
+        spaced.add(
+          SizedBox(
+            width: dir == Axis.horizontal ? gap : 0,
+            height: dir == Axis.vertical ? gap : 0,
+          ),
+        );
       }
     }
     return spaced;

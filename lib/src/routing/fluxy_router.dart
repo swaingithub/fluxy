@@ -3,12 +3,28 @@ import 'package:flutter/material.dart';
 import '../reactive/signal.dart';
 import '../dsl/fx.dart';
 
-typedef FluxyRouteBuilder = Widget Function(Map<String, String> params, Object? args);
+typedef FluxyRouteBuilder =
+    Widget Function(Map<String, String> params, Object? args);
 typedef FluxyGuard = FutureOr<bool> Function();
 typedef FluxyMiddleware = FutureOr<bool> Function(String path);
-typedef FluxyTransitionBuilder = Widget Function(BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child);
+typedef FluxyTransitionBuilder =
+    Widget Function(
+      BuildContext context,
+      Animation<double> animation,
+      Animation<double> secondaryAnimation,
+      Widget child,
+    );
 
-enum FxTransition { native, fade, slideUp, slideRight, slideLeft, zoom, none, custom }
+enum FxTransition {
+  native,
+  fade,
+  slideUp,
+  slideRight,
+  slideLeft,
+  zoom,
+  none,
+  custom,
+}
 
 /// Defines a route in Fluxy.
 class FxRoute {
@@ -31,12 +47,12 @@ class FxRoute {
     this.transitionDuration,
     this.children = const [],
   });
-  
+
   // Quick constructors for transitions
-  static FxRoute fade(String path, FluxyRouteBuilder builder) => 
+  static FxRoute fade(String path, FluxyRouteBuilder builder) =>
       FxRoute(path: path, builder: builder, transition: FxTransition.fade);
-      
-  static FxRoute slideUp(String path, FluxyRouteBuilder builder) => 
+
+  static FxRoute slideUp(String path, FluxyRouteBuilder builder) =>
       FxRoute(path: path, builder: builder, transition: FxTransition.slideUp);
 
   /// Helper to apply shared guards/settings to a group of routes.
@@ -45,22 +61,24 @@ class FxRoute {
     required List<FxRoute> routes,
     String? prefix,
   }) {
-    return routes.map((r) => FxRoute(
-      path: prefix != null ? '$prefix${r.path}' : r.path,
-      builder: r.builder,
-      guards: [...guards, ...r.guards],
-      redirectTo: r.redirectTo,
-      transition: r.transition,
-      transitionBuilder: r.transitionBuilder,
-      transitionDuration: r.transitionDuration,
-      children: r.children,
-    )).toList();
+    return routes
+        .map(
+          (r) => FxRoute(
+            path: prefix != null ? '$prefix${r.path}' : r.path,
+            builder: r.builder,
+            guards: [...guards, ...r.guards],
+            redirectTo: r.redirectTo,
+            transition: r.transition,
+            transitionBuilder: r.transitionBuilder,
+            transitionDuration: r.transitionDuration,
+            children: r.children,
+          ),
+        )
+        .toList();
   }
 }
 
 // ... FxOutlet ...
-
-
 
 /// A widget that renders a nested navigator for sub-routes.
 class FxOutlet extends StatelessWidget {
@@ -86,7 +104,7 @@ class FxOutlet extends StatelessWidget {
       initialRoute: initialRoute,
       observers: observers ?? [],
       onGenerateRoute: (settings) {
-         return FluxyRouter.generateScopedRoute(settings, routes, unknownRoute);
+        return FluxyRouter.generateScopedRoute(settings, routes, unknownRoute);
       },
     );
   }
@@ -94,7 +112,8 @@ class FxOutlet extends StatelessWidget {
 
 /// The Fluxy Navigation Engine (Router 2.0 - Production Stable).
 class FluxyRouter {
-  static final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+  static final GlobalKey<NavigatorState> navigatorKey =
+      GlobalKey<NavigatorState>();
   static final Map<String, GlobalKey<NavigatorState>> _nestedKeys = {};
   static final List<FxRoute> _routes = [];
   static final List<FluxyMiddleware> _middlewares = [];
@@ -106,7 +125,7 @@ class FluxyRouter {
     if (scope == null) return navigatorKey;
     return _nestedKeys.putIfAbsent(scope, () => GlobalKey<NavigatorState>());
   }
-  
+
   static void setRoutes(List<FxRoute> routes, {FxRoute? unknownRoute}) {
     _routes.clear();
     _routes.addAll(routes);
@@ -133,9 +152,13 @@ class FluxyRouter {
   }
 
   /// reusable route generator for root and scopes
-  static Route<dynamic>? generateScopedRoute(RouteSettings settings, List<FxRoute> routes, FxRoute? unknownRoute) {
+  static Route<dynamic>? generateScopedRoute(
+    RouteSettings settings,
+    List<FxRoute> routes,
+    FxRoute? unknownRoute,
+  ) {
     final uri = Uri.parse(settings.name ?? '/');
-    
+
     for (var route in routes) {
       final params = _matchPath(route.path, uri.path);
       if (params != null) {
@@ -151,7 +174,11 @@ class FluxyRouter {
     return null;
   }
 
-  static Route<dynamic> _createRoute(FxRoute route, RouteSettings settings, Map<String, String> params) {
+  static Route<dynamic> _createRoute(
+    FxRoute route,
+    RouteSettings settings,
+    Map<String, String> params,
+  ) {
     _GuardWrapper builder(context) => _GuardWrapper(
       route: route,
       params: params,
@@ -165,28 +192,62 @@ class FluxyRouter {
     return PageRouteBuilder(
       settings: settings,
       pageBuilder: (context, animation, secondaryAnimation) => builder(context),
-      transitionDuration: route.transitionDuration ?? const Duration(milliseconds: 300),
+      transitionDuration:
+          route.transitionDuration ?? const Duration(milliseconds: 300),
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        if (route.transition == FxTransition.custom && route.transitionBuilder != null) {
-          return route.transitionBuilder!(context, animation, secondaryAnimation, child);
+        if (route.transition == FxTransition.custom &&
+            route.transitionBuilder != null) {
+          return route.transitionBuilder!(
+            context,
+            animation,
+            secondaryAnimation,
+            child,
+          );
         }
-        
+
         switch (route.transition) {
           case FxTransition.fade:
             return FadeTransition(opacity: animation, child: child);
           case FxTransition.slideUp:
             return SlideTransition(
-              position: Tween<Offset>(begin: const Offset(0.0, 1.0), end: Offset.zero).animate(CurvedAnimation(parent: animation, curve: Curves.easeOutCubic)),
+              position:
+                  Tween<Offset>(
+                    begin: const Offset(0.0, 1.0),
+                    end: Offset.zero,
+                  ).animate(
+                    CurvedAnimation(
+                      parent: animation,
+                      curve: Curves.easeOutCubic,
+                    ),
+                  ),
               child: child,
             );
           case FxTransition.slideRight:
             return SlideTransition(
-              position: Tween<Offset>(begin: const Offset(1.0, 0.0), end: Offset.zero).animate(CurvedAnimation(parent: animation, curve: Curves.easeOutCubic)),
+              position:
+                  Tween<Offset>(
+                    begin: const Offset(1.0, 0.0),
+                    end: Offset.zero,
+                  ).animate(
+                    CurvedAnimation(
+                      parent: animation,
+                      curve: Curves.easeOutCubic,
+                    ),
+                  ),
               child: child,
             );
           case FxTransition.slideLeft:
-             return SlideTransition(
-              position: Tween<Offset>(begin: const Offset(-1.0, 0.0), end: Offset.zero).animate(CurvedAnimation(parent: animation, curve: Curves.easeOutCubic)),
+            return SlideTransition(
+              position:
+                  Tween<Offset>(
+                    begin: const Offset(-1.0, 0.0),
+                    end: Offset.zero,
+                  ).animate(
+                    CurvedAnimation(
+                      parent: animation,
+                      curve: Curves.easeOutCubic,
+                    ),
+                  ),
               child: child,
             );
           case FxTransition.zoom:
@@ -201,51 +262,80 @@ class FluxyRouter {
   }
 
   /// Navigates to a new page.
-  static Future<T?> to<T>(String routeName, {Object? arguments, String? scope}) async {
+  static Future<T?> to<T>(
+    String routeName, {
+    Object? arguments,
+    String? scope,
+  }) async {
     if (!await _runMiddleware(routeName)) return null;
 
     final state = getKey(scope).currentState;
     if (state == null) {
-      debugPrint("FluxyRouter: Navigator state is null for scope: ${scope ?? 'root'}. Check if your navigator is mounted.");
+      debugPrint(
+        "FluxyRouter: Navigator state is null for scope: ${scope ?? 'root'}. Check if your navigator is mounted.",
+      );
       return null;
     }
     return state.pushNamed<T>(routeName, arguments: arguments);
   }
 
   /// Replaces current page with a new one.
-  static Future<T?> off<T, TO>(String routeName, {TO? result, Object? arguments, String? scope}) async {
+  static Future<T?> off<T, TO>(
+    String routeName, {
+    TO? result,
+    Object? arguments,
+    String? scope,
+  }) async {
     if (!await _runMiddleware(routeName)) return null;
-    
+
     final state = getKey(scope).currentState;
     if (state == null) {
-      debugPrint("FluxyRouter: Navigator state is null for scope: ${scope ?? 'root'}. Check if your navigator is mounted.");
+      debugPrint(
+        "FluxyRouter: Navigator state is null for scope: ${scope ?? 'root'}. Check if your navigator is mounted.",
+      );
       return null;
     }
-    return state.pushReplacementNamed<T, TO>(routeName, result: result, arguments: arguments);
+    return state.pushReplacementNamed<T, TO>(
+      routeName,
+      result: result,
+      arguments: arguments,
+    );
   }
 
   /// Clears the navigation stack and pushes a new route.
-  static Future<T?> offAll<T>(String routeName, {Object? arguments, String? scope}) async {
+  static Future<T?> offAll<T>(
+    String routeName, {
+    Object? arguments,
+    String? scope,
+  }) async {
     if (!await _runMiddleware(routeName)) return null;
-    
+
     final state = getKey(scope).currentState;
     if (state == null) {
-      debugPrint("FluxyRouter: Navigator state is null for scope: ${scope ?? 'root'}. Check if your navigator is mounted.");
+      debugPrint(
+        "FluxyRouter: Navigator state is null for scope: ${scope ?? 'root'}. Check if your navigator is mounted.",
+      );
       return null;
     }
-    return state.pushNamedAndRemoveUntil<T>(routeName, (route) => false, arguments: arguments);
+    return state.pushNamedAndRemoveUntil<T>(
+      routeName,
+      (route) => false,
+      arguments: arguments,
+    );
   }
 
   /// Goes back to previous page.
   static void back<T>([T? result, String? scope]) {
     final state = getKey(scope).currentState;
     if (state == null) {
-      debugPrint("FluxyRouter: Navigator state is null for scope: ${scope ?? 'root'}. Cannot go back.");
+      debugPrint(
+        "FluxyRouter: Navigator state is null for scope: ${scope ?? 'root'}. Cannot go back.",
+      );
       return;
     }
     state.pop<T>(result);
   }
-  
+
   /// Runs global middleware. Returns false if navigation should abort.
   static Future<bool> _runMiddleware(String path) async {
     for (final middleware in _middlewares) {
@@ -257,12 +347,12 @@ class FluxyRouter {
 
   static Map<String, String>? _matchPath(String pattern, String path) {
     if (pattern == path) return {}; // Exact match optimization & root handling
-    
+
     final patternParts = pattern.split('/').where((e) => e.isNotEmpty).toList();
     final pathParts = path.split('/').where((e) => e.isNotEmpty).toList();
-    
+
     if (patternParts.length != pathParts.length) return null;
-    
+
     final Map<String, String> params = {};
     for (var i = 0; i < patternParts.length; i++) {
       if (patternParts[i].startsWith(':')) {
@@ -275,15 +365,14 @@ class FluxyRouter {
   }
 }
 
-
 class _GuardWrapper extends StatefulWidget {
   final FxRoute route;
   final Map<String, String> params;
   final Object? arguments;
 
   const _GuardWrapper({
-    required this.route, 
-    required this.params, 
+    required this.route,
+    required this.params,
     this.arguments,
   });
 
@@ -342,7 +431,7 @@ class _GuardReactiveView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // We use a separate StatelessWidget to leverage Fluxy's reactivity 
+    // We use a separate StatelessWidget to leverage Fluxy's reactivity
     // for the guard status without rebuilding the whole wrapper unnecessarily.
     return Fx(() {
       final status = isAuthorized.value;
@@ -355,7 +444,10 @@ class _GuardReactiveView extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text("Access Denied", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                const Text(
+                  "Access Denied",
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
                 const SizedBox(height: 16),
                 ElevatedButton(onPressed: onCheck, child: const Text("Retry")),
               ],

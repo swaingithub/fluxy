@@ -9,7 +9,10 @@ class LayoutTreeBuilder {
   static String _generateId() => 'node_${_idCounter++}';
 
   /// Builds a Box node.
-  static LayoutNode box({FxStyle? style, List<LayoutNode> children = const []}) {
+  static LayoutNode box({
+    FxStyle? style,
+    List<LayoutNode> children = const [],
+  }) {
     return LayoutNode(
       id: _generateId(),
       type: NodeType.box,
@@ -19,7 +22,11 @@ class LayoutTreeBuilder {
   }
 
   /// Builds a Flex node (Row/Column).
-  static LayoutNode flex({required Axis direction, FxStyle? style, List<LayoutNode> children = const []}) {
+  static LayoutNode flex({
+    required Axis direction,
+    FxStyle? style,
+    List<LayoutNode> children = const [],
+  }) {
     return LayoutNode(
       id: _generateId(),
       type: NodeType.flex,

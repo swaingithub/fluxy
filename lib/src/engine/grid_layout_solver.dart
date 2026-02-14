@@ -13,7 +13,7 @@ class GridLayoutSolver {
 
     // 1. Calculate column count
     int columnCount = style.crossAxisCount ?? 2;
-    
+
     // Auto-fit behavior: If minColumnWidth is provided, calculate columns based on available space
     if (style.minColumnWidth != null && style.minColumnWidth! > 0) {
       columnCount = (maxWidth / (style.minColumnWidth! + gap)).floor();
@@ -37,11 +37,12 @@ class GridLayoutSolver {
 
     // 4. Calculate total grid height
     final int rowCount = (node.children.length / columnCount).ceil();
-    final double totalHeight = (rowCount * cellHeight) + (math.max(0, rowCount - 1) * gap);
+    final double totalHeight =
+        (rowCount * cellHeight) + (math.max(0, rowCount - 1) * gap);
 
     node.computedWidth = maxWidth;
     node.computedHeight = style.height ?? totalHeight;
-    
+
     // Store calculated meta-data if needed for the widget pass
     // (In a real implementation, we'd store columnCount on the node)
   }
@@ -49,12 +50,17 @@ class GridLayoutSolver {
   static void _solveChild(LayoutNode child, BoxConstraints constraints) {
     child.computedWidth = constraints.maxWidth;
     child.computedHeight = constraints.maxHeight;
-    
+
     // Recursive solve for nested structures would go here
   }
 
   /// Utility to calculate column count for a given width and style.
-  static int calculateColumnCount(double width, {int? crossAxisCount, double? minColumnWidth, double gap = 0}) {
+  static int calculateColumnCount(
+    double width, {
+    int? crossAxisCount,
+    double? minColumnWidth,
+    double gap = 0,
+  }) {
     if (minColumnWidth != null && minColumnWidth > 0) {
       return math.max(1, (width / (minColumnWidth + gap)).floor());
     }

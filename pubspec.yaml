@@ -1,6 +1,6 @@
 name: fluxy
 description: "A complete Flutter platform unifying reactive state, declarative UI, styling, animation, routing, and tooling. Build production-grade apps faster and at scale."
-version: 0.1.3
+version: 0.1.4
 homepage: https://github.com/swaingithub/fluxy
 repository: https://github.com/swaingithub/fluxy
 documentation: https://fluxy-doc.vercel.app/

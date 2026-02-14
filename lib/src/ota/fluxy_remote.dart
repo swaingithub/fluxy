@@ -23,22 +23,22 @@ class FluxyRemote {
   }
 
   /// Checks for updates from the given manifest URL.
-  /// 
-  /// Manifest format: 
+  ///
+  /// Manifest format:
   /// ```json
-  /// { 
-  ///   "version": 2, 
-  ///   "assets": { 
-  ///     "home.json": "https://api.example.com/assets/home.json", 
-  ///     "theme.json": "https://api.example.com/assets/theme.json" 
-  ///   } 
+  /// {
+  ///   "version": 2,
+  ///   "assets": {
+  ///     "home.json": "https://api.example.com/assets/home.json",
+  ///     "theme.json": "https://api.example.com/assets/theme.json"
+  ///   }
   /// }
   /// ```
   static Future<void> update(String manifestUrl) async {
     try {
       await init();
       debugPrint('[FluxyRemote] Checking for updates...');
-      
+
       final client = HttpClient();
       final request = await client.getUrl(Uri.parse(manifestUrl));
       final response = await request.close();
@@ -50,17 +50,23 @@ class FluxyRemote {
       final body = await response.transform(utf8.decoder).join();
       final Map<String, dynamic> manifest = jsonDecode(body);
       final int newVersion = manifest['version'] ?? 0;
-      
+
       final prefs = await SharedPreferences.getInstance();
       final int currentVersion = prefs.getInt(_versionKey) ?? 0;
 
       if (newVersion > currentVersion) {
-        debugPrint('[FluxyRemote] New version detected: $newVersion (Current: $currentVersion). Downloading...');
+        debugPrint(
+          '[FluxyRemote] New version detected: $newVersion (Current: $currentVersion). Downloading...',
+        );
         await _downloadAssets(manifest['assets']);
         await prefs.setInt(_versionKey, newVersion);
-        debugPrint('[FluxyRemote] Update complete. Version is now $newVersion.');
+        debugPrint(
+          '[FluxyRemote] Update complete. Version is now $newVersion.',
+        );
       } else {
-        debugPrint('[FluxyRemote] Already up to date (Version $currentVersion).');
+        debugPrint(
+          '[FluxyRemote] Already up to date (Version $currentVersion).',
+        );
       }
     } catch (e) {
       debugPrint('[FluxyRemote] Update failed: $e');
@@ -70,22 +76,27 @@ class FluxyRemote {
   static Future<void> _downloadAssets(Map<String, dynamic>? assets) async {
     if (assets == null) return;
     final client = HttpClient();
-    
+
     for (final entry in assets.entries) {
       final String filename = entry.key;
       final String url = entry.value;
-      
+
       try {
         final request = await client.getUrl(Uri.parse(url));
         final response = await request.close();
-        
+
         if (response.statusCode == 200) {
-          final bytes = await response.fold<List<int>>([], (a, b) => a..addAll(b));
+          final bytes = await response.fold<List<int>>(
+            [],
+            (a, b) => a..addAll(b),
+          );
           final file = File('${_assetsDir!.path}/$filename');
           await file.writeAsBytes(bytes);
           debugPrint('[FluxyRemote] Downloaded $filename');
         } else {
-           debugPrint('[FluxyRemote] Failed to download $filename: ${response.statusCode}');
+          debugPrint(
+            '[FluxyRemote] Failed to download $filename: ${response.statusCode}',
+          );
         }
       } catch (e) {
         debugPrint('[FluxyRemote] Exception downloading $filename: $e');

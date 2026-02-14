@@ -17,14 +17,23 @@ class FluxyPlayApp extends StatelessWidget {
       title: 'Fluxy Play',
       theme: ThemeData.light(useMaterial3: true),
       darkTheme: ThemeData.dark(useMaterial3: true),
-      initialRoute: FxRoute(path: '/', builder: (_, __) => const PlayHomeScreen()),
+      initialRoute: FxRoute(
+        path: '/',
+        builder: (_, __) => const PlayHomeScreen(),
+      ),
       routes: [
-         FxRoute(path: '/', builder: (_, __) => const PlayHomeScreen()),
-         FxRoute(path: '/marketplace', builder: (_, __) => const MarketplaceScreen()),
-         FxRoute(path: '/preview', builder: (_, args) {
+        FxRoute(path: '/', builder: (_, __) => const PlayHomeScreen()),
+        FxRoute(
+          path: '/marketplace',
+          builder: (_, __) => const MarketplaceScreen(),
+        ),
+        FxRoute(
+          path: '/preview',
+          builder: (_, args) {
             final url = (args as Map?)?['url'] as String? ?? '';
             return PreviewScreen(url: url);
-         }),
+          },
+        ),
       ],
     );
   }
@@ -39,10 +48,7 @@ class PlayHomeScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Fluxy Play ✨'),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.settings),
-            onPressed: () {},
-          )
+          IconButton(icon: const Icon(Icons.settings), onPressed: () {}),
         ],
       ),
       body: SingleChildScrollView(
@@ -76,7 +82,11 @@ class PlayHomeScreen extends StatelessWidget {
         children: [
           const Text(
             "Welcome Back!",
-            style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.white),
+            style: TextStyle(
+              fontSize: 28,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
           ),
           const SizedBox(height: 8),
           const Text(
@@ -85,13 +95,13 @@ class PlayHomeScreen extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           ElevatedButton.icon(
-             icon: const Icon(Icons.flash_on),
-             label: const Text("Enter Project URL"),
-             onPressed: () => _showUrlDialog(context),
-             style: ElevatedButton.styleFrom(
-               backgroundColor: Colors.white,
-               foregroundColor: Theme.of(context).primaryColor,
-             ),
+            icon: const Icon(Icons.flash_on),
+            label: const Text("Enter Project URL"),
+            onPressed: () => _showUrlDialog(context),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.white,
+              foregroundColor: Theme.of(context).primaryColor,
+            ),
           ),
         ],
       ),
@@ -107,7 +117,10 @@ class PlayHomeScreen extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text("Explore", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              const Text(
+                "Explore",
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
               TextButton(
                 onPressed: () => FluxyRouter.to('/marketplace'),
                 child: const Text("View All"),
@@ -119,10 +132,20 @@ class PlayHomeScreen extends StatelessWidget {
             child: ListView(
               scrollDirection: Axis.horizontal,
               children: [
-                 _buildCard(context, "Starter", Icons.rocket_launch, Colors.orange),
-                 _buildCard(context, "E-Commerce", Icons.shopping_bag, Colors.blue),
-                 _buildCard(context, "SaaS", Icons.bar_chart, Colors.purple),
-                 _buildCard(context, "Todo", Icons.check_circle, Colors.green),
+                _buildCard(
+                  context,
+                  "Starter",
+                  Icons.rocket_launch,
+                  Colors.orange,
+                ),
+                _buildCard(
+                  context,
+                  "E-Commerce",
+                  Icons.shopping_bag,
+                  Colors.blue,
+                ),
+                _buildCard(context, "SaaS", Icons.bar_chart, Colors.purple),
+                _buildCard(context, "Todo", Icons.check_circle, Colors.green),
               ],
             ),
           ),
@@ -131,11 +154,19 @@ class PlayHomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildCard(BuildContext context, String title, IconData icon, Color color) {
+  Widget _buildCard(
+    BuildContext context,
+    String title,
+    IconData icon,
+    Color color,
+  ) {
     return GestureDetector(
       onTap: () {
         // Find template by name/id roughly
-        final tpl = MarketplaceData.templates.firstWhere((t) => t['name'].contains(title), orElse: () => MarketplaceData.templates.first);
+        final tpl = MarketplaceData.templates.firstWhere(
+          (t) => t['name'].contains(title),
+          orElse: () => MarketplaceData.templates.first,
+        );
         FluxyRouter.to('/preview', arguments: {'url': tpl['manifestUrl']});
       },
       child: Container(
@@ -151,7 +182,10 @@ class PlayHomeScreen extends StatelessWidget {
           children: [
             Icon(icon, color: color, size: 32),
             const SizedBox(height: 8),
-            Text(title, style: TextStyle(color: color, fontWeight: FontWeight.bold)),
+            Text(
+              title,
+              style: TextStyle(color: color, fontWeight: FontWeight.bold),
+            ),
           ],
         ),
       ),
@@ -164,15 +198,23 @@ class PlayHomeScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text("Community Apps", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          const Text(
+            "Community Apps",
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
           const SizedBox(height: 12),
-          ...MarketplaceData.communityApps.map((app) => ListTile(
-            leading: CircleAvatar(child: Text(app['name'][0])),
-            title: Text(app['name']),
-            subtitle: Text(" by ${app['author']}"),
-            trailing: const Icon(Icons.chevron_right),
-            onTap: () => FluxyRouter.to('/preview', arguments: {'url': app['manifestUrl']}),
-          )),
+          ...MarketplaceData.communityApps.map(
+            (app) => ListTile(
+              leading: CircleAvatar(child: Text(app['name'][0])),
+              title: Text(app['name']),
+              subtitle: Text(" by ${app['author']}"),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () => FluxyRouter.to(
+                '/preview',
+                arguments: {'url': app['manifestUrl']},
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -193,7 +235,10 @@ class PlayHomeScreen extends StatelessWidget {
           ),
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
@@ -229,9 +274,14 @@ class MarketplaceScreen extends StatelessWidget {
           final tpl = MarketplaceData.templates[index];
           return Card(
             elevation: 4,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
             child: InkWell(
-              onTap: () => FluxyRouter.to('/preview', arguments: {'url': tpl['manifestUrl']}),
+              onTap: () => FluxyRouter.to(
+                '/preview',
+                arguments: {'url': tpl['manifestUrl']},
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -239,9 +289,13 @@ class MarketplaceScreen extends StatelessWidget {
                     child: Container(
                       decoration: BoxDecoration(
                         color: Colors.grey[200],
-                        borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+                        borderRadius: const BorderRadius.vertical(
+                          top: Radius.circular(16),
+                        ),
                       ),
-                      child: const Center(child: Icon(Icons.image, size: 48, color: Colors.grey)),
+                      child: const Center(
+                        child: Icon(Icons.image, size: 48, color: Colors.grey),
+                      ),
                     ),
                   ),
                   Padding(
@@ -249,9 +303,23 @@ class MarketplaceScreen extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(tpl['name'], style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                        Text(
+                          tpl['name'],
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
                         const SizedBox(height: 4),
-                        Text(tpl['description'], maxLines: 2, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 12, color: Colors.grey)),
+                        Text(
+                          tpl['description'],
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey,
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -288,15 +356,20 @@ class _PreviewScreenState extends State<PreviewScreen> {
   }
 
   Future<void> _load() async {
-     await Fluxy.update(widget.url);
-     setState(() {}); // Rebuild to refresh views if needed
+    await Fluxy.update(widget.url);
+    setState(() {}); // Rebuild to refresh views if needed
   }
 
   @override
   Widget build(BuildContext context) {
     // Extract filename from URL (simplistic)
-    final filename = widget.url.split('/').lastWhere((element) => element.endsWith('.json'), orElse: () => 'home.json');
-    
+    final filename = widget.url
+        .split('/')
+        .lastWhere(
+          (element) => element.endsWith('.json'),
+          orElse: () => 'home.json',
+        );
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Preview'),
@@ -306,9 +379,13 @@ class _PreviewScreenState extends State<PreviewScreen> {
         ),
       ),
       body: FxRemoteView(
-        path: filename, 
+        path: filename,
         placeholder: const Center(child: CircularProgressIndicator()),
-        errorBuilder: (e) => Center(child: Text('Failed to load $filename\nError: $e\nURL: ${widget.url}')),
+        errorBuilder: (e) => Center(
+          child: Text(
+            'Failed to load $filename\nError: $e\nURL: ${widget.url}',
+          ),
+        ),
       ),
     );
   }

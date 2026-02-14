@@ -86,7 +86,11 @@ class FluxyPersistence {
     }
   }
 
-  static Future<void> save(String key, dynamic value, {bool secure = false}) async {
+  static Future<void> save(
+    String key,
+    dynamic value, {
+    bool secure = false,
+  }) async {
     if (!_isInitialized) await init();
     try {
       final String encoded = jsonEncode(value);
@@ -126,14 +130,19 @@ class PersistentSignal<T> extends Signal<T> {
   }
 
   Future<void> _load() async {
-    final stored = await FluxyPersistence.load(config.key, secure: config.secure);
+    final stored = await FluxyPersistence.load(
+      config.key,
+      secure: config.secure,
+    );
     if (stored != null) {
       try {
         // Handle basic types directly, map conversions might be needed for objects
         // For simple signals (int, bool, String, Map, List), jsonDecode works fine.
         value = stored as T;
       } catch (e) {
-        debugPrint("Fluxy [Persistence] Type mismatch for key '${config.key}': $e");
+        debugPrint(
+          "Fluxy [Persistence] Type mismatch for key '${config.key}': $e",
+        );
         // Fallback to initial value if type fails
       }
     }
@@ -157,5 +166,3 @@ class PersistentSignal<T> extends Signal<T> {
     }
   }
 }
-
-

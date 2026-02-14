@@ -3,7 +3,16 @@ import '../styles/tokens.dart';
 import '../dsl/fx.dart';
 import 'box.dart';
 
-enum FxButtonVariant { primary, secondary, danger, warning, success, text, ghost, outline }
+enum FxButtonVariant {
+  primary,
+  secondary,
+  danger,
+  warning,
+  success,
+  text,
+  ghost,
+  outline,
+}
 
 enum FxButtonSize { xs, sm, md, lg, xl }
 
@@ -60,12 +69,17 @@ class FxButton extends StatelessWidget {
   FxButton fullWidth() =>
       copyWith(style: style.merge(const FxStyle(width: double.infinity)));
 
-  FxButton shadowSm() => copyWith(style: style.merge(FxStyle(shadows: FxTokens.shadow.sm)));
-  FxButton shadowMd() => copyWith(style: style.merge(FxStyle(shadows: FxTokens.shadow.md)));
-  FxButton shadowLg() => copyWith(style: style.merge(FxStyle(shadows: FxTokens.shadow.lg)));
+  FxButton shadowSm() =>
+      copyWith(style: style.merge(FxStyle(shadows: FxTokens.shadow.sm)));
+  FxButton shadowMd() =>
+      copyWith(style: style.merge(FxStyle(shadows: FxTokens.shadow.md)));
+  FxButton shadowLg() =>
+      copyWith(style: style.merge(FxStyle(shadows: FxTokens.shadow.lg)));
 
-  FxButton bg(Color color) => copyWith(style: style.merge(FxStyle(backgroundColor: color)));
-  FxButton textColor(Color color) => copyWith(style: style.merge(FxStyle(color: color)));
+  FxButton bg(Color color) =>
+      copyWith(style: style.merge(FxStyle(backgroundColor: color)));
+  FxButton textColor(Color color) =>
+      copyWith(style: style.merge(FxStyle(color: color)));
 
   /// Merges a custom style object
   FxButton applyStyle(FxStyle s) => copyWith(style: style.merge(s));
@@ -184,11 +198,18 @@ class FxButton extends StatelessWidget {
       backgroundColor: brandColor,
       padding: padding,
       borderRadius: BorderRadius.circular(isRounded ? 9999 : 10),
-      border: borderColor != null ? Border.all(color: borderColor, width: 1) : null,
+      border: borderColor != null
+          ? Border.all(color: borderColor, width: 1)
+          : null,
       transition: const Duration(milliseconds: 150),
       // Implicit Interactivity
-      hover: variant == FxButtonVariant.ghost || variant == FxButtonVariant.outline
-          ? FxStyle(backgroundColor: brandColor == Colors.transparent ? FxTokens.colors.slate50 : brandColor.withValues(alpha: 0.9))
+      hover:
+          variant == FxButtonVariant.ghost || variant == FxButtonVariant.outline
+          ? FxStyle(
+              backgroundColor: brandColor == Colors.transparent
+                  ? FxTokens.colors.slate50
+                  : brandColor.withValues(alpha: 0.9),
+            )
           : FxStyle(opacity: 0.9),
       pressed: const FxStyle(opacity: 0.7, shadows: []),
     ).merge(style);
@@ -209,13 +230,16 @@ class FxButton extends StatelessWidget {
           )
         else if (icon != null)
           icon!,
-        
-        Fx.text(label, style: FxStyle(
-          color: onBrandColor,
-          fontSize: fontSize,
-          fontWeight: FontWeight.w600,
-          letterSpacing: -0.2,
-        )),
+
+        Fx.text(
+          label,
+          style: FxStyle(
+            color: onBrandColor,
+            fontSize: fontSize,
+            fontWeight: FontWeight.w600,
+            letterSpacing: -0.2,
+          ),
+        ),
 
         if (!isLoading && trailingIcon != null) trailingIcon!,
       ],

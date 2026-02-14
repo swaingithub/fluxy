@@ -16,7 +16,12 @@ void main(List<String> arguments) async {
     ..addCommand('cloud');
 
   // Handle flags
-  parser.addFlag('help', abbr: 'h', negatable: false, help: 'Show usage information.');
+  parser.addFlag(
+    'help',
+    abbr: 'h',
+    negatable: false,
+    help: 'Show usage information.',
+  );
   parser.addFlag('version', abbr: 'v', negatable: false, help: 'Show version.');
 
   ArgResults argResults;
@@ -94,7 +99,10 @@ Future<void> _handleInit(List<String> args) async {
   print('🚀 Creating Fluxy project: $projectName...');
 
   // 1. Flutter Create
-  final result = await Process.run('flutter', ['create', projectName], runInShell: true);
+  final result = await Process.run('flutter', [
+    'create',
+    projectName,
+  ], runInShell: true);
   if (result.exitCode != 0) {
     print('Error creating Flutter project:');
     print(result.stderr);
@@ -111,14 +119,23 @@ Future<void> _handleInit(List<String> args) async {
   // 2. Add Fluxy Dependency
   print('📦 Adding fluxy dependency...');
   final pubResult = await Process.run(
-    'flutter', 
-    ['pub', 'add', 'fluxy', 'provider', 'shared_preferences', 'flutter_secure_storage'], 
+    'flutter',
+    [
+      'pub',
+      'add',
+      'fluxy',
+      'provider',
+      'shared_preferences',
+      'flutter_secure_storage',
+    ],
     workingDirectory: projectDir.path,
     runInShell: true,
   );
-  
+
   if (pubResult.exitCode != 0) {
-    print('Warning: Failed to add dependencies automatically. You may need to add "fluxy" manually.');
+    print(
+      'Warning: Failed to add dependencies automatically. You may need to add "fluxy" manually.',
+    );
     print(pubResult.stderr);
   }
 
@@ -137,7 +154,12 @@ Future<void> _handleInit(List<String> args) async {
 Future<void> _handleRun(List<String> args) async {
   print('🚀 Launching Fluxy App...');
   // Wrap flutter run
-  final process = await Process.start('flutter', ['run', ...args], mode: ProcessStartMode.inheritStdio, runInShell: true);
+  final process = await Process.start(
+    'flutter',
+    ['run', ...args],
+    mode: ProcessStartMode.inheritStdio,
+    runInShell: true,
+  );
   final exitCode = await process.exitCode;
   if (exitCode != 0) exit(exitCode);
 }
@@ -145,17 +167,24 @@ Future<void> _handleRun(List<String> args) async {
 Future<void> _handleDoctor() async {
   print('🩺 Fluxy Doctor\n');
   print('Fluxy CLI Version: $version');
-  
+
   print('\nChecking Flutter...');
-  final flutterResult = await Process.run('flutter', ['--version'], runInShell: true);
+  final flutterResult = await Process.run('flutter', [
+    '--version',
+  ], runInShell: true);
   if (flutterResult.exitCode == 0) {
     print(flutterResult.stdout);
   } else {
     print('❌ Flutter not found or error executing.');
   }
-  
+
   print('\nChecking Doctor...');
-  final process = await Process.start('flutter', ['doctor'], mode: ProcessStartMode.inheritStdio, runInShell: true);
+  final process = await Process.start(
+    'flutter',
+    ['doctor'],
+    mode: ProcessStartMode.inheritStdio,
+    runInShell: true,
+  );
   await process.exitCode;
 }
 
@@ -164,12 +193,12 @@ Future<void> _handleBuild(List<String> args) async {
     print('Usage: fluxy build <apk|ios|web|appbundle> [args]');
     return;
   }
-  
+
   final target = args.first;
   print('🏗️ Building for $target...');
-  
+
   final buildArgs = ['build', target, ...args.skip(1)];
-  
+
   // Add optimization flags automatically if release
   if (!args.contains('--debug') && !args.contains('--profile')) {
     if (!buildArgs.contains('--release')) buildArgs.add('--release');
@@ -178,15 +207,22 @@ Future<void> _handleBuild(List<String> args) async {
     // buildArgs.add('--split-debug-info=./debug-info');
   }
 
-  final process = await Process.start('flutter', buildArgs, mode: ProcessStartMode.inheritStdio, runInShell: true);
+  final process = await Process.start(
+    'flutter',
+    buildArgs,
+    mode: ProcessStartMode.inheritStdio,
+    runInShell: true,
+  );
   final exitCode = await process.exitCode;
   if (exitCode != 0) exit(exitCode);
-  
+
   print('✅ Build Complete!');
 }
 
 Future<void> _handleDeploy() async {
-  print('🚀 Deployment integrations (Firebase, TestFlight, Play Store) are coming in Phase 5!');
+  print(
+    '🚀 Deployment integrations (Firebase, TestFlight, Play Store) are coming in Phase 5!',
+  );
   print('For now, use manual upload of the artifacts generated in "build".');
 }
 

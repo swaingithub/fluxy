@@ -4,6 +4,7 @@ import '../styles/tokens.dart';
 import '../widgets/box.dart';
 
 enum FxAvatarSize { sm, md, lg, xl }
+
 enum FxAvatarShape { circle, square, rounded }
 
 class FxAvatar extends StatelessWidget {
@@ -28,25 +29,32 @@ class FxAvatar extends StatelessWidget {
 
   double get _size {
     switch (size) {
-      case FxAvatarSize.sm: return 32;
-      case FxAvatarSize.md: return 40;
-      case FxAvatarSize.lg: return 56;
-      case FxAvatarSize.xl: return 80;
+      case FxAvatarSize.sm:
+        return 32;
+      case FxAvatarSize.md:
+        return 40;
+      case FxAvatarSize.lg:
+        return 56;
+      case FxAvatarSize.xl:
+        return 80;
     }
   }
 
   double get _radius {
     switch (shape) {
-      case FxAvatarShape.circle: return _size / 2;
-      case FxAvatarShape.square: return 0;
-      case FxAvatarShape.rounded: return FxTokens.radius.md;
+      case FxAvatarShape.circle:
+        return _size / 2;
+      case FxAvatarShape.square:
+        return 0;
+      case FxAvatarShape.rounded:
+        return FxTokens.radius.md;
     }
   }
 
   @override
   Widget build(BuildContext context) {
     Widget content;
-    
+
     if (image != null) {
       content = Image.network(
         image!,
@@ -61,14 +69,16 @@ class FxAvatar extends StatelessWidget {
 
     return Box(
       onTap: onTap,
-      style: style.merge(FxStyle(
-        width: _size,
-        height: _size,
-        borderRadius: BorderRadius.circular(_radius),
-        backgroundColor: Colors.grey.shade200,
-        clipBehavior: Clip.antiAlias,
-        alignment: Alignment.center,
-      )),
+      style: style.merge(
+        FxStyle(
+          width: _size,
+          height: _size,
+          borderRadius: BorderRadius.circular(_radius),
+          backgroundColor: Colors.grey.shade200,
+          clipBehavior: Clip.antiAlias,
+          alignment: Alignment.center,
+        ),
+      ),
       child: content,
     );
   }
@@ -77,7 +87,9 @@ class FxAvatar extends StatelessWidget {
     if (fallbackWidget != null) return fallbackWidget!;
     if (fallback != null) {
       return Text(
-        fallback!.substring(0, (fallback!.length > 2 ? 2 : fallback!.length)).toUpperCase(),
+        fallback!
+            .substring(0, (fallback!.length > 2 ? 2 : fallback!.length))
+            .toUpperCase(),
         style: TextStyle(
           color: Colors.grey.shade600,
           fontWeight: FontWeight.bold,

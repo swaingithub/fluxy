@@ -1,3 +1,14 @@
+## 0.1.4
+
+* **Fluxy 2.0 DSL Architecture**:
+    * **Context-Free Overlays**: Introduced `Fx.toast`, `Fx.loader`, and `Fx.dialog` that work without direct `BuildContext` access.
+    * **Reactive Networking**: Launched `Fx.fetch()` with built-in retries, timeouts, debouncing, and automatic `AsyncSignal` binding.
+    * **Smart Form DSL**: Re-engineered `Fx.form()` for automatic keyboard management and bulk validation.
+    * **Fluent Styling Proxies**: Added `.font`, `.shadow`, and `.align` property proxies for rapid UI construction.
+    * **Performance Lists**: Upgraded `Fx.list()` with `itemBuilder` support for high-performance lazy rendering.
+    * **Enhanced Time DSL**: Added `.sec` duration extension (e.g., `2.sec`).
+    * **Context Extensions**: Added `context.theme`, `context.colors`, and `context.isDark` for instant token access.
+
 ## 0.1.3
 
 * **Built-in Theme Management**: Added `FxTheme` and methods like `Fx.toggleTheme()` for zero-boilerplate dark mode support.

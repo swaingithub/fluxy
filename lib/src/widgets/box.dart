@@ -9,7 +9,7 @@ import '../reactive/signal.dart';
 /// The foundational building block of Fluxy.
 /// Similar to a <div> in web development.
 class Box extends StatefulWidget {
-  final String? id; 
+  final String? id;
   final FxStyle style;
   final String? className;
   final FxResponsiveStyle? responsive;
@@ -28,7 +28,14 @@ class Box extends StatefulWidget {
     this.onTap,
   });
 
-  Box copyWith({FxStyle? style, String? className, FxResponsiveStyle? responsive, dynamic child, dynamic children, VoidCallback? onTap}) {
+  Box copyWith({
+    FxStyle? style,
+    String? className,
+    FxResponsiveStyle? responsive,
+    dynamic child,
+    dynamic children,
+    VoidCallback? onTap,
+  }) {
     return Box(
       id: id,
       style: style ?? this.style,
@@ -47,7 +54,7 @@ class Box extends StatefulWidget {
 class _BoxState extends State<Box> with ReactiveSubscriberMixin {
   bool _isHovered = false;
   bool _isPressed = false;
-  
+
   // Cache the resolved style and built widget
   FxStyle? _lastResolvedBase;
   Widget? _cachedWidget;
@@ -68,25 +75,30 @@ class _BoxState extends State<Box> with ReactiveSubscriberMixin {
   @override
   Widget build(BuildContext context) {
     FluxyReactiveContext.push(this);
-    
+
     try {
       final base = FxStyleResolver.resolve(
-        context, 
-        style: widget.style, 
+        context,
+        style: widget.style,
         className: widget.className,
-        responsive: widget.responsive
+        responsive: widget.responsive,
       );
 
-      final shouldRebuild = _cachedWidget == null || 
-                           DiffEngine.shouldRebuild(
-                             oldStyle: _lastResolvedBase, 
-                             newStyle: base,
-                             structuralChange: false,
-                           );
+      final shouldRebuild =
+          _cachedWidget == null ||
+          DiffEngine.shouldRebuild(
+            oldStyle: _lastResolvedBase,
+            newStyle: base,
+            structuralChange: false,
+          );
 
       _lastResolvedBase = base;
 
-      final s = FxStyleResolver.resolveInteractive(base, isHovered: _isHovered, isPressed: _isPressed);
+      final s = FxStyleResolver.resolveInteractive(
+        base,
+        isHovered: _isHovered,
+        isPressed: _isPressed,
+      );
 
       if (shouldRebuild || _isHovered || _isPressed) {
         _cachedWidget = _buildContent(s);
@@ -99,10 +111,16 @@ class _BoxState extends State<Box> with ReactiveSubscriberMixin {
   }
 
   Widget _buildContent(FxStyle s) {
-    final List<Widget> resolvedChildren = widget.children is Function ? (widget.children as Function)() : (widget.children is List<Widget> ? widget.children : []);
-    final Widget resolvedChild = widget.child is Function ? (widget.child as Function)() : (widget.child is Widget ? widget.child : const SizedBox.shrink());
+    final List<Widget> resolvedChildren = widget.children is Function
+        ? (widget.children as Function)()
+        : (widget.children is List<Widget> ? widget.children : []);
+    final Widget resolvedChild = widget.child is Function
+        ? (widget.child as Function)()
+        : (widget.child is Widget ? widget.child : const SizedBox.shrink());
 
-    Widget current = resolvedChildren.isNotEmpty ? _buildChildren(s, resolvedChildren) : resolvedChild;
+    Widget current = resolvedChildren.isNotEmpty
+        ? _buildChildren(s, resolvedChildren)
+        : resolvedChild;
 
     // Apply Opacity
     final opacityVal = s.opacity;
@@ -156,7 +174,11 @@ class _BoxState extends State<Box> with ReactiveSubscriberMixin {
     }
 
     // Interaction Detection
-    final isInteractive = widget.onTap != null || s.hover != null || s.pressed != null || s.cursor != null;
+    final isInteractive =
+        widget.onTap != null ||
+        s.hover != null ||
+        s.pressed != null ||
+        s.cursor != null;
 
     if (isInteractive) {
       current = MouseRegion(
@@ -183,7 +205,10 @@ class _BoxState extends State<Box> with ReactiveSubscriberMixin {
       );
     }
 
-    if (s.top != null || s.right != null || s.bottom != null || s.left != null) {
+    if (s.top != null ||
+        s.right != null ||
+        s.bottom != null ||
+        s.left != null) {
       current = Positioned(
         top: s.top,
         right: s.right,
@@ -204,7 +229,11 @@ class _BoxState extends State<Box> with ReactiveSubscriberMixin {
       mainAxisSize: style.mainAxisSize ?? MainAxisSize.max,
       children: [
         if (style.gap != null)
-          ..._addGaps(resolvedChildren, style.gap!, style.direction ?? Axis.vertical)
+          ..._addGaps(
+            resolvedChildren,
+            style.gap!,
+            style.direction ?? Axis.vertical,
+          )
         else
           ...resolvedChildren,
       ],
@@ -217,10 +246,12 @@ class _BoxState extends State<Box> with ReactiveSubscriberMixin {
     for (var i = 0; i < items.length; i++) {
       spaced.add(items[i]);
       if (i < items.length - 1) {
-        spaced.add(SizedBox(
-          height: direction == Axis.vertical ? gap : 0, 
-          width: direction == Axis.horizontal ? gap : 0,
-        ));
+        spaced.add(
+          SizedBox(
+            height: direction == Axis.vertical ? gap : 0,
+            width: direction == Axis.horizontal ? gap : 0,
+          ),
+        );
       }
     }
     return spaced;

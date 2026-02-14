@@ -15,10 +15,10 @@ class FxStyle {
   final double? glass;
   final BorderRadius? borderRadius;
   final BoxBorder? border;
-  
+
   // Layout direction
   final Axis? direction;
-  
+
   // Flexbox Properties
   final MainAxisAlignment? justifyContent;
   final CrossAxisAlignment? alignItems;

@@ -32,7 +32,7 @@ class BreakpointResolver {
     if (responsive.xl != null) {
       effective = effective.merge(responsive.xl);
     }
-    
+
     return effective;
   }
 }

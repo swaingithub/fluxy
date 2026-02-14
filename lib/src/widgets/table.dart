@@ -43,14 +43,18 @@ class FxTable<T> extends StatelessWidget {
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: ConstrainedBox(
-          constraints: const BoxConstraints(minWidth: 600), // Min width to trigger scroll
+          constraints: const BoxConstraints(
+            minWidth: 600,
+          ), // Min width to trigger scroll
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               // Header
               _buildHeader(),
               // Rows
-              ...data.asMap().entries.map((entry) => _buildRow(entry.key, entry.value)),
+              ...data.asMap().entries.map(
+                (entry) => _buildRow(entry.key, entry.value),
+              ),
             ],
           ),
         ),
@@ -88,14 +92,16 @@ class FxTable<T> extends StatelessWidget {
 
   Widget _buildRow(int index, T item) {
     final isStripe = striped && index.isOdd;
-    
+
     return Fx.box(
       style: FxStyle(
         backgroundColor: isStripe ? const Color(0xFFF8FAFC) : Colors.white,
-        hover: const FxStyle(backgroundColor: Color(0xFFF1F5F9)), // Hover effect
+        hover: const FxStyle(
+          backgroundColor: Color(0xFFF1F5F9),
+        ), // Hover effect
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-        border: index != data.length - 1 
-            ? const Border(bottom: BorderSide(color: Color(0xFFF1F5F9))) 
+        border: index != data.length - 1
+            ? const Border(bottom: BorderSide(color: Color(0xFFF1F5F9)))
             : null,
       ),
       child: Row(

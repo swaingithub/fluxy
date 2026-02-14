@@ -5,10 +5,7 @@ import 'debug_config.dart';
 class FluxyInspector extends StatefulWidget {
   final Widget child;
 
-  const FluxyInspector({
-    super.key,
-    required this.child,
-  });
+  const FluxyInspector({super.key, required this.child});
 
   @override
   State<FluxyInspector> createState() => _FluxyInspectorState();
@@ -42,18 +39,25 @@ class _FluxyInspectorState extends State<FluxyInspector> {
             children: [
               const Text(
                 'Fluxy Inspector',
-                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
               ),
               const Divider(color: Colors.white24),
               _buildToggle(
                 'Layout Borders',
                 FluxyDebugConfig.showLayoutBorders,
-                (val) => setState(() => FluxyDebugConfig.showLayoutBorders = val),
+                (val) =>
+                    setState(() => FluxyDebugConfig.showLayoutBorders = val),
               ),
               _buildToggle(
                 'Performance Overlay',
                 FluxyDebugConfig.showPerformanceOverlay,
-                (val) => setState(() => FluxyDebugConfig.showPerformanceOverlay = val),
+                (val) => setState(
+                  () => FluxyDebugConfig.showPerformanceOverlay = val,
+                ),
               ),
               const SizedBox(height: 8),
               const Text(

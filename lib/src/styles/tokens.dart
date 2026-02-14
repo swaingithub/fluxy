@@ -1,4 +1,3 @@
-
 import 'package:flutter/widgets.dart';
 
 /// Design tokens for the Fluxy design system.
@@ -63,16 +62,46 @@ class _ShadowTokens {
     BoxShadow(color: Color(0x0D000000), offset: Offset(0, 1), blurRadius: 2),
   ];
   List<BoxShadow> get md => [
-    BoxShadow(color: Color(0x1A000000), offset: Offset(0, 4), blurRadius: 6, spreadRadius: -1),
-    BoxShadow(color: Color(0x1A000000), offset: Offset(0, 2), blurRadius: 4, spreadRadius: -1),
+    BoxShadow(
+      color: Color(0x1A000000),
+      offset: Offset(0, 4),
+      blurRadius: 6,
+      spreadRadius: -1,
+    ),
+    BoxShadow(
+      color: Color(0x1A000000),
+      offset: Offset(0, 2),
+      blurRadius: 4,
+      spreadRadius: -1,
+    ),
   ];
   List<BoxShadow> get lg => [
-    BoxShadow(color: Color(0x1A000000), offset: Offset(0, 10), blurRadius: 15, spreadRadius: -3),
-    BoxShadow(color: Color(0x1A000000), offset: Offset(0, 4), blurRadius: 6, spreadRadius: -2),
+    BoxShadow(
+      color: Color(0x1A000000),
+      offset: Offset(0, 10),
+      blurRadius: 15,
+      spreadRadius: -3,
+    ),
+    BoxShadow(
+      color: Color(0x1A000000),
+      offset: Offset(0, 4),
+      blurRadius: 6,
+      spreadRadius: -2,
+    ),
   ];
   List<BoxShadow> get xl => [
-    BoxShadow(color: Color(0x1A000000), offset: Offset(0, 20), blurRadius: 25, spreadRadius: -5),
-    BoxShadow(color: Color(0x1A000000), offset: Offset(0, 10), blurRadius: 10, spreadRadius: -5),
+    BoxShadow(
+      color: Color(0x1A000000),
+      offset: Offset(0, 20),
+      blurRadius: 25,
+      spreadRadius: -5,
+    ),
+    BoxShadow(
+      color: Color(0x1A000000),
+      offset: Offset(0, 10),
+      blurRadius: 10,
+      spreadRadius: -5,
+    ),
   ];
 }
 

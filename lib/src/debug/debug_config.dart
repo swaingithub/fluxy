@@ -2,10 +2,10 @@
 class FluxyDebugConfig {
   /// Whether to show layout borders for all Fluxy widgets.
   static bool showLayoutBorders = false;
-  
+
   /// Whether to show the performance overlay.
   static bool showPerformanceOverlay = false;
-  
+
   /// Whether the inspector is active.
   static bool isInspectorActive = false;
 

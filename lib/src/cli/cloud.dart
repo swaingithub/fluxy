@@ -44,7 +44,7 @@ class FluxyCloud {
       print('✅ Generated fluxy_android_build.yml');
       print('👉 Commit and push to trigger your first Android Cloud Build!');
     } else if (target == 'ios') {
-       final file = File(p.join(workflowsDir.path, 'fluxy_ios_build.yml'));
+      final file = File(p.join(workflowsDir.path, 'fluxy_ios_build.yml'));
       file.writeAsStringSync(_iosTemplate);
       print('✅ Generated fluxy_ios_build.yml');
       print('👉 Commit and push to trigger your first iOS Cloud Build!');
@@ -58,7 +58,7 @@ class FluxyCloud {
     if (!workflowsDir.existsSync()) {
       workflowsDir.createSync(recursive: true);
     }
-    
+
     final file = File(p.join(workflowsDir.path, 'fluxy_deploy.yml'));
     file.writeAsStringSync(_deployTemplate);
     print('✅ Generated fluxy_deploy.yml');

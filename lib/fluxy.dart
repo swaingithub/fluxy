@@ -26,6 +26,9 @@ export 'src/widgets/bottom_bar.dart';
 export 'src/widgets/avatar.dart';
 export 'src/widgets/badge.dart';
 export 'src/widgets/table.dart';
+export 'src/widgets/list_box.dart';
+export 'src/widgets/fx_form.dart'; // FxForm
+export 'src/feedback/overlays.dart'; // FxToast, FxLoader
 
 // Reactive Core
 export 'src/reactive/signal.dart';
@@ -64,35 +67,39 @@ import 'src/ota/fluxy_remote.dart';
 /// The global entry point for the Fluxy framework.
 class Fluxy {
   // OTA Shortcuts
-  static Future<void> update(String manifestUrl) => FluxyRemote.update(manifestUrl);
+  static Future<void> update(String manifestUrl) =>
+      FluxyRemote.update(manifestUrl);
 
   // Navigation Shortcuts
-  static Future<T?> to<T>(String routeName, {Object? arguments}) => 
+  static Future<T?> to<T>(String routeName, {Object? arguments}) =>
       FluxyRouter.to<T>(routeName, arguments: arguments);
 
-  static Future<T?> off<T, TO>(String routeName, {TO? result, Object? arguments}) => 
-      FluxyRouter.off<T, TO>(routeName, result: result, arguments: arguments);
+  static Future<T?> off<T, TO>(
+    String routeName, {
+    TO? result,
+    Object? arguments,
+  }) => FluxyRouter.off<T, TO>(routeName, result: result, arguments: arguments);
 
-  static Future<T?> offAll<T>(String routeName, {Object? arguments}) => 
+  static Future<T?> offAll<T>(String routeName, {Object? arguments}) =>
       FluxyRouter.offAll<T>(routeName, arguments: arguments);
-  
+
   static void back<T>([T? result]) => FluxyRouter.back<T>(result);
 
   // DI Shortcuts
   static T find<T>({String? tag}) => FluxyDI.find<T>(tag: tag);
-  
-  static void put<T>(T instance, {String? tag}) => FluxyDI.put<T>(instance, tag: tag);
 
-  static void lazyPut<T>(T Function() factory, {String? tag}) => 
+  static void put<T>(T instance, {String? tag}) =>
+      FluxyDI.put<T>(instance, tag: tag);
+
+  static void lazyPut<T>(T Function() factory, {String? tag}) =>
       FluxyDI.lazyPut<T>(factory, tag: tag);
-  
+
   // I18n Shortcuts
   static void setLocale(Locale locale) => FluxyI18n.setLocale(locale);
 
   /// Enables the Fluxy Debug Inspector overlay.
   static Widget debug({required Widget child}) => FluxyDevTools(child: child);
 }
-
 
 /// A pre-configured MaterialApp for Fluxy projects.
 /// Automatically hooks up routing, navigation keys, and observers.
@@ -132,75 +139,77 @@ class FluxyApp extends StatelessWidget {
       }
     }
 
-    return Fx(() => MaterialApp(
-      title: title,
-      navigatorKey: FluxyRouter.navigatorKey,
-      onGenerateRoute: FluxyRouter.onGenerateRoute,
-      initialRoute: initialRoute?.path ?? '/',
-      theme: theme,
-      darkTheme: darkTheme,
-      themeMode: themeMode ?? FxTheme.mode, // Use internal theme if not provided
-      debugShowCheckedModeBanner: debugShowCheckedModeBanner,
-      navigatorObservers: FluxyRouter.observers,
-      builder: (context, child) {
-        // Global Error Boundary - Senior Level Production Protection
-        ErrorWidget.builder = (FlutterErrorDetails details) {
-          return Material(
-            child: Container(
-              color: Colors.black,
-              padding: const EdgeInsets.all(24),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                   const Icon(Icons.error_outline, color: Colors.redAccent, size: 48),
-                   const SizedBox(height: 16),
-                   const Text(
-                     "A production error occurred",
-                     style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
-                   ),
-                   const SizedBox(height: 8),
-                   Text(
-                     details.exception.toString(),
-                     textAlign: TextAlign.center,
-                       style: TextStyle(color: Colors.redAccent.withValues(alpha: 0.9), fontSize: 12, fontFamily: 'monospace'),
-                   ),
-                   if (!kReleaseMode) ...[
-                     const SizedBox(height: 16),
-                     Expanded(
-                       child: SingleChildScrollView(
-                         child: Text(
-                           details.stack.toString(),
-                             style: TextStyle(color: Colors.white.withValues(alpha: 0.5), fontSize: 10, fontFamily: 'monospace'),
-                         ),
-                       ),
-                     ),
-                   ],
-                ],
+    return Fx(
+      () => MaterialApp(
+        title: title,
+        navigatorKey: FluxyRouter.navigatorKey,
+        onGenerateRoute: FluxyRouter.onGenerateRoute,
+        initialRoute: initialRoute?.path ?? '/',
+        theme: theme,
+        darkTheme: darkTheme,
+        themeMode:
+            themeMode ?? FxTheme.mode, // Use internal theme if not provided
+        debugShowCheckedModeBanner: debugShowCheckedModeBanner,
+        navigatorObservers: FluxyRouter.observers,
+        builder: (context, child) {
+          // Global Error Boundary - Senior Level Production Protection
+          ErrorWidget.builder = (FlutterErrorDetails details) {
+            return Material(
+              child: Container(
+                color: Colors.black,
+                padding: const EdgeInsets.all(24),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(
+                      Icons.error_outline,
+                      color: Colors.redAccent,
+                      size: 48,
+                    ),
+                    const SizedBox(height: 16),
+                    const Text(
+                      "A production error occurred",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      details.exception.toString(),
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.redAccent.withValues(alpha: 0.9),
+                        fontSize: 12,
+                        fontFamily: 'monospace',
+                      ),
+                    ),
+                    if (!kReleaseMode) ...[
+                      const SizedBox(height: 16),
+                      Expanded(
+                        child: SingleChildScrollView(
+                          child: Text(
+                            details.stack.toString(),
+                            style: TextStyle(
+                              color: Colors.white.withValues(alpha: 0.5),
+                              fontSize: 10,
+                              fontFamily: 'monospace',
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
               ),
-            ),
-          );
-        };
-        
-        return builder?.call(context, child) ?? child!;
-      },
-    ));
+            );
+          };
+
+          return builder?.call(context, child) ?? child!;
+        },
+      ),
+    );
   }
 }
 
-/// Extensions on BuildContext to provide easy access to Fluxy services.
-extension FluxyContextExtension on BuildContext {
-  /// Navigates to a new page.
-  Future<T?> to<T>(String route, {Map<String, dynamic>? arguments}) => FluxyRouter.to<T>(route, arguments: arguments);
-
-  /// Replaces current page.
-  Future<T?> off<T, TO>(String route, {TO? result, Map<String, dynamic>? arguments}) => FluxyRouter.off<T, TO>(route, result: result, arguments: arguments);
-
-  /// Clears stack and navigates.
-  Future<T?> offAll<T>(String route, {Map<String, dynamic>? arguments}) => FluxyRouter.offAll<T>(route, arguments: arguments);
-
-  /// Goes back.
-  void back<T>([T? result]) => FluxyRouter.back<T>(result);
-
-  /// Finds a dependency.
-  T find<T>({String? tag}) => FluxyDI.find<T>(tag: tag);
-}

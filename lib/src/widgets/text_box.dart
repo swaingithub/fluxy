@@ -18,7 +18,12 @@ class TextBox extends StatefulWidget {
     this.responsive,
   });
 
-  TextBox copyWith({FxStyle? style, dynamic data, String? className, FxResponsiveStyle? responsive}) {
+  TextBox copyWith({
+    FxStyle? style,
+    dynamic data,
+    String? className,
+    FxResponsiveStyle? responsive,
+  }) {
     return TextBox(
       data: data ?? this.data,
       style: style ?? this.style,
@@ -48,16 +53,18 @@ class _TextBoxState extends State<TextBox> with ReactiveSubscriberMixin {
   @override
   Widget build(BuildContext context) {
     FluxyReactiveContext.push(this);
-    
+
     try {
       final s = FxStyleResolver.resolve(
-        context, 
-        style: widget.style, 
+        context,
+        style: widget.style,
         className: widget.className,
-        responsive: widget.responsive
+        responsive: widget.responsive,
       );
 
-      final String displayData = widget.data is Function ? widget.data().toString() : widget.data.toString();
+      final String displayData = widget.data is Function
+          ? widget.data().toString()
+          : widget.data.toString();
 
       Widget current = Text(
         displayData,
@@ -67,7 +74,11 @@ class _TextBoxState extends State<TextBox> with ReactiveSubscriberMixin {
         style: FxDecorationBuilder.textStyle(s),
       );
 
-      if (FxDecorationBuilder.hasVisuals(s) || s.width != null || s.height != null || s.padding != s.padding /* always false now but keeping structure */ || s.margin != s.margin) {
+      if (FxDecorationBuilder.hasVisuals(s) ||
+          s.width != null ||
+          s.height != null ||
+          s.padding != s.padding /* always false now but keeping structure */ ||
+          s.margin != s.margin) {
         current = Container(
           width: s.width,
           height: s.height,

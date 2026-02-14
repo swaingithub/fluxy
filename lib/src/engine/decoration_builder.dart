@@ -7,7 +7,7 @@ class FxDecorationBuilder {
   /// Builds a BoxDecoration from a Fluxy FxStyle.
   static BoxDecoration build(FxStyle style) {
     BoxBorder? border = style.border;
-    
+
     // Inject debug border if active
     if (FluxyDebugConfig.showLayoutBorders) {
       border = Border.all(color: const Color(0xFFFF00FF), width: 1);
@@ -37,10 +37,10 @@ class FxDecorationBuilder {
   /// Determines if a style requires a Container/Decoration wrapper.
   static bool hasVisuals(FxStyle style) {
     return style.backgroundColor != null ||
-           style.gradient != null ||
-           style.shadows != null ||
-           style.borderRadius != null ||
-           style.border != null ||
-           style.opacity != null;
+        style.gradient != null ||
+        style.shadows != null ||
+        style.borderRadius != null ||
+        style.border != null ||
+        style.opacity != null;
   }
 }

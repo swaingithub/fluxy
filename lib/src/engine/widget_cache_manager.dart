@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 
-/// WidgetCacheManager stores built widget subtrees to prevent 
+/// WidgetCacheManager stores built widget subtrees to prevent
 /// unnecessary rebuilds of deep Fluxy trees.
 class WidgetCacheManager {
   final Map<String, Widget> _cache = {};
@@ -10,7 +10,7 @@ class WidgetCacheManager {
     if (!shouldRebuild && _cache.containsKey(id)) {
       return _cache[id]!;
     }
-    
+
     final widget = builder();
     _cache[id] = widget;
     return widget;

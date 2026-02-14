@@ -18,10 +18,16 @@ class GridBox extends StatelessWidget {
     required this.children,
     this.onTap,
   });
-  
+
   final VoidCallback? onTap;
 
-  GridBox copyWith({FxStyle? style, String? className, FxResponsiveStyle? responsive, List<Widget>? children, VoidCallback? onTap}) {
+  GridBox copyWith({
+    FxStyle? style,
+    String? className,
+    FxResponsiveStyle? responsive,
+    List<Widget>? children,
+    VoidCallback? onTap,
+  }) {
     return GridBox(
       style: style ?? this.style,
       className: className ?? this.className,
@@ -34,17 +40,17 @@ class GridBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final s = FxStyleResolver.resolve(
-      context, 
-      style: style, 
+      context,
+      style: style,
       className: className,
-      responsive: responsive
+      responsive: responsive,
     );
     final double width = MediaQuery.of(context).size.width;
 
     Widget current = GridView.count(
       crossAxisCount: GridLayoutSolver.calculateColumnCount(
-        width, 
-        crossAxisCount: s.crossAxisCount, 
+        width,
+        crossAxisCount: s.crossAxisCount,
         minColumnWidth: s.minColumnWidth,
         gap: s.gap ?? 0,
       ),
@@ -57,7 +63,10 @@ class GridBox extends StatelessWidget {
       children: children,
     );
 
-    if (FxDecorationBuilder.hasVisuals(s) || s.width != null || s.height != null || s.margin != EdgeInsets.zero) {
+    if (FxDecorationBuilder.hasVisuals(s) ||
+        s.width != null ||
+        s.height != null ||
+        s.margin != EdgeInsets.zero) {
       current = Container(
         width: s.width,
         height: s.height,
@@ -68,12 +77,11 @@ class GridBox extends StatelessWidget {
     }
 
     if (s.flex != null) {
-      current = Expanded(
-        flex: s.flex!,
-        child: current,
-      );
+      current = Expanded(flex: s.flex!, child: current);
     }
 
-    return onTap != null ? GestureDetector(onTap: onTap, child: current) : current;
+    return onTap != null
+        ? GestureDetector(onTap: onTap, child: current)
+        : current;
   }
 }

@@ -2,11 +2,12 @@ import 'package:flutter/widgets.dart';
 import '../styles/style.dart';
 import 'tailwind_parser.dart';
 
-/// FxStyleResolver is responsible for merging and resolving the final 
+/// FxStyleResolver is responsible for merging and resolving the final
 /// computed style of a Fluxy widget.
 class FxStyleResolver {
   /// Resolves the final style from a widget's static style and responsive options.
-  static FxStyle resolve(BuildContext context, {
+  static FxStyle resolve(
+    BuildContext context, {
     FxStyle? style,
     String? className,
     FxResponsiveStyle? responsive,
@@ -40,7 +41,8 @@ class FxStyleResolver {
   }
 
   /// Resolves the final style considering interactive states.
-  static FxStyle resolveInteractive(FxStyle base, {
+  static FxStyle resolveInteractive(
+    FxStyle base, {
     required bool isHovered,
     required bool isPressed,
   }) {

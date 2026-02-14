@@ -30,7 +30,8 @@ class FxBadge extends StatelessWidget {
         child,
         Positioned(
           top: offset.dy,
-          right: -offset.dx, // Negative because we position from left/top usually in Stack but badge is usually top-right
+          right: -offset
+              .dx, // Negative because we position from left/top usually in Stack but badge is usually top-right
           // Actually Stack uses top/right/bottom/left.
           // Let's use top and right.
           child: _buildBadge(),
@@ -72,7 +73,9 @@ class FxBadge extends StatelessWidget {
         width: diameter,
         height: diameter,
         alignment: Alignment.center,
-        shadows: [BoxShadow(color: Colors.black26, blurRadius: 4, offset: Offset(0, 2))],
+        shadows: [
+          BoxShadow(color: Colors.black26, blurRadius: 4, offset: Offset(0, 2)),
+        ],
       ),
       child: badgeContent,
     );

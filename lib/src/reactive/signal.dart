@@ -99,14 +99,15 @@ class Signal<T> {
   final String id;
   final String? label;
 
-  Signal(T initialValue, {this.label}) 
+  Signal(T initialValue, {this.label})
     : _value = initialValue,
-      id = 'sig_${DateTime.now().microsecondsSinceEpoch}_${initialValue.hashCode}' {
+      id =
+          'sig_${DateTime.now().microsecondsSinceEpoch}_${initialValue.hashCode}' {
     SignalRegistry.register(this);
   }
 
   /// Internal constructor for Computed that allows lazy initialization
-  Signal._internal({this.label}) 
+  Signal._internal({this.label})
     : id = 'comp_${DateTime.now().microsecondsSinceEpoch}' {
     SignalRegistry.register(this);
   }
@@ -120,7 +121,6 @@ class Signal<T> {
     FluxyReactiveContext.onSignalRead?.call(this);
     return _value as T;
   }
-
 
   set value(T newValue) {
     if (_deepEquals(_value, newValue)) return;
@@ -160,7 +160,7 @@ class Signal<T> {
 class Computed<T> extends Signal<T> with ReactiveSubscriberMixin {
   final T Function() _compute;
   final void Function(Object error, StackTrace stack)? _onError;
-  
+
   bool _isDirty = true;
   bool _isComputing = false;
   Object? _lastError;
@@ -170,8 +170,8 @@ class Computed<T> extends Signal<T> with ReactiveSubscriberMixin {
     super.label,
     void Function(Object error, StackTrace stack)? onError,
     bool validate = false,
-  })  : _onError = onError,
-        super._internal();
+  }) : _onError = onError,
+       super._internal();
 
   @override
   T get value {
@@ -185,33 +185,35 @@ class Computed<T> extends Signal<T> with ReactiveSubscriberMixin {
     if (_isDirty) {
       _reevaluate();
     }
-    
+
     // If there was an error and no fallback value, rethrow
     if (_lastError != null && _value == null) {
       throw _lastError!;
     }
-    
+
     return _value as T;
   }
 
   void _reevaluate() {
     if (_isComputing) {
-      debugPrint('Fluxy [Computed] Warning: Reentrant computation detected for ${label ?? id}');
+      debugPrint(
+        'Fluxy [Computed] Warning: Reentrant computation detected for ${label ?? id}',
+      );
       return;
     }
-    
+
     _isComputing = true;
     final startTime = DateTime.now();
-    
+
     clearDependencies();
 
     FluxyReactiveContext.push(this);
     try {
       final newValue = _compute();
-      
+
       // Memoization - only notify if value actually changed
       final hasChanged = !_deepEquals(_value, newValue);
-      
+
       _value = newValue;
       _isDirty = false;
       _lastError = null;
@@ -219,21 +221,24 @@ class Computed<T> extends Signal<T> with ReactiveSubscriberMixin {
       if (hasChanged) {
         notifySubscribers();
       }
-      
+
       // Record performance metrics
       final duration = DateTime.now().difference(startTime);
-      if (duration.inMicroseconds > 1000) { // Only log if > 1ms
-        debugPrint('Fluxy [Computed] ${label ?? id} took ${duration.inMilliseconds}ms');
+      if (duration.inMicroseconds > 1000) {
+        // Only log if > 1ms
+        debugPrint(
+          'Fluxy [Computed] ${label ?? id} took ${duration.inMilliseconds}ms',
+        );
       }
     } catch (e, stack) {
       _lastError = e;
       _isDirty = false; // Don't keep retrying on every access
-      
+
       debugPrint('Fluxy [Computed] Error in ${label ?? id}: $e');
-      
+
       // Call error handler if provided
       _onError?.call(e, stack);
-      
+
       // If we have a previous value, keep it; otherwise rethrow
       if (_value == null) {
         rethrow;
@@ -259,7 +264,7 @@ class Computed<T> extends Signal<T> with ReactiveSubscriberMixin {
 
   /// Returns true if this computed has an error.
   bool get hasError => _lastError != null;
-  
+
   /// Returns the last error, if any.
   Object? get error => _lastError;
 
@@ -268,7 +273,6 @@ class Computed<T> extends Signal<T> with ReactiveSubscriberMixin {
     _subscribers.clear();
   }
 }
-
 
 /// A persistent side-effect that runs whenever its dependencies change.
 class Effect with ReactiveSubscriberMixin {
@@ -306,9 +310,18 @@ class Effect with ReactiveSubscriberMixin {
 // --- Global Functions ---
 
 /// Creates a new reactive signal.
-Signal<T> flux<T>(T initialValue, {String? persistKey, bool secure = false, String? label}) {
+Signal<T> flux<T>(
+  T initialValue, {
+  String? persistKey,
+  bool secure = false,
+  String? label,
+}) {
   if (persistKey != null) {
-    return PersistentSignal<T>(initialValue, PersistenceConfig(key: persistKey, secure: secure), label: label);
+    return PersistentSignal<T>(
+      initialValue,
+      PersistenceConfig(key: persistKey, secure: secure),
+      label: label,
+    );
   }
   return Signal<T>(initialValue, label: label);
 }
@@ -320,7 +333,6 @@ Computed<T> computed<T>(
   void Function(Object error, StackTrace stack)? onError,
   bool validate = false,
 }) => Computed<T>(fn, label: label, onError: onError, validate: validate);
-
 
 /// Registers a side-effect that tracks its dependencies.
 Effect effect(VoidCallback fn) => Effect(fn);
@@ -349,7 +361,8 @@ class FluxyCircularDependencyException implements Exception {
   final FluxySubscriber subscriber;
   FluxyCircularDependencyException(this.subscriber);
   @override
-  String toString() => 'FluxyCircularDependencyException: Circular dependency detected in reactive graph involving $subscriber';
+  String toString() =>
+      'FluxyCircularDependencyException: Circular dependency detected in reactive graph involving $subscriber';
 }
 
 /// Helper for deep equality comparison of primitives and collections.
@@ -410,7 +423,7 @@ class SignalRegistry {
     _prune();
     return _signals.map((ref) => ref.target).whereType<Signal>().toList();
   }
-  
+
   static Signal? find(String id) {
     _prune();
     try {

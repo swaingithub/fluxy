@@ -15,20 +15,23 @@ class DiffEngine {
     if (structuralChange == true) return true;
     if (oldClassName != newClassName) return true;
     if (oldStyle != newStyle) return true;
-    
+
     return false;
   }
 
   /// Calculates the difference between two groups of children.
-  static bool hasTreeChanged(List<Widget> oldChildren, List<Widget> newChildren) {
+  static bool hasTreeChanged(
+    List<Widget> oldChildren,
+    List<Widget> newChildren,
+  ) {
     if (oldChildren.length != newChildren.length) return true;
-    
+
     for (int i = 0; i < oldChildren.length; i++) {
       if (!identical(oldChildren[i], newChildren[i])) {
         return true;
       }
     }
-    
+
     return false;
   }
 }

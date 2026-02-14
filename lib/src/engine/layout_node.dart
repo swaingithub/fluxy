@@ -1,14 +1,7 @@
 import 'package:flutter/widgets.dart';
 import '../styles/style.dart';
 
-enum NodeType {
-  box,
-  flex,
-  grid,
-  stack,
-  text,
-  leaf,
-}
+enum NodeType { box, flex, grid, stack, text, leaf }
 
 /// A node in the Fluxy Layout Abstract Syntax Tree (AST).
 /// This represents an intermediate representation between the DSL and Flutter RenderObjects.
@@ -18,7 +11,7 @@ class LayoutNode {
   final Axis? direction;
   final FxStyle style;
   final List<LayoutNode> children;
-  
+
   // Computed layout data (caching)
   double? computedWidth;
   double? computedHeight;

@@ -32,7 +32,8 @@ class ResponsiveEngine {
   }
 
   /// Selects a value based on the current breakpoint.
-  static T value<T>(BuildContext context, {
+  static T value<T>(
+    BuildContext context, {
     required T xs,
     T? sm,
     T? md,
@@ -41,11 +42,16 @@ class ResponsiveEngine {
   }) {
     final bp = of(context);
     switch (bp) {
-      case Breakpoint.xs: return xs;
-      case Breakpoint.sm: return sm ?? xs;
-      case Breakpoint.md: return md ?? sm ?? xs;
-      case Breakpoint.lg: return lg ?? md ?? sm ?? xs;
-      case Breakpoint.xl: return xl ?? lg ?? md ?? sm ?? xs;
+      case Breakpoint.xs:
+        return xs;
+      case Breakpoint.sm:
+        return sm ?? xs;
+      case Breakpoint.md:
+        return md ?? sm ?? xs;
+      case Breakpoint.lg:
+        return lg ?? md ?? sm ?? xs;
+      case Breakpoint.xl:
+        return xl ?? lg ?? md ?? sm ?? xs;
     }
   }
 }

@@ -22,15 +22,12 @@ class Spring {
 
   /// A bouncy, playful spring. Good for attention-grabbing elements.
   static const bouncy = Spring(stiffness: 300, damping: 15);
-  
+
   /// A gentle, slow spring. Good for background ambiance.
   static const gentle = Spring(stiffness: 120, damping: 14);
 
-  SpringDescription get description => SpringDescription(
-        mass: mass,
-        stiffness: stiffness,
-        damping: damping,
-      );
+  SpringDescription get description =>
+      SpringDescription(mass: mass, stiffness: stiffness, damping: damping);
 }
 
 /// A wrapper widget that provides the Motion DSL context.
@@ -68,28 +65,32 @@ class FxMotion extends StatefulWidget {
   State<FxMotion> createState() => _FxMotionState();
 }
 
-class _FxMotionState extends State<FxMotion> with SingleTickerProviderStateMixin {
+class _FxMotionState extends State<FxMotion>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   // We use a separate curved animation because the controller might be linear (if spring)
   // Actually if spring, controller follows spring. If duration, we wrap curved.
-  
+
   @override
   void initState() {
     super.initState();
     _controller = AnimationController(
       vsync: this,
       duration: widget.duration,
-      // If spring is used, duration is technically driven by physics, 
-      // but providing a fallback upper bound is good practice, 
+      // If spring is used, duration is technically driven by physics,
+      // but providing a fallback upper bound is good practice,
       // though animateWith ignores it.
-      upperBound: 1.0, 
+      upperBound: 1.0,
     );
 
     if (widget.autoStart) {
       if (widget.delay != null) {
-        Future.delayed(Duration(milliseconds: (widget.delay! * 1000).toInt()), () {
-          if (mounted) _start();
-        });
+        Future.delayed(
+          Duration(milliseconds: (widget.delay! * 1000).toInt()),
+          () {
+            if (mounted) _start();
+          },
+        );
       } else {
         _start();
       }
@@ -118,10 +119,10 @@ class _FxMotionState extends State<FxMotion> with SingleTickerProviderStateMixin
 
   @override
   Widget build(BuildContext context) {
-    // If spring, curve is integrated into physics. 
+    // If spring, curve is integrated into physics.
     // If duration, apply global Curve.
-    final anim = widget.spring != null 
-        ? _controller 
+    final anim = widget.spring != null
+        ? _controller
         : CurvedAnimation(parent: _controller, curve: widget.curve);
 
     return AnimatedBuilder(
@@ -138,7 +139,10 @@ class _FxMotionState extends State<FxMotion> with SingleTickerProviderStateMixin
 
         if (widget.slide != null) {
           result = Transform.translate(
-            offset: Tween<Offset>(begin: widget.slide, end: Offset.zero).evaluate(anim),
+            offset: Tween<Offset>(
+              begin: widget.slide,
+              end: Offset.zero,
+            ).evaluate(anim),
             child: result,
           );
         }
@@ -167,11 +171,11 @@ class _FxMotionState extends State<FxMotion> with SingleTickerProviderStateMixin
 /// Unified Animation DSL Extension
 extension FxMotionExtension on Widget {
   /// Declarative animation entry point.
-  /// 
+  ///
   /// Usage:
   /// ```dart
   /// Fx.text('Hello').animate(
-  ///   fade: 0.0, 
+  ///   fade: 0.0,
   ///   slide: Offset(0, 20),
   ///   spring: Spring.bouncy
   /// )
@@ -182,7 +186,7 @@ extension FxMotionExtension on Widget {
     Spring? spring,
     double? delay, // Seconds
     bool autoStart = true,
-    
+
     // Effects (Begin Values -> End is Natural)
     double? fade,
     Offset? slide,
@@ -288,10 +292,16 @@ class FxHero extends StatelessWidget {
   Widget build(BuildContext context) {
     return Hero(
       tag: tag,
-      child: Material(
-        type: MaterialType.transparency,
-        child: child,
-      ),
+      child: Material(type: MaterialType.transparency, child: child),
     );
   }
+}
+
+/// Convenient extensions for duration.
+extension FluxyDurationExtension on num {
+  Duration get ms => Duration(milliseconds: toInt());
+  Duration get s => Duration(seconds: toInt());
+  Duration get sec => Duration(seconds: toInt());
+  Duration get m => Duration(minutes: toInt());
+  Duration get h => Duration(hours: toInt());
 }

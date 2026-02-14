@@ -17,10 +17,16 @@ class StackBox extends StatelessWidget {
     required this.children,
     this.onTap,
   });
-  
+
   final VoidCallback? onTap;
 
-  StackBox copyWith({FxStyle? style, String? className, FxResponsiveStyle? responsive, List<Widget>? children, VoidCallback? onTap}) {
+  StackBox copyWith({
+    FxStyle? style,
+    String? className,
+    FxResponsiveStyle? responsive,
+    List<Widget>? children,
+    VoidCallback? onTap,
+  }) {
     return StackBox(
       style: style ?? this.style,
       className: className ?? this.className,
@@ -33,10 +39,10 @@ class StackBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final s = FxStyleResolver.resolve(
-      context, 
-      style: style, 
+      context,
+      style: style,
       className: className,
-      responsive: responsive
+      responsive: responsive,
     );
 
     Widget current = Stack(
@@ -45,7 +51,11 @@ class StackBox extends StatelessWidget {
       children: children,
     );
 
-    if (FxDecorationBuilder.hasVisuals(s) || s.width != null || s.height != null || s.padding != s.padding /* always false now but keeping structure */ || s.margin != s.margin) {
+    if (FxDecorationBuilder.hasVisuals(s) ||
+        s.width != null ||
+        s.height != null ||
+        s.padding != s.padding /* always false now but keeping structure */ ||
+        s.margin != s.margin) {
       current = Container(
         width: s.width,
         height: s.height,
@@ -58,12 +68,11 @@ class StackBox extends StatelessWidget {
 
     final flexVal = s.flex;
     if (flexVal != null) {
-      current = Expanded(
-        flex: flexVal,
-        child: current,
-      );
+      current = Expanded(flex: flexVal, child: current);
     }
 
-    return onTap != null ? GestureDetector(onTap: onTap, child: current) : current;
+    return onTap != null
+        ? GestureDetector(onTap: onTap, child: current)
+        : current;
   }
 }

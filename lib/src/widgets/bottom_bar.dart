@@ -28,12 +28,20 @@ class FxBottomBar extends StatelessWidget {
     final effectiveBase = baseColor ?? Colors.grey.shade400;
 
     return Box(
-      style: containerStyle ?? FxStyle(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-        backgroundColor: Colors.white,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-        shadows: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 20, offset: const Offset(0, -5))],
-      ),
+      style:
+          containerStyle ??
+          FxStyle(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+            backgroundColor: Colors.white,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+            shadows: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.05),
+                blurRadius: 20,
+                offset: const Offset(0, -5),
+              ),
+            ],
+          ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: items.asMap().entries.map((entry) {
@@ -45,24 +53,28 @@ class FxBottomBar extends StatelessWidget {
             onTap: () => onTap(index),
             behavior: HitTestBehavior.opaque,
             child: AnimatedContainer(
-              duration: animate ? const Duration(milliseconds: 300) : Duration.zero,
+              duration: animate
+                  ? const Duration(milliseconds: 300)
+                  : Duration.zero,
               curve: Curves.fastOutSlowIn,
-              padding: isActive 
+              padding: isActive
                   ? const EdgeInsets.symmetric(horizontal: 16, vertical: 8)
                   : const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               decoration: BoxDecoration(
-                color: isActive ? effectiveActive.withValues(alpha: 0.1) : Colors.transparent,
+                color: isActive
+                    ? effectiveActive.withValues(alpha: 0.1)
+                    : Colors.transparent,
                 borderRadius: BorderRadius.circular(100),
               ),
               child: Row(
                 children: [
-                  if (isActive && item.activeIconWidget != null) 
+                  if (isActive && item.activeIconWidget != null)
                     item.activeIconWidget!
                   else if (item.iconWidget != null)
                     IconTheme(
                       data: IconThemeData(
                         color: isActive ? effectiveActive : effectiveBase,
-                        size: 24
+                        size: 24,
                       ),
                       child: item.iconWidget!,
                     )
@@ -72,10 +84,9 @@ class FxBottomBar extends StatelessWidget {
                       color: isActive ? effectiveActive : effectiveBase,
                       size: 24,
                     )
-                  else 
+                  else
                     const SizedBox(width: 24, height: 24),
 
-                  
                   if (isActive) ...[
                     const SizedBox(width: 8),
                     Text(

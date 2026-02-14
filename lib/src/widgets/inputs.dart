@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../reactive/signal.dart';
 import '../dsl/fx.dart';
-
-/// Reactive TextField that binds directly to a Signal<String>.
 import '../reactive/forms.dart';
 
+/// Reactive TextField that binds directly to a Signal<String>.
 class FxTextField extends StatefulWidget {
   final Signal<String> signal;
   final String? placeholder;
@@ -14,6 +14,9 @@ class FxTextField extends StatefulWidget {
   final TextInputType? keyboardType;
   final int? maxLines;
   final VoidCallback? onSubmitted;
+  final List<TextInputFormatter>? inputFormatters;
+  final FocusNode? focusNode;
+  final List<Validator<String>>? validators;
 
   const FxTextField({
     super.key,
@@ -25,6 +28,9 @@ class FxTextField extends StatefulWidget {
     this.keyboardType,
     this.maxLines = 1,
     this.onSubmitted,
+    this.inputFormatters,
+    this.focusNode,
+    this.validators,
   });
 
   @override
@@ -39,9 +45,8 @@ class _FxTextFieldState extends State<FxTextField> {
   void initState() {
     super.initState();
     _controller = TextEditingController(text: widget.signal.value);
-    
+
     // Efficiently bind signal updates to controller
-    // Only update controller if value is actually different to avoid cursor jumps
     _subscription = effect(() {
       final newVal = widget.signal.value;
       if (_controller.text != newVal) {
@@ -54,6 +59,14 @@ class _FxTextFieldState extends State<FxTextField> {
     });
 
     _controller.addListener(_onChanged);
+
+    // Register validators (Run once on init)
+    if (widget.validators != null && widget.signal is FluxField<String>) {
+      final field = widget.signal as FluxField<String>;
+      for (final v in widget.validators!) {
+        field.addRule(v);
+      }
+    }
   }
 
   void _onChanged() {
@@ -76,7 +89,7 @@ class _FxTextFieldState extends State<FxTextField> {
     // Reactive build wrapper to listen for validation state
     return Fx(() {
       String? errorText;
-      
+
       // Auto-validation integration
       if (widget.signal is FluxField<String>) {
         final field = widget.signal as FluxField<String>;
@@ -98,45 +111,46 @@ class _FxTextFieldState extends State<FxTextField> {
         style: widget.style,
         keyboardType: widget.keyboardType,
         maxLines: widget.maxLines,
-        decoration: widget.decoration?.copyWith(errorText: errorText) ?? defaultDecoration,
+        inputFormatters: widget.inputFormatters,
+        focusNode: widget.focusNode,
+        decoration:
+            widget.decoration?.copyWith(errorText: errorText) ??
+            defaultDecoration,
         onSubmitted: (_) {
-          // If it's a form field, mark as touched on submit
-           if (widget.signal is FluxField) {
-             (widget.signal as FluxField).touch();
-           }
-           widget.onSubmitted?.call();
+          if (widget.signal is FluxField) {
+            (widget.signal as FluxField).touch();
+          }
+          widget.onSubmitted?.call();
         },
         onTapOutside: (_) {
-           // Mark as touched on blur
-           if (widget.signal is FluxField) {
-             (widget.signal as FluxField).touch();
-           }
-           FocusScope.of(context).unfocus();
+          if (widget.signal is FluxField) {
+            (widget.signal as FluxField).touch();
+          }
+          FocusScope.of(context).unfocus();
         },
       );
     });
   }
 }
-
+// ... FxCheckbox and FxSlider omitted for brevity if unchanged, but file overwrite means I must include them.
+// I will include them to keep the file valid.
 
 /// Reactive Checkbox that binds directly to a Signal<bool>.
 class FxCheckbox extends StatelessWidget {
   final Signal<bool> signal;
   final Color? activeColor;
 
-  const FxCheckbox({
-    super.key,
-    required this.signal,
-    this.activeColor,
-  });
+  const FxCheckbox({super.key, required this.signal, this.activeColor});
 
   @override
   Widget build(BuildContext context) {
-    return Fx(() => Checkbox(
-      value: signal.value,
-      activeColor: activeColor,
-      onChanged: (val) => signal.value = val ?? false,
-    ));
+    return Fx(
+      () => Checkbox(
+        value: signal.value,
+        activeColor: activeColor,
+        onChanged: (val) => signal.value = val ?? false,
+      ),
+    );
   }
 }
 
@@ -159,13 +173,15 @@ class FxSlider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Fx(() => Slider(
-      value: signal.value,
-      min: min,
-      max: max,
-      divisions: divisions,
-      activeColor: activeColor,
-      onChanged: (val) => signal.value = val,
-    ));
+    return Fx(
+      () => Slider(
+        value: signal.value,
+        min: min,
+        max: max,
+        divisions: divisions,
+        activeColor: activeColor,
+        onChanged: (val) => signal.value = val,
+      ),
+    );
   }
 }

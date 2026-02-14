@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../fluxy.dart';
 
-
-
 /// Renders Fluxy Widgets from JSON Schemas.
 class FluxyRenderer {
   final Map<String, dynamic> dataContext;
@@ -12,7 +10,7 @@ class FluxyRenderer {
 
   Widget render(Map<String, dynamic> json) {
     if (json.isEmpty) return const SizedBox.shrink();
-    
+
     final String type = json['type'] ?? 'box';
     final FxStyle style = FluxyStyleParser.parse(json['style']);
     final String? action = json['onTap'] ?? json['action'];
@@ -25,42 +23,49 @@ class FluxyRenderer {
           child: _renderSingleChild(json) ?? const SizedBox.shrink(),
           children: _renderChildren(json),
         );
-      
+
       case 'text':
         final textWidget = Fx.text(
           _interpolate(json['data'] ?? ''),
           style: style,
         );
         if (action != null) {
-          return GestureDetector(onTap: () => _handleAction(action), child: textWidget);
+          return GestureDetector(
+            onTap: () => _handleAction(action),
+            child: textWidget,
+          );
         }
         return textWidget;
-      
+
       case 'button':
         return Fx.box(
           onTap: () => _handleAction(action ?? ''),
           style: style,
-          child: _renderSingleChild(json) ?? Fx.text(_interpolate(json['label'] ?? 'Click')),
+          child:
+              _renderSingleChild(json) ??
+              Fx.text(_interpolate(json['label'] ?? 'Click')),
         );
-        
+
       case 'image':
         final url = _interpolate(json['url'] ?? '');
         return Fx.image(
           url,
           width: style.width,
           height: style.height,
-          radius: style.borderRadius is BorderRadius ? (style.borderRadius as BorderRadius).topLeft.x : 0, 
+          radius: style.borderRadius is BorderRadius
+              ? (style.borderRadius as BorderRadius).topLeft.x
+              : 0,
           // Simplified implementation for radius extraction
           fit: _parseBoxFit(json['fit']),
         );
-        
+
       case 'row':
         return Fx.row(
           children: _renderChildren(json),
           style: style,
           gap: (json['gap'] as num?)?.toDouble(),
         );
-        
+
       case 'column':
         return Fx.column(
           children: _renderChildren(json),
@@ -74,9 +79,12 @@ class FluxyRenderer {
           tag: tag,
           child: _renderSingleChild(json) ?? const SizedBox.shrink(),
         );
-      
+
       default:
-        return Text('Unknown Type: $type', style: const TextStyle(color: Colors.red));
+        return Text(
+          'Unknown Type: $type',
+          style: const TextStyle(color: Colors.red),
+        );
     }
   }
 
@@ -141,12 +149,18 @@ class FluxyRenderer {
 
   BoxFit _parseBoxFit(String? fit) {
     switch (fit) {
-      case 'contain': return BoxFit.contain;
-      case 'cover': return BoxFit.cover;
-      case 'fill': return BoxFit.fill;
-      case 'fitWidth': return BoxFit.fitWidth;
-      case 'fitHeight': return BoxFit.fitHeight;
-      default: return BoxFit.cover;
+      case 'contain':
+        return BoxFit.contain;
+      case 'cover':
+        return BoxFit.cover;
+      case 'fill':
+        return BoxFit.fill;
+      case 'fitWidth':
+        return BoxFit.fitWidth;
+      case 'fitHeight':
+        return BoxFit.fitHeight;
+      default:
+        return BoxFit.cover;
     }
   }
 }
@@ -185,15 +199,18 @@ class _FxRemoteViewState extends State<FxRemoteView> {
       future: _fetchFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return widget.placeholder ?? const Center(child: CircularProgressIndicator());
+          return widget.placeholder ??
+              const Center(child: CircularProgressIndicator());
         }
-        
+
         if (snapshot.hasError) {
-          return widget.errorBuilder?.call(snapshot.error) ?? Text('Error: ${snapshot.error}');
+          return widget.errorBuilder?.call(snapshot.error) ??
+              Text('Error: ${snapshot.error}');
         }
 
         if (!snapshot.hasData || snapshot.data == null) {
-          return widget.errorBuilder?.call('No Data') ?? const Text('Asset not found');
+          return widget.errorBuilder?.call('No Data') ??
+              const Text('Asset not found');
         }
 
         return FluxyRenderer(dataContext: widget.data).render(snapshot.data!);

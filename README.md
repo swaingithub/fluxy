@@ -11,7 +11,7 @@ Fluxy is built for engineering teams who require rapid iteration, simplified sta
 
 ## Technical Overview
 
-Modern application development often faces challenges with widget tree depth, state management boilerplate, and sluggish deployment cycles. Fluxy addresses these bottlenecks by introducing a platform-layer on top of the Flutter core.
+Modern application development often faces challenges with widget tree depth, state management boilerplate, and sluggish deployment cycles. Fluxy addresses these bottlenecks by bringing a "SwiftUI-like" experience to Flutter.
 
 ### Core Pillars
 
@@ -41,7 +41,7 @@ Add Fluxy to your `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  fluxy: ^0.1.2
+  fluxy: ^0.1.3
 ```
 
 Then, activate the Fluxy CLI globally for project orchestration:
@@ -52,28 +52,87 @@ dart pub global activate fluxy
 
 ---
 
-## Core Framework Usage
+## What's New in 2.0 DSL
 
-### Atomic Styling DSL (New in 0.1.2)
+Fluxy 0.1.4 introduces a massive DSL upgrade to rival standard declarative frameworks.
 
-Fluxy 0.1.1 introduced **Atomic Modifiers**, and 0.1.2 brings a more intuitive **Proxy-based DSL** for even cleaner syntax.
+### 1. Enhanced Input System
+A production-grade text input supporting validation, formatting, and focus control.
 
 ```dart
-Fx.column(
-  gap: 12,
-  children: [
-    Fx.avatar(fallback: "JD").size(FxAvatarSize.xl),
-    Fx.text("John Doe")
-        .weight.bold     // New Proxy Syntax
-        .textLg()        // Semantic Sizing
-        .mt(4),
-    Fx.button("Follow", onTap: () {})
-        .p(16)
-        .px(32)
-        .bg.blue500      // New Proxy Syntax
-        .shadowMedium()  // Semantic Shadows
+Fx.input(
+  signal: email,
+  placeholder: "Enter email",
+  keyboardType: TextInputType.emailAddress,
+  inputFormatters: [LengthLimitingTextInputFormatter(50)],
+  validators: [
+    (val) => val.contains('@') ? null : "Invalid email",
+    (val) => val.length > 5 ? null : "Too short"
   ]
-).center().p(24);
+)
+```
+
+### 2. Spacing & Layout DSL
+Gone are the days of manual `SizedBox`. Use fluent gaps and spacing.
+
+```dart
+Fx.row(
+  children: [
+    Fx.text("Item 1"),
+    Fx.gap(16),       // Intelligent Gap
+    Fx.text("Item 2"),
+    Fx.hgap(8),       // Horizontal Gap
+    Fx.text("Item 3"),
+  ]
+).gap(12) // Flex gap
+```
+
+### 3. Declarative Conditionals
+Cleaner conditional rendering without ternary clutter.
+
+```dart
+Fx.cond(
+  isLoading,
+  Fx.text("Loading..."),
+  Fx.button("Submit")
+)
+```
+
+### 4. Duration Extensions
+Readable time definitions.
+
+```dart
+Fx.text("Fade In")
+  .animate(
+    duration: 500.ms,
+    delay: 1.sec,
+    fade: 0.0
+  )
+```
+
+---
+
+## Core Framework Usage
+
+### Atomic Styling DSL
+
+```dart
+Fx.scaffold(
+  appBar: Fx.appBar(title: "Fluxy 2.0"),
+  body: Fx.col(children: [
+    Fx.text("Upgrade Complete").font.xl.bold.center(),
+    
+    // Scrollable list with container styling
+    Fx.list(children: [
+      Fx.text("Feature A").p(12).bg.slate50,
+      Fx.text("Feature B").p(12).bg.slate50,
+    ])
+    .gap(8)
+    .padding(16)
+    .border(Colors.grey)
+    .expand() // Fills remaining space
+  ])
+)
 ```
 
 ### Reactive State Management
@@ -93,14 +152,6 @@ Fx.column(
 ).center();
 ```
 
-### Premium Widgets
-
-Fluxy includes a suite of high-performance widgets designed for modern apps:
-- **FxAvatar**: Smart profile images with fallbacks and multiple shapes.
-- **FxBadge**: Notification overlays that anchor to any widget.
-- **FxDropdown**: Overlay-based "web-style" selection with custom slide animations.
-- **FxBottomBar**: Premium pill-style navigation with smooth physics.
-
 ---
 
 ## Command Line Interface (CLI)
@@ -111,27 +162,6 @@ The Fluxy CLI facilitates project scaffolding and cloud integration.
 - **Development**: `fluxy run` - Optimized development runner.
 - **Cloud Builds**: `fluxy cloud build <android|ios>` - Configures GitHub Actions for automated cloud builds.
 - **Deployment**: `fluxy cloud deploy` - Sets up automated deployment to TestFlight and Google Play.
-
----
-
-## Performance and Optimization
-
-Fluxy is designed with a "Payload-First" philosophy:
-
-- **Atomic Rebuilds**: Only widgets that directly consume a signal are rebuilt, minimizing CPU cycles.
-- **Dependency Tree-Shaking**: The framework is modular, ensuring that unused features are removed during production compilation.
-- **Native Efficiency**: Fluxy compiles directly to ARM/x64 machine code via the Flutter compiler, maintaining 60/120 FPS performance.
-
----
-
-## Roadmap and Release Status (v0.1.2 Alpha)
-
-- **Signals & State Engine**: Production Ready
-- **Atomic DSL & Modifiers**: Production Ready (Proxy-based DSL)
-- **Premium Widget Suite**: Production Ready
-- **Fluxy CLI & Cloud Sync**: Production Ready
-- **Over-The-Air Distribution**: Production Ready
-- **Reactive Inspector**: Beta
 
 ---
 

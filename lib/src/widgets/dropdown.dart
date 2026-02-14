@@ -27,13 +27,17 @@ class FxDropdown<T> extends StatefulWidget {
     this.style = FxStyle.none,
     this.dropdownStyle = FxStyle.none,
     this.iconColor,
-  }) : assert(value != null || signal != null, "Either value or signal must be provided");
+  }) : assert(
+         value != null || signal != null,
+         "Either value or signal must be provided",
+       );
 
   @override
   State<FxDropdown<T>> createState() => _FxDropdownState<T>();
 }
 
-class _FxDropdownState<T> extends State<FxDropdown<T>> with SingleTickerProviderStateMixin {
+class _FxDropdownState<T> extends State<FxDropdown<T>>
+    with SingleTickerProviderStateMixin {
   final LayerLink _layerLink = LayerLink();
   OverlayEntry? _overlayEntry;
   bool _isOpen = false;
@@ -44,9 +48,15 @@ class _FxDropdownState<T> extends State<FxDropdown<T>> with SingleTickerProvider
   @override
   void initState() {
     super.initState();
-    _animationController = AnimationController(vsync: this, duration: const Duration(milliseconds: 200));
-    _expandAnimation = CurvedAnimation(parent: _animationController, curve: Curves.easeInOut);
-    
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 200),
+    );
+    _expandAnimation = CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.easeInOut,
+    );
+
     if (widget.signal != null) {
       _subscription = effect(() {
         widget.signal!.value; // Track dependency
@@ -124,12 +134,14 @@ class _FxDropdownState<T> extends State<FxDropdown<T>> with SingleTickerProvider
                   axisAlignment: 1,
                   sizeFactor: _expandAnimation,
                   child: Box(
-                    style: widget.dropdownStyle.merge(FxStyle(
-                      backgroundColor: Colors.white,
-                      borderRadius: BorderRadius.circular(8),
-                      // shadow: [BoxShadow(color: Colors.black12, blurRadius: 10, offset: Offset(0, 4))],
-                      padding: const EdgeInsets.symmetric(vertical: 4),
-                    )),
+                    style: widget.dropdownStyle.merge(
+                      FxStyle(
+                        backgroundColor: Colors.white,
+                        borderRadius: BorderRadius.circular(8),
+                        // shadow: [BoxShadow(color: Colors.black12, blurRadius: 10, offset: Offset(0, 4))],
+                        padding: const EdgeInsets.symmetric(vertical: 4),
+                      ),
+                    ),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -139,18 +151,27 @@ class _FxDropdownState<T> extends State<FxDropdown<T>> with SingleTickerProvider
                           onTap: () => _handleSelect(item),
                           hoverColor: Colors.grey.withValues(alpha: 0.05),
                           child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                            color: isSelected ? Colors.blue.withValues(alpha: 0.08) : Colors.transparent,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 10,
+                            ),
+                            color: isSelected
+                                ? Colors.blue.withValues(alpha: 0.08)
+                                : Colors.transparent,
                             child: widget.itemBuilder != null
-                              ? widget.itemBuilder!(item)
-                              : Text(
-                                  widget.itemLabel?.call(item) ?? item.text,
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    color: isSelected ? Colors.blue : Colors.black87,
-                                    fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
+                                ? widget.itemBuilder!(item)
+                                : Text(
+                                    widget.itemLabel?.call(item) ?? item.text,
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: isSelected
+                                          ? Colors.blue
+                                          : Colors.black87,
+                                      fontWeight: isSelected
+                                          ? FontWeight.w600
+                                          : FontWeight.w400,
+                                    ),
                                   ),
-                                ),
                           ),
                         );
                       }).toList(),
@@ -172,29 +193,39 @@ class _FxDropdownState<T> extends State<FxDropdown<T>> with SingleTickerProvider
       child: GestureDetector(
         onTap: _toggleDropdown,
         child: Box(
-          style: widget.style.merge(FxStyle(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: _isOpen ? Colors.blue : Colors.grey.shade300),
-            backgroundColor: Colors.white,
-          )),
+          style: widget.style.merge(
+            FxStyle(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(
+                color: _isOpen ? Colors.blue : Colors.grey.shade300,
+              ),
+              backgroundColor: Colors.white,
+            ),
+          ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                _currentValue != null 
-                  ? (widget.itemLabel?.call(_currentValue!) ?? _currentValue!.text)
-                  : (widget.placeholder ?? "Select..."),
+                _currentValue != null
+                    ? (widget.itemLabel?.call(_currentValue!) ??
+                          _currentValue!.text)
+                    : (widget.placeholder ?? "Select..."),
                 style: TextStyle(
                   fontSize: 14,
-                  color: _currentValue != null ? Colors.black87 : Colors.grey.shade400,
+                  color: _currentValue != null
+                      ? Colors.black87
+                      : Colors.grey.shade400,
                 ),
               ),
               RotationTransition(
                 turns: Tween(begin: 0.0, end: 0.5).animate(_expandAnimation),
-                child: Icon(Icons.keyboard_arrow_down_rounded, 
-                  color: widget.iconColor ?? (_isOpen ? Colors.blue : Colors.grey.shade600),
-                  size: 20
+                child: Icon(
+                  Icons.keyboard_arrow_down_rounded,
+                  color:
+                      widget.iconColor ??
+                      (_isOpen ? Colors.blue : Colors.grey.shade600),
+                  size: 20,
                 ),
               ),
             ],
@@ -203,10 +234,8 @@ class _FxDropdownState<T> extends State<FxDropdown<T>> with SingleTickerProvider
       ),
     );
   }
-
 }
 
 extension on Object? {
   String get text => toString();
 }
-

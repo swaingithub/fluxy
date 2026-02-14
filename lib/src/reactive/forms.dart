@@ -97,7 +97,7 @@ class FluxForm {
       field.reset();
     }
   }
-  
+
   /// Gets all current errors.
   Map<String, String> get errors {
     final Map<String, String> errs = {};
@@ -118,17 +118,23 @@ extension StringFieldExtensions on FluxField<String> {
 
   FluxField<String> email([String message = "Invalid email"]) {
     final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
-    return addRule((v) => v.isNotEmpty && !emailRegex.hasMatch(v) ? message : null);
+    return addRule(
+      (v) => v.isNotEmpty && !emailRegex.hasMatch(v) ? message : null,
+    );
   }
 
   FluxField<String> minLength(int length, [String? message]) {
-    return addRule((v) => v.length < length ? (message ?? "Min $length chars") : null);
+    return addRule(
+      (v) => v.length < length ? (message ?? "Min $length chars") : null,
+    );
   }
 
   FluxField<String> maxLength(int length, [String? message]) {
-    return addRule((v) => v.length > length ? (message ?? "Max $length chars") : null);
+    return addRule(
+      (v) => v.length > length ? (message ?? "Max $length chars") : null,
+    );
   }
-  
+
   FluxField<String> match(String pattern, [String message = "Format invalid"]) {
     return addRule((v) => !RegExp(pattern).hasMatch(v) ? message : null);
   }
@@ -139,4 +145,3 @@ FluxField<T> fluxField<T>(T initialValue) => FluxField<T>(initialValue);
 
 /// Helper to create a form.
 FluxForm fluxForm(Map<String, FluxField> fields) => FluxForm(fields);
-

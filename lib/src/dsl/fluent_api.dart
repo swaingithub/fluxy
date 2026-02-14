@@ -9,11 +9,7 @@ class Fluxy {
     Widget child = const SizedBox.shrink(),
     List<Widget> children = const [],
   }) {
-    return Box(
-      style: style,
-      child: child,
-      children: children,
-    );
+    return Box(style: style, child: child, children: children);
   }
 
   static Widget row({
@@ -21,7 +17,9 @@ class Fluxy {
     required List<Widget> children,
   }) {
     return Box(
-      style: style.merge(const FxStyle(justifyContent: MainAxisAlignment.start)),
+      style: style.merge(
+        const FxStyle(justifyContent: MainAxisAlignment.start),
+      ),
       children: children,
     );
   }

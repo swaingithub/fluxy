@@ -23,14 +23,14 @@ class FxNestedStack extends StatelessWidget {
       initialRoute: initialRoute,
       onGenerateRoute: (settings) {
         final uri = Uri.parse(settings.name ?? initialRoute);
-        
+
         for (var route in routes) {
           // Flatten match for nested navigators to simplify sub-routing
           if (route.path == uri.path) {
-             return MaterialPageRoute(
-               builder: (context) => route.builder({}, settings.arguments),
-               settings: settings,
-             );
+            return MaterialPageRoute(
+              builder: (context) => route.builder({}, settings.arguments),
+              settings: settings,
+            );
           }
         }
         return null;
@@ -55,24 +55,36 @@ class FxTabScaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Fx(() => IndexedStack(
-        index: currentIndex.value,
-        children: tabs.map((tab) => FxNestedStack(
-          scope: tab.label,
-          initialRoute: tab.initialRoute,
-          routes: tab.routes,
-        )).toList(),
-      )),
-      bottomNavigationBar: bottomNavBuilder != null 
-        ? Fx(() => bottomNavBuilder!(context, currentIndex.value))
-        : Fx(() => BottomNavigationBar(
-            currentIndex: currentIndex.value,
-            onTap: (index) => currentIndex.value = index,
-            items: tabs.map((tab) => BottomNavigationBarItem(
-              icon: Icon(tab.icon),
-              label: tab.label,
-            )).toList(),
-          )),
+      body: Fx(
+        () => IndexedStack(
+          index: currentIndex.value,
+          children: tabs
+              .map(
+                (tab) => FxNestedStack(
+                  scope: tab.label,
+                  initialRoute: tab.initialRoute,
+                  routes: tab.routes,
+                ),
+              )
+              .toList(),
+        ),
+      ),
+      bottomNavigationBar: bottomNavBuilder != null
+          ? Fx(() => bottomNavBuilder!(context, currentIndex.value))
+          : Fx(
+              () => BottomNavigationBar(
+                currentIndex: currentIndex.value,
+                onTap: (index) => currentIndex.value = index,
+                items: tabs
+                    .map(
+                      (tab) => BottomNavigationBarItem(
+                        icon: Icon(tab.icon),
+                        label: tab.label,
+                      ),
+                    )
+                    .toList(),
+              ),
+            ),
     );
   }
 }

@@ -9,8 +9,8 @@ class FluxyDevTools extends StatefulWidget {
   const FluxyDevTools({super.key, required this.child});
 
   static void show(BuildContext context) {
-     // Implementation to show devtools as an overlay if needed, 
-     // but here we use it as a wrapper.
+    // Implementation to show devtools as an overlay if needed,
+    // but here we use it as a wrapper.
   }
 
   @override
@@ -57,11 +57,7 @@ class _FluxyDevToolsState extends State<FluxyDevTools> {
   @override
   Widget build(BuildContext context) {
     return Stack(
-      children: [
-        widget.child,
-        if (_isOpen) _buildOverlay(),
-        _buildFab(),
-      ],
+      children: [widget.child, if (_isOpen) _buildOverlay(), _buildFab()],
     );
   }
 
@@ -73,7 +69,10 @@ class _FluxyDevToolsState extends State<FluxyDevTools> {
         mini: true,
         backgroundColor: const Color(0xFF2563EB),
         onPressed: _toggleOpen,
-        child: Icon(_isOpen ? Icons.close : Icons.bug_report, color: Colors.white),
+        child: Icon(
+          _isOpen ? Icons.close : Icons.bug_report,
+          color: Colors.white,
+        ),
       ),
     );
   }
@@ -98,10 +97,7 @@ class _FluxyDevToolsState extends State<FluxyDevTools> {
                     ),
                     Expanded(
                       child: TabBarView(
-                        children: [
-                          _buildSignalList(),
-                          _buildTimelineLogs(),
-                        ],
+                        children: [_buildSignalList(), _buildTimelineLogs()],
                       ),
                     ),
                   ],
@@ -123,10 +119,20 @@ class _FluxyDevToolsState extends State<FluxyDevTools> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const Text("Fluxy DevTools 🛠️", style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
+          const Text(
+            "Fluxy DevTools 🛠️",
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
           Row(
             children: [
-              Text('${SignalRegistry.all.length} Signals', style: const TextStyle(color: Colors.white70, fontSize: 12)),
+              Text(
+                '${SignalRegistry.all.length} Signals',
+                style: const TextStyle(color: Colors.white70, fontSize: 12),
+              ),
               const SizedBox(width: 8),
               IconButton(
                 icon: const Icon(Icons.delete_sweep, color: Colors.white70),
@@ -145,16 +151,25 @@ class _FluxyDevToolsState extends State<FluxyDevTools> {
       itemCount: _logs.length,
       itemBuilder: (context, index) => Text(
         _logs[index],
-        style: const TextStyle(color: Colors.greenAccent, fontSize: 12, fontFamily: 'monospace'),
+        style: const TextStyle(
+          color: Colors.greenAccent,
+          fontSize: 12,
+          fontFamily: 'monospace',
+        ),
       ),
     );
   }
 
   Widget _buildSignalList() {
     final signals = SignalRegistry.all;
-    
+
     if (signals.isEmpty) {
-      return const Center(child: Text("No active signals", style: TextStyle(color: Colors.white54)));
+      return const Center(
+        child: Text(
+          "No active signals",
+          style: TextStyle(color: Colors.white54),
+        ),
+      );
     }
 
     return ListView.builder(
@@ -164,14 +179,18 @@ class _FluxyDevToolsState extends State<FluxyDevTools> {
         final signal = signals[index];
         final subsCount = signal.subscribers.length;
         final isComputed = signal is Computed;
-        
+
         return Container(
           margin: const EdgeInsets.only(bottom: 8),
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
             color: Colors.white.withValues(alpha: 0.05),
             borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: isComputed ? Colors.purpleAccent.withValues(alpha: 0.3) : Colors.blueAccent.withValues(alpha: 0.3)),
+            border: Border.all(
+              color: isComputed
+                  ? Colors.purpleAccent.withValues(alpha: 0.3)
+                  : Colors.blueAccent.withValues(alpha: 0.3),
+            ),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -182,32 +201,49 @@ class _FluxyDevToolsState extends State<FluxyDevTools> {
                   Expanded(
                     child: Text(
                       signal.label ?? signal.id,
-                      style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 6,
+                      vertical: 2,
+                    ),
                     decoration: BoxDecoration(
-                      color: (isComputed ? Colors.purple : Colors.blue).withValues(alpha: 0.2),
+                      color: (isComputed ? Colors.purple : Colors.blue)
+                          .withValues(alpha: 0.2),
                       borderRadius: BorderRadius.circular(4),
                     ),
                     child: Text(
                       isComputed ? "COMPUTED" : "SIGNAL",
-                      style: TextStyle(color: isComputed ? Colors.purpleAccent : Colors.blueAccent, fontSize: 10, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        color: isComputed
+                            ? Colors.purpleAccent
+                            : Colors.blueAccent,
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ],
               ),
               const SizedBox(height: 8),
               Container(
-                 width: double.infinity,
-                 padding: const EdgeInsets.all(8),
-                 color: Colors.black26,
-                 child: Text(
-                    "${signal.toString()}",
-                    style: const TextStyle(color: Colors.greenAccent, fontFamily: 'monospace', fontSize: 12),
-                 ),
+                width: double.infinity,
+                padding: const EdgeInsets.all(8),
+                color: Colors.black26,
+                child: Text(
+                  "${signal.toString()}",
+                  style: const TextStyle(
+                    color: Colors.greenAccent,
+                    fontFamily: 'monospace',
+                    fontSize: 12,
+                  ),
+                ),
               ),
               const SizedBox(height: 4),
               Text(

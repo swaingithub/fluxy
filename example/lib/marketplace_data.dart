@@ -9,8 +9,10 @@ class MarketplaceData {
       "description": "A minimal template with a counter and routing.",
       "author": "Fluxy Team",
       "version": "1.0.0",
-      "preview": "https://raw.githubusercontent.com/fluxy/templates/main/starter/preview.png", // Hypothetical
-      "manifestUrl": "https://raw.githubusercontent.com/fluxy/templates/main/starter/manifest.json" // Hypothetical
+      "preview":
+          "https://raw.githubusercontent.com/fluxy/templates/main/starter/preview.png", // Hypothetical
+      "manifestUrl":
+          "https://raw.githubusercontent.com/fluxy/templates/main/starter/manifest.json", // Hypothetical
     },
     {
       "id": "tpl_commerce",
@@ -18,8 +20,10 @@ class MarketplaceData {
       "description": "Product listing, details, and cart flow using SDUI.",
       "author": "Community",
       "version": "0.5.0",
-      "preview": "https://raw.githubusercontent.com/fluxy/templates/main/commerce/preview.png",
-      "manifestUrl": "https://raw.githubusercontent.com/fluxy/templates/main/commerce/manifest.json"
+      "preview":
+          "https://raw.githubusercontent.com/fluxy/templates/main/commerce/preview.png",
+      "manifestUrl":
+          "https://raw.githubusercontent.com/fluxy/templates/main/commerce/manifest.json",
     },
     {
       "id": "tpl_saas",
@@ -27,9 +31,11 @@ class MarketplaceData {
       "description": "Analytics dashboard with charts and data tables.",
       "author": "Pro Devs",
       "version": "2.1.0",
-      "preview": "https://raw.githubusercontent.com/fluxy/templates/main/saas/preview.png",
-      "manifestUrl": "https://raw.githubusercontent.com/fluxy/templates/main/saas/manifest.json"
-    }
+      "preview":
+          "https://raw.githubusercontent.com/fluxy/templates/main/saas/preview.png",
+      "manifestUrl":
+          "https://raw.githubusercontent.com/fluxy/templates/main/saas/manifest.json",
+    },
   ];
 
   static const List<Map<String, dynamic>> communityApps = [
@@ -37,13 +43,15 @@ class MarketplaceData {
       "id": "app_todo",
       "name": "Super Todo",
       "author": "@dev_guru",
-      "manifestUrl": "https://gist.githubusercontent.com/dev_guru/todo/raw/manifest.json"
+      "manifestUrl":
+          "https://gist.githubusercontent.com/dev_guru/todo/raw/manifest.json",
     },
     {
       "id": "app_meditation",
       "name": "Zen Mind",
       "author": "@yoga_coder",
-      "manifestUrl": "https://gist.githubusercontent.com/yoga_coder/zen/raw/manifest.json"
-    }
+      "manifestUrl":
+          "https://gist.githubusercontent.com/yoga_coder/zen/raw/manifest.json",
+    },
   ];
 }

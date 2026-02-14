@@ -4,7 +4,7 @@ import 'signal.dart';
 /// A reactive list that automatically triggers updates when its contents change.
 class FluxList<T> extends Signal<List<T>> with ListMixin<T> {
   bool _isBatching = false;
-  
+
   FluxList(super.initialValue);
 
   @override
@@ -83,7 +83,10 @@ class FluxList<T> extends Signal<List<T>> with ListMixin<T> {
   }
 
   /// Updates all items that match the predicate using a transformer function.
-  void updateWhere(bool Function(T item) predicate, T Function(T current) transformer) {
+  void updateWhere(
+    bool Function(T item) predicate,
+    T Function(T current) transformer,
+  ) {
     bool hasChanges = false;
     for (int i = 0; i < value.length; i++) {
       if (predicate(value[i])) {
@@ -95,7 +98,10 @@ class FluxList<T> extends Signal<List<T>> with ListMixin<T> {
   }
 
   /// Updates the first item that matches the predicate.
-  void updateFirst(bool Function(T item) predicate, T Function(T current) transformer) {
+  void updateFirst(
+    bool Function(T item) predicate,
+    T Function(T current) transformer,
+  ) {
     for (int i = 0; i < value.length; i++) {
       if (predicate(value[i])) {
         value[i] = transformer(value[i]);
@@ -126,7 +132,7 @@ class FluxList<T> extends Signal<List<T>> with ListMixin<T> {
 /// A reactive map that automatically triggers updates when its contents change.
 class FluxMap<K, V> extends Signal<Map<K, V>> with MapMixin<K, V> {
   bool _isBatching = false;
-  
+
   FluxMap(super.initialValue);
 
   @override
@@ -185,18 +191,18 @@ class FluxMap<K, V> extends Signal<Map<K, V>> with MapMixin<K, V> {
   ) {
     bool hasChanges = false;
     final keysToUpdate = <K>[];
-    
+
     for (final entry in value.entries) {
       if (predicate(entry.key, entry.value)) {
         keysToUpdate.add(entry.key);
       }
     }
-    
+
     for (final key in keysToUpdate) {
       value[key] = transformer(value[key] as V);
       hasChanges = true;
     }
-    
+
     if (hasChanges) _notifyIfNotBatching();
   }
 
@@ -219,10 +225,12 @@ class FluxMap<K, V> extends Signal<Map<K, V>> with MapMixin<K, V> {
 }
 
 /// Creates a new reactive list.
-FluxList<T> fluxList<T>([List<T>? initialValue]) => FluxList<T>(initialValue ?? []);
+FluxList<T> fluxList<T>([List<T>? initialValue]) =>
+    FluxList<T>(initialValue ?? []);
 
 /// Creates a new reactive map.
-FluxMap<K, V> fluxMap<K, V>([Map<K, V>? initialValue]) => FluxMap<K, V>(initialValue ?? {});
+FluxMap<K, V> fluxMap<K, V>([Map<K, V>? initialValue]) =>
+    FluxMap<K, V>(initialValue ?? {});
 
 /// Fluent extensions for creating reactive collections.
 extension FluxyListExtension<T> on List<T> {
@@ -232,4 +240,3 @@ extension FluxyListExtension<T> on List<T> {
 extension FluxyMapExtension<K, V> on Map<K, V> {
   FluxMap<K, V> get obs => FluxMap<K, V>(this);
 }
-
