@@ -1,3 +1,12 @@
+## 0.1.5
+
+* **Next-Gen Layout System**:
+    * **Explicit Layout DSL**: Introduced `Fx.row`, `Fx.col`, and `Fx.stack` with named parameters (`justify`, `items`, `gap`) for safer and more intuitive UI construction.
+    * **Intelligent Grids**: Launched `Fx.grid.auto()` for automatic column calculation and `Fx.grid.responsive()` for explicit breakpoint control.
+    * **Layout Presets**: Added semantic shortcuts like `Fx.grid.cards()`, `Fx.grid.gallery()`, and `Fx.grid.dashboard()`.
+    * **Adaptive Layout Switcher**: Introduced `Fx.layout()` for seamless switching between mobile, tablet, and desktop views.
+    * **Breakpoint Engine**: New internal `FxBreakpoint` system for precise platform-aware layouts.
+
 ## 0.1.4
 
 * **Fluxy 2.0 DSL Architecture**:

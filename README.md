@@ -41,7 +41,7 @@ Add Fluxy to your `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  fluxy: ^0.1.3
+  fluxy: ^0.1.5
 ```
 
 Then, activate the Fluxy CLI globally for project orchestration:
@@ -52,9 +52,62 @@ dart pub global activate fluxy
 
 ---
 
-## What's New in 2.0 DSL
+Fluxy 0.1.5 introduces the **Next-Gen Layout System**, a declarative, named-parameter approach to building responsive interfaces.
 
-Fluxy 0.1.4 introduces a massive DSL upgrade to rival standard declarative frameworks.
+### 1. Advanced Grid Engine
+Build responsive grids without complex logic.
+
+```dart
+// Automatic column calculation based on available width
+Fx.grid.auto(
+  minItemWidth: 160,
+  gap: 16,
+  children: products.map(ProductCard.new).toList(),
+)
+
+// Explicit responsive control
+Fx.grid.responsive(
+  xs: 1, sm: 2, md: 3, lg: 4,
+  gap: 20,
+  children: cards,
+)
+```
+
+### 2. Semantic Layout Presets
+Rapidly scaffold common UI patterns with pre-configured defaults.
+
+```dart
+Fx.grid.cards(children: products)
+Fx.grid.gallery(cols: 3, children: images)
+Fx.grid.dashboard(children: charts)
+```
+
+### 3. Adaptive Layout Switcher
+Seamlessly transition between device types.
+
+```dart
+Fx.layout(
+  mobile: Fx.col(children: [Menu(), Gallery()]),
+  tablet: Fx.grid(cols: 2, children: [Menu(), Gallery()]),
+  desktop: Fx.grid(cols: 4, children: [Sidebar(), Menu(), Gallery()]),
+)
+```
+
+### 4. Explicit Flex Layouts
+Avoid deep nesting and ambiguous modifiers.
+
+```dart
+Fx.row(
+  justify: MainAxisAlignment.spaceBetween,
+  items: CrossAxisAlignment.center,
+  gap: 12,
+  children: [Logo(), NavLinks(), Profile()]
+)
+```
+
+---
+
+## What's New in 2.0 DSL
 
 ### 1. Enhanced Input System
 A production-grade text input supporting validation, formatting, and focus control.

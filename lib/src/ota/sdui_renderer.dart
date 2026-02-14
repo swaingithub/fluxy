@@ -63,14 +63,14 @@ class FluxyRenderer {
         return Fx.row(
           children: _renderChildren(json),
           style: style,
-          gap: (json['gap'] as num?)?.toDouble(),
+          gap: (json['gap'] as num?)?.toDouble() ?? 0.0,
         );
 
       case 'column':
         return Fx.column(
           children: _renderChildren(json),
           style: style,
-          gap: (json['gap'] as num?)?.toDouble(),
+          gap: (json['gap'] as num?)?.toDouble() ?? 0.0,
         );
 
       case 'hero':

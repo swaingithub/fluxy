@@ -138,8 +138,7 @@ class WalletDashboard extends StatelessWidget {
 
             // Main Balance Gradient Card
             Fx.box(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  child: Column(crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Fx.row(
                         children: [
@@ -240,7 +239,7 @@ class WalletDashboard extends StatelessWidget {
 
             // Transactions Header with Dropdown
             Fx.row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              justify: MainAxisAlignment.spaceBetween,
               children: [
                 Fx.text(
                   "Recent Transactions",
@@ -278,7 +277,7 @@ class WalletDashboard extends StatelessWidget {
 
             // Redesigned Action Row
             Fx.row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              justify: MainAxisAlignment.spaceEvenly,
               children: [
                 _actionButton(
                   Icons.notifications_active_outlined,
@@ -493,7 +492,7 @@ class _LayoutShowcaseState extends State<LayoutShowcase> {
                 .wFull()
                 .child(
                   Fx.column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    justify: MainAxisAlignment.center,
                     children: [
                       Fx.icon(
                         Icons.person,
@@ -556,7 +555,7 @@ class _LayoutShowcaseState extends State<LayoutShowcase> {
     return Fx.row(
       children: [
         Fx.column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          justify: MainAxisAlignment.center,
           children: [
             Fx.text("Page $_index Content").bold().fontSize(24),
             const SizedBox(height: 16),

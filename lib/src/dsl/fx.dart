@@ -5,8 +5,6 @@ import '../styles/tokens.dart'; // Tokens
 import 'modifiers.dart'; // Extension
 import '../widgets/box.dart';
 import '../widgets/text_box.dart';
-import '../widgets/flex_box.dart';
-import '../widgets/stack_box.dart';
 import '../reactive/signal.dart';
 import '../reactive/async_signal.dart';
 import '../widgets/inputs.dart'; // Existing FxTextField
@@ -22,12 +20,16 @@ import '../widgets/badge.dart';
 export '../styles/style.dart';
 export 'modifiers.dart';
 import '../styles/fx_theme.dart';
-import '../widgets/grid_box.dart';
 import '../widgets/list_box.dart';
 import '../widgets/table.dart';
 import '../widgets/fx_form.dart';
 import '../feedback/overlays.dart';
 import '../reactive/forms.dart';
+import '../layout/fx_grid.dart';
+import '../layout/fx_row.dart';
+import '../layout/fx_col.dart';
+import '../layout/fx_stack.dart';
+import '../layout/fx_layout.dart';
 
 /// The hyper-minimal Fx API for Fluxy.
 /// Designed for maximum builder velocity and zero boilerplate reactivity.
@@ -73,49 +75,49 @@ class Fx extends StatefulWidget {
 
   // --- Responsive Layouts ---
 
-  /// Builds a widget based on screen size breakpoints.
-  static Widget responsive({
-    required WidgetBuilder mobile,
-    WidgetBuilder? tablet,
-    WidgetBuilder? desktop,
-  }) {
-    return Builder(
-      builder: (context) {
-        final width = MediaQuery.of(context).size.width;
-        if (width >= 1024 && desktop != null) return desktop(context);
-        if (width >= 600 && tablet != null) return tablet(context);
-        return mobile(context);
-      },
-    );
-  }
-
-  /// A structured layout helper for responsive designs.
-  /// Similar to responsive() but with semantic names.
+  /// Advanced Layout Switcher. Automatically chooses layout based on screen size.
   static Widget layout({
-    required WidgetBuilder mobile,
-    WidgetBuilder? desktop,
-  }) => responsive(mobile: mobile, tablet: desktop, desktop: desktop);
+    required Widget mobile,
+    Widget? tablet,
+    Widget? desktop,
+  }) => FxLayout(mobile: mobile, tablet: tablet, desktop: desktop);
 
-  /// Advanced Grid Layout.
-  static Widget grid({
+  /// Advanced Grid Layout System.
+  static const grid = _FxGridHelper();
+
+  /// Horizontal Layout (Row).
+  static Widget row({
     required List<Widget> children,
-    int? columns,
+    MainAxisAlignment justify = MainAxisAlignment.start,
+    CrossAxisAlignment items = CrossAxisAlignment.center,
     double gap = 0,
     FxStyle style = FxStyle.none,
-    FxResponsiveStyle? responsive,
-  }) {
-    // Merge explicit columns into style
-    FxStyle effectiveStyle = style.merge(FxStyle(gap: gap));
-    if (columns != null) {
-      effectiveStyle = effectiveStyle.merge(FxStyle(crossAxisCount: columns));
-    }
+    MainAxisSize size = MainAxisSize.max,
+  }) => FxRow(
+    children: children,
+    justify: justify,
+    items: items,
+    gap: gap,
+    style: style,
+    size: size,
+  );
 
-    return GridBox(
-      children: children,
-      style: effectiveStyle,
-      responsive: responsive,
-    );
-  }
+  /// Vertical Layout (Column).
+  static Widget col({
+    required List<Widget> children,
+    MainAxisAlignment justify = MainAxisAlignment.start,
+    CrossAxisAlignment items = CrossAxisAlignment.center,
+    double gap = 0,
+    FxStyle style = FxStyle.none,
+    MainAxisSize size = MainAxisSize.max,
+  }) => FxCol(
+    children: children,
+    justify: justify,
+    items: items,
+    gap: gap,
+    style: style,
+    size: size,
+  );
 
   // --- Core Primitives ---
 
@@ -172,88 +174,18 @@ class Fx extends StatefulWidget {
     return Fx(() => signal.value ? trueChild : falseChild);
   }
 
-  /// Horizontal layout (Row).
-  /// Supports: Fx.row(children: [...]).gap.md
-  static Widget row({
-    required List<Widget> children,
-    FxStyle style = FxStyle.none,
-    String? className,
-    FxResponsiveStyle? responsive,
-    double? gap,
-    MainAxisAlignment mainAxisAlignment = MainAxisAlignment.start,
-    CrossAxisAlignment crossAxisAlignment = CrossAxisAlignment.center,
-  }) {
-    return FlexBox(
-      direction: Axis.horizontal,
-      style: style.merge(
-        FxStyle(
-          gap: gap,
-          justifyContent: mainAxisAlignment,
-          alignItems: crossAxisAlignment,
-        ),
-      ),
-      className: className,
-      responsive: responsive,
-      children: children,
-    );
-  }
-
-  /// Vertical layout (Column).
-  /// Supports: Fx.col(children: [...]).gap.md
-  static Widget col({
-    required List<Widget> children,
-    FxStyle style = FxStyle.none,
-    String? className,
-    FxResponsiveStyle? responsive,
-    double? gap,
-    MainAxisAlignment mainAxisAlignment = MainAxisAlignment.start,
-    CrossAxisAlignment crossAxisAlignment = CrossAxisAlignment.center,
-  }) {
-    return FlexBox(
-      direction: Axis.vertical,
-      style: style.merge(
-        FxStyle(
-          gap: gap,
-          justifyContent: mainAxisAlignment,
-          alignItems: crossAxisAlignment,
-        ),
-      ),
-      className: className,
-      responsive: responsive,
-      children: children,
-    );
-  }
-
-  /// Alias for col
-  static Widget column({
-    required List<Widget> children,
-    FxStyle style = FxStyle.none,
-    String? className,
-    FxResponsiveStyle? responsive,
-    double? gap,
-    MainAxisAlignment mainAxisAlignment = MainAxisAlignment.start,
-    CrossAxisAlignment crossAxisAlignment = CrossAxisAlignment.center,
-  }) => col(
-    children: children,
-    style: style,
-    className: className,
-    responsive: responsive,
-    gap: gap,
-    mainAxisAlignment: mainAxisAlignment,
-    crossAxisAlignment: crossAxisAlignment,
-  );
-
   /// Stack layout.
   static Widget stack({
     required List<Widget> children,
+    AlignmentGeometry alignment = AlignmentDirectional.topStart,
     FxStyle style = FxStyle.none,
-    AlignmentGeometry? alignment,
-  }) {
-    return StackBox(
-      style: style.merge(FxStyle(alignment: alignment)),
-      children: children,
-    );
-  }
+    StackFit fit = StackFit.loose,
+  }) => FxStack(
+    children: children,
+    alignment: alignment,
+    style: style,
+    fit: fit,
+  );
 
   /// A wrapper for Scaffold.
   static Widget scaffold({
@@ -837,6 +769,119 @@ class Fx extends StatefulWidget {
       FluxyRouter.to<T>(route, arguments: arguments, scope: scope);
   static void back<T>([T? result, String? scope]) =>
       FluxyRouter.back<T>(result, scope);
+
+  /// Alias for Vertical Layout (Column).
+  static Widget column({
+    required List<Widget> children,
+    MainAxisAlignment justify = MainAxisAlignment.start,
+    CrossAxisAlignment items = CrossAxisAlignment.center,
+    double gap = 0,
+    FxStyle style = FxStyle.none,
+    MainAxisSize size = MainAxisSize.max,
+  }) => col(
+    children: children,
+    justify: justify,
+    items: items,
+    gap: gap,
+    style: style,
+    size: size,
+  );
+}
+
+/// Helper class for Fx.grid factory pattern.
+class _FxGridHelper {
+  const _FxGridHelper();
+
+  FxGrid call({
+    required List<Widget> children,
+    int? columns = 2,
+    double gap = 0,
+    FxStyle style = FxStyle.none,
+    double childAspectRatio = 1.0,
+  }) => FxGrid(
+    children: children,
+    columns: columns,
+    gap: gap,
+    style: style,
+    childAspectRatio: childAspectRatio,
+  );
+
+  FxGrid auto({
+    required List<Widget> children,
+    required double minItemWidth,
+    double gap = 0,
+    FxStyle style = FxStyle.none,
+    double childAspectRatio = 1.0,
+  }) => FxGrid.auto(
+    children: children,
+    minItemWidth: minItemWidth,
+    gap: gap,
+    style: style,
+    childAspectRatio: childAspectRatio,
+  );
+
+  FxGrid responsive({
+    required List<Widget> children,
+    int? xs,
+    int? sm,
+    int? md,
+    int? lg,
+    int? xl,
+    double gap = 0,
+    FxStyle style = FxStyle.none,
+    double childAspectRatio = 1.0,
+  }) => FxGrid.responsive(
+    children: children,
+    xs: xs,
+    sm: sm,
+    md: md,
+    lg: lg,
+    xl: xl,
+    gap: gap,
+    style: style,
+    childAspectRatio: childAspectRatio,
+  );
+
+  FxGrid cards({
+    required List<Widget> children,
+    double gap = 16,
+    double childAspectRatio = 0.8,
+  }) => FxGrid.cards(
+    children: children,
+    gap: gap,
+    childAspectRatio: childAspectRatio,
+  );
+
+  FxGrid gallery({
+    required List<Widget> children,
+    double gap = 4,
+    int columns = 3,
+  }) => FxGrid.gallery(
+    children: children,
+    gap: gap,
+    columns: columns,
+  );
+
+  FxGrid feed({
+    required List<Widget> children,
+    double gap = 16,
+  }) => FxGrid(
+    children: children,
+    columns: 1,
+    gap: gap,
+  );
+
+  FxGrid dashboard({
+    required List<Widget> children,
+    double gap = 20,
+  }) => FxGrid.responsive(
+    children: children,
+    xs: 1,
+    sm: 2,
+    md: 3,
+    lg: 4,
+    gap: gap,
+  );
 }
 
 class _FxState extends State<Fx> with ReactiveSubscriberMixin {
