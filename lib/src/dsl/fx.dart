@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart'; // Input Formatters
+import 'package:flutter/services.dart';
 import '../styles/style.dart';
 import '../styles/tokens.dart'; // Tokens
 import 'modifiers.dart'; // Extension

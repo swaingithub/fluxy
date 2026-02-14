@@ -1,0 +1,4829 @@
+[ +381 ms] Artifact Instance of 'MaterialFonts' is not required, skipping update.
+[   +3 ms] Artifact Instance of 'GradleWrapper' is not required, skipping update.
+[        ] Artifact Instance of 'AndroidGenSnapshotArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'AndroidInternalBuildArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'IOSEngineArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'FlutterWebSdk' is not required, skipping update.
+[   +2 ms] Artifact Instance of 'LegacyCanvasKitRemover' is not required, skipping update.
+[        ] Artifact Instance of 'FlutterSdk' is not required, skipping update.
+[        ] Artifact Instance of 'WindowsEngineArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'MacOSEngineArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'LinuxEngineArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'LinuxFuchsiaSDKArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'MacOSFuchsiaSDKArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'FlutterRunnerSDKArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'FlutterRunnerDebugSymbols' is not required, skipping update.
+[        ] Artifact Instance of 'IosUsbArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'IosUsbArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'IosUsbArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'IosUsbArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'IosUsbArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'IosUsbArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'FontSubsetArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'PubDependencies' is not required, skipping update.
+[   +2 ms] executing: [C:\flutter/] git -c log.showSignature=false log HEAD -n 1 --pretty=format:%ad --date=iso
+[ +170 ms] Exit code 0 from: git -c log.showSignature=false log HEAD -n 1 --pretty=format:%ad --date=iso
+[        ] 2025-11-20 17:53:13 -0500
+[  +37 ms] Artifact Instance of 'AndroidGenSnapshotArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'AndroidInternalBuildArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'IOSEngineArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'FlutterWebSdk' is not required, skipping update.
+[        ] Artifact Instance of 'FlutterEngineStamp' is not required, skipping update.
+[        ] Artifact Instance of 'LegacyCanvasKitRemover' is not required, skipping update.
+[   +5 ms] Artifact Instance of 'WindowsEngineArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'MacOSEngineArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'LinuxEngineArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'LinuxFuchsiaSDKArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'MacOSFuchsiaSDKArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'FlutterRunnerSDKArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'FlutterRunnerDebugSymbols' is not required, skipping update.
+[ +137 ms] Artifact Instance of 'MaterialFonts' is not required, skipping update.
+[        ] Artifact Instance of 'GradleWrapper' is not required, skipping update.
+[        ] Artifact Instance of 'AndroidGenSnapshotArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'AndroidInternalBuildArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'IOSEngineArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'FlutterWebSdk' is not required, skipping update.
+[        ] Artifact Instance of 'FlutterEngineStamp' is not required, skipping update.
+[        ] Artifact Instance of 'LegacyCanvasKitRemover' is not required, skipping update.
+[        ] Artifact Instance of 'FlutterSdk' is not required, skipping update.
+[        ] Artifact Instance of 'WindowsEngineArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'MacOSEngineArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'LinuxEngineArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'LinuxFuchsiaSDKArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'MacOSFuchsiaSDKArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'FlutterRunnerSDKArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'FlutterRunnerDebugSymbols' is not required, skipping update.
+[        ] Artifact Instance of 'IosUsbArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'IosUsbArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'IosUsbArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'IosUsbArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'IosUsbArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'IosUsbArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'FontSubsetArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'PubDependencies' is not required, skipping update.
+[  +81 ms] executing: [C:\Users\Asus\Desktop\plugin and package\fluxy/] C:\flutter\bin\cache\dart-sdk\bin\dart pub --suppress-analytics publish --dry-run --verbose
+flutter : FINE: Pub 3.10.1
+At line:1 char:1
++ flutter pub publish 
+--dry-run --verbose > 
+dry_run_verbose.txt 2>&1
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~
+    + CategoryInfo          
+    : NotSpecified: (FINE:  
+   Pub 3.10.1:String) [],   
+  RemoteException
+    + FullyQualifiedErrorId 
+    : NativeCommandError
+ 
+MSG : Resolving dependencies...
+SLVR: fact: fluxy is 0.1.6
+SLVR: derived: fluxy
+SLVR: fact: fluxy depends 
+on flutter from sdk
+SLVR: fact: fluxy depends 
+on shared_preferences ^2.5.4
+SLVR: fact: fluxy depends 
+on flutter_secure_storage 
+^10.0.0
+SLVR: fact: fluxy depends 
+on args ^2.7.0
+SLVR: fact: fluxy depends 
+on path ^1.9.1
+SLVR: fact: fluxy depends 
+on path_provider ^2.1.5
+SLVR: fact: fluxy depends 
+on flutter_test from sdk
+SLVR: fact: fluxy depends 
+on flutter_lints ^3.0.0
+SLVR:   selecting fluxy
+SLVR:   derived: 
+flutter_lints ^3.0.0
+SLVR:   derived: 
+flutter_test from sdk
+SLVR:   derived: 
+path_provider ^2.1.5
+SLVR:   derived: path ^1.9.1
+SLVR:   derived: args ^2.7.0
+SLVR:   derived: 
+flutter_secure_storage 
+^10.0.0
+SLVR:   derived: 
+shared_preferences ^2.5.4
+SLVR:   derived: flutter 
+from sdk
+SLVR:   fact: flutter_lints 
+3.0.2 depends on lints 
+^3.0.0
+SLVR:     selecting 
+flutter_lints 3.0.2
+SLVR:     derived: lints 
+^3.0.0
+SLVR:     fact: 
+flutter_test 0.0.0 from sdk 
+depends on flutter from sdk
+SLVR:     fact: 
+flutter_test 0.0.0 from sdk 
+depends on test_api 0.7.7
+SLVR:     fact: 
+flutter_test 0.0.0 from sdk 
+depends on matcher 0.12.17
+SLVR:     fact: 
+flutter_test 0.0.0 from sdk 
+depends on path 1.9.1
+SLVR:     fact: 
+flutter_test 0.0.0 from sdk 
+depends on fake_async 1.3.3
+SLVR:     fact: 
+flutter_test 0.0.0 from sdk 
+depends on clock 1.1.2
+SLVR:     fact: 
+flutter_test 0.0.0 from sdk 
+depends on stack_trace 
+1.12.1
+SLVR:     fact: 
+flutter_test 0.0.0 from sdk 
+depends on vector_math 2.2.0
+SLVR:     fact: 
+flutter_test 0.0.0 from sdk 
+depends on leak_tracker_flut
+ter_testing 3.0.10
+SLVR:     fact: 
+flutter_test 0.0.0 from sdk 
+depends on collection 1.19.1
+SLVR:     fact: 
+flutter_test 0.0.0 from sdk 
+depends on meta 1.17.0
+SLVR:     fact: 
+flutter_test 0.0.0 from sdk 
+depends on stream_channel 
+2.1.4
+SLVR:       selecting 
+flutter_test 0.0.0 from sdk
+SLVR:       derived: 
+stream_channel 2.1.4
+SLVR:       derived: meta 
+1.17.0
+SLVR:       derived: 
+collection 1.19.1
+SLVR:       derived: leak_tr
+acker_flutter_testing 3.0.10
+SLVR:       derived: 
+vector_math 2.2.0
+SLVR:       derived: 
+stack_trace 1.12.1
+SLVR:       derived: clock 
+1.1.2
+SLVR:       derived: 
+fake_async 1.3.3
+SLVR:       derived: path 
+1.9.1
+SLVR:       derived: 
+matcher 0.12.17
+SLVR:       derived: 
+test_api 0.7.7
+SLVR:       fact: 
+path_provider 2.1.5 depends 
+on flutter from sdk
+SLVR:       fact: 
+path_provider 2.1.5 depends 
+on path_provider_android 
+^2.2.5
+SLVR:       fact: 
+path_provider 2.1.5 depends 
+on path_provider_foundation 
+^2.3.2
+SLVR:       fact: 
+path_provider 2.1.5 depends 
+on path_provider_linux 
+^2.2.0
+SLVR:       fact: 
+path_provider 2.1.5 depends 
+on path_provider_platform_in
+terface ^2.1.0
+SLVR:       fact: 
+path_provider 2.1.5 depends 
+on path_provider_windows 
+^2.2.0
+SLVR:         selecting 
+path_provider 2.1.5
+SLVR:         derived: 
+path_provider_windows ^2.2.0
+SLVR:         derived: path_
+provider_platform_interface 
+^2.1.0
+SLVR:         derived: 
+path_provider_linux ^2.2.0
+SLVR:         derived: 
+path_provider_foundation 
+^2.3.2
+SLVR:         derived: 
+path_provider_android ^2.2.5
+SLVR:           selecting 
+path 1.9.1
+SLVR:             selecting 
+args 2.7.0
+SLVR:             fact: 
+flutter_secure_storage 
+10.0.0 depends on flutter 
+from sdk
+SLVR:             fact: 
+flutter_secure_storage 
+10.0.0 depends on flutter_se
+cure_storage_darwin ^0.2.0
+SLVR:             fact: 
+flutter_secure_storage 
+10.0.0 depends on flutter_se
+cure_storage_linux ^3.0.0
+SLVR:             fact: 
+flutter_secure_storage 
+10.0.0 depends on flutter_se
+cure_storage_platform_interf
+ace ^2.0.1
+SLVR:             fact: 
+flutter_secure_storage 
+10.0.0 depends on 
+flutter_secure_storage_web 
+^2.1.0
+SLVR:             fact: 
+flutter_secure_storage 
+10.0.0 depends on flutter_se
+cure_storage_windows ^4.1.0
+SLVR:             fact: 
+flutter_secure_storage 
+10.0.0 depends on meta 
+^1.3.0
+SLVR:               
+selecting 
+flutter_secure_storage 
+10.0.0
+SLVR:               
+derived: flutter_secure_stor
+age_windows ^4.1.0
+SLVR:               
+derived: 
+flutter_secure_storage_web 
+^2.1.0
+SLVR:               
+derived: flutter_secure_stor
+age_platform_interface 
+^2.0.1
+SLVR:               
+derived: flutter_secure_stor
+age_linux ^3.0.0
+SLVR:               
+derived: flutter_secure_stor
+age_darwin ^0.2.0
+SLVR:               fact: 
+shared_preferences 2.5.4 
+depends on flutter from sdk
+SLVR:               fact: 
+shared_preferences 2.5.4 
+depends on 
+shared_preferences_android 
+^2.3.4
+SLVR:               fact: 
+shared_preferences 2.5.4 
+depends on shared_preference
+s_foundation ^2.5.0
+SLVR:               fact: 
+shared_preferences 2.5.4 
+depends on 
+shared_preferences_linux 
+^2.4.0
+SLVR:               fact: 
+shared_preferences 2.5.4 
+depends on shared_preference
+s_platform_interface ^2.4.0
+SLVR:               fact: 
+shared_preferences 2.5.4 
+depends on 
+shared_preferences_web 
+^2.4.0
+SLVR:               fact: 
+shared_preferences 2.5.4 
+depends on 
+shared_preferences_windows 
+^2.4.0
+SLVR:                 
+selecting 
+shared_preferences 2.5.4
+SLVR:                 
+derived: 
+shared_preferences_windows 
+^2.4.0
+SLVR:                 
+derived: 
+shared_preferences_web 
+^2.4.0
+SLVR:                 
+derived: shared_preferences_
+platform_interface ^2.4.0
+SLVR:                 
+derived: 
+shared_preferences_linux 
+^2.4.0
+SLVR:                 
+derived: shared_preferences_
+foundation ^2.5.0
+SLVR:                 
+derived: 
+shared_preferences_android 
+^2.3.4
+SLVR:                 fact: 
+flutter 0.0.0 from sdk 
+depends on characters 1.4.0
+SLVR:                 fact: 
+flutter 0.0.0 from sdk 
+depends on collection 1.19.1
+SLVR:                 fact: 
+flutter 0.0.0 from sdk 
+depends on 
+material_color_utilities 
+0.11.1
+SLVR:                 fact: 
+flutter 0.0.0 from sdk 
+depends on meta 1.17.0
+SLVR:                 fact: 
+flutter 0.0.0 from sdk 
+depends on vector_math 2.2.0
+SLVR:                 fact: 
+flutter 0.0.0 from sdk 
+depends on sky_engine from 
+sdk
+SLVR:                   
+selecting flutter 0.0.0 
+from sdk
+SLVR:                   
+derived: sky_engine from sdk
+SLVR:                   
+derived: 
+material_color_utilities 
+0.11.1
+SLVR:                   
+derived: characters 1.4.0
+SLVR:                     
+selecting lints 3.0.0
+SLVR:                     
+fact: stream_channel 2.1.4 
+depends on async ^2.5.0
+SLVR:                       
+selecting stream_channel 
+2.1.4
+SLVR:                       
+derived: async ^2.5.0
+SLVR:                       
+  selecting meta 1.17.0
+SLVR:                       
+    selecting collection 
+1.19.1
+SLVR:                       
+    fact: leak_tracker_flutt
+er_testing 3.0.10 depends 
+on flutter from sdk
+SLVR:                       
+    fact: leak_tracker_flutt
+er_testing 3.0.10 depends 
+on leak_tracker ^11.0.1
+SLVR:                       
+    fact: leak_tracker_flutt
+er_testing 3.0.10 depends 
+on leak_tracker_testing 
+^3.0.1
+SLVR:                       
+    fact: leak_tracker_flutt
+er_testing 3.0.10 depends 
+on matcher ^0.12.16
+SLVR:                       
+    fact: leak_tracker_flutt
+er_testing 3.0.10 depends 
+on meta ^1.8.0
+SLVR:                       
+      selecting leak_tracker
+_flutter_testing 3.0.10
+SLVR:                       
+      derived: 
+leak_tracker_testing ^3.0.1
+SLVR:                       
+      derived: leak_tracker 
+^11.0.1
+SLVR:                       
+        selecting 
+vector_math 2.2.0
+SLVR:                       
+        fact: stack_trace 
+1.12.1 depends on path 
+^1.8.0
+SLVR:                       
+          selecting 
+stack_trace 1.12.1
+SLVR:                       
+            selecting clock 
+1.1.2
+SLVR:                       
+            fact: 
+fake_async 1.3.3 depends on 
+clock ^1.1.0
+SLVR:                       
+            fact: 
+fake_async 1.3.3 depends on 
+collection ^1.15.0
+SLVR:                       
+              selecting 
+fake_async 1.3.3
+SLVR:                       
+              fact: matcher 
+0.12.17 depends on async 
+^2.10.0
+SLVR:                       
+              fact: matcher 
+0.12.17 depends on meta 
+^1.8.0
+SLVR:                       
+              fact: matcher 
+0.12.17 depends on 
+stack_trace ^1.10.0
+SLVR:                       
+              fact: matcher 
+0.12.17 depends on 
+term_glyph ^1.2.0
+SLVR:                       
+              fact: matcher 
+0.12.17 depends on test_api 
+>=0.5.0 <0.8.0
+SLVR:                       
+                selecting 
+matcher 0.12.17
+SLVR:                       
+                derived: 
+term_glyph ^1.2.0
+SLVR:                       
+                derived: 
+async ^2.10.0
+SLVR:                       
+                fact: 
+test_api 0.7.7 depends on 
+async ^2.5.0
+SLVR:                       
+                fact: 
+test_api 0.7.7 depends on 
+boolean_selector ^2.1.0
+SLVR:                       
+                fact: 
+test_api 0.7.7 depends on 
+collection ^1.15.0
+SLVR:                       
+                fact: 
+test_api 0.7.7 depends on 
+meta ^1.14.0
+SLVR:                       
+                fact: 
+test_api 0.7.7 depends on 
+source_span ^1.8.0
+SLVR:                       
+                fact: 
+test_api 0.7.7 depends on 
+stack_trace ^1.10.0
+SLVR:                       
+                fact: 
+test_api 0.7.7 depends on 
+stream_channel ^2.1.0
+SLVR:                       
+                fact: 
+test_api 0.7.7 depends on 
+string_scanner ^1.1.0
+SLVR:                       
+                fact: 
+test_api 0.7.7 depends on 
+term_glyph ^1.2.0
+SLVR:                       
+                  selecting 
+test_api 0.7.7
+SLVR:                       
+                  derived: 
+string_scanner ^1.1.0
+SLVR:                       
+                  derived: 
+source_span ^1.8.0
+SLVR:                       
+                  derived: 
+boolean_selector ^2.1.0
+SLVR:                       
+                  fact: 
+path_provider_windows 2.3.0 
+depends on ffi ^2.0.0
+SLVR:                       
+                  fact: 
+path_provider_windows 2.3.0 
+depends on flutter from sdk
+SLVR:                       
+                  fact: 
+path_provider_windows 2.3.0 
+depends on path ^1.8.0
+SLVR:                       
+                  fact: 
+path_provider_windows 2.3.0 
+depends on path_provider_pla
+tform_interface ^2.1.0
+SLVR:                       
+                    
+selecting 
+path_provider_windows 2.3.0
+SLVR:                       
+                    
+derived: ffi ^2.0.0
+SLVR:                       
+                    fact: pa
+th_provider_platform_interfa
+ce 2.1.2 depends on flutter 
+from sdk
+SLVR:                       
+                    fact: pa
+th_provider_platform_interfa
+ce 2.1.2 depends on 
+platform ^3.0.0
+SLVR:                       
+                    fact: pa
+th_provider_platform_interfa
+ce 2.1.2 depends on 
+plugin_platform_interface 
+^2.1.7
+SLVR:                       
+                      
+selecting path_provider_plat
+form_interface 2.1.2
+SLVR:                       
+                      
+derived: 
+plugin_platform_interface 
+^2.1.7
+SLVR:                       
+                      
+derived: platform ^3.0.0
+SLVR:                       
+                      fact: 
+path_provider_linux 2.2.1 
+depends on ffi >=1.1.2 
+<3.0.0
+SLVR:                       
+                      fact: 
+path_provider_linux 2.2.1 
+depends on flutter from sdk
+SLVR:                       
+                      fact: 
+path_provider_linux 2.2.1 
+depends on path ^1.8.0
+SLVR:                       
+                      fact: 
+path_provider_linux 2.2.1 
+depends on path_provider_pla
+tform_interface ^2.1.0
+SLVR:                       
+                      fact: 
+path_provider_linux 2.2.1 
+depends on xdg_directories 
+>=0.2.0 <2.0.0
+SLVR:                       
+                        
+selecting 
+path_provider_linux 2.2.1
+SLVR:                       
+                        
+derived: xdg_directories 
+>=0.2.0 <2.0.0
+SLVR:                       
+                        
+fact: 
+path_provider_foundation 
+2.5.1 depends on flutter 
+from sdk
+SLVR:                       
+                        
+fact: 
+path_provider_foundation 
+2.5.1 depends on path_provid
+er_platform_interface ^2.1.0
+SLVR:                       
+                          
+selecting 
+path_provider_foundation 
+2.5.1
+SLVR:                       
+                          
+fact: path_provider_android 
+2.2.22 depends on flutter 
+from sdk
+SLVR:                       
+                          
+fact: path_provider_android 
+2.2.22 depends on path_provi
+der_platform_interface 
+^2.1.0
+SLVR:                       
+                            
+selecting 
+path_provider_android 2.2.22
+SLVR:                       
+                            
+fact: flutter_secure_storage
+_windows 4.1.0 depends on 
+ffi ^2.0.0
+SLVR:                       
+                            
+fact: flutter_secure_storage
+_windows 4.1.0 depends on 
+flutter from sdk
+SLVR:                       
+                            
+fact: flutter_secure_storage
+_windows 4.1.0 depends on fl
+utter_secure_storage_platfor
+m_interface ^2.0.0
+SLVR:                       
+                            
+fact: flutter_secure_storage
+_windows 4.1.0 depends on 
+path ^1.8.0
+SLVR:                       
+                            
+fact: flutter_secure_storage
+_windows 4.1.0 depends on 
+path_provider ^2.0.0
+SLVR:                       
+                            
+fact: flutter_secure_storage
+_windows 4.1.0 depends on 
+win32 ^5.5.4
+SLVR:                       
+                            
+  selecting flutter_secure_s
+torage_windows 4.1.0
+SLVR:                       
+                            
+  derived: win32 ^5.5.4
+SLVR:                       
+                            
+  fact: 
+flutter_secure_storage_web 
+2.1.0 depends on flutter 
+from sdk
+SLVR:                       
+                            
+  fact: 
+flutter_secure_storage_web 
+2.1.0 depends on flutter_sec
+ure_storage_platform_interfa
+ce ^2.0.0
+SLVR:                       
+                            
+  fact: 
+flutter_secure_storage_web 
+2.1.0 depends on 
+flutter_web_plugins from sdk
+SLVR:                       
+                            
+  fact: 
+flutter_secure_storage_web 
+2.1.0 depends on web 
+>=0.5.0 <2.0.0
+SLVR:                       
+                            
+    selecting 
+flutter_secure_storage_web 
+2.1.0
+SLVR:                       
+                            
+    derived: web >=0.5.0 
+<2.0.0
+SLVR:                       
+                            
+    derived: 
+flutter_web_plugins from sdk
+SLVR:                       
+                            
+    fact: flutter_secure_sto
+rage_platform_interface 
+2.0.1 depends on flutter 
+from sdk
+SLVR:                       
+                            
+    fact: flutter_secure_sto
+rage_platform_interface 
+2.0.1 depends on 
+plugin_platform_interface 
+^2.0.1
+SLVR:                       
+                            
+      selecting flutter_secu
+re_storage_platform_interfac
+e 2.0.1
+SLVR:                       
+                            
+      fact: flutter_secure_s
+torage_linux 3.0.0 depends 
+on flutter from sdk
+SLVR:                       
+                            
+      fact: flutter_secure_s
+torage_linux 3.0.0 depends 
+on flutter_secure_storage_pl
+atform_interface ^2.0.0
+SLVR:                       
+                            
+        selecting flutter_se
+cure_storage_linux 3.0.0
+SLVR:                       
+                            
+        fact: flutter_secure
+_storage_darwin 0.2.0 
+depends on flutter from sdk
+SLVR:                       
+                            
+        fact: flutter_secure
+_storage_darwin 0.2.0 
+depends on 
+plugin_platform_interface 
+^2.0.2
+SLVR:                       
+                            
+          selecting flutter_
+secure_storage_darwin 0.2.0
+SLVR:                       
+                            
+          fact: 
+shared_preferences_windows 
+2.4.1 depends on file 
+>=6.0.0 <8.0.0
+SLVR:                       
+                            
+          fact: 
+shared_preferences_windows 
+2.4.1 depends on flutter 
+from sdk
+SLVR:                       
+                            
+          fact: 
+shared_preferences_windows 
+2.4.1 depends on path ^1.8.0
+SLVR:                       
+                            
+          fact: 
+shared_preferences_windows 
+2.4.1 depends on path_provid
+er_platform_interface ^2.0.0
+SLVR:                       
+                            
+          fact: 
+shared_preferences_windows 
+2.4.1 depends on 
+path_provider_windows ^2.0.0
+SLVR:                       
+                            
+          fact: 
+shared_preferences_windows 
+2.4.1 depends on shared_pref
+erences_platform_interface 
+^2.4.0
+SLVR:                       
+                            
+            selecting 
+shared_preferences_windows 
+2.4.1
+SLVR:                       
+                            
+            derived: file 
+>=6.0.0 <8.0.0
+SLVR:                       
+                            
+            fact: 
+shared_preferences_web 
+2.4.3 depends on flutter 
+from sdk
+SLVR:                       
+                            
+            fact: 
+shared_preferences_web 
+2.4.3 depends on 
+flutter_web_plugins from sdk
+SLVR:                       
+                            
+            fact: 
+shared_preferences_web 
+2.4.3 depends on shared_pref
+erences_platform_interface 
+^2.4.0
+SLVR:                       
+                            
+            fact: 
+shared_preferences_web 
+2.4.3 depends on web 
+>=0.5.1 <2.0.0
+SLVR:                       
+                            
+              selecting 
+shared_preferences_web 2.4.3
+SLVR:                       
+                            
+              derived: web 
+>=0.5.1 <2.0.0
+SLVR:                       
+                            
+              fact: shared_p
+references_platform_interfac
+e 2.4.1 depends on flutter 
+from sdk
+SLVR:                       
+                            
+              fact: shared_p
+references_platform_interfac
+e 2.4.1 depends on 
+plugin_platform_interface 
+^2.1.7
+SLVR:                       
+                            
+                selecting sh
+ared_preferences_platform_in
+terface 2.4.1
+SLVR:                       
+                            
+                fact: 
+shared_preferences_linux 
+2.4.1 depends on file 
+>=6.0.0 <8.0.0
+SLVR:                       
+                            
+                fact: 
+shared_preferences_linux 
+2.4.1 depends on flutter 
+from sdk
+SLVR:                       
+                            
+                fact: 
+shared_preferences_linux 
+2.4.1 depends on path ^1.8.0
+SLVR:                       
+                            
+                fact: 
+shared_preferences_linux 
+2.4.1 depends on 
+path_provider_linux ^2.0.0
+SLVR:                       
+                            
+                fact: 
+shared_preferences_linux 
+2.4.1 depends on path_provid
+er_platform_interface ^2.0.0
+SLVR:                       
+                            
+                fact: 
+shared_preferences_linux 
+2.4.1 depends on shared_pref
+erences_platform_interface 
+^2.4.0
+SLVR:                       
+                            
+                  selecting 
+shared_preferences_linux 
+2.4.1
+SLVR:                       
+                            
+                  fact: shar
+ed_preferences_foundation 
+2.5.6 depends on flutter 
+from sdk
+SLVR:                       
+                            
+                  fact: shar
+ed_preferences_foundation 
+2.5.6 depends on shared_pref
+erences_platform_interface 
+^2.4.0
+SLVR:                       
+                            
+                    
+selecting shared_preferences
+_foundation 2.5.6
+SLVR:                       
+                            
+                    fact: 
+shared_preferences_android 
+2.4.20 depends on flutter 
+from sdk
+SLVR:                       
+                            
+                    fact: 
+shared_preferences_android 
+2.4.20 depends on shared_pre
+ferences_platform_interface 
+^2.4.0
+SLVR:                       
+                            
+                      
+selecting 
+shared_preferences_android 
+2.4.20
+SLVR:                       
+                            
+                        
+selecting sky_engine 0.0.0 
+from sdk
+SLVR:                       
+                            
+                        
+fact: 
+material_color_utilities 
+0.11.1 depends on 
+collection ^1.15.0
+SLVR:                       
+                            
+                          
+selecting 
+material_color_utilities 
+0.11.1
+SLVR:                       
+                            
+                            
+selecting characters 1.4.0
+SLVR:                       
+                            
+                            
+fact: async 2.13.0 depends 
+on collection ^1.15.0
+SLVR:                       
+                            
+                            
+fact: async 2.13.0 depends 
+on meta ^1.3.0
+SLVR:                       
+                            
+                            
+  selecting async 2.13.0
+SLVR:                       
+                            
+                            
+  fact: 
+leak_tracker_testing 3.0.2 
+depends on leak_tracker 
+>=9.0.0 <12.0.0
+SLVR:                       
+                            
+                            
+  fact: 
+leak_tracker_testing 3.0.2 
+depends on matcher ^0.12.16
+SLVR:                       
+                            
+                            
+  fact: 
+leak_tracker_testing 3.0.2 
+depends on meta ^1.11.0
+SLVR:                       
+                            
+                            
+    selecting 
+leak_tracker_testing 3.0.2
+SLVR:                       
+                            
+                            
+    fact: leak_tracker 
+11.0.2 depends on clock 
+^1.1.1
+SLVR:                       
+                            
+                            
+    fact: leak_tracker 
+11.0.2 depends on 
+collection ^1.15.0
+SLVR:                       
+                            
+                            
+    fact: leak_tracker 
+11.0.2 depends on meta 
+^1.8.0
+SLVR:                       
+                            
+                            
+    fact: leak_tracker 
+11.0.2 depends on path 
+^1.8.3
+SLVR:                       
+                            
+                            
+    fact: leak_tracker 
+11.0.2 depends on 
+vm_service >=11.10.0 <16.0.0
+SLVR:                       
+                            
+                            
+      selecting 
+leak_tracker 11.0.2
+SLVR:                       
+                            
+                            
+      derived: vm_service 
+>=11.10.0 <16.0.0
+SLVR:                       
+                            
+                            
+        selecting 
+term_glyph 1.2.2
+SLVR:                       
+                            
+                            
+        fact: 
+string_scanner 1.4.1 
+depends on source_span 
+^1.8.0
+SLVR:                       
+                            
+                            
+          selecting 
+string_scanner 1.4.1
+SLVR:                       
+                            
+                            
+          fact: source_span 
+1.10.2 depends on 
+collection ^1.15.0
+SLVR:                       
+                            
+                            
+          fact: source_span 
+1.10.2 depends on path 
+^1.8.0
+SLVR:                       
+                            
+                            
+          fact: source_span 
+1.10.2 depends on 
+term_glyph ^1.2.0
+SLVR:                       
+                            
+                            
+            selecting 
+source_span 1.10.2
+SLVR:                       
+                            
+                            
+            fact: 
+boolean_selector 2.1.2 
+depends on source_span 
+^1.8.0
+SLVR:                       
+                            
+                            
+            fact: 
+boolean_selector 2.1.2 
+depends on string_scanner 
+^1.1.0
+SLVR:                       
+                            
+                            
+              selecting 
+boolean_selector 2.1.2
+SLVR:                       
+                            
+                            
+                selecting 
+ffi 2.2.0
+SLVR:                       
+                            
+                            
+                fact: 
+plugin_platform_interface 
+2.1.8 depends on meta ^1.3.0
+SLVR:                       
+                            
+                            
+                  selecting 
+plugin_platform_interface 
+2.1.8
+SLVR:                       
+                            
+                            
+                    
+selecting platform 3.1.6
+SLVR:                       
+                            
+                            
+                    fact: 
+xdg_directories 1.1.0 
+depends on meta ^1.3.0
+SLVR:                       
+                            
+                            
+                    fact: 
+xdg_directories 1.1.0 
+depends on path ^1.8.0
+SLVR:                       
+                            
+                            
+                      
+selecting xdg_directories 
+1.1.0
+SLVR:                       
+                            
+                            
+                      fact: 
+win32 5.15.0 depends on ffi 
+^2.1.4
+SLVR:                       
+                            
+                            
+                        
+selecting win32 5.15.0
+SLVR:                       
+                            
+                            
+                          
+selecting web 1.1.1
+SLVR:                       
+                            
+                            
+                          
+fact: flutter_web_plugins 
+0.0.0 from sdk depends on 
+flutter from sdk
+SLVR:                       
+                            
+                            
+                            
+selecting 
+flutter_web_plugins 0.0.0 
+from sdk
+SLVR:                       
+                            
+                            
+                            
+fact: file 7.0.1 depends on 
+meta ^1.9.1
+SLVR:                       
+                            
+                            
+                            
+fact: file 7.0.1 depends on 
+path ^1.8.3
+SLVR:                       
+                            
+                            
+                            
+  selecting file 7.0.1
+SLVR:                       
+                            
+                            
+                            
+    selecting vm_service 
+15.0.2
+SLVR: Version solving took 
+0:00:00.844498 seconds.
+    | Tried 1 solutions.
+FINE: Resolving 
+dependencies finished 
+(0.851s).
+MSG : Downloading packages...
+FINE: Downloading packages 
+finished (0.042s).
+IO  : Get versions from http
+s://pub.dev/api/packages/sha
+red_preferences_android.
+IO  : HTTP GET https://pub.d
+ev/api/packages/shared_prefe
+rences_android
+    | Accept: 
+application/vnd.pub.v2+json
+    | X-Pub-OS: windows
+    | X-Pub-Command: publish
+    | X-Pub-Session-ID: C095
+2020-4383-4485-A77F-B6A03AC3
+C62E
+    | X-Pub-Environment: 
+flutter_cli:forward
+    | user-agent: Dart pub 
+3.10.1
+IO  : HTTP response 200 OK 
+for GET https://pub.dev/api/
+packages/shared_preferences_
+android
+    | took 0:00:00.144071
+    | x-goog-storage-class: 
+STANDARD
+    | last-modified: Mon, 
+26 Jan 2026 23:39:28 GMT
+    | cache-control: 
+public, max-age=120
+    | date: Sat, 14 Feb 
+2026 13:26:10 GMT
+    | vary: Accept-Encoding
+    | content-encoding: gzip
+    | x-goog-stored-content-
+length: 4048
+    | age: 7
+    | x-guploader-uploadid: 
+AJRbA5UMvioTQLLmLK0qLwnM8b1B
+XD2mU1LlVfooAbMgpEg0J6mUJQDA
+FUKb8KGzecN_jUwrqqP3i1Q
+    | x-goog-hash: crc32c=Yc
+JLmg==,md5=2PKmNwsT1N7hs1jq7
+26loA==
+    | content-type: 
+application/json; 
+charset="utf-8"
+    | x-goog-generation: 
+1769470768546154
+    | server: UploadServer
+    | alt-svc: h3=":443"; 
+ma=2592000,h3-29=":443"; 
+ma=2592000
+    | 
+x-goog-meta-validated: 
+2026-01-26T23:39:28.496747
+    | accept-ranges: bytes
+    | content-length: 4048
+    | x-goog-stored-content-
+encoding: gzip
+    | etag: "d8f2a6370b13d4d
+ee1b358eaef6ea5a0"
+    | via: 1.1 google
+    | 
+x-goog-metageneration: 1
+    | expires: Sat, 14 Feb 
+2026 13:28:10 GMT
+IO  : Writing 49716 
+characters to text file C:\U
+sers\Asus\AppData\Local\Pub\
+Cache\hosted\pub.dev\.cache\
+shared_preferences_android-v
+ersions.json.
+FINE: Contents:
+    | {"name":"shared_prefer
+ences_android","latest":{"ve
+rsion":"2.4.20","pubspec":{"
+name":"shared_preferences_an
+droid","description":"Androi
+d implementation of the 
+shared_preferences plugin","
+repository":"https://github.
+com/flutter/packages/tree/ma
+in/packages/shared_preferenc
+es/shared_preferences_androi
+d","issue_tracker":"https://
+github.com/flutter/flutter/i
+ssues?q=is%3Aissue+is%3Aopen
++label%3A%22p%3A+shared_pref
+erences%22","version":"2.4.2
+0","environment":{"sdk":"^3.
+9.0","flutter":">=3.35.0"},"
+flutter":{"plugin":{"impleme
+nts":"shared_preferences","p
+latforms":{"android":{"packa
+ge":"io.flutter.plugins.shar
+edpreferences","pluginClass"
+:"SharedPreferencesPlugin","
+dartPluginClass":"SharedPref
+erencesAndroid"}}}},"depende
+ncies":{"flutter":{"sdk":"fl
+utter"},"shared_preferences_
+platform_interface":"^2.4.0"
+},"dev_dependencies":{"flutt
+er_test":{"sdk":"flutter"},"
+pigeon":"^26.1.0"},"topics":
+["persistence","shared-prefe
+rences","storage"]},"archive
+_url":"https://pub.dev/api/a
+rchives/shared_preferences_a
+ndroid-2.4.20.tar.gz","archi
+ve_sha256":"cbc40be9be1c5af4
+dab4d6e0de4d5d3729e6f3d65b89
+d21e1815d57705644a6f","publi
+shed":"2026-01-26T23:38:38.4
+77677Z"},"versions":[{"versi
+on":"2.0.8","pubspec":{"name
+":"shared_preferences_androi
+d","description":"Android 
+implementation of the 
+shared_preferences plugin","
+repository":"https://github.
+com/flutter/plugins/tree/mas
+ter/packages/shared_preferen
+ces/shared_preferences_andro
+id","issue_tracker":"https:/
+/github.com/flutter/flutter/
+issues?q=is%3Aissue+is%3Aope
+n+label%3A%22p%3A+shared_pre
+ferences%22","version":"2.0.
+8","environment":{"sdk":">=2
+.14.0 <3.0.0","flutter":">=2
+.5.0"},"flutter":{"plugin":{
+"implements":"shared_prefere
+nces","platforms":{"android"
+:{"package":"io.flutter.plug
+ins.sharedpreferences","plug
+inClass":"SharedPreferencesP
+lugin"}}}},"dependencies":{"
+flutter":{"sdk":"flutter"},"
+meta":"^1.3.0","shared_prefe
+rences_platform_interface":"
+^2.0.0"},"dev_dependencies":
+{"flutter_test":{"sdk":"flut
+ter"},"pedantic":"^1.10.0"}}
+,"archive_url":"https://pub.
+dev/api/archives/shared_pref
+erences_android-2.0.8.tar.gz
+","archive_sha256":"042776e2
+90522e1f919a5ae9d714b6ee4d5b
+70f60ca91e73c26385450cfe02e3
+","published":"2021-11-19T02
+:39:13.814975Z"},{"version":
+"2.0.9","pubspec":{"name":"s
+hared_preferences_android","
+description":"Android 
+implementation of the 
+shared_preferences plugin","
+repository":"https://github.
+com/flutter/plugins/tree/mas
+ter/packages/shared_preferen
+ces/shared_preferences_andro
+id","issue_tracker":"https:/
+/github.com/flutter/flutter/
+issues?q=is%3Aissue+is%3Aope
+n+label%3A%22p%3A+shared_pre
+ferences%22","version":"2.0.
+9","environment":{"sdk":">=2
+.14.0 <3.0.0","flutter":">=2
+.5.0"},"flutter":{"plugin":{
+"implements":"shared_prefere
+nces","platforms":{"android"
+:{"package":"io.flutter.plug
+ins.sharedpreferences","plug
+inClass":"SharedPreferencesP
+lugin"}}}},"dependencies":{"
+flutter":{"sdk":"flutter"},"
+meta":"^1.3.0","shared_prefe
+rences_platform_interface":"
+^2.0.0"},"dev_dependencies":
+{"flutter_test":{"sdk":"flut
+ter"},"pedantic":"^1.10.0"}}
+,"archive_url":"https://pub.
+dev/api/archives/shared_pref
+erences_android-2.0.9.tar.gz
+","archive_sha256":"54eead0b
+53ed93d0c5d45dd1d39298d49748
+9e0f1246aa8fb3d94372c9be9b35
+","published":"2021-11-22T21
+:27:23.161765Z"},{"version":
+"2.0.10","pubspec":{"name":"
+shared_preferences_android",
+"description":"Android 
+implementation of the 
+shared_preferences plugin","
+repository":"https://github.
+com/flutter/plugins/tree/mas
+ter/packages/shared_preferen
+ces/shared_preferences_andro
+id","issue_tracker":"https:/
+/github.com/flutter/flutter/
+issues?q=is%3Aissue+is%3Aope
+n+label%3A%22p%3A+shared_pre
+ferences%22","version":"2.0.
+10","environment":{"sdk":">=
+2.14.0 <3.0.0","flutter":">=
+2.5.0"},"flutter":{"plugin":
+{"implements":"shared_prefer
+ences","platforms":{"android
+":{"package":"io.flutter.plu
+gins.sharedpreferences","plu
+ginClass":"SharedPreferences
+Plugin"}}}},"dependencies":{
+"flutter":{"sdk":"flutter"},
+"shared_preferences_platform
+_interface":"^2.0.0"},"dev_d
+ependencies":{"flutter_test"
+:{"sdk":"flutter"},"pedantic
+":"^1.10.0"}},"archive_url":
+"https://pub.dev/api/archive
+s/shared_preferences_android
+-2.0.10.tar.gz","archive_sha
+256":"eb5f8ca2adb3303e094997
+1b8bc6408c67b5000502b838ee6c
+b0ef96cd29e708","published":
+"2022-01-10T19:24:25.442871Z
+"},{"version":"2.0.11","pubs
+pec":{"name":"shared_prefere
+nces_android","description":
+"Android implementation of 
+the shared_preferences plugi
+n","repository":"https://git
+hub.com/flutter/plugins/tree
+/main/packages/shared_prefer
+ences/shared_preferences_and
+roid","issue_tracker":"https
+://github.com/flutter/flutte
+r/issues?q=is%3Aissue+is%3Ao
+pen+label%3A%22p%3A+shared_p
+references%22","version":"2.
+0.11","environment":{"sdk":"
+>=2.14.0 <3.0.0","flutter":"
+>=2.8.0"},"flutter":{"plugin
+":{"implements":"shared_pref
+erences","platforms":{"andro
+id":{"package":"io.flutter.p
+lugins.sharedpreferences","p
+luginClass":"SharedPreferenc
+esPlugin","dartPluginClass":
+"SharedPreferencesAndroid"}}
+}},"dependencies":{"flutter"
+:{"sdk":"flutter"},"shared_p
+references_platform_interfac
+e":"^2.0.0"},"dev_dependenci
+es":{"flutter_test":{"sdk":"
+flutter"}}},"archive_url":"h
+ttps://pub.dev/api/archives/
+shared_preferences_android-2
+.0.11.tar.gz","archive_sha25
+6":"bc236594233d10b7668dd904
+14fe0e09d906115aaa1dfe269e47
+8e5f2af532a6","published":"2
+022-02-09T20:04:27.274714Z"}
+,{"version":"2.0.12","pubspe
+c":{"name":"shared_preferenc
+es_android","description":"A
+ndroid implementation of 
+the shared_preferences plugi
+n","repository":"https://git
+hub.com/flutter/plugins/tree
+/main/packages/shared_prefer
+ences/shared_preferences_and
+roid","issue_tracker":"https
+://github.com/flutter/flutte
+r/issues?q=is%3Aissue+is%3Ao
+pen+label%3A%22p%3A+shared_p
+references%22","version":"2.
+0.12","environment":{"sdk":"
+>=2.14.0 <3.0.0","flutter":"
+>=2.8.0"},"flutter":{"plugin
+":{"implements":"shared_pref
+erences","platforms":{"andro
+id":{"package":"io.flutter.p
+lugins.sharedpreferences","p
+luginClass":"SharedPreferenc
+esPlugin","dartPluginClass":
+"SharedPreferencesAndroid"}}
+}},"dependencies":{"flutter"
+:{"sdk":"flutter"},"shared_p
+references_platform_interfac
+e":"^2.0.0"},"dev_dependenci
+es":{"flutter_test":{"sdk":"
+flutter"}}},"archive_url":"h
+ttps://pub.dev/api/archives/
+shared_preferences_android-2
+.0.12.tar.gz","archive_sha25
+6":"853801ce6ba7429ec4e923e3
+7317f32a57c903de50b8c33ffcfb
+db7e6f0dd39c","published":"2
+022-05-10T19:40:40.168326Z"}
+,{"version":"2.0.13","pubspe
+c":{"name":"shared_preferenc
+es_android","description":"A
+ndroid implementation of 
+the shared_preferences plugi
+n","repository":"https://git
+hub.com/flutter/plugins/tree
+/main/packages/shared_prefer
+ences/shared_preferences_and
+roid","issue_tracker":"https
+://github.com/flutter/flutte
+r/issues?q=is%3Aissue+is%3Ao
+pen+label%3A%22p%3A+shared_p
+references%22","version":"2.
+0.13","environment":{"sdk":"
+>=2.14.0 <3.0.0","flutter":"
+>=2.10.0"},"flutter":{"plugi
+n":{"implements":"shared_pre
+ferences","platforms":{"andr
+oid":{"package":"io.flutter.
+plugins.sharedpreferences","
+pluginClass":"SharedPreferen
+cesPlugin","dartPluginClass"
+:"SharedPreferencesAndroid"}
+}}},"dependencies":{"flutter
+":{"sdk":"flutter"},"shared_
+preferences_platform_interfa
+ce":"^2.0.0"},"dev_dependenc
+ies":{"flutter_test":{"sdk":
+"flutter"}}},"archive_url":"
+https://pub.dev/api/archives
+/shared_preferences_android-
+2.0.13.tar.gz","archive_sha2
+56":"3e128864b9cff21bdd5b3ad
+569953070a851d62901bee880bb0
+52b1110b38007","published":"
+2022-09-06T21:34:25.454434Z"
+},{"version":"2.0.14","pubsp
+ec":{"name":"shared_preferen
+ces_android","description":"
+Android implementation of 
+the shared_preferences plugi
+n","repository":"https://git
+hub.com/flutter/plugins/tree
+/main/packages/shared_prefer
+ences/shared_preferences_and
+roid","issue_tracker":"https
+://github.com/flutter/flutte
+r/issues?q=is%3Aissue+is%3Ao
+pen+label%3A%22p%3A+shared_p
+references%22","version":"2.
+0.14","environment":{"sdk":"
+>=2.14.0 <3.0.0","flutter":"
+>=2.10.0"},"flutter":{"plugi
+n":{"implements":"shared_pre
+ferences","platforms":{"andr
+oid":{"package":"io.flutter.
+plugins.sharedpreferences","
+pluginClass":"SharedPreferen
+cesPlugin","dartPluginClass"
+:"SharedPreferencesAndroid"}
+}}},"dependencies":{"flutter
+":{"sdk":"flutter"},"shared_
+preferences_platform_interfa
+ce":"^2.0.0"},"dev_dependenc
+ies":{"flutter_test":{"sdk":
+"flutter"}}},"archive_url":"
+https://pub.dev/api/archives
+/shared_preferences_android-
+2.0.14.tar.gz","archive_sha2
+56":"8e251f3c986002b65fed639
+6bce81f379fb63c27317d49743cf
+289fd0fd1ab97","published":"
+2022-10-14T17:39:11.310311Z"
+},{"version":"2.0.15","pubsp
+ec":{"name":"shared_preferen
+ces_android","description":"
+Android implementation of 
+the shared_preferences plugi
+n","repository":"https://git
+hub.com/flutter/plugins/tree
+/main/packages/shared_prefer
+ences/shared_preferences_and
+roid","issue_tracker":"https
+://github.com/flutter/flutte
+r/issues?q=is%3Aissue+is%3Ao
+pen+label%3A%22p%3A+shared_p
+references%22","version":"2.
+0.15","environment":{"sdk":"
+>=2.14.0 <3.0.0","flutter":"
+>=2.10.0"},"flutter":{"plugi
+n":{"implements":"shared_pre
+ferences","platforms":{"andr
+oid":{"package":"io.flutter.
+plugins.sharedpreferences","
+pluginClass":"SharedPreferen
+cesPlugin","dartPluginClass"
+:"SharedPreferencesAndroid"}
+}}},"dependencies":{"flutter
+":{"sdk":"flutter"},"shared_
+preferences_platform_interfa
+ce":"^2.0.0"},"dev_dependenc
+ies":{"flutter_test":{"sdk":
+"flutter"}}},"archive_url":"
+https://pub.dev/api/archives
+/shared_preferences_android-
+2.0.15.tar.gz","archive_sha2
+56":"955e9736a12ba776bdd261c
+f030232b30eadfcd9c79b32a3250
+dd4a494e8c8f7","published":"
+2023-01-20T19:38:09.792567Z"
+},{"version":"2.0.16","pubsp
+ec":{"name":"shared_preferen
+ces_android","description":"
+Android implementation of 
+the shared_preferences plugi
+n","repository":"https://git
+hub.com/flutter/packages/tre
+e/main/packages/shared_prefe
+rences/shared_preferences_an
+droid","issue_tracker":"http
+s://github.com/flutter/flutt
+er/issues?q=is%3Aissue+is%3A
+open+label%3A%22p%3A+shared_
+preferences%22","version":"2
+.0.16","environment":{"sdk":
+">=2.14.0 <3.0.0","flutter":
+">=3.0.0"},"flutter":{"plugi
+n":{"implements":"shared_pre
+ferences","platforms":{"andr
+oid":{"package":"io.flutter.
+plugins.sharedpreferences","
+pluginClass":"SharedPreferen
+cesPlugin","dartPluginClass"
+:"SharedPreferencesAndroid"}
+}}},"dependencies":{"flutter
+":{"sdk":"flutter"},"shared_
+preferences_platform_interfa
+ce":"^2.0.0"},"dev_dependenc
+ies":{"flutter_test":{"sdk":
+"flutter"}}},"archive_url":"
+https://pub.dev/api/archives
+/shared_preferences_android-
+2.0.16.tar.gz","archive_sha2
+56":"a51a4f9375097f94df1c6e0
+a49c0374440d31ab026b59d58a7e
+7660675879db4","published":"
+2023-02-22T20:37:59.180203Z"
+},{"version":"2.0.17","pubsp
+ec":{"name":"shared_preferen
+ces_android","description":"
+Android implementation of 
+the shared_preferences plugi
+n","repository":"https://git
+hub.com/flutter/packages/tre
+e/main/packages/shared_prefe
+rences/shared_preferences_an
+droid","issue_tracker":"http
+s://github.com/flutter/flutt
+er/issues?q=is%3Aissue+is%3A
+open+label%3A%22p%3A+shared_
+preferences%22","version":"2
+.0.17","environment":{"sdk":
+">=2.17.0 <3.0.0","flutter":
+">=3.0.0"},"flutter":{"plugi
+n":{"implements":"shared_pre
+ferences","platforms":{"andr
+oid":{"package":"io.flutter.
+plugins.sharedpreferences","
+pluginClass":"SharedPreferen
+cesPlugin","dartPluginClass"
+:"SharedPreferencesAndroid"}
+}}},"dependencies":{"flutter
+":{"sdk":"flutter"},"shared_
+preferences_platform_interfa
+ce":"^2.0.0"},"dev_dependenc
+ies":{"flutter_test":{"sdk":
+"flutter"}}},"archive_url":"
+https://pub.dev/api/archives
+/shared_preferences_android-
+2.0.17.tar.gz","archive_sha2
+56":"ad423a80fe7b4e48b50d611
+1b3ea1027af0e959e49d485712e1
+34863d9c1c521","published":"
+2023-03-08T18:26:20.544671Z"
+},{"version":"2.1.0","pubspe
+c":{"name":"shared_preferenc
+es_android","description":"A
+ndroid implementation of 
+the shared_preferences plugi
+n","repository":"https://git
+hub.com/flutter/packages/tre
+e/main/packages/shared_prefe
+rences/shared_preferences_an
+droid","issue_tracker":"http
+s://github.com/flutter/flutt
+er/issues?q=is%3Aissue+is%3A
+open+label%3A%22p%3A+shared_
+preferences%22","version":"2
+.1.0","environment":{"sdk":"
+>=2.17.0 <4.0.0","flutter":"
+>=3.0.0"},"flutter":{"plugin
+":{"implements":"shared_pref
+erences","platforms":{"andro
+id":{"package":"io.flutter.p
+lugins.sharedpreferences","p
+luginClass":"SharedPreferenc
+esPlugin","dartPluginClass":
+"SharedPreferencesAndroid"}}
+}},"dependencies":{"flutter"
+:{"sdk":"flutter"},"shared_p
+references_platform_interfac
+e":"^2.2.0"},"dev_dependenci
+es":{"flutter_test":{"sdk":"
+flutter"}}},"archive_url":"h
+ttps://pub.dev/api/archives/
+shared_preferences_android-2
+.1.0.tar.gz","archive_sha256
+":"8304d8a1f7d21a429f91dee55
+2792249362b68a331ac5c3c1caf3
+70f658873f6","published":"20
+23-03-31T14:49:32.914980Z"},
+{"version":"2.1.1","retracte
+d":true,"pubspec":{"name":"s
+hared_preferences_android","
+description":"Android 
+implementation of the 
+shared_preferences plugin","
+repository":"https://github.
+com/flutter/packages/tree/ma
+in/packages/shared_preferenc
+es/shared_preferences_androi
+d","issue_tracker":"https://
+github.com/flutter/flutter/i
+ssues?q=is%3Aissue+is%3Aopen
++label%3A%22p%3A+shared_pref
+erences%22","version":"2.1.1
+","environment":{"sdk":">=2.
+17.0 <4.0.0","flutter":">=3.
+0.0"},"flutter":{"plugin":{"
+implements":"shared_preferen
+ces","platforms":{"android":
+{"package":"io.flutter.plugi
+ns.sharedpreferences","plugi
+nClass":"SharedPreferencesPl
+ugin","dartPluginClass":"Sha
+redPreferencesAndroid"}}}},"
+dependencies":{"flutter":{"s
+dk":"flutter"},"shared_prefe
+rences_platform_interface":"
+^2.2.0"},"dev_dependencies":
+{"flutter_test":{"sdk":"flut
+ter"},"pigeon":"^9.2.3"}},"a
+rchive_url":"https://pub.dev
+/api/archives/shared_prefere
+nces_android-2.1.1.tar.gz","
+archive_sha256":"1bc5d734b10
+9c327b922b0891b41fc51483ccbd
+53c0d19952b7e230349a5d90b","
+published":"2023-04-13T19:33
+:54.985681Z"},{"version":"2.
+1.2","pubspec":{"name":"shar
+ed_preferences_android","des
+cription":"Android 
+implementation of the 
+shared_preferences plugin","
+repository":"https://github.
+com/flutter/packages/tree/ma
+in/packages/shared_preferenc
+es/shared_preferences_androi
+d","issue_tracker":"https://
+github.com/flutter/flutter/i
+ssues?q=is%3Aissue+is%3Aopen
++label%3A%22p%3A+shared_pref
+erences%22","version":"2.1.2
+","environment":{"sdk":">=2.
+17.0 <4.0.0","flutter":">=3.
+0.0"},"flutter":{"plugin":{"
+implements":"shared_preferen
+ces","platforms":{"android":
+{"package":"io.flutter.plugi
+ns.sharedpreferences","plugi
+nClass":"SharedPreferencesPl
+ugin","dartPluginClass":"Sha
+redPreferencesAndroid"}}}},"
+dependencies":{"flutter":{"s
+dk":"flutter"},"shared_prefe
+rences_platform_interface":"
+^2.2.0"},"dev_dependencies":
+{"flutter_test":{"sdk":"flut
+ter"},"pigeon":"^9.2.3"}},"a
+rchive_url":"https://pub.dev
+/api/archives/shared_prefere
+nces_android-2.1.2.tar.gz","
+archive_sha256":"7fa90471a68
+75d26ad78c7e4a675874b2043874
+586891128dc5899662c97db46","
+published":"2023-04-14T18:24
+:25.464760Z"},{"version":"2.
+1.3","pubspec":{"name":"shar
+ed_preferences_android","des
+cription":"Android 
+implementation of the 
+shared_preferences plugin","
+repository":"https://github.
+com/flutter/packages/tree/ma
+in/packages/shared_preferenc
+es/shared_preferences_androi
+d","issue_tracker":"https://
+github.com/flutter/flutter/i
+ssues?q=is%3Aissue+is%3Aopen
++label%3A%22p%3A+shared_pref
+erences%22","version":"2.1.3
+","environment":{"sdk":">=2.
+17.0 <4.0.0","flutter":">=3.
+0.0"},"flutter":{"plugin":{"
+implements":"shared_preferen
+ces","platforms":{"android":
+{"package":"io.flutter.plugi
+ns.sharedpreferences","plugi
+nClass":"SharedPreferencesPl
+ugin","dartPluginClass":"Sha
+redPreferencesAndroid"}}}},"
+dependencies":{"flutter":{"s
+dk":"flutter"},"shared_prefe
+rences_platform_interface":"
+^2.2.0"},"dev_dependencies":
+{"flutter_test":{"sdk":"flut
+ter"},"pigeon":"^9.2.3"}},"a
+rchive_url":"https://pub.dev
+/api/archives/shared_prefere
+nces_android-2.1.3.tar.gz","
+archive_sha256":"5d7b3bd0400
+bdd0c03e59a3d3d5314651141a14
+5b58196cd9018b12a2adc0c1b","
+published":"2023-04-26T19:15
+:05.292098Z"},{"version":"2.
+1.4","pubspec":{"name":"shar
+ed_preferences_android","des
+cription":"Android 
+implementation of the 
+shared_preferences plugin","
+repository":"https://github.
+com/flutter/packages/tree/ma
+in/packages/shared_preferenc
+es/shared_preferences_androi
+d","issue_tracker":"https://
+github.com/flutter/flutter/i
+ssues?q=is%3Aissue+is%3Aopen
++label%3A%22p%3A+shared_pref
+erences%22","version":"2.1.4
+","environment":{"sdk":">=2.
+17.0 <4.0.0","flutter":">=3.
+0.0"},"flutter":{"plugin":{"
+implements":"shared_preferen
+ces","platforms":{"android":
+{"package":"io.flutter.plugi
+ns.sharedpreferences","plugi
+nClass":"SharedPreferencesPl
+ugin","dartPluginClass":"Sha
+redPreferencesAndroid"}}}},"
+dependencies":{"flutter":{"s
+dk":"flutter"},"shared_prefe
+rences_platform_interface":"
+^2.2.0"},"dev_dependencies":
+{"flutter_test":{"sdk":"flut
+ter"},"pigeon":"^9.2.3"}},"a
+rchive_url":"https://pub.dev
+/api/archives/shared_prefere
+nces_android-2.1.4.tar.gz","
+archive_sha256":"6478c6bbbec
+fe9aced34c483171e90d7c078f58
+83558b30ec3163cf18402c749","
+published":"2023-04-28T03:16
+:44.271065Z"},{"version":"2.
+2.0","pubspec":{"name":"shar
+ed_preferences_android","des
+cription":"Android 
+implementation of the 
+shared_preferences plugin","
+repository":"https://github.
+com/flutter/packages/tree/ma
+in/packages/shared_preferenc
+es/shared_preferences_androi
+d","issue_tracker":"https://
+github.com/flutter/flutter/i
+ssues?q=is%3Aissue+is%3Aopen
++label%3A%22p%3A+shared_pref
+erences%22","version":"2.2.0
+","environment":{"sdk":">=2.
+18.0 <4.0.0","flutter":">=3.
+3.0"},"flutter":{"plugin":{"
+implements":"shared_preferen
+ces","platforms":{"android":
+{"package":"io.flutter.plugi
+ns.sharedpreferences","plugi
+nClass":"SharedPreferencesPl
+ugin","dartPluginClass":"Sha
+redPreferencesAndroid"}}}},"
+dependencies":{"flutter":{"s
+dk":"flutter"},"shared_prefe
+rences_platform_interface":"
+^2.3.0"},"dev_dependencies":
+{"flutter_test":{"sdk":"flut
+ter"},"pigeon":"^9.2.3"}},"a
+rchive_url":"https://pub.dev
+/api/archives/shared_prefere
+nces_android-2.2.0.tar.gz","
+archive_sha256":"fe8401ec5b6
+dcd739a0fe9588802069e608c3fd
+bfd3c3c93e546cf2f90438076","
+published":"2023-06-29T18:34
+:00.469260Z"},{"version":"2.
+2.1","pubspec":{"name":"shar
+ed_preferences_android","des
+cription":"Android 
+implementation of the 
+shared_preferences plugin","
+repository":"https://github.
+com/flutter/packages/tree/ma
+in/packages/shared_preferenc
+es/shared_preferences_androi
+d","issue_tracker":"https://
+github.com/flutter/flutter/i
+ssues?q=is%3Aissue+is%3Aopen
++label%3A%22p%3A+shared_pref
+erences%22","version":"2.2.1
+","environment":{"sdk":">=2.
+19.0 <4.0.0","flutter":">=3.
+7.0"},"flutter":{"plugin":{"
+implements":"shared_preferen
+ces","platforms":{"android":
+{"package":"io.flutter.plugi
+ns.sharedpreferences","plugi
+nClass":"SharedPreferencesPl
+ugin","dartPluginClass":"Sha
+redPreferencesAndroid"}}}},"
+dependencies":{"flutter":{"s
+dk":"flutter"},"shared_prefe
+rences_platform_interface":"
+^2.3.0"},"dev_dependencies":
+{"flutter_test":{"sdk":"flut
+ter"},"pigeon":"^9.2.3"},"to
+pics":["persistence","shared
+-preferences","storage"]},"a
+rchive_url":"https://pub.dev
+/api/archives/shared_prefere
+nces_android-2.2.1.tar.gz","
+archive_sha256":"8568a389334
+b6e83415b6aae55378e158fbc231
+4e074983362d20c562780fb06","
+published":"2023-08-30T15:16
+:31.017127Z"},{"version":"2.
+2.2","pubspec":{"name":"shar
+ed_preferences_android","des
+cription":"Android 
+implementation of the 
+shared_preferences plugin","
+repository":"https://github.
+com/flutter/packages/tree/ma
+in/packages/shared_preferenc
+es/shared_preferences_androi
+d","issue_tracker":"https://
+github.com/flutter/flutter/i
+ssues?q=is%3Aissue+is%3Aopen
++label%3A%22p%3A+shared_pref
+erences%22","version":"2.2.2
+","environment":{"sdk":"^3.2
+.0","flutter":">=3.16.0"},"f
+lutter":{"plugin":{"implemen
+ts":"shared_preferences","pl
+atforms":{"android":{"packag
+e":"io.flutter.plugins.share
+dpreferences","pluginClass":
+"SharedPreferencesPlugin","d
+artPluginClass":"SharedPrefe
+rencesAndroid"}}}},"dependen
+cies":{"flutter":{"sdk":"flu
+tter"},"shared_preferences_p
+latform_interface":"^2.3.0"}
+,"dev_dependencies":{"flutte
+r_test":{"sdk":"flutter"},"p
+igeon":"^9.2.3"},"topics":["
+persistence","shared-prefere
+nces","storage"]},"archive_u
+rl":"https://pub.dev/api/arc
+hives/shared_preferences_and
+roid-2.2.2.tar.gz","archive_
+sha256":"1ee8bf911094a1b592d
+e7ab29add6f826a7331fb854273d
+55918693d5364a1f2","publishe
+d":"2024-04-12T19:49:37.3584
+76Z"},{"version":"2.2.3","pu
+bspec":{"name":"shared_prefe
+rences_android","description
+":"Android implementation 
+of the shared_preferences pl
+ugin","repository":"https://
+github.com/flutter/packages/
+tree/main/packages/shared_pr
+eferences/shared_preferences
+_android","issue_tracker":"h
+ttps://github.com/flutter/fl
+utter/issues?q=is%3Aissue+is
+%3Aopen+label%3A%22p%3A+shar
+ed_preferences%22","version"
+:"2.2.3","environment":{"sdk
+":"^3.4.0","flutter":">=3.22
+.0"},"flutter":{"plugin":{"i
+mplements":"shared_preferenc
+es","platforms":{"android":{
+"package":"io.flutter.plugin
+s.sharedpreferences","plugin
+Class":"SharedPreferencesPlu
+gin","dartPluginClass":"Shar
+edPreferencesAndroid"}}}},"d
+ependencies":{"flutter":{"sd
+k":"flutter"},"shared_prefer
+ences_platform_interface":"^
+2.3.0"},"dev_dependencies":{
+"flutter_test":{"sdk":"flutt
+er"},"pigeon":"^9.2.3"},"top
+ics":["persistence","shared-
+preferences","storage"]},"ar
+chive_url":"https://pub.dev/
+api/archives/shared_preferen
+ces_android-2.2.3.tar.gz","a
+rchive_sha256":"93d0ec9dd902
+d85f326068e6a899487d1f65ffcd
+5798721a95330b26c8131577","p
+ublished":"2024-05-28T19:13:
+01.658134Z"},{"version":"2.2
+.4","pubspec":{"name":"share
+d_preferences_android","desc
+ription":"Android 
+implementation of the 
+shared_preferences plugin","
+repository":"https://github.
+com/flutter/packages/tree/ma
+in/packages/shared_preferenc
+es/shared_preferences_androi
+d","issue_tracker":"https://
+github.com/flutter/flutter/i
+ssues?q=is%3Aissue+is%3Aopen
++label%3A%22p%3A+shared_pref
+erences%22","version":"2.2.4
+","environment":{"sdk":"^3.4
+.0","flutter":">=3.22.0"},"f
+lutter":{"plugin":{"implemen
+ts":"shared_preferences","pl
+atforms":{"android":{"packag
+e":"io.flutter.plugins.share
+dpreferences","pluginClass":
+"SharedPreferencesPlugin","d
+artPluginClass":"SharedPrefe
+rencesAndroid"}}}},"dependen
+cies":{"flutter":{"sdk":"flu
+tter"},"shared_preferences_p
+latform_interface":"^2.3.0"}
+,"dev_dependencies":{"flutte
+r_test":{"sdk":"flutter"},"p
+igeon":"^9.2.3"},"topics":["
+persistence","shared-prefere
+nces","storage"]},"archive_u
+rl":"https://pub.dev/api/arc
+hives/shared_preferences_and
+roid-2.2.4.tar.gz","archive_
+sha256":"3d4571b3c5eb58ce52a
+419d86e655493d0bc3020672da79
+f72fa0c16ca3a8ec1","publishe
+d":"2024-07-26T15:07:01.1996
+48Z"},{"version":"2.3.0","pu
+bspec":{"name":"shared_prefe
+rences_android","description
+":"Android implementation 
+of the shared_preferences pl
+ugin","repository":"https://
+github.com/flutter/packages/
+tree/main/packages/shared_pr
+eferences/shared_preferences
+_android","issue_tracker":"h
+ttps://github.com/flutter/fl
+utter/issues?q=is%3Aissue+is
+%3Aopen+label%3A%22p%3A+shar
+ed_preferences%22","version"
+:"2.3.0","environment":{"sdk
+":"^3.4.0","flutter":">=3.22
+.0"},"flutter":{"plugin":{"i
+mplements":"shared_preferenc
+es","platforms":{"android":{
+"package":"io.flutter.plugin
+s.sharedpreferences","plugin
+Class":"SharedPreferencesPlu
+gin","dartPluginClass":"Shar
+edPreferencesAndroid"}}}},"d
+ependencies":{"flutter":{"sd
+k":"flutter"},"shared_prefer
+ences_platform_interface":"^
+2.4.0"},"dev_dependencies":{
+"flutter_test":{"sdk":"flutt
+er"},"pigeon":"^16.0.4"},"to
+pics":["persistence","shared
+-preferences","storage"]},"a
+rchive_url":"https://pub.dev
+/api/archives/shared_prefere
+nces_android-2.3.0.tar.gz","
+archive_sha256":"041be4d9d2d
+c6079cf342bc8b761b03787e3b71
+192d658220a56cac9c04a0294","
+published":"2024-07-30T18:17
+:51.946800Z"},{"version":"2.
+3.1","pubspec":{"name":"shar
+ed_preferences_android","des
+cription":"Android 
+implementation of the 
+shared_preferences plugin","
+repository":"https://github.
+com/flutter/packages/tree/ma
+in/packages/shared_preferenc
+es/shared_preferences_androi
+d","issue_tracker":"https://
+github.com/flutter/flutter/i
+ssues?q=is%3Aissue+is%3Aopen
++label%3A%22p%3A+shared_pref
+erences%22","version":"2.3.1
+","environment":{"sdk":"^3.4
+.0","flutter":">=3.22.0"},"f
+lutter":{"plugin":{"implemen
+ts":"shared_preferences","pl
+atforms":{"android":{"packag
+e":"io.flutter.plugins.share
+dpreferences","pluginClass":
+"SharedPreferencesPlugin","d
+artPluginClass":"SharedPrefe
+rencesAndroid"}}}},"dependen
+cies":{"flutter":{"sdk":"flu
+tter"},"shared_preferences_p
+latform_interface":"^2.4.0"}
+,"dev_dependencies":{"flutte
+r_test":{"sdk":"flutter"},"p
+igeon":"^16.0.4"},"topics":[
+"persistence","shared-prefer
+ences","storage"]},"archive_
+url":"https://pub.dev/api/ar
+chives/shared_preferences_an
+droid-2.3.1.tar.gz","archive
+_sha256":"a7e8467e9181cef109
+f601e3f65765685786c1a738a83d
+7fbbde377589c0d974","publish
+ed":"2024-08-09T20:32:18.430
+327Z"},{"version":"2.3.2","p
+ubspec":{"name":"shared_pref
+erences_android","descriptio
+n":"Android implementation 
+of the shared_preferences pl
+ugin","repository":"https://
+github.com/flutter/packages/
+tree/main/packages/shared_pr
+eferences/shared_preferences
+_android","issue_tracker":"h
+ttps://github.com/flutter/fl
+utter/issues?q=is%3Aissue+is
+%3Aopen+label%3A%22p%3A+shar
+ed_preferences%22","version"
+:"2.3.2","environment":{"sdk
+":"^3.4.0","flutter":">=3.22
+.0"},"flutter":{"plugin":{"i
+mplements":"shared_preferenc
+es","platforms":{"android":{
+"package":"io.flutter.plugin
+s.sharedpreferences","plugin
+Class":"SharedPreferencesPlu
+gin","dartPluginClass":"Shar
+edPreferencesAndroid"}}}},"d
+ependencies":{"flutter":{"sd
+k":"flutter"},"shared_prefer
+ences_platform_interface":"^
+2.4.0"},"dev_dependencies":{
+"flutter_test":{"sdk":"flutt
+er"},"pigeon":"^16.0.4"},"to
+pics":["persistence","shared
+-preferences","storage"]},"a
+rchive_url":"https://pub.dev
+/api/archives/shared_prefere
+nces_android-2.3.2.tar.gz","
+archive_sha256":"480ba434577
+3f56acda9abf5f50bd966f581dac
+5d514e5fc4a18c62976bbba7e","
+published":"2024-08-25T10:30
+:04.567730Z"},{"version":"2.
+3.3","pubspec":{"name":"shar
+ed_preferences_android","des
+cription":"Android 
+implementation of the 
+shared_preferences plugin","
+repository":"https://github.
+com/flutter/packages/tree/ma
+in/packages/shared_preferenc
+es/shared_preferences_androi
+d","issue_tracker":"https://
+github.com/flutter/flutter/i
+ssues?q=is%3Aissue+is%3Aopen
++label%3A%22p%3A+shared_pref
+erences%22","version":"2.3.3
+","environment":{"sdk":"^3.5
+.0","flutter":">=3.24.0"},"f
+lutter":{"plugin":{"implemen
+ts":"shared_preferences","pl
+atforms":{"android":{"packag
+e":"io.flutter.plugins.share
+dpreferences","pluginClass":
+"SharedPreferencesPlugin","d
+artPluginClass":"SharedPrefe
+rencesAndroid"}}}},"dependen
+cies":{"flutter":{"sdk":"flu
+tter"},"shared_preferences_p
+latform_interface":"^2.4.0"}
+,"dev_dependencies":{"flutte
+r_test":{"sdk":"flutter"},"p
+igeon":"^16.0.4"},"topics":[
+"persistence","shared-prefer
+ences","storage"]},"archive_
+url":"https://pub.dev/api/ar
+chives/shared_preferences_an
+droid-2.3.3.tar.gz","archive
+_sha256":"3b9febd815c9ca29c9
+e3520d50ec32f49157711e143b7a
+4ca039eb87e8ade5ab","publish
+ed":"2024-10-05T21:22:52.327
+792Z"},{"version":"2.3.4","p
+ubspec":{"name":"shared_pref
+erences_android","descriptio
+n":"Android implementation 
+of the shared_preferences pl
+ugin","repository":"https://
+github.com/flutter/packages/
+tree/main/packages/shared_pr
+eferences/shared_preferences
+_android","issue_tracker":"h
+ttps://github.com/flutter/fl
+utter/issues?q=is%3Aissue+is
+%3Aopen+label%3A%22p%3A+shar
+ed_preferences%22","version"
+:"2.3.4","environment":{"sdk
+":"^3.5.0","flutter":">=3.24
+.0"},"flutter":{"plugin":{"i
+mplements":"shared_preferenc
+es","platforms":{"android":{
+"package":"io.flutter.plugin
+s.sharedpreferences","plugin
+Class":"SharedPreferencesPlu
+gin","dartPluginClass":"Shar
+edPreferencesAndroid"}}}},"d
+ependencies":{"flutter":{"sd
+k":"flutter"},"shared_prefer
+ences_platform_interface":"^
+2.4.0"},"dev_dependencies":{
+"flutter_test":{"sdk":"flutt
+er"},"pigeon":"^16.0.4"},"to
+pics":["persistence","shared
+-preferences","storage"]},"a
+rchive_url":"https://pub.dev
+/api/archives/shared_prefere
+nces_android-2.3.4.tar.gz","
+archive_sha256":"7f172d1b06d
+e5da47b6264c2692ee2ead20bbbc
+246690427cdb4fc301cd0c549","
+published":"2024-12-02T19:52
+:10.560664Z"},{"version":"2.
+4.0","pubspec":{"name":"shar
+ed_preferences_android","des
+cription":"Android 
+implementation of the 
+shared_preferences plugin","
+repository":"https://github.
+com/flutter/packages/tree/ma
+in/packages/shared_preferenc
+es/shared_preferences_androi
+d","issue_tracker":"https://
+github.com/flutter/flutter/i
+ssues?q=is%3Aissue+is%3Aopen
++label%3A%22p%3A+shared_pref
+erences%22","version":"2.4.0
+","environment":{"sdk":"^3.5
+.0","flutter":">=3.24.0"},"f
+lutter":{"plugin":{"implemen
+ts":"shared_preferences","pl
+atforms":{"android":{"packag
+e":"io.flutter.plugins.share
+dpreferences","pluginClass":
+"SharedPreferencesPlugin","d
+artPluginClass":"SharedPrefe
+rencesAndroid"}}}},"dependen
+cies":{"flutter":{"sdk":"flu
+tter"},"shared_preferences_p
+latform_interface":"^2.4.0"}
+,"dev_dependencies":{"flutte
+r_test":{"sdk":"flutter"},"p
+igeon":"^22.6.0"},"topics":[
+"persistence","shared-prefer
+ences","storage"]},"archive_
+url":"https://pub.dev/api/ar
+chives/shared_preferences_an
+droid-2.4.0.tar.gz","archive
+_sha256":"02a7d8a9ef346c9af7
+15811b01fbd8e27845ad2c41148e
+efd31321471b41863d","publish
+ed":"2024-12-13T17:04:50.294
+641Z"},{"version":"2.4.1","p
+ubspec":{"name":"shared_pref
+erences_android","descriptio
+n":"Android implementation 
+of the shared_preferences pl
+ugin","repository":"https://
+github.com/flutter/packages/
+tree/main/packages/shared_pr
+eferences/shared_preferences
+_android","issue_tracker":"h
+ttps://github.com/flutter/fl
+utter/issues?q=is%3Aissue+is
+%3Aopen+label%3A%22p%3A+shar
+ed_preferences%22","version"
+:"2.4.1","environment":{"sdk
+":"^3.5.0","flutter":">=3.24
+.0"},"flutter":{"plugin":{"i
+mplements":"shared_preferenc
+es","platforms":{"android":{
+"package":"io.flutter.plugin
+s.sharedpreferences","plugin
+Class":"SharedPreferencesPlu
+gin","dartPluginClass":"Shar
+edPreferencesAndroid"}}}},"d
+ependencies":{"flutter":{"sd
+k":"flutter"},"shared_prefer
+ences_platform_interface":"^
+2.4.0"},"dev_dependencies":{
+"flutter_test":{"sdk":"flutt
+er"},"pigeon":"^22.6.0"},"to
+pics":["persistence","shared
+-preferences","storage"]},"a
+rchive_url":"https://pub.dev
+/api/archives/shared_prefere
+nces_android-2.4.1.tar.gz","
+archive_sha256":"bf808be89fe
+9dc467475e982c1db6c2faf3d2ac
+f54d526cd5ec37d86c99dbd84","
+published":"2025-01-10T18:05
+:27.291899Z"},{"version":"2.
+4.2","pubspec":{"name":"shar
+ed_preferences_android","des
+cription":"Android 
+implementation of the 
+shared_preferences plugin","
+repository":"https://github.
+com/flutter/packages/tree/ma
+in/packages/shared_preferenc
+es/shared_preferences_androi
+d","issue_tracker":"https://
+github.com/flutter/flutter/i
+ssues?q=is%3Aissue+is%3Aopen
++label%3A%22p%3A+shared_pref
+erences%22","version":"2.4.2
+","environment":{"sdk":"^3.5
+.0","flutter":">=3.24.0"},"f
+lutter":{"plugin":{"implemen
+ts":"shared_preferences","pl
+atforms":{"android":{"packag
+e":"io.flutter.plugins.share
+dpreferences","pluginClass":
+"SharedPreferencesPlugin","d
+artPluginClass":"SharedPrefe
+rencesAndroid"}}}},"dependen
+cies":{"flutter":{"sdk":"flu
+tter"},"shared_preferences_p
+latform_interface":"^2.4.0"}
+,"dev_dependencies":{"flutte
+r_test":{"sdk":"flutter"},"p
+igeon":"^22.6.0"},"topics":[
+"persistence","shared-prefer
+ences","storage"]},"archive_
+url":"https://pub.dev/api/ar
+chives/shared_preferences_an
+droid-2.4.2.tar.gz","archive
+_sha256":"138b7bbbc7f59c5623
+6e426c37afb8f78cbc57b094ac64
+c440e0bb90e380a4f5","publish
+ed":"2025-01-17T20:15:28.043
+613Z"},{"version":"2.4.3","p
+ubspec":{"name":"shared_pref
+erences_android","descriptio
+n":"Android implementation 
+of the shared_preferences pl
+ugin","repository":"https://
+github.com/flutter/packages/
+tree/main/packages/shared_pr
+eferences/shared_preferences
+_android","issue_tracker":"h
+ttps://github.com/flutter/fl
+utter/issues?q=is%3Aissue+is
+%3Aopen+label%3A%22p%3A+shar
+ed_preferences%22","version"
+:"2.4.3","environment":{"sdk
+":"^3.5.0","flutter":">=3.24
+.0"},"flutter":{"plugin":{"i
+mplements":"shared_preferenc
+es","platforms":{"android":{
+"package":"io.flutter.plugin
+s.sharedpreferences","plugin
+Class":"SharedPreferencesPlu
+gin","dartPluginClass":"Shar
+edPreferencesAndroid"}}}},"d
+ependencies":{"flutter":{"sd
+k":"flutter"},"shared_prefer
+ences_platform_interface":"^
+2.4.0"},"dev_dependencies":{
+"flutter_test":{"sdk":"flutt
+er"},"pigeon":"^22.7.2"},"to
+pics":["persistence","shared
+-preferences","storage"]},"a
+rchive_url":"https://pub.dev
+/api/archives/shared_prefere
+nces_android-2.4.3.tar.gz","
+archive_sha256":"986dc7b7d14
+f38064bfa85ace28df1f1a66d4fb
+a32e4b1079d4ea537d9541b01","
+published":"2025-01-24T22:19
+:04.608377Z"},{"version":"2.
+4.4","pubspec":{"name":"shar
+ed_preferences_android","des
+cription":"Android 
+implementation of the 
+shared_preferences plugin","
+repository":"https://github.
+com/flutter/packages/tree/ma
+in/packages/shared_preferenc
+es/shared_preferences_androi
+d","issue_tracker":"https://
+github.com/flutter/flutter/i
+ssues?q=is%3Aissue+is%3Aopen
++label%3A%22p%3A+shared_pref
+erences%22","version":"2.4.4
+","environment":{"sdk":"^3.5
+.0","flutter":">=3.24.0"},"f
+lutter":{"plugin":{"implemen
+ts":"shared_preferences","pl
+atforms":{"android":{"packag
+e":"io.flutter.plugins.share
+dpreferences","pluginClass":
+"SharedPreferencesPlugin","d
+artPluginClass":"SharedPrefe
+rencesAndroid"}}}},"dependen
+cies":{"flutter":{"sdk":"flu
+tter"},"shared_preferences_p
+latform_interface":"^2.4.0"}
+,"dev_dependencies":{"flutte
+r_test":{"sdk":"flutter"},"p
+igeon":"^22.7.2"},"topics":[
+"persistence","shared-prefer
+ences","storage"]},"archive_
+url":"https://pub.dev/api/ar
+chives/shared_preferences_an
+droid-2.4.4.tar.gz","archive
+_sha256":"650584dcc0a39856f3
+69782874e562efd002a9c94aec03
+2412c9eb81419cce1f","publish
+ed":"2025-01-27T23:52:51.500
+917Z"},{"version":"2.4.5","p
+ubspec":{"name":"shared_pref
+erences_android","descriptio
+n":"Android implementation 
+of the shared_preferences pl
+ugin","repository":"https://
+github.com/flutter/packages/
+tree/main/packages/shared_pr
+eferences/shared_preferences
+_android","issue_tracker":"h
+ttps://github.com/flutter/fl
+utter/issues?q=is%3Aissue+is
+%3Aopen+label%3A%22p%3A+shar
+ed_preferences%22","version"
+:"2.4.5","environment":{"sdk
+":"^3.5.0","flutter":">=3.24
+.0"},"flutter":{"plugin":{"i
+mplements":"shared_preferenc
+es","platforms":{"android":{
+"package":"io.flutter.plugin
+s.sharedpreferences","plugin
+Class":"SharedPreferencesPlu
+gin","dartPluginClass":"Shar
+edPreferencesAndroid"}}}},"d
+ependencies":{"flutter":{"sd
+k":"flutter"},"shared_prefer
+ences_platform_interface":"^
+2.4.0"},"dev_dependencies":{
+"flutter_test":{"sdk":"flutt
+er"},"pigeon":"^22.7.2"},"to
+pics":["persistence","shared
+-preferences","storage"]},"a
+rchive_url":"https://pub.dev
+/api/archives/shared_prefere
+nces_android-2.4.5.tar.gz","
+archive_sha256":"ea86be7b711
+4f9e94fddfbb52649e59a03d6627
+ccd2387ebddcd6624719e9f16","
+published":"2025-02-11T02:18
+:59.064671Z"},{"version":"2.
+4.6","pubspec":{"name":"shar
+ed_preferences_android","des
+cription":"Android 
+implementation of the 
+shared_preferences plugin","
+repository":"https://github.
+com/flutter/packages/tree/ma
+in/packages/shared_preferenc
+es/shared_preferences_androi
+d","issue_tracker":"https://
+github.com/flutter/flutter/i
+ssues?q=is%3Aissue+is%3Aopen
++label%3A%22p%3A+shared_pref
+erences%22","version":"2.4.6
+","environment":{"sdk":"^3.5
+.0","flutter":">=3.24.0"},"f
+lutter":{"plugin":{"implemen
+ts":"shared_preferences","pl
+atforms":{"android":{"packag
+e":"io.flutter.plugins.share
+dpreferences","pluginClass":
+"SharedPreferencesPlugin","d
+artPluginClass":"SharedPrefe
+rencesAndroid"}}}},"dependen
+cies":{"flutter":{"sdk":"flu
+tter"},"shared_preferences_p
+latform_interface":"^2.4.0"}
+,"dev_dependencies":{"flutte
+r_test":{"sdk":"flutter"},"p
+igeon":"^24.2.0"},"topics":[
+"persistence","shared-prefer
+ences","storage"]},"archive_
+url":"https://pub.dev/api/ar
+chives/shared_preferences_an
+droid-2.4.6.tar.gz","archive
+_sha256":"a768fc8ede5f0c8e61
+50476e14f38e2417c0864ca36bb4
+582be8e21925a03c22","publish
+ed":"2025-02-19T00:16:28.590
+846Z"},{"version":"2.4.7","p
+ubspec":{"name":"shared_pref
+erences_android","descriptio
+n":"Android implementation 
+of the shared_preferences pl
+ugin","repository":"https://
+github.com/flutter/packages/
+tree/main/packages/shared_pr
+eferences/shared_preferences
+_android","issue_tracker":"h
+ttps://github.com/flutter/fl
+utter/issues?q=is%3Aissue+is
+%3Aopen+label%3A%22p%3A+shar
+ed_preferences%22","version"
+:"2.4.7","environment":{"sdk
+":"^3.5.0","flutter":">=3.24
+.0"},"flutter":{"plugin":{"i
+mplements":"shared_preferenc
+es","platforms":{"android":{
+"package":"io.flutter.plugin
+s.sharedpreferences","plugin
+Class":"SharedPreferencesPlu
+gin","dartPluginClass":"Shar
+edPreferencesAndroid"}}}},"d
+ependencies":{"flutter":{"sd
+k":"flutter"},"shared_prefer
+ences_platform_interface":"^
+2.4.0"},"dev_dependencies":{
+"flutter_test":{"sdk":"flutt
+er"},"pigeon":"^24.2.0"},"to
+pics":["persistence","shared
+-preferences","storage"]},"a
+rchive_url":"https://pub.dev
+/api/archives/shared_prefere
+nces_android-2.4.7.tar.gz","
+archive_sha256":"9f9f3d372d4
+304723e6136663bb291c0b93f5e4
+c8a4a6314347f481a33bda2b1","
+published":"2025-03-05T16:17
+:58.723671Z"},{"version":"2.
+4.8","pubspec":{"name":"shar
+ed_preferences_android","des
+cription":"Android 
+implementation of the 
+shared_preferences plugin","
+repository":"https://github.
+com/flutter/packages/tree/ma
+in/packages/shared_preferenc
+es/shared_preferences_androi
+d","issue_tracker":"https://
+github.com/flutter/flutter/i
+ssues?q=is%3Aissue+is%3Aopen
++label%3A%22p%3A+shared_pref
+erences%22","version":"2.4.8
+","environment":{"sdk":"^3.6
+.0","flutter":">=3.27.0"},"f
+lutter":{"plugin":{"implemen
+ts":"shared_preferences","pl
+atforms":{"android":{"packag
+e":"io.flutter.plugins.share
+dpreferences","pluginClass":
+"SharedPreferencesPlugin","d
+artPluginClass":"SharedPrefe
+rencesAndroid"}}}},"dependen
+cies":{"flutter":{"sdk":"flu
+tter"},"shared_preferences_p
+latform_interface":"^2.4.0"}
+,"dev_dependencies":{"flutte
+r_test":{"sdk":"flutter"},"p
+igeon":"^24.2.0"},"topics":[
+"persistence","shared-prefer
+ences","storage"]},"archive_
+url":"https://pub.dev/api/ar
+chives/shared_preferences_an
+droid-2.4.8.tar.gz","archive
+_sha256":"3ec7210872c4ba945e
+3244982918e502fa2bfb5230dff6
+832459ca0e1879b7ad","publish
+ed":"2025-03-06T16:34:44.540
+813Z"},{"version":"2.4.9","p
+ubspec":{"name":"shared_pref
+erences_android","descriptio
+n":"Android implementation 
+of the shared_preferences pl
+ugin","repository":"https://
+github.com/flutter/packages/
+tree/main/packages/shared_pr
+eferences/shared_preferences
+_android","issue_tracker":"h
+ttps://github.com/flutter/fl
+utter/issues?q=is%3Aissue+is
+%3Aopen+label%3A%22p%3A+shar
+ed_preferences%22","version"
+:"2.4.9","environment":{"sdk
+":"^3.6.0","flutter":">=3.27
+.0"},"flutter":{"plugin":{"i
+mplements":"shared_preferenc
+es","platforms":{"android":{
+"package":"io.flutter.plugin
+s.sharedpreferences","plugin
+Class":"SharedPreferencesPlu
+gin","dartPluginClass":"Shar
+edPreferencesAndroid"}}}},"d
+ependencies":{"flutter":{"sd
+k":"flutter"},"shared_prefer
+ences_platform_interface":"^
+2.4.0"},"dev_dependencies":{
+"flutter_test":{"sdk":"flutt
+er"},"pigeon":"^24.2.0"},"to
+pics":["persistence","shared
+-preferences","storage"]},"a
+rchive_url":"https://pub.dev
+/api/archives/shared_prefere
+nces_android-2.4.9.tar.gz","
+archive_sha256":"c2c8c46297b
+5d6a80bed7741ec1f2759742c77d
+272f1a1698176ae828f8e1a18","
+published":"2025-04-09T18:29
+:49.433721Z"},{"version":"2.
+4.10","pubspec":{"name":"sha
+red_preferences_android","de
+scription":"Android 
+implementation of the 
+shared_preferences plugin","
+repository":"https://github.
+com/flutter/packages/tree/ma
+in/packages/shared_preferenc
+es/shared_preferences_androi
+d","issue_tracker":"https://
+github.com/flutter/flutter/i
+ssues?q=is%3Aissue+is%3Aopen
++label%3A%22p%3A+shared_pref
+erences%22","version":"2.4.1
+0","environment":{"sdk":"^3.
+6.0","flutter":">=3.27.0"},"
+flutter":{"plugin":{"impleme
+nts":"shared_preferences","p
+latforms":{"android":{"packa
+ge":"io.flutter.plugins.shar
+edpreferences","pluginClass"
+:"SharedPreferencesPlugin","
+dartPluginClass":"SharedPref
+erencesAndroid"}}}},"depende
+ncies":{"flutter":{"sdk":"fl
+utter"},"shared_preferences_
+platform_interface":"^2.4.0"
+},"dev_dependencies":{"flutt
+er_test":{"sdk":"flutter"},"
+pigeon":"^24.2.0"},"topics":
+["persistence","shared-prefe
+rences","storage"]},"archive
+_url":"https://pub.dev/api/a
+rchives/shared_preferences_a
+ndroid-2.4.10.tar.gz","archi
+ve_sha256":"20cbd561f743a342
+c76c151d6ddb93a9ce6005751e7a
+a458baad3858bfbfb6ac","publi
+shed":"2025-04-19T16:19:17.4
+42838Z"},{"version":"2.4.11"
+,"pubspec":{"name":"shared_p
+references_android","descrip
+tion":"Android 
+implementation of the 
+shared_preferences plugin","
+repository":"https://github.
+com/flutter/packages/tree/ma
+in/packages/shared_preferenc
+es/shared_preferences_androi
+d","issue_tracker":"https://
+github.com/flutter/flutter/i
+ssues?q=is%3Aissue+is%3Aopen
++label%3A%22p%3A+shared_pref
+erences%22","version":"2.4.1
+1","environment":{"sdk":"^3.
+6.0","flutter":">=3.27.0"},"
+flutter":{"plugin":{"impleme
+nts":"shared_preferences","p
+latforms":{"android":{"packa
+ge":"io.flutter.plugins.shar
+edpreferences","pluginClass"
+:"SharedPreferencesPlugin","
+dartPluginClass":"SharedPref
+erencesAndroid"}}}},"depende
+ncies":{"flutter":{"sdk":"fl
+utter"},"shared_preferences_
+platform_interface":"^2.4.0"
+},"dev_dependencies":{"flutt
+er_test":{"sdk":"flutter"},"
+pigeon":"^24.2.0"},"topics":
+["persistence","shared-prefe
+rences","storage"]},"archive
+_url":"https://pub.dev/api/a
+rchives/shared_preferences_a
+ndroid-2.4.11.tar.gz","archi
+ve_sha256":"5bcf0772a761b04f
+8c6bf814721713de6f3e5d9d89ca
+f8d3fe031b02a342379e","publi
+shed":"2025-08-07T19:58:36.9
+79359Z"},{"version":"2.4.12"
+,"pubspec":{"name":"shared_p
+references_android","descrip
+tion":"Android 
+implementation of the 
+shared_preferences plugin","
+repository":"https://github.
+com/flutter/packages/tree/ma
+in/packages/shared_preferenc
+es/shared_preferences_androi
+d","issue_tracker":"https://
+github.com/flutter/flutter/i
+ssues?q=is%3Aissue+is%3Aopen
++label%3A%22p%3A+shared_pref
+erences%22","version":"2.4.1
+2","environment":{"sdk":"^3.
+7.0","flutter":">=3.29.0"},"
+flutter":{"plugin":{"impleme
+nts":"shared_preferences","p
+latforms":{"android":{"packa
+ge":"io.flutter.plugins.shar
+edpreferences","pluginClass"
+:"SharedPreferencesPlugin","
+dartPluginClass":"SharedPref
+erencesAndroid"}}}},"depende
+ncies":{"flutter":{"sdk":"fl
+utter"},"shared_preferences_
+platform_interface":"^2.4.0"
+},"dev_dependencies":{"flutt
+er_test":{"sdk":"flutter"},"
+pigeon":"^24.2.0"},"topics":
+["persistence","shared-prefe
+rences","storage"]},"archive
+_url":"https://pub.dev/api/a
+rchives/shared_preferences_a
+ndroid-2.4.12.tar.gz","archi
+ve_sha256":"a2608114b1ffdcbc
+9c120eb71a0e207c71da56202852
+d4aab8a5e30a82269e74","publi
+shed":"2025-08-27T00:38:51.9
+54130Z"},{"version":"2.4.13"
+,"pubspec":{"name":"shared_p
+references_android","descrip
+tion":"Android 
+implementation of the 
+shared_preferences plugin","
+repository":"https://github.
+com/flutter/packages/tree/ma
+in/packages/shared_preferenc
+es/shared_preferences_androi
+d","issue_tracker":"https://
+github.com/flutter/flutter/i
+ssues?q=is%3Aissue+is%3Aopen
++label%3A%22p%3A+shared_pref
+erences%22","version":"2.4.1
+3","environment":{"sdk":"^3.
+7.0","flutter":">=3.29.0"},"
+flutter":{"plugin":{"impleme
+nts":"shared_preferences","p
+latforms":{"android":{"packa
+ge":"io.flutter.plugins.shar
+edpreferences","pluginClass"
+:"SharedPreferencesPlugin","
+dartPluginClass":"SharedPref
+erencesAndroid"}}}},"depende
+ncies":{"flutter":{"sdk":"fl
+utter"},"shared_preferences_
+platform_interface":"^2.4.0"
+},"dev_dependencies":{"flutt
+er_test":{"sdk":"flutter"},"
+pigeon":"^24.2.0"},"topics":
+["persistence","shared-prefe
+rences","storage"]},"archive
+_url":"https://pub.dev/api/a
+rchives/shared_preferences_a
+ndroid-2.4.13.tar.gz","archi
+ve_sha256":"bd14436108211b0d
+4ee5038689a56d4ae3620fd72fd6
+036e113bf1345bc74d9e","publi
+shed":"2025-09-22T18:24:30.8
+52426Z"},{"version":"2.4.14"
+,"pubspec":{"name":"shared_p
+references_android","descrip
+tion":"Android 
+implementation of the 
+shared_preferences plugin","
+repository":"https://github.
+com/flutter/packages/tree/ma
+in/packages/shared_preferenc
+es/shared_preferences_androi
+d","issue_tracker":"https://
+github.com/flutter/flutter/i
+ssues?q=is%3Aissue+is%3Aopen
++label%3A%22p%3A+shared_pref
+erences%22","version":"2.4.1
+4","environment":{"sdk":"^3.
+9.0","flutter":">=3.35.0"},"
+flutter":{"plugin":{"impleme
+nts":"shared_preferences","p
+latforms":{"android":{"packa
+ge":"io.flutter.plugins.shar
+edpreferences","pluginClass"
+:"SharedPreferencesPlugin","
+dartPluginClass":"SharedPref
+erencesAndroid"}}}},"depende
+ncies":{"flutter":{"sdk":"fl
+utter"},"shared_preferences_
+platform_interface":"^2.4.0"
+},"dev_dependencies":{"flutt
+er_test":{"sdk":"flutter"},"
+pigeon":"^24.2.0"},"topics":
+["persistence","shared-prefe
+rences","storage"]},"archive
+_url":"https://pub.dev/api/a
+rchives/shared_preferences_a
+ndroid-2.4.14.tar.gz","archi
+ve_sha256":"0b0f98d535319cb5
+cdd4f65783c2a54ee6d417a2f093
+dbb18be3e36e4c3d181f","publi
+shed":"2025-10-02T15:47:33.1
+64974Z"},{"version":"2.4.15"
+,"pubspec":{"name":"shared_p
+references_android","descrip
+tion":"Android 
+implementation of the 
+shared_preferences plugin","
+repository":"https://github.
+com/flutter/packages/tree/ma
+in/packages/shared_preferenc
+es/shared_preferences_androi
+d","issue_tracker":"https://
+github.com/flutter/flutter/i
+ssues?q=is%3Aissue+is%3Aopen
++label%3A%22p%3A+shared_pref
+erences%22","version":"2.4.1
+5","environment":{"sdk":"^3.
+9.0","flutter":">=3.35.0"},"
+flutter":{"plugin":{"impleme
+nts":"shared_preferences","p
+latforms":{"android":{"packa
+ge":"io.flutter.plugins.shar
+edpreferences","pluginClass"
+:"SharedPreferencesPlugin","
+dartPluginClass":"SharedPref
+erencesAndroid"}}}},"depende
+ncies":{"flutter":{"sdk":"fl
+utter"},"shared_preferences_
+platform_interface":"^2.4.0"
+},"dev_dependencies":{"flutt
+er_test":{"sdk":"flutter"},"
+pigeon":"^24.2.0"},"topics":
+["persistence","shared-prefe
+rences","storage"]},"archive
+_url":"https://pub.dev/api/a
+rchives/shared_preferences_a
+ndroid-2.4.15.tar.gz","archi
+ve_sha256":"34266009473bf71d
+748912da4bf62d439185226c03e0
+1e2d9687bc65bbfcb713","publi
+shed":"2025-10-08T18:26:26.4
+92792Z"},{"version":"2.4.16"
+,"pubspec":{"name":"shared_p
+references_android","descrip
+tion":"Android 
+implementation of the 
+shared_preferences plugin","
+repository":"https://github.
+com/flutter/packages/tree/ma
+in/packages/shared_preferenc
+es/shared_preferences_androi
+d","issue_tracker":"https://
+github.com/flutter/flutter/i
+ssues?q=is%3Aissue+is%3Aopen
++label%3A%22p%3A+shared_pref
+erences%22","version":"2.4.1
+6","environment":{"sdk":"^3.
+9.0","flutter":">=3.35.0"},"
+flutter":{"plugin":{"impleme
+nts":"shared_preferences","p
+latforms":{"android":{"packa
+ge":"io.flutter.plugins.shar
+edpreferences","pluginClass"
+:"SharedPreferencesPlugin","
+dartPluginClass":"SharedPref
+erencesAndroid"}}}},"depende
+ncies":{"flutter":{"sdk":"fl
+utter"},"shared_preferences_
+platform_interface":"^2.4.0"
+},"dev_dependencies":{"flutt
+er_test":{"sdk":"flutter"},"
+pigeon":"^26.1.0"},"topics":
+["persistence","shared-prefe
+rences","storage"]},"archive
+_url":"https://pub.dev/api/a
+rchives/shared_preferences_a
+ndroid-2.4.16.tar.gz","archi
+ve_sha256":"07d552dbe8e71ed7
+20e5205e760438ff4ecfb76ec3b3
+2ea664350e2ca4b0c43b","publi
+shed":"2025-11-17T18:43:00.6
+49533Z"},{"version":"2.4.17"
+,"pubspec":{"name":"shared_p
+references_android","descrip
+tion":"Android 
+implementation of the 
+shared_preferences plugin","
+repository":"https://github.
+com/flutter/packages/tree/ma
+in/packages/shared_preferenc
+es/shared_preferences_androi
+d","issue_tracker":"https://
+github.com/flutter/flutter/i
+ssues?q=is%3Aissue+is%3Aopen
++label%3A%22p%3A+shared_pref
+erences%22","version":"2.4.1
+7","environment":{"sdk":"^3.
+9.0","flutter":">=3.35.0"},"
+flutter":{"plugin":{"impleme
+nts":"shared_preferences","p
+latforms":{"android":{"packa
+ge":"io.flutter.plugins.shar
+edpreferences","pluginClass"
+:"SharedPreferencesPlugin","
+dartPluginClass":"SharedPref
+erencesAndroid"}}}},"depende
+ncies":{"flutter":{"sdk":"fl
+utter"},"shared_preferences_
+platform_interface":"^2.4.0"
+},"dev_dependencies":{"flutt
+er_test":{"sdk":"flutter"},"
+pigeon":"^26.1.0"},"topics":
+["persistence","shared-prefe
+rences","storage"]},"archive
+_url":"https://pub.dev/api/a
+rchives/shared_preferences_a
+ndroid-2.4.17.tar.gz","archi
+ve_sha256":"46a46fd64659eff1
+5f4638bbe19de43f9483f0e0bf02
+4a9fb6b3582064bacc7b","publi
+shed":"2025-11-21T19:34:24.7
+92054Z"},{"version":"2.4.18"
+,"pubspec":{"name":"shared_p
+references_android","descrip
+tion":"Android 
+implementation of the 
+shared_preferences plugin","
+repository":"https://github.
+com/flutter/packages/tree/ma
+in/packages/shared_preferenc
+es/shared_preferences_androi
+d","issue_tracker":"https://
+github.com/flutter/flutter/i
+ssues?q=is%3Aissue+is%3Aopen
++label%3A%22p%3A+shared_pref
+erences%22","version":"2.4.1
+8","environment":{"sdk":"^3.
+9.0","flutter":">=3.35.0"},"
+flutter":{"plugin":{"impleme
+nts":"shared_preferences","p
+latforms":{"android":{"packa
+ge":"io.flutter.plugins.shar
+edpreferences","pluginClass"
+:"SharedPreferencesPlugin","
+dartPluginClass":"SharedPref
+erencesAndroid"}}}},"depende
+ncies":{"flutter":{"sdk":"fl
+utter"},"shared_preferences_
+platform_interface":"^2.4.0"
+},"dev_dependencies":{"flutt
+er_test":{"sdk":"flutter"},"
+pigeon":"^26.1.0"},"topics":
+["persistence","shared-prefe
+rences","storage"]},"archive
+_url":"https://pub.dev/api/a
+rchives/shared_preferences_a
+ndroid-2.4.18.tar.gz","archi
+ve_sha256":"83af5c682796c0f7
+719c2bbf74792d113e40ae97981b
+8f266fa84574573556bc","publi
+shed":"2025-12-01T18:36:49.1
+95054Z"},{"version":"2.4.20"
+,"pubspec":{"name":"shared_p
+references_android","descrip
+tion":"Android 
+implementation of the 
+shared_preferences plugin","
+repository":"https://github.
+com/flutter/packages/tree/ma
+in/packages/shared_preferenc
+es/shared_preferences_androi
+d","issue_tracker":"https://
+github.com/flutter/flutter/i
+ssues?q=is%3Aissue+is%3Aopen
++label%3A%22p%3A+shared_pref
+erences%22","version":"2.4.2
+0","environment":{"sdk":"^3.
+9.0","flutter":">=3.35.0"},"
+flutter":{"plugin":{"impleme
+nts":"shared_preferences","p
+latforms":{"android":{"packa
+ge":"io.flutter.plugins.shar
+edpreferences","pluginClass"
+:"SharedPreferencesPlugin","
+dartPluginClass":"SharedPref
+erencesAndroid"}}}},"depende
+ncies":{"flutter":{"sdk":"fl
+utter"},"shared_preferences_
+platform_interface":"^2.4.0"
+},"dev_dependencies":{"flutt
+er_test":{"sdk":"flutter"},"
+pigeon":"^26.1.0"},"topics":
+["persistence","shared-prefe
+rences","storage"]},"archive
+_url":"https://pub.dev/api/a
+rchives/shared_preferences_a
+ndroid-2.4.20.tar.gz","archi
+ve_sha256":"cbc40be9be1c5af4
+dab4d6e0de4d5d3729e6f3d65b89
+d21e1815d57705644a6f","publi
+shed":"2026-01-26T23:38:38.4
+77677Z"}],"advisoriesUpdated
+":"2024-12-07T03:41:02.35928
+2Z","_fetchedAt":"2026-02-14
+T18:56:19.704652"}
+MSG :   characters 1.4.0 (1.4.1 available)
+    |   flutter_lints 3.0.2 (6.0.0 available)
+    |   lints 3.0.0 (6.1.0 available)
+    |   matcher 0.12.17 (0.12.18 available)
+    |   material_color_utilities 0.11.1 (0.13.0 available)
+    |   meta 1.17.0 (1.18.1 available)
+    |   path_provider_foundation 2.5.1 (2.6.0 available)
+    |   test_api 0.7.7 (0.7.9 available)
+MSG : Got dependencies!
+MSG : 8 packages have newer versions incompatible with dependency constraints.
+    | Try `flutter pub outdated` for more information.
+FINE: `pubspec.lock` is 
+unchanged. Not rewriting.
+FINE: `.dart_tool\package_co
+nfig.json` is unchanged. 
+Not rewriting.
+FINE: `.dart_tool\package_gr
+aph.json` is unchanged. Not 
+rewriting.
+FINE: `C:\Users\Asus\AppData
+\Local\Pub\Cache\active_root
+s\8b\dd8f5a8e18d82155bd4f27c
+d233bece4c435215a41258be8efa
+6fe2b9389e8` is unchanged. 
+Not rewriting.
+IO  : Spawning "cmd /c git 
+--version" in C:\Users\Asus\
+Desktop\plugin and 
+package\fluxy\.
+IO  : Finished cmd. Exit 
+code 0.
+    | stdout:
+    | | git version 
+2.45.2.windows.1
+    | | 
+    | Nothing output on 
+stderr.
+FINE: Determined git 
+command git.
+IO  : Spawning "cmd /c git 
+rev-parse --show-toplevel" 
+in C:\Users\Asus\Desktop\plu
+gin and package\fluxy\.
+IO  : Finished cmd. Exit 
+code 0.
+    | stdout:
+    | | C:/Users/Asus/Deskto
+p/plugin and package/fluxy
+    | | 
+    | Nothing output on 
+stderr.
+FINE: Archiving and 
+publishing fluxy.
+MSG : Publishing fluxy 0.1.6 to https://pub.dev:
+    | ????????? CHANGELOG.md (9 KB)
+    | ????????? DOCUMENTATION.md (4 KB)
+    | ????????? GUIDE.md (3 KB)
+    | ????????? IMPLEMENTATION_PLAN.md (3 KB)
+    | ????????? LICENSE (1 KB)
+    | ????????? MIGRATION_0.1.6.md (3 KB)
+    | ????????? README.md (6 KB)
+    | ????????? analysis.txt (<1 KB)
+    | ????????? analysis_ascii.txt (<1 KB)
+    | ????????? bin
+    | ???   ????????? fluxy.dart (7 KB)
+    | ????????? dry_run_verbose.txt (176 KB)
+    | ????????? example
+    | ???   ????????? README.md (<1 KB)
+    | ???   ????????? analysis_options.yaml (<1 KB)
+    | ???   ????????? android
+    | ???   ???   ????????? app
+    | ???   ???   ???   ????????? build.gradle.kts (1 KB)
+    | ???   ???   ???   ????????? src
+    | ???   ???   ???       ????????? debug
+    | ???   ???   ???       ???   ????????? AndroidManifest.xml (<1 KB)
+    | ???   ???   ???       ????????? main
+    | ???   ???   ???       ???   ????????? AndroidManifest.xml (2 KB)
+    | ???   ???   ???       ???   ????????? kotlin
+    | ???   ???   ???       ???   ???   ????????? com
+    | ???   ???   ???       ???   ???       ????????? example
+    | ???   ???   ???       ???   ???           ????????? fluxy_example
+    | ???   ???   ???       ???   ???               ????????? MainActivity.kt (<1 KB)
+    | ???   ???   ???       ???   ????????? res
+    | ???   ???   ???       ???       ????????? drawable
+    | ???   ???   ???       ???       ???   ????????? launch_background.xml (<1 KB)
+    | ???   ???   ???       ???       ????????? drawable-v21
+    | ???   ???   ???       ???       ???   ????????? launch_background.xml (<1 KB)
+    | ???   ???   ???       ???       ????????? mipmap-hdpi
+    | ???   ???   ???       ???       ???   ????????? ic_launcher.png (<1 KB)
+    | ???   ???   ???       ???       ????????? mipmap-mdpi
+    | ???   ???   ???       ???       ???   ????????? ic_launcher.png (<1 KB)
+    | ???   ???   ???       ???       ????????? mipmap-xhdpi
+    | ???   ???   ???       ???       ???   ????????? ic_launcher.png (<1 KB)
+    | ???   ???   ???       ???       ????????? mipmap-xxhdpi
+    | ???   ???   ???       ???       ???   ????????? ic_launcher.png (1 KB)
+    | ???   ???   ???       ???       ????????? mipmap-xxxhdpi
+    | ???   ???   ???       ???       ???   ????????? ic_launcher.png (1 KB)
+    | ???   ???   ???       ???       ????????? values
+    | ???   ???   ???       ???       ???   ????????? styles.xml (<1 KB)
+    | ???   ???   ???       ???       ????????? values-night
+    | ???   ???   ???       ???           ????????? styles.xml (<1 KB)
+    | ???   ???   ???       ????????? profile
+    | ???   ???   ???           ????????? AndroidManifest.xml (<1 KB)
+    | ???   ???   ????????? build.gradle.kts (<1 KB)
+    | ???   ???   ????????? gradle
+    | ???   ???   ???   ????????? wrapper
+    | ???   ???   ???       ????????? gradle-wrapper.properties (<1 KB)
+    | ???   ???   ????????? gradle.properties (<1 KB)
+    | ???   ???   ????????? settings.gradle.kts (<1 KB)
+    | ???   ????????? lib
+    | ???   ???   ????????? fluxy_play.dart (12 KB)
+    | ???   ???   ????????? main.dart (26 KB)
+    | ???   ???   ????????? marketplace_data.dart (1 KB)
+    | ???   ????????? pubspec.yaml (<1 KB)
+    | ???   ????????? test
+    | ???   ???   ????????? widget_test.dart (1 KB)
+    | ???   ????????? windows
+    | ???       ????????? CMakeLists.txt (4 KB)
+    | ???       ????????? flutter
+    | ???       ???   ????????? CMakeLists.txt (3 KB)
+    | ???       ???   ????????? generated_plugin_registrant.cc (<1 KB)
+    | ???       ???   ????????? generated_plugin_registrant.h (<1 KB)
+    | ???       ???   ????????? generated_plugins.cmake (<1 KB)
+    | ???       ????????? runner
+    | ???           ????????? CMakeLists.txt (1 KB)
+    | ???           ????????? Runner.rc (3 KB)
+    | ???           ????????? flutter_window.cpp (2 KB)
+    | ???           ????????? flutter_window.h (<1 KB)
+    | ???           ????????? main.cpp (1 KB)
+    | ???           ????????? resource.h (<1 KB)
+    | ???           ????????? resources
+    | ???           ???   ????????? app_icon.ico (32 KB)
+    | ???           ????????? runner.exe.manifest (<1 KB)
+    | ???           ????????? utils.cpp (1 KB)
+    | ???           ????????? utils.h (<1 KB)
+    | ???           ????????? win32_window.cpp (8 KB)
+    | ???           ????????? win32_window.h (3 KB)
+    | ????????? lib
+    | ???   ????????? fluxy.dart (6 KB)
+    | ???   ????????? src
+    | ???       ????????? cli
+    | ???       ???   ????????? cloud.dart (4 KB)
+    | ???       ????????? debug
+    | ???       ???   ????????? debug_config.dart (<1 KB)
+    | ???       ???   ????????? fluxy_debug.dart (14 KB)
+    | ???       ???   ????????? fluxy_inspector.dart (2 KB)
+    | ???       ????????? devtools
+    | ???       ???   ????????? fluxy_devtools.dart (7 KB)
+    | ???       ????????? di
+    | ???       ???   ????????? fluxy_di.dart (2 KB)
+    | ???       ????????? dsl
+    | ???       ???   ????????? fluent_api.dart (<1 KB)
+    | ???       ???   ????????? form_dsl.dart (<1 KB)
+    | ???       ???   ????????? fx.dart (27 KB)
+    | ???       ???   ????????? modifiers.dart (18 KB)
+    | ???       ???   ????????? ui.dart (2 KB)
+    | ???       ????????? engine
+    | ???       ???   ????????? decoration_builder.dart (1 KB)
+    | ???       ???   ????????? diff_engine.dart (1 KB)
+    | ???       ???   ????????? flex_layout_solver.dart (3 KB)
+    | ???       ???   ????????? grid_layout_solver.dart (2 KB)
+    | ???       ???   ????????? layout_engine.dart (2 KB)
+    | ???       ???   ????????? layout_node.dart (1 KB)
+    | ???       ???   ????????? style_resolver.dart (1 KB)
+    | ???       ???   ????????? tailwind_parser.dart (6 KB)
+    | ???       ???   ????????? tree_builder.dart (1 KB)
+    | ???       ???   ????????? widget_cache_manager.dart (<1 KB)
+    | ???       ????????? feedback
+    | ???       ???   ????????? overlays.dart (8 KB)
+    | ???       ????????? i18n
+    | ???       ???   ????????? fluxy_i18n.dart (4 KB)
+    | ???       ????????? layout
+    | ???       ???   ????????? breakpoint.dart (<1 KB)
+    | ???       ???   ????????? fx_col.dart (1 KB)
+    | ???       ???   ????????? fx_grid.dart (6 KB)
+    | ???       ???   ????????? fx_layout.dart (<1 KB)
+    | ???       ???   ????????? fx_row.dart (1 KB)
+    | ???       ???   ????????? fx_stack.dart (1 KB)
+    | ???       ????????? motion
+    | ???       ???   ????????? fx_motion.dart (7 KB)
+    | ???       ????????? ota
+    | ???       ???   ????????? fluxy_remote.dart (3 KB)
+    | ???       ???   ????????? sdui_renderer.dart (5 KB)
+    | ???       ???   ????????? style_parser.dart (5 KB)
+    | ???       ????????? reactive
+    | ???       ???   ????????? async_signal.dart (6 KB)
+    | ???       ???   ????????? collections.dart (5 KB)
+    | ???       ???   ????????? forms.dart (3 KB)
+    | ???       ???   ????????? persistence.dart (4 KB)
+    | ???       ???   ????????? signal.dart (11 KB)
+    | ???       ????????? responsive
+    | ???       ???   ????????? breakpoint_resolver.dart (1 KB)
+    | ???       ???   ????????? responsive_engine.dart (1 KB)
+    | ???       ????????? routing
+    | ???       ???   ????????? fluxy_router.dart (13 KB)
+    | ???       ????????? styles
+    | ???       ???   ????????? fx_theme.dart (<1 KB)
+    | ???       ???   ????????? style.dart (13 KB)
+    | ???       ???   ????????? tokens.dart (3 KB)
+    | ???       ????????? widgets
+    | ???           ????????? avatar.dart (3 KB)
+    | ???           ????????? badge.dart (3 KB)
+    | ???           ????????? bottom_bar.dart (3 KB)
+    | ???           ????????? box.dart (7 KB)
+    | ???           ????????? button.dart (8 KB)
+    | ???           ????????? dropdown.dart (9 KB)
+    | ???           ????????? flex_box.dart (3 KB)
+    | ???           ????????? fx_form.dart (1 KB)
+    | ???           ????????? fx_widget.dart (<1 KB)
+    | ???           ????????? grid_box.dart (2 KB)
+    | ???           ????????? inputs.dart (7 KB)
+    | ???           ????????? list_box.dart (4 KB)
+    | ???           ????????? stack_box.dart (2 KB)
+    | ???           ????????? tab_stack.dart (2 KB)
+    | ???           ????????? table.dart (4 KB)
+    | ???           ????????? text_box.dart (2 KB)
+    | ????????? pubspec.yaml (<1 KB)
+    | ????????? test
+    |     ????????? fluxy_test.dart (<1 KB)
+FINE: Creating .tar.gz 
+stream containing:
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\.
+    | C:\Users\Asus\Desktop\
+plugin and 
+package\fluxy\test
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\tes
+t\fluxy_test.dart
+    | C:\Users\Asus\Desktop\
+plugin and 
+package\fluxy\README.md
+    | C:\Users\Asus\Desktop\
+plugin and 
+package\fluxy\pubspec.yaml
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\MIG
+RATION_0.1.6.md
+    | C:\Users\Asus\Desktop\
+plugin and 
+package\fluxy\LICENSE
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\lib
+    | C:\Users\Asus\Desktop\
+plugin and 
+package\fluxy\lib\src
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\lib
+\src\widgets
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\lib
+\src\widgets\text_box.dart
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\lib
+\src\widgets\tab_stack.dart
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\lib
+\src\widgets\table.dart
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\lib
+\src\widgets\stack_box.dart
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\lib
+\src\widgets\list_box.dart
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\lib
+\src\widgets\inputs.dart
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\lib
+\src\widgets\grid_box.dart
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\lib
+\src\widgets\fx_widget.dart
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\lib
+\src\widgets\fx_form.dart
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\lib
+\src\widgets\flex_box.dart
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\lib
+\src\widgets\dropdown.dart
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\lib
+\src\widgets\button.dart
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\lib
+\src\widgets\box.dart
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\lib
+\src\widgets\bottom_bar.dart
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\lib
+\src\widgets\badge.dart
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\lib
+\src\widgets\avatar.dart
+    | C:\Users\Asus\Desktop\
+plugin and 
+package\fluxy\lib\src\styles
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\lib
+\src\styles\tokens.dart
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\lib
+\src\styles\style.dart
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\lib
+\src\styles\fx_theme.dart
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\lib
+\src\routing
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\lib
+\src\routing\fluxy_router.da
+rt
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\lib
+\src\responsive
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\lib
+\src\responsive\responsive_e
+ngine.dart
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\lib
+\src\responsive\breakpoint_r
+esolver.dart
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\lib
+\src\reactive
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\lib
+\src\reactive\signal.dart
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\lib
+\src\reactive\persistence.da
+rt
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\lib
+\src\reactive\forms.dart
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\lib
+\src\reactive\collections.da
+rt
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\lib
+\src\reactive\async_signal.d
+art
+    | C:\Users\Asus\Desktop\
+plugin and 
+package\fluxy\lib\src\ota
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\lib
+\src\ota\style_parser.dart
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\lib
+\src\ota\sdui_renderer.dart
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\lib
+\src\ota\fluxy_remote.dart
+    | C:\Users\Asus\Desktop\
+plugin and 
+package\fluxy\lib\src\motion
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\lib
+\src\motion\fx_motion.dart
+    | C:\Users\Asus\Desktop\
+plugin and 
+package\fluxy\lib\src\layout
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\lib
+\src\layout\fx_stack.dart
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\lib
+\src\layout\fx_row.dart
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\lib
+\src\layout\fx_layout.dart
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\lib
+\src\layout\fx_grid.dart
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\lib
+\src\layout\fx_col.dart
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\lib
+\src\layout\breakpoint.dart
+    | C:\Users\Asus\Desktop\
+plugin and 
+package\fluxy\lib\src\i18n
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\lib
+\src\i18n\fluxy_i18n.dart
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\lib
+\src\feedback
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\lib
+\src\feedback\overlays.dart
+    | C:\Users\Asus\Desktop\
+plugin and 
+package\fluxy\lib\src\engine
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\lib
+\src\engine\widget_cache_man
+ager.dart
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\lib
+\src\engine\tree_builder.dar
+t
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\lib
+\src\engine\tailwind_parser.
+dart
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\lib
+\src\engine\style_resolver.d
+art
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\lib
+\src\engine\layout_node.dart
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\lib
+\src\engine\layout_engine.da
+rt
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\lib
+\src\engine\grid_layout_solv
+er.dart
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\lib
+\src\engine\flex_layout_solv
+er.dart
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\lib
+\src\engine\diff_engine.dart
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\lib
+\src\engine\decoration_build
+er.dart
+    | C:\Users\Asus\Desktop\
+plugin and 
+package\fluxy\lib\src\dsl
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\lib
+\src\dsl\ui.dart
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\lib
+\src\dsl\modifiers.dart
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\lib
+\src\dsl\fx.dart
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\lib
+\src\dsl\form_dsl.dart
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\lib
+\src\dsl\fluent_api.dart
+    | C:\Users\Asus\Desktop\
+plugin and 
+package\fluxy\lib\src\di
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\lib
+\src\di\fluxy_di.dart
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\lib
+\src\devtools
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\lib
+\src\devtools\fluxy_devtools
+.dart
+    | C:\Users\Asus\Desktop\
+plugin and 
+package\fluxy\lib\src\debug
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\lib
+\src\debug\fluxy_inspector.d
+art
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\lib
+\src\debug\fluxy_debug.dart
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\lib
+\src\debug\debug_config.dart
+    | C:\Users\Asus\Desktop\
+plugin and 
+package\fluxy\lib\src\cli
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\lib
+\src\cli\cloud.dart
+    | C:\Users\Asus\Desktop\
+plugin and 
+package\fluxy\lib\fluxy.dart
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\IMP
+LEMENTATION_PLAN.md
+    | C:\Users\Asus\Desktop\
+plugin and 
+package\fluxy\GUIDE.md
+    | C:\Users\Asus\Desktop\
+plugin and 
+package\fluxy\example
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\exa
+mple\windows
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\exa
+mple\windows\runner
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\exa
+mple\windows\runner\win32_wi
+ndow.h
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\exa
+mple\windows\runner\win32_wi
+ndow.cpp
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\exa
+mple\windows\runner\utils.h
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\exa
+mple\windows\runner\utils.cp
+p
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\exa
+mple\windows\runner\Runner.r
+c
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\exa
+mple\windows\runner\runner.e
+xe.manifest
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\exa
+mple\windows\runner\resource
+s
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\exa
+mple\windows\runner\resource
+s\app_icon.ico
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\exa
+mple\windows\runner\resource
+.h
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\exa
+mple\windows\runner\main.cpp
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\exa
+mple\windows\runner\flutter_
+window.h
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\exa
+mple\windows\runner\flutter_
+window.cpp
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\exa
+mple\windows\runner\CMakeLis
+ts.txt
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\exa
+mple\windows\flutter
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\exa
+mple\windows\flutter\generat
+ed_plugin_registrant.h
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\exa
+mple\windows\flutter\generat
+ed_plugin_registrant.cc
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\exa
+mple\windows\flutter\generat
+ed_plugins.cmake
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\exa
+mple\windows\flutter\CMakeLi
+sts.txt
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\exa
+mple\windows\CMakeLists.txt
+    | C:\Users\Asus\Desktop\
+plugin and 
+package\fluxy\example\test
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\exa
+mple\test\widget_test.dart
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\exa
+mple\README.md
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\exa
+mple\pubspec.yaml
+    | C:\Users\Asus\Desktop\
+plugin and 
+package\fluxy\example\lib
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\exa
+mple\lib\marketplace_data.da
+rt
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\exa
+mple\lib\main.dart
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\exa
+mple\lib\fluxy_play.dart
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\exa
+mple\android
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\exa
+mple\android\settings.gradle
+.kts
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\exa
+mple\android\gradle.properti
+es
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\exa
+mple\android\gradle
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\exa
+mple\android\gradle\wrapper
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\exa
+mple\android\gradle\wrapper\
+gradle-wrapper.properties
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\exa
+mple\android\build.gradle.kt
+s
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\exa
+mple\android\app
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\exa
+mple\android\app\src
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\exa
+mple\android\app\src\profile
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\exa
+mple\android\app\src\profile
+\AndroidManifest.xml
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\exa
+mple\android\app\src\main
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\exa
+mple\android\app\src\main\re
+s
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\exa
+mple\android\app\src\main\re
+s\values-night
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\exa
+mple\android\app\src\main\re
+s\values-night\styles.xml
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\exa
+mple\android\app\src\main\re
+s\values
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\exa
+mple\android\app\src\main\re
+s\values\styles.xml
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\exa
+mple\android\app\src\main\re
+s\mipmap-xxxhdpi
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\exa
+mple\android\app\src\main\re
+s\mipmap-xxxhdpi\ic_launcher
+.png
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\exa
+mple\android\app\src\main\re
+s\mipmap-xxhdpi
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\exa
+mple\android\app\src\main\re
+s\mipmap-xxhdpi\ic_launcher.
+png
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\exa
+mple\android\app\src\main\re
+s\mipmap-xhdpi
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\exa
+mple\android\app\src\main\re
+s\mipmap-xhdpi\ic_launcher.p
+ng
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\exa
+mple\android\app\src\main\re
+s\mipmap-mdpi
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\exa
+mple\android\app\src\main\re
+s\mipmap-mdpi\ic_launcher.pn
+g
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\exa
+mple\android\app\src\main\re
+s\mipmap-hdpi
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\exa
+mple\android\app\src\main\re
+s\mipmap-hdpi\ic_launcher.pn
+g
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\exa
+mple\android\app\src\main\re
+s\drawable-v21
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\exa
+mple\android\app\src\main\re
+s\drawable-v21\launch_backgr
+ound.xml
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\exa
+mple\android\app\src\main\re
+s\drawable
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\exa
+mple\android\app\src\main\re
+s\drawable\launch_background
+.xml
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\exa
+mple\android\app\src\main\ko
+tlin
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\exa
+mple\android\app\src\main\ko
+tlin\com
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\exa
+mple\android\app\src\main\ko
+tlin\com\example
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\exa
+mple\android\app\src\main\ko
+tlin\com\example\fluxy_examp
+le
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\exa
+mple\android\app\src\main\ko
+tlin\com\example\fluxy_examp
+le\MainActivity.kt
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\exa
+mple\android\app\src\main\ja
+va
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\exa
+mple\android\app\src\main\ja
+va\io
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\exa
+mple\android\app\src\main\ja
+va\io\flutter
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\exa
+mple\android\app\src\main\ja
+va\io\flutter\plugins
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\exa
+mple\android\app\src\main\An
+droidManifest.xml
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\exa
+mple\android\app\src\debug
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\exa
+mple\android\app\src\debug\A
+ndroidManifest.xml
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\exa
+mple\android\app\build.gradl
+e.kts
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\exa
+mple\analysis_options.yaml
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\dry
+_run_verbose.txt
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\DOC
+UMENTATION.md
+    | C:\Users\Asus\Desktop\
+plugin and 
+package\fluxy\CHANGELOG.md
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\bin
+    | C:\Users\Asus\Desktop\
+plugin and 
+package\fluxy\bin\fluxy.dart
+    | C:\Users\Asus\Desktop\
+plugin and package\fluxy\ana
+lysis_ascii.txt
+    | C:\Users\Asus\Desktop\
+plugin and 
+package\fluxy\analysis.txt
+MSG : 
+    | Total compressed archive size: 142 KB.
+MSG : Validating package...
+IO  : Spawning "cmd /c git 
+check-ignore --quiet ." in C
+:\Users\Asus\Desktop\plugin 
+and package\fluxy\.
+IO  : Finished cmd. Exit 
+code 1.
+    | Nothing output on 
+stdout.
+    | Nothing output on 
+stderr.
+IO  : Spawning "cmd /c git 
+-c core.quotePath=false 
+ls-files -z --cached 
+--exclude-standard 
+--recurse-submodules" in C:\
+Users\Asus\Desktop\plugin 
+and package\fluxy\.
+IO  : Finished cmd. Exit 
+code 0.
+    | Binary output on 
+stdout.
+    | Nothing output on 
+stderr.
+IO  : Spawning "cmd /c git 
+rev-parse --show-toplevel" 
+in C:\Users\Asus\Desktop\plu
+gin and package\fluxy\.
+IO  : Finished cmd. Exit 
+code 0.
+    | stdout:
+    | | C:/Users/Asus/Deskto
+p/plugin and package/fluxy
+    | | 
+    | Nothing output on 
+stderr.
+IO  : Spawning "cmd /c git 
+rev-parse --show-toplevel" 
+in C:\Users\Asus\Desktop\plu
+gin and package\fluxy\.
+IO  : Finished cmd. Exit 
+code 0.
+    | stdout:
+    | | C:/Users/Asus/Deskto
+p/plugin and package/fluxy
+    | | 
+    | Nothing output on 
+stderr.
+IO  : Spawning "cmd /c git 
+status -z --no-renames 
+--untracked-files=no" in C:\
+Users\Asus\Desktop\plugin 
+and package\fluxy\.
+IO  : Finished cmd. Exit 
+code 0.
+    | Binary output on 
+stdout.
+    | Nothing output on 
+stderr.
+IO  : Reading binary file C:
+\Users\Asus\Desktop\plugin 
+and package\fluxy\README.md.
+IO  : Read 6929 bytes from C
+:\Users\Asus\Desktop\plugin 
+and package\fluxy\README.md.
+IO  : Reading binary file C:
+\Users\Asus\Desktop\plugin 
+and 
+package\fluxy\CHANGELOG.md.
+IO  : Read 9640 bytes from C
+:\Users\Asus\Desktop\plugin 
+and 
+package\fluxy\CHANGELOG.md.
+IO  : Spawning "C:\flutter\b
+in\cache\dart-sdk\bin\dart.e
+xe analyze .\bin .\lib 
+.\pubspec.yaml" in C:\Users\
+Asus\Desktop\plugin and 
+package\fluxy\.
+IO  : Get versions from http
+s://pub.dev/api/packages/flu
+xy.
+IO  : HTTP GET https://pub.d
+ev/api/packages/fluxy
+    | Accept: 
+application/vnd.pub.v2+json
+    | X-Pub-OS: windows
+    | X-Pub-Command: publish
+    | X-Pub-Session-ID: C095
+2020-4383-4485-A77F-B6A03AC3
+C62E
+    | X-Pub-Environment: 
+flutter_cli:forward
+    | user-agent: Dart pub 
+3.10.1
+IO  : HTTP response 200 OK 
+for GET https://pub.dev/api/
+packages/fluxy
+    | took 0:00:00.079699
+    | x-goog-storage-class: 
+STANDARD
+    | last-modified: Sat, 
+14 Feb 2026 07:58:19 GMT
+    | cache-control: 
+public, max-age=120
+    | date: Sat, 14 Feb 
+2026 13:25:59 GMT
+    | vary: Accept-Encoding
+    | content-encoding: gzip
+    | x-goog-stored-content-
+length: 2051
+    | age: 21
+    | x-guploader-uploadid: 
+AJRbA5VCNdwRrTUY8khHeZgdPffc
+_i0Lta97YWAFg16WzG-OOEJe6rki
+DrEABcTtuG6q8Fs
+    | x-goog-hash: crc32c=2V
+SfUg==,md5=e+VBTZEl2UB/CP4yS
+O7q9w==
+    | content-type: 
+application/json; 
+charset="utf-8"
+    | x-goog-generation: 
+1771055899233556
+    | server: UploadServer
+    | alt-svc: h3=":443"; 
+ma=2592000,h3-29=":443"; 
+ma=2592000
+    | 
+x-goog-meta-validated: 
+2026-02-14T07:58:19.159127
+    | accept-ranges: bytes
+    | content-length: 2051
+    | x-goog-stored-content-
+encoding: gzip
+    | etag: "7be5414d9125d94
+07f08fe3248eeeaf7"
+    | via: 1.1 google
+    | 
+x-goog-metageneration: 1
+    | expires: Sat, 14 Feb 
+2026 13:27:59 GMT
+IO  : Writing 18907 
+characters to text file C:\U
+sers\Asus\AppData\Local\Pub\
+Cache\hosted\pub.dev\.cache\
+fluxy-versions.json.
+FINE: Contents:
+    | {"name":"fluxy","lates
+t":{"version":"0.1.5","pubsp
+ec":{"name":"fluxy","descrip
+tion":"A complete Flutter 
+platform unifying reactive 
+state, declarative UI, 
+styling, animation, 
+routing, and tooling. Build 
+production-grade apps 
+faster and at scale.","versi
+on":"0.1.5","homepage":"http
+s://github.com/swaingithub/f
+luxy","repository":"https://
+github.com/swaingithub/fluxy
+","documentation":"https://f
+luxy-doc.vercel.app/","issue
+_tracker":"https://github.co
+m/swaingithub/fluxy/issues",
+"environment":{"sdk":">=3.10
+.0 <4.0.0","flutter":">=3.10
+.0"},"dependencies":{"flutte
+r":{"sdk":"flutter"},"shared
+_preferences":"^2.5.4","flut
+ter_secure_storage":"^10.0.0
+","args":"^2.7.0","path":"^1
+.9.1","path_provider":"^2.1.
+5"},"dev_dependencies":{"flu
+tter_test":{"sdk":"flutter"}
+,"flutter_lints":"^3.0.0"},"
+flutter":{"uses-material-des
+ign":true},"executables":{"f
+luxy":null}},"archive_url":"
+https://pub.dev/api/archives
+/fluxy-0.1.5.tar.gz","archiv
+e_sha256":"1d09133c9261cd249
+75cd6972748247fbd9ee5354771e
+74b3b30e27deb4c0a5f","publis
+hed":"2026-02-14T07:58:18.19
+0967Z"},"versions":[{"versio
+n":"0.0.1","pubspec":{"name"
+:"fluxy","description":"High
+-performance reactive UI 
+framework for Flutter. 
+SwiftUI-like syntax with 
+zero-boilerplate signals, 
+Tailwind-inspired styling, 
+and fluent modifiers.","vers
+ion":"0.0.1","homepage":"htt
+ps://github.com/fluxy/fluxy"
+,"repository":"https://githu
+b.com/fluxy/fluxy","issue_tr
+acker":"https://github.com/f
+luxy/fluxy/issues","environm
+ent":{"sdk":">=3.10.0 <4.0.0
+","flutter":">=3.10.0"},"dep
+endencies":{"flutter":{"sdk"
+:"flutter"}},"dev_dependenci
+es":{"flutter_test":{"sdk":"
+flutter"},"flutter_lints":"^
+3.0.0"},"flutter":{"uses-mat
+erial-design":true}},"archiv
+e_url":"https://pub.dev/api/
+archives/fluxy-0.0.1.tar.gz"
+,"archive_sha256":"73a8b866c
+c5b92efb8c8f7ee4ab9e3dccb690
+7d0039756035c21fa10333fdad8"
+,"published":"2026-02-11T13:
+01:51.147376Z"},{"version":"
+0.0.2","pubspec":{"name":"fl
+uxy","description":"High-per
+formance reactive UI 
+framework for Flutter. 
+SwiftUI-like syntax with 
+zero-boilerplate signals, 
+Tailwind-inspired styling, 
+and fluent modifiers.","vers
+ion":"0.0.2","homepage":"htt
+ps://github.com/swaingithub/
+fluxy","repository":"https:/
+/github.com/swaingithub/flux
+y","issue_tracker":"https://
+github.com/swaingithub/fluxy
+/issues","environment":{"sdk
+":">=3.10.0 <4.0.0","flutter
+":">=3.10.0"},"dependencies"
+:{"flutter":{"sdk":"flutter"
+}},"dev_dependencies":{"flut
+ter_test":{"sdk":"flutter"},
+"flutter_lints":"^3.0.0"},"f
+lutter":{"uses-material-desi
+gn":true}},"archive_url":"ht
+tps://pub.dev/api/archives/f
+luxy-0.0.2.tar.gz","archive_
+sha256":"417b401bebe60fdf2b6
+874a2e60ff7ce5501967e65d235c
+2924479b894ab83dd","publishe
+d":"2026-02-11T17:22:31.7482
+38Z"},{"version":"0.0.3","pu
+bspec":{"name":"fluxy","desc
+ription":"High-performance 
+reactive UI framework for 
+Flutter. SwiftUI-like 
+syntax with 
+zero-boilerplate signals, 
+Tailwind-inspired styling, 
+and fluent modifiers.","vers
+ion":"0.0.3","homepage":"htt
+ps://github.com/swaingithub/
+fluxy","repository":"https:/
+/github.com/swaingithub/flux
+y","issue_tracker":"https://
+github.com/swaingithub/fluxy
+/issues","environment":{"sdk
+":">=3.10.0 <4.0.0","flutter
+":">=3.10.0"},"dependencies"
+:{"flutter":{"sdk":"flutter"
+}},"dev_dependencies":{"flut
+ter_test":{"sdk":"flutter"},
+"flutter_lints":"^3.0.0"},"f
+lutter":{"uses-material-desi
+gn":true}},"archive_url":"ht
+tps://pub.dev/api/archives/f
+luxy-0.0.3.tar.gz","archive_
+sha256":"f6562936a20e5448519
+467a54123ce85f000dfdae23179c
+3181c93b411b85133","publishe
+d":"2026-02-11T19:16:05.7129
+21Z"},{"version":"0.0.4","pu
+bspec":{"name":"fluxy","desc
+ription":"High-performance 
+reactive UI framework for 
+Flutter. SwiftUI-like 
+syntax with 
+zero-boilerplate signals, 
+Tailwind-inspired styling, 
+and fluent modifiers.","vers
+ion":"0.0.4","homepage":"htt
+ps://github.com/swaingithub/
+fluxy","repository":"https:/
+/github.com/swaingithub/flux
+y","documentation":"https://
+fluxy-doc.vercel.app/","issu
+e_tracker":"https://github.c
+om/swaingithub/fluxy/issues"
+,"environment":{"sdk":">=3.1
+0.0 <4.0.0","flutter":">=3.1
+0.0"},"dependencies":{"flutt
+er":{"sdk":"flutter"}},"dev_
+dependencies":{"flutter_test
+":{"sdk":"flutter"},"flutter
+_lints":"^3.0.0"},"flutter":
+{"uses-material-design":true
+}},"archive_url":"https://pu
+b.dev/api/archives/fluxy-0.0
+.4.tar.gz","archive_sha256":
+"7b777222e6dbaeee1b12e274412
+9090f832854b3a511c2a422273a9
+de769006f","published":"2026
+-02-11T20:12:36.070716Z"},{"
+version":"0.0.5","pubspec":{
+"name":"fluxy","description"
+:"A complete Flutter 
+platform unifying reactive 
+state, declarative UI, 
+styling, animation, 
+routing, and tooling. Build 
+production-grade apps 
+faster and at scale.","versi
+on":"0.0.5","homepage":"http
+s://github.com/swaingithub/f
+luxy","repository":"https://
+github.com/swaingithub/fluxy
+","documentation":"https://f
+luxy-doc.vercel.app/","issue
+_tracker":"https://github.co
+m/swaingithub/fluxy/issues",
+"environment":{"sdk":">=3.10
+.0 <4.0.0","flutter":">=3.10
+.0"},"dependencies":{"flutte
+r":{"sdk":"flutter"},"shared
+_preferences":"^2.2.0","flut
+ter_secure_storage":"^9.0.0"
+},"dev_dependencies":{"flutt
+er_test":{"sdk":"flutter"},"
+flutter_lints":"^3.0.0"},"fl
+utter":{"uses-material-desig
+n":true}},"archive_url":"htt
+ps://pub.dev/api/archives/fl
+uxy-0.0.5.tar.gz","archive_s
+ha256":"5ea5c179aba194d2aa33
+4be52cc58bfe1cd1f8d3ac3160f4
+d84e6b28f499271d","published
+":"2026-02-12T07:06:50.89513
+1Z"},{"version":"0.0.6","pub
+spec":{"name":"fluxy","descr
+iption":"A complete Flutter 
+platform unifying reactive 
+state, declarative UI, 
+styling, animation, 
+routing, and tooling. Build 
+production-grade apps 
+faster and at scale.","versi
+on":"0.0.6","homepage":"http
+s://github.com/swaingithub/f
+luxy","repository":"https://
+github.com/swaingithub/fluxy
+","documentation":"https://f
+luxy-doc.vercel.app/","issue
+_tracker":"https://github.co
+m/swaingithub/fluxy/issues",
+"environment":{"sdk":">=3.10
+.0 <4.0.0","flutter":">=3.10
+.0"},"dependencies":{"flutte
+r":{"sdk":"flutter"},"shared
+_preferences":"^2.2.0","flut
+ter_secure_storage":"^9.0.0"
+,"args":"^2.4.2","path":"^1.
+8.3","path_provider":"^2.1.3
+"},"dev_dependencies":{"flut
+ter_test":{"sdk":"flutter"},
+"flutter_lints":"^3.0.0"},"f
+lutter":{"uses-material-desi
+gn":true},"executables":{"fl
+uxy":null}},"archive_url":"h
+ttps://pub.dev/api/archives/
+fluxy-0.0.6.tar.gz","archive
+_sha256":"6d9b91bf103a23c95d
+a84b04357423ccc49b81a9f8b716
+a2ab144fb8ec7eb160","publish
+ed":"2026-02-12T14:11:16.037
+547Z"},{"version":"0.0.7","p
+ubspec":{"name":"fluxy","des
+cription":"A complete 
+Flutter platform unifying 
+reactive state, declarative 
+UI, styling, animation, 
+routing, and tooling. Build 
+production-grade apps 
+faster and at scale.","versi
+on":"0.0.7","homepage":"http
+s://github.com/swaingithub/f
+luxy","repository":"https://
+github.com/swaingithub/fluxy
+","documentation":"https://f
+luxy-doc.vercel.app/","issue
+_tracker":"https://github.co
+m/swaingithub/fluxy/issues",
+"environment":{"sdk":">=3.10
+.0 <4.0.0","flutter":">=3.10
+.0"},"dependencies":{"flutte
+r":{"sdk":"flutter"},"shared
+_preferences":"^2.2.0","flut
+ter_secure_storage":"^9.0.0"
+,"args":"^2.4.2","path":"^1.
+8.3","path_provider":"^2.1.3
+"},"dev_dependencies":{"flut
+ter_test":{"sdk":"flutter"},
+"flutter_lints":"^3.0.0"},"f
+lutter":{"uses-material-desi
+gn":true},"executables":{"fl
+uxy":null}},"archive_url":"h
+ttps://pub.dev/api/archives/
+fluxy-0.0.7.tar.gz","archive
+_sha256":"4ff6595906915c8e7d
+1f24d182cad875636ebbc9e4406d
+313eb99be6776d8ff9","publish
+ed":"2026-02-12T14:21:10.659
+783Z"},{"version":"0.0.8","p
+ubspec":{"name":"fluxy","des
+cription":"A complete 
+Flutter platform unifying 
+reactive state, declarative 
+UI, styling, animation, 
+routing, and tooling. Build 
+production-grade apps 
+faster and at scale.","versi
+on":"0.0.8","homepage":"http
+s://github.com/swaingithub/f
+luxy","repository":"https://
+github.com/swaingithub/fluxy
+","documentation":"https://f
+luxy-doc.vercel.app/","issue
+_tracker":"https://github.co
+m/swaingithub/fluxy/issues",
+"environment":{"sdk":">=3.10
+.0 <4.0.0","flutter":">=3.10
+.0"},"dependencies":{"flutte
+r":{"sdk":"flutter"},"shared
+_preferences":"^2.2.0","flut
+ter_secure_storage":"^9.0.0"
+,"args":"^2.4.2","path":"^1.
+8.3","path_provider":"^2.1.3
+"},"dev_dependencies":{"flut
+ter_test":{"sdk":"flutter"},
+"flutter_lints":"^3.0.0"},"f
+lutter":{"uses-material-desi
+gn":true},"executables":{"fl
+uxy":null}},"archive_url":"h
+ttps://pub.dev/api/archives/
+fluxy-0.0.8.tar.gz","archive
+_sha256":"bb65178acd54d6a4f1
+b7a6fc58fdb85add5f512507083d
+49456b7b96f19dbbaf","publish
+ed":"2026-02-12T14:31:10.337
+483Z"},{"version":"0.0.9","p
+ubspec":{"name":"fluxy","des
+cription":"A complete 
+Flutter platform unifying 
+reactive state, declarative 
+UI, styling, animation, 
+routing, and tooling. Build 
+production-grade apps 
+faster and at scale.","versi
+on":"0.0.9","homepage":"http
+s://github.com/swaingithub/f
+luxy","repository":"https://
+github.com/swaingithub/fluxy
+","documentation":"https://f
+luxy-doc.vercel.app/","issue
+_tracker":"https://github.co
+m/swaingithub/fluxy/issues",
+"environment":{"sdk":">=3.10
+.0 <4.0.0","flutter":">=3.10
+.0"},"dependencies":{"flutte
+r":{"sdk":"flutter"},"shared
+_preferences":"^2.2.0","flut
+ter_secure_storage":"^9.0.0"
+,"args":"^2.4.2","path":"^1.
+8.3","path_provider":"^2.1.3
+"},"dev_dependencies":{"flut
+ter_test":{"sdk":"flutter"},
+"flutter_lints":"^3.0.0"},"f
+lutter":{"uses-material-desi
+gn":true},"executables":{"fl
+uxy":null}},"archive_url":"h
+ttps://pub.dev/api/archives/
+fluxy-0.0.9.tar.gz","archive
+_sha256":"6a2254d0810ece42cf
+2337af2a29cc68b3495fa51537c3
+b531362f4b4823dc70","publish
+ed":"2026-02-12T15:02:43.064
+413Z"},{"version":"0.1.0","p
+ubspec":{"name":"fluxy","des
+cription":"A complete 
+Flutter platform unifying 
+reactive state, declarative 
+UI, styling, animation, 
+routing, and tooling. Build 
+production-grade apps 
+faster and at scale.","versi
+on":"0.1.0","homepage":"http
+s://github.com/swaingithub/f
+luxy","repository":"https://
+github.com/swaingithub/fluxy
+","documentation":"https://f
+luxy-doc.vercel.app/","issue
+_tracker":"https://github.co
+m/swaingithub/fluxy/issues",
+"environment":{"sdk":">=3.10
+.0 <4.0.0","flutter":">=3.10
+.0"},"dependencies":{"flutte
+r":{"sdk":"flutter"},"shared
+_preferences":"^2.5.4","flut
+ter_secure_storage":"^10.0.0
+","args":"^2.7.0","path":"^1
+.9.1","path_provider":"^2.1.
+5"},"dev_dependencies":{"flu
+tter_test":{"sdk":"flutter"}
+,"flutter_lints":"^3.0.0"},"
+flutter":{"uses-material-des
+ign":true},"executables":{"f
+luxy":null}},"archive_url":"
+https://pub.dev/api/archives
+/fluxy-0.1.0.tar.gz","archiv
+e_sha256":"37441ac99553ec7ca
+1769e905c94b5004f0cfcafe16cb
+a00d9340b2eea8afc17","publis
+hed":"2026-02-12T15:55:42.87
+7380Z"},{"version":"0.1.1","
+pubspec":{"name":"fluxy","de
+scription":"A complete 
+Flutter platform unifying 
+reactive state, declarative 
+UI, styling, animation, 
+routing, and tooling. Build 
+production-grade apps 
+faster and at scale.","versi
+on":"0.1.1","homepage":"http
+s://github.com/swaingithub/f
+luxy","repository":"https://
+github.com/swaingithub/fluxy
+","documentation":"https://f
+luxy-doc.vercel.app/","issue
+_tracker":"https://github.co
+m/swaingithub/fluxy/issues",
+"environment":{"sdk":">=3.10
+.0 <4.0.0","flutter":">=3.10
+.0"},"dependencies":{"flutte
+r":{"sdk":"flutter"},"shared
+_preferences":"^2.5.4","flut
+ter_secure_storage":"^10.0.0
+","args":"^2.7.0","path":"^1
+.9.1","path_provider":"^2.1.
+5"},"dev_dependencies":{"flu
+tter_test":{"sdk":"flutter"}
+,"flutter_lints":"^3.0.0"},"
+flutter":{"uses-material-des
+ign":true},"executables":{"f
+luxy":null}},"archive_url":"
+https://pub.dev/api/archives
+/fluxy-0.1.1.tar.gz","archiv
+e_sha256":"ec99e65ccf6ee42de
+bdb685edc8342b08d4df3c5c9a7c
+e44abcf97f043e36312","publis
+hed":"2026-02-13T07:38:51.63
+0808Z"},{"version":"0.1.2","
+pubspec":{"name":"fluxy","de
+scription":"A complete 
+Flutter platform unifying 
+reactive state, declarative 
+UI, styling, animation, 
+routing, and tooling. Build 
+production-grade apps 
+faster and at scale.","versi
+on":"0.1.2","homepage":"http
+s://github.com/swaingithub/f
+luxy","repository":"https://
+github.com/swaingithub/fluxy
+","documentation":"https://f
+luxy-doc.vercel.app/","issue
+_tracker":"https://github.co
+m/swaingithub/fluxy/issues",
+"environment":{"sdk":">=3.10
+.0 <4.0.0","flutter":">=3.10
+.0"},"dependencies":{"flutte
+r":{"sdk":"flutter"},"shared
+_preferences":"^2.5.4","flut
+ter_secure_storage":"^10.0.0
+","args":"^2.7.0","path":"^1
+.9.1","path_provider":"^2.1.
+5"},"dev_dependencies":{"flu
+tter_test":{"sdk":"flutter"}
+,"flutter_lints":"^3.0.0"},"
+flutter":{"uses-material-des
+ign":true},"executables":{"f
+luxy":null}},"archive_url":"
+https://pub.dev/api/archives
+/fluxy-0.1.2.tar.gz","archiv
+e_sha256":"ad2e5d02b59132be1
+a626666550e165bd5b537bb3d227
+8e26e58cb4ebf4c0245","publis
+hed":"2026-02-13T11:35:47.06
+8914Z"},{"version":"0.1.3","
+pubspec":{"name":"fluxy","de
+scription":"A complete 
+Flutter platform unifying 
+reactive state, declarative 
+UI, styling, animation, 
+routing, and tooling. Build 
+production-grade apps 
+faster and at scale.","versi
+on":"0.1.3","homepage":"http
+s://github.com/swaingithub/f
+luxy","repository":"https://
+github.com/swaingithub/fluxy
+","documentation":"https://f
+luxy-doc.vercel.app/","issue
+_tracker":"https://github.co
+m/swaingithub/fluxy/issues",
+"environment":{"sdk":">=3.10
+.0 <4.0.0","flutter":">=3.10
+.0"},"dependencies":{"flutte
+r":{"sdk":"flutter"},"shared
+_preferences":"^2.5.4","flut
+ter_secure_storage":"^10.0.0
+","args":"^2.7.0","path":"^1
+.9.1","path_provider":"^2.1.
+5"},"dev_dependencies":{"flu
+tter_test":{"sdk":"flutter"}
+,"flutter_lints":"^3.0.0"},"
+flutter":{"uses-material-des
+ign":true},"executables":{"f
+luxy":null}},"archive_url":"
+https://pub.dev/api/archives
+/fluxy-0.1.3.tar.gz","archiv
+e_sha256":"43b9f0c2b2d957425
+39bd15576b8b9cdd0f09b1380404
+3dfb407c4ac53eeebd2","publis
+hed":"2026-02-13T15:49:02.19
+8241Z"},{"version":"0.1.4","
+pubspec":{"name":"fluxy","de
+scription":"A complete 
+Flutter platform unifying 
+reactive state, declarative 
+UI, styling, animation, 
+routing, and tooling. Build 
+production-grade apps 
+faster and at scale.","versi
+on":"0.1.4","homepage":"http
+s://github.com/swaingithub/f
+luxy","repository":"https://
+github.com/swaingithub/fluxy
+","documentation":"https://f
+luxy-doc.vercel.app/","issue
+_tracker":"https://github.co
+m/swaingithub/fluxy/issues",
+"environment":{"sdk":">=3.10
+.0 <4.0.0","flutter":">=3.10
+.0"},"dependencies":{"flutte
+r":{"sdk":"flutter"},"shared
+_preferences":"^2.5.4","flut
+ter_secure_storage":"^10.0.0
+","args":"^2.7.0","path":"^1
+.9.1","path_provider":"^2.1.
+5"},"dev_dependencies":{"flu
+tter_test":{"sdk":"flutter"}
+,"flutter_lints":"^3.0.0"},"
+flutter":{"uses-material-des
+ign":true},"executables":{"f
+luxy":null}},"archive_url":"
+https://pub.dev/api/archives
+/fluxy-0.1.4.tar.gz","archiv
+e_sha256":"b49bd150d989ff761
+f3bd86f9448a05b10a6a85eea068
+114d732d984e74dc707","publis
+hed":"2026-02-14T06:09:00.78
+2514Z"},{"version":"0.1.5","
+pubspec":{"name":"fluxy","de
+scription":"A complete 
+Flutter platform unifying 
+reactive state, declarative 
+UI, styling, animation, 
+routing, and tooling. Build 
+production-grade apps 
+faster and at scale.","versi
+on":"0.1.5","homepage":"http
+s://github.com/swaingithub/f
+luxy","repository":"https://
+github.com/swaingithub/fluxy
+","documentation":"https://f
+luxy-doc.vercel.app/","issue
+_tracker":"https://github.co
+m/swaingithub/fluxy/issues",
+"environment":{"sdk":">=3.10
+.0 <4.0.0","flutter":">=3.10
+.0"},"dependencies":{"flutte
+r":{"sdk":"flutter"},"shared
+_preferences":"^2.5.4","flut
+ter_secure_storage":"^10.0.0
+","args":"^2.7.0","path":"^1
+.9.1","path_provider":"^2.1.
+5"},"dev_dependencies":{"flu
+tter_test":{"sdk":"flutter"}
+,"flutter_lints":"^3.0.0"},"
+flutter":{"uses-material-des
+ign":true},"executables":{"f
+luxy":null}},"archive_url":"
+https://pub.dev/api/archives
+/fluxy-0.1.5.tar.gz","archiv
+e_sha256":"1d09133c9261cd249
+75cd6972748247fbd9ee5354771e
+74b3b30e27deb4c0a5f","publis
+hed":"2026-02-14T07:58:18.19
+0967Z"},{"version":"1.0.0-al
+pha.1","retracted":true,"pub
+spec":{"name":"fluxy","descr
+iption":"High-performance 
+reactive UI framework for 
+Flutter. SwiftUI-like 
+syntax with 
+zero-boilerplate signals, 
+Tailwind-inspired styling, 
+and fluent modifiers.","vers
+ion":"1.0.0-alpha.1","homepa
+ge":"https://github.com/swai
+ngithub/fluxy","repository":
+"https://github.com/swaingit
+hub/fluxy","issue_tracker":"
+https://github.com/swaingith
+ub/fluxy/issues","environmen
+t":{"sdk":">=3.10.0 <4.0.0",
+"flutter":">=3.10.0"},"depen
+dencies":{"flutter":{"sdk":"
+flutter"}},"dev_dependencies
+":{"flutter_test":{"sdk":"fl
+utter"},"flutter_lints":"^3.
+0.0"},"flutter":{"uses-mater
+ial-design":true}},"archive_
+url":"https://pub.dev/api/ar
+chives/fluxy-1.0.0-alpha.1.t
+ar.gz","archive_sha256":"6ba
+58dabeaf85bb63ab1fb9fedeef62
+369893a6218b197c2ce71b498827
+60ec1","published":"2026-02-
+11T13:32:14.165752Z"},{"vers
+ion":"1.0.0-alpha.2","retrac
+ted":true,"pubspec":{"name":
+"fluxy","description":"High-
+performance reactive UI 
+framework for Flutter. 
+SwiftUI-like syntax with 
+zero-boilerplate signals, 
+Tailwind-inspired styling, 
+and fluent modifiers.","vers
+ion":"1.0.0-alpha.2","homepa
+ge":"https://github.com/swai
+ngithub/fluxy","repository":
+"https://github.com/swaingit
+hub/fluxy","issue_tracker":"
+https://github.com/swaingith
+ub/fluxy/issues","environmen
+t":{"sdk":">=3.10.0 <4.0.0",
+"flutter":">=3.10.0"},"depen
+dencies":{"flutter":{"sdk":"
+flutter"}},"dev_dependencies
+":{"flutter_test":{"sdk":"fl
+utter"},"flutter_lints":"^3.
+0.0"},"flutter":{"uses-mater
+ial-design":true}},"archive_
+url":"https://pub.dev/api/ar
+chives/fluxy-1.0.0-alpha.2.t
+ar.gz","archive_sha256":"c40
+932ff38342bb594f9642e83364cf
+8eeca7f1bc0cd553027b4e48eab0
+7c23c","published":"2026-02-
+11T14:57:02.915106Z"},{"vers
+ion":"1.0.0-alpha.3","retrac
+ted":true,"pubspec":{"name":
+"fluxy","description":"High-
+performance reactive UI 
+framework for Flutter. 
+SwiftUI-like syntax with 
+zero-boilerplate signals, 
+Tailwind-inspired styling, 
+and fluent modifiers.","vers
+ion":"1.0.0-alpha.3","homepa
+ge":"https://github.com/swai
+ngithub/fluxy","repository":
+"https://github.com/swaingit
+hub/fluxy","issue_tracker":"
+https://github.com/swaingith
+ub/fluxy/issues","environmen
+t":{"sdk":">=3.10.0 <4.0.0",
+"flutter":">=3.10.0"},"depen
+dencies":{"flutter":{"sdk":"
+flutter"}},"dev_dependencies
+":{"flutter_test":{"sdk":"fl
+utter"},"flutter_lints":"^3.
+0.0"},"flutter":{"uses-mater
+ial-design":true}},"archive_
+url":"https://pub.dev/api/ar
+chives/fluxy-1.0.0-alpha.3.t
+ar.gz","archive_sha256":"053
+0d96d93a788266d5b5e0f8c4c555
+31e06718dd43ec50c211979dd208
+008bf","published":"2026-02-
+11T15:40:52.073081Z"},{"vers
+ion":"1.0.0-alpha.4","retrac
+ted":true,"pubspec":{"name":
+"fluxy","description":"High-
+performance reactive UI 
+framework for Flutter. 
+SwiftUI-like syntax with 
+zero-boilerplate signals, 
+Tailwind-inspired styling, 
+and fluent modifiers.","vers
+ion":"1.0.0-alpha.4","homepa
+ge":"https://github.com/swai
+ngithub/fluxy","repository":
+"https://github.com/swaingit
+hub/fluxy","issue_tracker":"
+https://github.com/swaingith
+ub/fluxy/issues","environmen
+t":{"sdk":">=3.10.0 <4.0.0",
+"flutter":">=3.10.0"},"depen
+dencies":{"flutter":{"sdk":"
+flutter"}},"dev_dependencies
+":{"flutter_test":{"sdk":"fl
+utter"},"flutter_lints":"^3.
+0.0"},"flutter":{"uses-mater
+ial-design":true}},"archive_
+url":"https://pub.dev/api/ar
+chives/fluxy-1.0.0-alpha.4.t
+ar.gz","archive_sha256":"102
+ab9fe72eec81b9cc24fadbcd67dd
+fe65cb82cfc0e0e79cb9a9c07c72
+87760","published":"2026-02-
+11T17:14:22.883597Z"}],"_fet
+chedAt":"2026-02-14T18:56:23
+.047115"}
+IO  : Finished C:\flutter\bi
+n\cache\dart-sdk\bin\dart.ex
+e. Exit code 0.
+    | stdout:
+    | | Analyzing bin, lib, 
+pubspec.yaml...
+    | | No issues found!
+    | | 
+    | Nothing output on 
+stderr.
+MSG : Package validation found the following potential issue:
+    | * 2 checked-in files are modified in git.
+    |   
+    |   Usually you want to publish from a clean git state.
+    |   
+    |   Consider committing these files or reverting the changes.
+    |   
+    |   Modified files:
+    |   
+    |   lib\src\dsl\fx.dart
+    |   lib\src\dsl\modifiers.dart
+    |   
+    |   Run `git status` for more information.
+    |   
+FINE: Validating package 
+finished (5.223s).
+MSG : The server may enforce additional checks.
+MSG : 
+    | Package has 1 warning.
+IO  : Writing 128981 
+characters to text file C:\U
+sers\Asus\AppData\Local\Pub\
+Cache\log\pub_log.txt.
+MSG : Logs written to C:\Users\Asus\AppData\Local\Pub\Cache\log\pub_log.txt.
+[+7421 ms] pub failed
+           command: "C:\flutter\bin\cache\dart-sdk\bin\dart pub --suppress-analytics publish --dry-run --verbose"
+           pub env: {
+             "FLUTTER_ROOT": "C:\flutter",
+             "PUB_ENVIRONMENT": "flutter_cli:forward",
+           }
+           exit code: 65
+
+[   +4 ms] "flutter publish" took 7,676ms.
+[ +185 ms] Failed to update 
+packages.
+[   +3 ms] 
+           #0      
+throwToolExit (package:flutt
+er_tools/src/base/common.dar
+t:34:3)
+           #1      _DefaultP
+ub._runWithStdioInherited (p
+ackage:flutter_tools/src/dar
+t/pub.dart:486:7)
+           <asynchronous 
+suspension>
+           #2      
+_DefaultPub.interactively (p
+ackage:flutter_tools/src/dar
+t/pub.dart:559:5)
+           <asynchronous 
+suspension>
+           #3      PackagesF
+orwardCommand.runCommand (pa
+ckage:flutter_tools/src/comm
+ands/packages.dart:166:5)
+           <asynchronous 
+suspension>
+           #4      FlutterCo
+mmand.run.<anonymous 
+closure> (package:flutter_to
+ols/src/runner/flutter_comma
+nd.dart:1559:27)
+           <asynchronous 
+suspension>
+           #5      
+AppContext.run.<anonymous 
+closure> (package:flutter_to
+ols/src/base/context.dart:15
+4:19)
+           <asynchronous 
+suspension>
+           #6      
+CommandRunner.runCommand (pa
+ckage:args/command_runner.da
+rt:212:13)
+           <asynchronous 
+suspension>
+           #7      FlutterCo
+mmandRunner.runCommand.<anon
+ymous closure> (package:flut
+ter_tools/src/runner/flutter
+_command_runner.dart:487:9)
+           <asynchronous 
+suspension>
+           #8      
+AppContext.run.<anonymous 
+closure> (package:flutter_to
+ols/src/base/context.dart:15
+4:19)
+           <asynchronous 
+suspension>
+           #9      FlutterCo
+mmandRunner.runCommand (pack
+age:flutter_tools/src/runner
+/flutter_command_runner.dart
+:422:5)
+           <asynchronous 
+suspension>
+           #10     
+run.<anonymous 
+closure>.<anonymous 
+closure> (package:flutter_to
+ols/runner.dart:104:11)
+           <asynchronous 
+suspension>
+           #11     
+AppContext.run.<anonymous 
+closure> (package:flutter_to
+ols/src/base/context.dart:15
+4:19)
+           <asynchronous 
+suspension>
+           #12     main (pac
+kage:flutter_tools/executabl
+e.dart:103:3)
+           <asynchronous 
+suspension>
+
+
+[        ] Running 1 shutdown hook
+[   +4 ms] Shutdown hooks complete
+[ +144 ms] exiting with code 65

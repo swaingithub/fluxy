@@ -1,0 +1,4 @@
+Analyzing fluxy...                                              
+
+   info - The import of '../styles/style.dart' is unnecessary because all of the used elements are also provided by the import of 'fx.dart' - lib\src\dsl\modifiers.dart:2:8 - unnecessary_import
+
