@@ -1,3 +1,19 @@
+## 0.1.6
+
+* **Bulletproof Architecture (Refactoring)**:
+    * **Attribute Accumulation DSL**: Transitioned from "Widget Wrapping" to "Attribute Accumulation". Modifiers now directly update `FxStyle` properties, resulting in a significantly flatter and higher-performance widget tree.
+    * **Base FxWidget Class**: Implemented a unified `FxWidget` base class for all Fluxy widgets, enforcing a consistent contract for style and responsive attribute management.
+    * **Structural Recursion Fix**: Resolved `ParentData` issues (like `Incorrect use of ParentDataWidget`) by implementing structural recursion. Modifiers now "peer through" `Expanded`, `Flexible`, and `Positioned` to apply styles to the correct target.
+    * **Namespace Protection**: Renamed internal `FxStyle` properties to private fields with public getters, preventing naming collisions between Flutter widget properties and DSL methods.
+    * **Shadow Recursion Fix**: Resolved a critical issue where repeatedly applying shadows could lead to stack overflow due to recursive wrapping.
+* **DSL Consistency & Trust**:
+    * **Unified Modifier API**: Synchronized `.padding()`, `.margin()`, `.rounded()`, and other core modifiers across ALL widgets.
+    * **Smart Proxy Refinement**: Updated `.font`, `.shadow`, `.bg`, and `.width` proxies to use the new attribute accumulation engine.
+    * **Official Syntax Lock**: Locked the core DSL contract. Future versions will prioritize non-breaking extensions.
+* **Dev Experience Polish**:
+    * **Updated Factory Methods**: `Fx.avatar`, `Fx.table`, `Fx.dropdown`, and `Fx.badge` now natively support `style`, `className`, and `responsive` objects.
+    * **Improved List Performance**: Fixed an inconsistency where `Fx.list` builders didn't correctly propagate styles to children.
+
 ## 0.1.5
 
 * **Next-Gen Layout System**:

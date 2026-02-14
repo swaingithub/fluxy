@@ -4,19 +4,33 @@ import '../engine/style_resolver.dart';
 import '../engine/decoration_builder.dart';
 import '../reactive/signal.dart';
 
-class TextBox extends StatefulWidget {
+import 'fx_widget.dart';
+
+class TextBox extends FxWidget {
   final dynamic data;
   final FxStyle style;
-  final String? className;
   final FxResponsiveStyle? responsive;
 
   const TextBox({
     super.key,
+    super.id,
+    super.className,
     required this.data,
     this.style = FxStyle.none,
-    this.className,
     this.responsive,
   });
+
+  @override
+  TextBox copyWithStyle(FxStyle additionalStyle) {
+    return copyWith(style: style.merge(additionalStyle));
+  }
+
+  @override
+  TextBox copyWithResponsive(FxResponsiveStyle additionalResponsive) {
+    return copyWith(
+      responsive: responsive?.merge(additionalResponsive) ?? additionalResponsive,
+    );
+  }
 
   TextBox copyWith({
     FxStyle? style,
@@ -25,6 +39,7 @@ class TextBox extends StatefulWidget {
     FxResponsiveStyle? responsive,
   }) {
     return TextBox(
+      key: key,
       data: data ?? this.data,
       style: style ?? this.style,
       className: className ?? this.className,

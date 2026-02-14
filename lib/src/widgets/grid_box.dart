@@ -4,22 +4,35 @@ import '../engine/style_resolver.dart';
 import '../engine/decoration_builder.dart';
 import '../engine/grid_layout_solver.dart';
 
-class GridBox extends StatelessWidget {
+import 'fx_widget.dart';
+
+class GridBox extends FxWidget {
   final FxStyle style;
-  final String? className;
   final FxResponsiveStyle? responsive;
   final List<Widget> children;
+  final VoidCallback? onTap;
 
   const GridBox({
     super.key,
+    super.id,
+    super.className,
     this.style = FxStyle.none,
-    this.className,
     this.responsive,
     required this.children,
     this.onTap,
   });
 
-  final VoidCallback? onTap;
+  @override
+  GridBox copyWithStyle(FxStyle additionalStyle) {
+    return copyWith(style: style.merge(additionalStyle));
+  }
+
+  @override
+  GridBox copyWithResponsive(FxResponsiveStyle additionalResponsive) {
+    return copyWith(
+      responsive: responsive?.merge(additionalResponsive) ?? additionalResponsive,
+    );
+  }
 
   GridBox copyWith({
     FxStyle? style,
@@ -29,8 +42,10 @@ class GridBox extends StatelessWidget {
     VoidCallback? onTap,
   }) {
     return GridBox(
-      style: style ?? this.style,
+      key: key,
+      id: id ?? this.id,
       className: className ?? this.className,
+      style: style ?? this.style,
       responsive: responsive ?? this.responsive,
       children: children ?? this.children,
       onTap: onTap ?? this.onTap,
@@ -38,12 +53,17 @@ class GridBox extends StatelessWidget {
   }
 
   @override
+  State<GridBox> createState() => _GridBoxState();
+}
+
+class _GridBoxState extends State<GridBox> {
+  @override
   Widget build(BuildContext context) {
     final s = FxStyleResolver.resolve(
       context,
-      style: style,
-      className: className,
-      responsive: responsive,
+      style: widget.style,
+      className: widget.className,
+      responsive: widget.responsive,
     );
     final double width = MediaQuery.of(context).size.width;
 
@@ -60,7 +80,7 @@ class GridBox extends StatelessWidget {
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       padding: s.padding,
-      children: children,
+      children: widget.children,
     );
 
     if (FxDecorationBuilder.hasVisuals(s) ||
@@ -80,8 +100,8 @@ class GridBox extends StatelessWidget {
       current = Expanded(flex: s.flex!, child: current);
     }
 
-    return onTap != null
-        ? GestureDetector(onTap: onTap, child: current)
+    return widget.onTap != null
+        ? GestureDetector(onTap: widget.onTap, child: current)
         : current;
   }
 }

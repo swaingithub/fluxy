@@ -3,24 +3,37 @@ import '../styles/style.dart';
 import '../engine/style_resolver.dart';
 import '../engine/decoration_builder.dart';
 
-class FlexBox extends StatelessWidget {
+import 'fx_widget.dart';
+
+class FlexBox extends FxWidget {
   final Axis direction;
   final FxStyle style;
-  final String? className;
   final FxResponsiveStyle? responsive;
   final List<Widget> children;
+  final VoidCallback? onTap;
 
   const FlexBox({
     super.key,
+    super.id,
+    super.className,
     required this.direction,
     this.style = FxStyle.none,
-    this.className,
     this.responsive,
     required this.children,
     this.onTap,
   });
 
-  final VoidCallback? onTap;
+  @override
+  FlexBox copyWithStyle(FxStyle additionalStyle) {
+    return copyWith(style: style.merge(additionalStyle));
+  }
+
+  @override
+  FlexBox copyWithResponsive(FxResponsiveStyle additionalResponsive) {
+    return copyWith(
+      responsive: responsive?.merge(additionalResponsive) ?? additionalResponsive,
+    );
+  }
 
   FlexBox copyWith({
     FxStyle? style,
@@ -31,9 +44,11 @@ class FlexBox extends StatelessWidget {
     VoidCallback? onTap,
   }) {
     return FlexBox(
+      key: key,
+      id: id ?? this.id,
+      className: className ?? this.className,
       direction: direction ?? this.direction,
       style: style ?? this.style,
-      className: className ?? this.className,
       responsive: responsive ?? this.responsive,
       children: children ?? this.children,
       onTap: onTap ?? this.onTap,
@@ -41,15 +56,20 @@ class FlexBox extends StatelessWidget {
   }
 
   @override
+  State<FlexBox> createState() => _FlexBoxState();
+}
+
+class _FlexBoxState extends State<FlexBox> {
+  @override
   Widget build(BuildContext context) {
     final s = FxStyleResolver.resolve(
       context,
-      style: style,
-      className: className,
-      responsive: responsive,
+      style: widget.style,
+      className: widget.className,
+      responsive: widget.responsive,
     );
 
-    final actualDirection = s.direction ?? direction;
+    final actualDirection = s.direction ?? widget.direction;
 
     Widget current = Flex(
       direction: actualDirection,
@@ -57,8 +77,8 @@ class FlexBox extends StatelessWidget {
       crossAxisAlignment: s.alignItems ?? CrossAxisAlignment.center,
       mainAxisSize: s.mainAxisSize ?? MainAxisSize.max,
       children: s.gap != null
-          ? _addGaps(children, s.gap!, actualDirection)
-          : children,
+          ? _addGaps(widget.children, s.gap!, actualDirection)
+          : widget.children,
     );
 
     // Apply container styles if any (Width, Height, Padding, Decoration)
@@ -85,10 +105,10 @@ class FlexBox extends StatelessWidget {
       );
     }
 
-    return onTap != null
+    return widget.onTap != null
         ? GestureDetector(
             behavior: HitTestBehavior.opaque,
-            onTap: onTap,
+            onTap: widget.onTap,
             child: current,
           )
         : current;

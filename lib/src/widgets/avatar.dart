@@ -2,33 +2,81 @@ import 'package:flutter/material.dart';
 import '../styles/style.dart';
 import '../styles/tokens.dart';
 import '../widgets/box.dart';
+import '../widgets/fx_widget.dart';
 
 enum FxAvatarSize { sm, md, lg, xl }
 
 enum FxAvatarShape { circle, square, rounded }
 
-class FxAvatar extends StatelessWidget {
+class FxAvatar extends FxWidget {
   final String? image;
   final String? fallback;
   final Widget? fallbackWidget;
   final FxAvatarSize size;
   final FxAvatarShape shape;
   final FxStyle style;
+  final FxResponsiveStyle? responsive;
   final VoidCallback? onTap;
 
   const FxAvatar({
     super.key,
+    super.id,
+    super.className,
     this.image,
     this.fallback,
     this.fallbackWidget,
     this.size = FxAvatarSize.md,
     this.shape = FxAvatarShape.circle,
     this.style = FxStyle.none,
+    this.responsive,
     this.onTap,
   });
 
+  @override
+  FxAvatar copyWithStyle(FxStyle additionalStyle) {
+    return copyWith(style: style.merge(additionalStyle));
+  }
+
+  @override
+  FxAvatar copyWithResponsive(FxResponsiveStyle additionalResponsive) {
+    return copyWith(
+      responsive: responsive?.merge(additionalResponsive) ?? additionalResponsive,
+    );
+  }
+
+  FxAvatar copyWith({
+    String? image,
+    String? fallback,
+    Widget? fallbackWidget,
+    FxAvatarSize? size,
+    FxAvatarShape? shape,
+    FxStyle? style,
+    FxResponsiveStyle? responsive,
+    VoidCallback? onTap,
+    String? className,
+  }) {
+    return FxAvatar(
+      key: key,
+      id: id,
+      className: className ?? this.className,
+      image: image ?? this.image,
+      fallback: fallback ?? this.fallback,
+      fallbackWidget: fallbackWidget ?? this.fallbackWidget,
+      size: size ?? this.size,
+      shape: shape ?? this.shape,
+      style: style ?? this.style,
+      responsive: responsive ?? this.responsive,
+      onTap: onTap ?? this.onTap,
+    );
+  }
+
+  @override
+  State<FxAvatar> createState() => _FxAvatarState();
+}
+
+class _FxAvatarState extends State<FxAvatar> {
   double get _size {
-    switch (size) {
+    switch (widget.size) {
       case FxAvatarSize.sm:
         return 32;
       case FxAvatarSize.md:
@@ -41,7 +89,7 @@ class FxAvatar extends StatelessWidget {
   }
 
   double get _radius {
-    switch (shape) {
+    switch (widget.shape) {
       case FxAvatarShape.circle:
         return _size / 2;
       case FxAvatarShape.square:
@@ -55,9 +103,9 @@ class FxAvatar extends StatelessWidget {
   Widget build(BuildContext context) {
     Widget content;
 
-    if (image != null) {
+    if (widget.image != null) {
       content = Image.network(
-        image!,
+        widget.image!,
         width: _size,
         height: _size,
         fit: BoxFit.cover,
@@ -68,8 +116,11 @@ class FxAvatar extends StatelessWidget {
     }
 
     return Box(
-      onTap: onTap,
-      style: style.merge(
+      id: widget.id,
+      className: widget.className,
+      onTap: widget.onTap,
+      responsive: widget.responsive,
+      style: widget.style.merge(
         FxStyle(
           width: _size,
           height: _size,
@@ -84,11 +135,11 @@ class FxAvatar extends StatelessWidget {
   }
 
   Widget _buildFallback() {
-    if (fallbackWidget != null) return fallbackWidget!;
-    if (fallback != null) {
+    if (widget.fallbackWidget != null) return widget.fallbackWidget!;
+    if (widget.fallback != null) {
       return Text(
-        fallback!
-            .substring(0, (fallback!.length > 2 ? 2 : fallback!.length))
+        widget.fallback!
+            .substring(0, (widget.fallback!.length > 2 ? 2 : widget.fallback!.length))
             .toUpperCase(),
         style: TextStyle(
           color: Colors.grey.shade600,

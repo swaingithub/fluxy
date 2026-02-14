@@ -3,7 +3,10 @@ import '../styles/style.dart';
 import '../widgets/box.dart';
 import '../reactive/signal.dart';
 
-class FxDropdown<T> extends StatefulWidget {
+import '../widgets/fx_widget.dart';
+import '../engine/style_resolver.dart';
+
+class FxDropdown<T> extends FxWidget {
   final T? value;
   final Signal<T>? signal;
   final List<T> items;
@@ -14,9 +17,12 @@ class FxDropdown<T> extends StatefulWidget {
   final FxStyle style;
   final FxStyle dropdownStyle;
   final Color? iconColor;
+  final FxResponsiveStyle? responsive;
 
   const FxDropdown({
     super.key,
+    super.id,
+    super.className,
     this.value,
     this.signal,
     required this.items,
@@ -27,10 +33,55 @@ class FxDropdown<T> extends StatefulWidget {
     this.style = FxStyle.none,
     this.dropdownStyle = FxStyle.none,
     this.iconColor,
+    this.responsive,
   }) : assert(
          value != null || signal != null,
          "Either value or signal must be provided",
        );
+
+  @override
+  FxDropdown<T> copyWithStyle(FxStyle additionalStyle) {
+    return copyWith(style: style.merge(additionalStyle));
+  }
+
+  @override
+  FxDropdown<T> copyWithResponsive(FxResponsiveStyle additionalResponsive) {
+    return copyWith(
+      responsive: responsive?.merge(additionalResponsive) ?? additionalResponsive,
+    );
+  }
+
+  FxDropdown<T> copyWith({
+    T? value,
+    Signal<T>? signal,
+    List<T>? items,
+    ValueChanged<T?>? onChanged,
+    String Function(T)? itemLabel,
+    Widget Function(T)? itemBuilder,
+    String? placeholder,
+    FxStyle? style,
+    FxStyle? dropdownStyle,
+    Color? iconColor,
+    FxResponsiveStyle? responsive,
+    String? className,
+  }) {
+    return FxDropdown<T>(
+      key: key,
+      id: id,
+      className: className ?? this.className,
+      value: value ?? this.value,
+      signal: signal ?? this.signal,
+      items: items ?? this.items,
+      onChanged: onChanged ?? this.onChanged,
+      itemLabel: itemLabel ?? this.itemLabel,
+      itemBuilder: itemBuilder ?? this.itemBuilder,
+      placeholder: placeholder ?? this.placeholder,
+      style: style ?? this.style,
+      dropdownStyle: dropdownStyle ?? this.dropdownStyle,
+      iconColor: iconColor ?? this.iconColor,
+      responsive: responsive ?? this.responsive,
+    );
+  }
 
   @override
   State<FxDropdown<T>> createState() => _FxDropdownState<T>();
@@ -188,21 +239,26 @@ class _FxDropdownState<T> extends State<FxDropdown<T>>
 
   @override
   Widget build(BuildContext context) {
+    final s = FxStyleResolver.resolve(
+      context,
+      style: widget.style,
+      className: widget.className,
+      responsive: widget.responsive,
+    );
+
     return CompositedTransformTarget(
       link: _layerLink,
       child: GestureDetector(
         onTap: _toggleDropdown,
         child: Box(
-          style: widget.style.merge(
-            FxStyle(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(
-                color: _isOpen ? Colors.blue : Colors.grey.shade300,
-              ),
-              backgroundColor: Colors.white,
+          style: FxStyle(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(
+              color: _isOpen ? Colors.blue : Colors.grey.shade300,
             ),
-          ),
+            backgroundColor: Colors.white,
+          ).merge(s),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

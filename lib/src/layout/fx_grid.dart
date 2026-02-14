@@ -4,12 +4,15 @@ import '../styles/style.dart';
 import '../engine/style_resolver.dart';
 import '../engine/decoration_builder.dart';
 
-class FxGrid extends StatelessWidget {
+import '../widgets/fx_widget.dart';
+
+class FxGrid extends FxWidget {
   final List<Widget> children;
   final int? columns;
   final double gap;
   final double? minItemWidth;
   final FxStyle style;
+  final FxResponsiveStyle? responsive;
   final double childAspectRatio;
   final bool shrinkWrap;
   final ScrollPhysics? physics;
@@ -23,11 +26,14 @@ class FxGrid extends StatelessWidget {
 
   const FxGrid({
     super.key,
+    super.id,
+    super.className,
     required this.children,
     this.columns = 2,
     this.gap = 0,
     this.minItemWidth,
     this.style = FxStyle.none,
+    this.responsive,
     this.childAspectRatio = 1.0,
     this.shrinkWrap = true,
     this.physics = const NeverScrollableScrollPhysics(),
@@ -110,40 +116,102 @@ class FxGrid extends StatelessWidget {
   }
 
   @override
+  FxGrid copyWithStyle(FxStyle additionalStyle) {
+    return copyWith(style: style.merge(additionalStyle));
+  }
+
+  @override
+  FxGrid copyWithResponsive(FxResponsiveStyle additionalResponsive) {
+    return copyWith(
+      responsive: responsive?.merge(additionalResponsive) ?? additionalResponsive,
+    );
+  }
+
+  FxGrid copyWith({
+    List<Widget>? children,
+    int? columns,
+    double? gap,
+    double? minItemWidth,
+    FxStyle? style,
+    FxResponsiveStyle? responsive,
+    double? childAspectRatio,
+    bool? shrinkWrap,
+    ScrollPhysics? physics,
+  }) {
+    return FxGrid(
+      key: key,
+      id: id,
+      className: className,
+      children: children ?? this.children,
+      columns: columns ?? this.columns,
+      gap: gap ?? this.gap,
+      minItemWidth: minItemWidth ?? this.minItemWidth,
+      style: style ?? this.style,
+      responsive: responsive ?? this.responsive,
+      childAspectRatio: childAspectRatio ?? this.childAspectRatio,
+      shrinkWrap: shrinkWrap ?? this.shrinkWrap,
+      physics: physics ?? this.physics,
+      xsCols: xsCols,
+      smCols: smCols,
+      mdCols: mdCols,
+      lgCols: lgCols,
+      xlCols: xlCols,
+    );
+  }
+
+  @override
+  State<FxGrid> createState() => _FxGridState();
+}
+
+class _FxGridState extends State<FxGrid> {
+  @override
   Widget build(BuildContext context) {
-    final s = FxStyleResolver.resolve(context, style: style);
+    final s = FxStyleResolver.resolve(
+      context,
+      style: widget.style,
+      className: widget.className,
+      responsive: widget.responsive,
+    );
     final width = MediaQuery.of(context).size.width;
-    
-    int resolvedCols = columns ?? 2;
+
+    // Attribute Accumulation: Style takes precedence over constructor args
+    int resolvedCols = s.crossAxisCount ?? widget.columns ?? 2;
     
     // 1. Check if it's a responsive grid
-    if (xsCols != null || smCols != null || mdCols != null || lgCols != null || xlCols != null) {
+    if (widget.xsCols != null ||
+        widget.smCols != null ||
+        widget.mdCols != null ||
+        widget.lgCols != null ||
+        widget.xlCols != null) {
       resolvedCols = FxBreakpoint.value<int>(
         context,
-        xs: xsCols ?? 2,
-        sm: smCols,
-        md: mdCols,
-        lg: lgCols,
-        xl: xlCols,
+        xs: widget.xsCols ?? 2,
+        sm: widget.smCols,
+        md: widget.mdCols,
+        lg: widget.lgCols,
+        xl: widget.xlCols,
       );
-    } 
+    }
     // 2. Check if it's an auto grid
-    else if (minItemWidth != null) {
-      resolvedCols = (width / (minItemWidth! + gap)).floor();
+    else if (widget.minItemWidth != null) {
+      resolvedCols = (width / (widget.minItemWidth! + widget.gap)).floor();
       if (resolvedCols < 1) resolvedCols = 1;
     }
+
+    // Also use gap from style if set
+    final effectiveGap = s.gap ?? widget.gap;
 
     Widget grid = GridView.builder(
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: resolvedCols,
-        mainAxisSpacing: gap,
-        crossAxisSpacing: gap,
-        childAspectRatio: childAspectRatio,
+        mainAxisSpacing: effectiveGap,
+        crossAxisSpacing: effectiveGap,
+        childAspectRatio: widget.childAspectRatio,
       ),
-      itemCount: children.length,
-      itemBuilder: (context, index) => children[index],
-      shrinkWrap: shrinkWrap,
-      physics: physics,
+      itemCount: widget.children.length,
+      itemBuilder: (context, index) => widget.children[index],
+      shrinkWrap: widget.shrinkWrap,
+      physics: widget.physics,
       padding: s.padding,
     );
 

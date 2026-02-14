@@ -267,12 +267,18 @@ class Fx extends StatefulWidget {
     required List<FxTableColumn<T>> columns,
     bool striped = true,
     VoidCallback? onRowTap,
+    FxStyle style = FxStyle.none,
+    String? className,
+    FxResponsiveStyle? responsive,
   }) {
     return FxTable<T>(
       data: data,
       columns: columns,
       striped: striped,
       onRowTap: onRowTap,
+      style: style,
+      className: className,
+      responsive: responsive,
     );
   }
 
@@ -583,6 +589,8 @@ class Fx extends StatefulWidget {
     FxStyle style = FxStyle.none,
     FxStyle dropdownStyle = FxStyle.none,
     Color? iconColor,
+    String? className,
+    FxResponsiveStyle? responsive,
   }) {
     return FxDropdown<T>(
       value: value,
@@ -595,6 +603,8 @@ class Fx extends StatefulWidget {
       style: style,
       dropdownStyle: dropdownStyle,
       iconColor: iconColor,
+      className: className,
+      responsive: responsive,
     );
   }
 
@@ -603,6 +613,8 @@ class Fx extends StatefulWidget {
   static Widget input({
     required Signal<String> signal,
     String? placeholder,
+    String? label,
+    IconData? icon,
     bool obscureText = false,
     List<Validator<String>>? validators,
     TextInputType? keyboardType,
@@ -614,6 +626,8 @@ class Fx extends StatefulWidget {
     return FxTextField(
       signal: signal,
       placeholder: placeholder,
+      label: label,
+      icon: icon,
       obscureText: obscureText,
       keyboardType: keyboardType,
       maxLines: maxLines,
@@ -621,11 +635,6 @@ class Fx extends StatefulWidget {
       focusNode: focusNode,
       onSubmitted: onSubmitted,
       validators: validators,
-      decoration: InputDecoration(
-        hintText: placeholder,
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-        contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-      ),
     );
   }
 
@@ -702,6 +711,9 @@ class Fx extends StatefulWidget {
     FxAvatarSize size = FxAvatarSize.md,
     FxAvatarShape shape = FxAvatarShape.circle,
     VoidCallback? onTap,
+    FxStyle style = FxStyle.none,
+    String? className,
+    FxResponsiveStyle? responsive,
   }) {
     return FxAvatar(
       image: image,
@@ -709,6 +721,9 @@ class Fx extends StatefulWidget {
       size: size,
       shape: shape,
       onTap: onTap,
+      style: style,
+      className: className,
+      responsive: responsive,
     );
   }
 
@@ -717,8 +732,19 @@ class Fx extends StatefulWidget {
     String? label,
     Color? color,
     Offset offset = const Offset(-4, -4),
+    FxStyle style = FxStyle.none,
+    String? className,
+    FxResponsiveStyle? responsive,
   }) {
-    return FxBadge(child: child, label: label, color: color, offset: offset);
+    return FxBadge(
+      child: child,
+      label: label,
+      color: color,
+      offset: offset,
+      style: style,
+      className: className,
+      responsive: responsive,
+    );
   }
 
   // --- Utilities ---

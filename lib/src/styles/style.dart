@@ -5,37 +5,37 @@ import '../responsive/breakpoint_resolver.dart';
 /// The core styling system for Fluxy.
 /// Inspired by CSS/Tailwind, designed for Flutter.
 class FxStyle {
-  final double? width;
-  final double? height;
-  final EdgeInsets padding;
-  final EdgeInsets margin;
+  final double? _width;
+  final double? _height;
+  final EdgeInsets? _padding;
+  final EdgeInsets? _margin;
   final Color? backgroundColor;
   final Gradient? gradient;
-  final List<BoxShadow>? shadows;
+  final List<BoxShadow>? _shadows;
   final double? glass;
-  final BorderRadius? borderRadius;
+  final BorderRadius? _borderRadius;
   final BoxBorder? border;
 
   // Layout direction
   final Axis? direction;
 
   // Flexbox Properties
-  final MainAxisAlignment? justifyContent;
-  final CrossAxisAlignment? alignItems;
+  final MainAxisAlignment? _justifyContent;
+  final CrossAxisAlignment? _alignItems;
   final MainAxisSize? mainAxisSize;
   final int? flex;
   final int? flexGrow;
   final int? flexShrink;
-  final double? gap;
+  final double? _gap;
   final FlexFit? flexFit;
 
   // Grid Properties
-  final int? crossAxisCount;
+  final int? _crossAxisCount;
   final double? minColumnWidth;
   final double? childAspectRatio;
 
   // Stack/Positioning
-  final AlignmentGeometry? alignment;
+  final AlignmentGeometry? _alignment;
   final Clip? clipBehavior;
   final double? top;
   final double? right;
@@ -44,10 +44,10 @@ class FxStyle {
   final double? zIndex;
 
   // Text Properties
-  final Color? color;
-  final double? fontSize;
-  final FontWeight? fontWeight;
-  final TextAlign? textAlign;
+  final Color? _color;
+  final double? _fontSize;
+  final FontWeight? _fontWeight;
+  final TextAlign? _textAlign;
   final String? fontFamily;
   final TextOverflow? overflow;
   final int? maxLines;
@@ -61,41 +61,42 @@ class FxStyle {
 
   // Utilities
   final MouseCursor? cursor;
-  final double? opacity;
+  final double? _opacity;
   final double? aspectRatio;
 
   const FxStyle({
-    this.width,
-    this.height,
-    this.padding = EdgeInsets.zero,
-    this.margin = EdgeInsets.zero,
+    double? width,
+    double? height,
+    EdgeInsets? padding,
+    EdgeInsets? margin,
     this.backgroundColor,
     this.gradient,
-    this.shadows,
+    List<BoxShadow>? shadows,
     this.glass,
-    this.borderRadius,
+    BorderRadius? borderRadius,
     this.border,
-    this.justifyContent,
-    this.alignItems,
+    MainAxisAlignment? justifyContent,
+    CrossAxisAlignment? alignItems,
     this.mainAxisSize,
     this.flex,
     this.flexGrow,
     this.flexShrink,
-    this.gap,
-    this.crossAxisCount,
+    double? gap,
+    this.flexFit,
+    int? crossAxisCount,
     this.minColumnWidth,
     this.childAspectRatio,
-    this.alignment,
+    AlignmentGeometry? alignment,
     this.clipBehavior,
     this.top,
     this.right,
     this.bottom,
     this.left,
     this.zIndex,
-    this.color,
-    this.fontSize,
-    this.fontWeight,
-    this.textAlign,
+    Color? color,
+    double? fontSize,
+    FontWeight? fontWeight,
+    TextAlign? textAlign,
     this.fontFamily,
     this.overflow,
     this.maxLines,
@@ -104,12 +105,44 @@ class FxStyle {
     this.hover,
     this.pressed,
     this.transition,
-    this.flexFit,
     this.direction,
     this.cursor,
-    this.opacity,
+    double? opacity,
     this.aspectRatio,
-  });
+  })  : _width = width,
+        _height = height,
+        _padding = padding,
+        _margin = margin,
+        _shadows = shadows,
+        _borderRadius = borderRadius,
+        _justifyContent = justifyContent,
+        _alignItems = alignItems,
+        _gap = gap,
+        _crossAxisCount = crossAxisCount,
+        _alignment = alignment,
+        _color = color,
+        _fontSize = fontSize,
+        _fontWeight = fontWeight,
+        _textAlign = textAlign,
+        _opacity = opacity;
+
+  /// Getters to maintain compatibility
+  double? get width => _width;
+  double? get height => _height;
+  EdgeInsets get padding => _padding ?? EdgeInsets.zero;
+  EdgeInsets get margin => _margin ?? EdgeInsets.zero;
+  List<BoxShadow>? get shadows => _shadows;
+  BorderRadius? get borderRadius => _borderRadius;
+  MainAxisAlignment? get justifyContent => _justifyContent;
+  CrossAxisAlignment? get alignItems => _alignItems;
+  double? get gap => _gap;
+  int? get crossAxisCount => _crossAxisCount;
+  AlignmentGeometry? get alignment => _alignment;
+  Color? get color => _color;
+  double? get fontSize => _fontSize;
+  FontWeight? get fontWeight => _fontWeight;
+  TextAlign? get textAlign => _textAlign;
+  double? get opacity => _opacity;
 
   /// An empty style object.
   static const none = FxStyle();
@@ -164,24 +197,24 @@ class FxStyle {
     return FxStyle(
       width: width ?? this.width,
       height: height ?? this.height,
-      padding: padding ?? this.padding,
-      margin: margin ?? this.margin,
+      padding: padding ?? _padding,
+      margin: margin ?? _margin,
       backgroundColor: backgroundColor ?? this.backgroundColor,
       gradient: gradient ?? this.gradient,
-      shadows: shadows ?? this.shadows,
+      shadows: shadows ?? _shadows,
       glass: glass ?? this.glass,
-      borderRadius: borderRadius ?? this.borderRadius,
+      borderRadius: borderRadius ?? _borderRadius,
       border: border ?? this.border,
-      justifyContent: justifyContent ?? this.justifyContent,
-      alignItems: alignItems ?? this.alignItems,
+      justifyContent: justifyContent ?? _justifyContent,
+      alignItems: alignItems ?? _alignItems,
       mainAxisSize: mainAxisSize ?? this.mainAxisSize,
       direction: direction ?? this.direction,
       flex: flex ?? this.flex,
       flexGrow: flexGrow ?? this.flexGrow,
       flexShrink: flexShrink ?? this.flexShrink,
-      gap: gap ?? this.gap,
+      gap: gap ?? _gap,
       flexFit: flexFit ?? this.flexFit,
-      crossAxisCount: crossAxisCount ?? this.crossAxisCount,
+      crossAxisCount: crossAxisCount ?? _crossAxisCount,
       minColumnWidth: minColumnWidth ?? this.minColumnWidth,
       childAspectRatio: childAspectRatio ?? this.childAspectRatio,
       alignment: alignment ?? this.alignment,
@@ -215,24 +248,28 @@ class FxStyle {
     return copyWith(
       width: other.width,
       height: other.height,
-      padding: other.padding == EdgeInsets.zero ? null : other.padding,
-      margin: other.margin == EdgeInsets.zero ? null : other.margin,
+      padding: other._padding == null || other._padding == EdgeInsets.zero
+          ? null
+          : other._padding,
+      margin: other._margin == null || other._margin == EdgeInsets.zero
+          ? null
+          : other._margin,
       backgroundColor: other.backgroundColor,
       gradient: other.gradient,
-      shadows: other.shadows,
+      shadows: other._shadows,
       glass: other.glass,
-      borderRadius: other.borderRadius,
+      borderRadius: other._borderRadius,
       border: other.border,
-      justifyContent: other.justifyContent,
-      alignItems: other.alignItems,
+      justifyContent: other._justifyContent,
+      alignItems: other._alignItems,
       mainAxisSize: other.mainAxisSize,
       direction: other.direction,
       flex: other.flex,
       flexGrow: other.flexGrow,
       flexShrink: other.flexShrink,
-      gap: other.gap,
+      gap: other._gap,
       flexFit: other.flexFit,
-      crossAxisCount: other.crossAxisCount,
+      crossAxisCount: other._crossAxisCount,
       minColumnWidth: other.minColumnWidth,
       childAspectRatio: other.childAspectRatio,
       alignment: other.alignment,
@@ -267,22 +304,22 @@ class FxStyle {
           runtimeType == other.runtimeType &&
           width == other.width &&
           height == other.height &&
-          padding == other.padding &&
-          margin == other.margin &&
+          _padding == other._padding &&
+          _margin == other._margin &&
           backgroundColor == other.backgroundColor &&
           gradient == other.gradient &&
-          shadows == other.shadows &&
+          _shadows == other._shadows &&
           glass == other.glass &&
-          borderRadius == other.borderRadius &&
+          _borderRadius == other._borderRadius &&
           border == other.border &&
-          justifyContent == other.justifyContent &&
-          alignItems == other.alignItems &&
+          _justifyContent == other._justifyContent &&
+          _alignItems == other._alignItems &&
           mainAxisSize == other.mainAxisSize &&
           flex == other.flex &&
           flexGrow == other.flexGrow &&
           flexShrink == other.flexShrink &&
-          gap == other.gap &&
-          crossAxisCount == other.crossAxisCount &&
+          _gap == other._gap &&
+          _crossAxisCount == other._crossAxisCount &&
           minColumnWidth == other.minColumnWidth &&
           childAspectRatio == other.childAspectRatio &&
           alignment == other.alignment &&
@@ -314,22 +351,22 @@ class FxStyle {
   int get hashCode =>
       width.hashCode ^
       height.hashCode ^
-      padding.hashCode ^
-      margin.hashCode ^
+      _padding.hashCode ^
+      _margin.hashCode ^
       backgroundColor.hashCode ^
       gradient.hashCode ^
-      shadows.hashCode ^
+      _shadows.hashCode ^
       glass.hashCode ^
-      borderRadius.hashCode ^
+      _borderRadius.hashCode ^
       border.hashCode ^
-      justifyContent.hashCode ^
-      alignItems.hashCode ^
+      _justifyContent.hashCode ^
+      _alignItems.hashCode ^
       mainAxisSize.hashCode ^
       flex.hashCode ^
       flexGrow.hashCode ^
       flexShrink.hashCode ^
-      gap.hashCode ^
-      crossAxisCount.hashCode ^
+      _gap.hashCode ^
+      _crossAxisCount.hashCode ^
       minColumnWidth.hashCode ^
       childAspectRatio.hashCode ^
       alignment.hashCode ^

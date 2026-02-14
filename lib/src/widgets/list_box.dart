@@ -3,9 +3,10 @@ import '../styles/style.dart';
 import '../engine/style_resolver.dart';
 import '../engine/decoration_builder.dart';
 
-class ListBox extends StatelessWidget {
+import '../widgets/fx_widget.dart';
+
+class ListBox extends FxWidget {
   final FxStyle style;
-  final String? className;
   final FxResponsiveStyle? responsive;
   final List<Widget>? children; // Optional now
   final int? itemCount; // For builder support
@@ -18,8 +19,9 @@ class ListBox extends StatelessWidget {
 
   const ListBox({
     super.key,
+    super.id,
+    super.className,
     this.style = FxStyle.none,
-    this.className,
     this.responsive,
     this.children,
     this.itemCount,
@@ -30,6 +32,18 @@ class ListBox extends StatelessWidget {
     this.gap,
     this.onTap,
   });
+
+  @override
+  ListBox copyWithStyle(FxStyle additionalStyle) {
+    return copyWith(style: style.merge(additionalStyle));
+  }
+
+  @override
+  ListBox copyWithResponsive(FxResponsiveStyle additionalResponsive) {
+    return copyWith(
+      responsive: responsive?.merge(additionalResponsive) ?? additionalResponsive,
+    );
+  }
 
   ListBox copyWith({
     FxStyle? style,
@@ -45,8 +59,10 @@ class ListBox extends StatelessWidget {
     VoidCallback? onTap,
   }) {
     return ListBox(
-      style: style ?? this.style,
+      key: key,
+      id: id,
       className: className ?? this.className,
+      style: style ?? this.style,
       responsive: responsive ?? this.responsive,
       children: children ?? this.children,
       itemCount: itemCount ?? this.itemCount,
@@ -60,32 +76,37 @@ class ListBox extends StatelessWidget {
   }
 
   @override
+  State<ListBox> createState() => _ListBoxState();
+}
+
+class _ListBoxState extends State<ListBox> {
+  @override
   Widget build(BuildContext context) {
     final s = FxStyleResolver.resolve(
       context,
-      style: style,
-      className: className,
-      responsive: responsive,
+      style: widget.style,
+      className: widget.className,
+      responsive: widget.responsive,
     );
 
-    final effectiveGap = gap ?? s.gap ?? 0;
+    final effectiveGap = widget.gap ?? s.gap ?? 0;
 
     // Determine builder methodology
-    final bool useBuilder = itemCount != null && itemBuilder != null;
-    final int count = useBuilder ? itemCount! : (children?.length ?? 0);
+    final bool useBuilder = widget.itemCount != null && widget.itemBuilder != null;
+    final int count = useBuilder ? widget.itemCount! : (widget.children?.length ?? 0);
     final IndexedWidgetBuilder builder = useBuilder
-        ? itemBuilder!
-        : (context, index) => children![index];
+        ? widget.itemBuilder!
+        : (context, index) => widget.children![index];
 
     Widget current = ListView.separated(
-      scrollDirection: scrollDirection,
-      physics: physics,
-      shrinkWrap: shrinkWrap,
+      scrollDirection: widget.scrollDirection,
+      physics: widget.physics,
+      shrinkWrap: widget.shrinkWrap,
       padding: s.padding, // Apply padding to content
       itemCount: count,
       itemBuilder: builder,
       separatorBuilder: (context, index) => effectiveGap > 0
-          ? (scrollDirection == Axis.vertical
+          ? (widget.scrollDirection == Axis.vertical
                 ? SizedBox(height: effectiveGap)
                 : SizedBox(width: effectiveGap))
           : const SizedBox.shrink(),
@@ -110,8 +131,8 @@ class ListBox extends StatelessWidget {
       current = Expanded(flex: s.flex!, child: current);
     }
 
-    return onTap != null
-        ? GestureDetector(onTap: onTap, child: current)
+    return widget.onTap != null
+        ? GestureDetector(onTap: widget.onTap, child: current)
         : current;
   }
 }

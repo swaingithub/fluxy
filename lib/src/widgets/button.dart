@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../styles/tokens.dart';
 import '../dsl/fx.dart';
 import 'box.dart';
+import '../widgets/fx_widget.dart';
 
 enum FxButtonVariant {
   primary,
@@ -16,7 +17,7 @@ enum FxButtonVariant {
 
 enum FxButtonSize { xs, sm, md, lg, xl }
 
-class FxButton extends StatelessWidget {
+class FxButton extends FxWidget {
   final String label;
   final VoidCallback? onTap;
   final FxButtonVariant variant;
@@ -30,6 +31,8 @@ class FxButton extends StatelessWidget {
 
   const FxButton({
     super.key,
+    super.id,
+    super.className,
     required this.label,
     this.onTap,
     this.variant = FxButtonVariant.primary,
@@ -41,6 +44,18 @@ class FxButton extends StatelessWidget {
     this.trailingIcon,
     this.isLoading = false,
   });
+
+  @override
+  FxButton copyWithStyle(FxStyle additionalStyle) {
+    return copyWith(style: style.merge(additionalStyle));
+  }
+
+  @override
+  FxButton copyWithResponsive(FxResponsiveStyle additionalResponsive) {
+    return copyWith(
+      responsive: responsive?.merge(additionalResponsive) ?? additionalResponsive,
+    );
+  }
 
   // --- Fluent Modifiers ---
 
@@ -95,8 +110,12 @@ class FxButton extends StatelessWidget {
     Widget? icon,
     Widget? trailingIcon,
     bool? isLoading,
+    String? className,
   }) {
     return FxButton(
+      key: key,
+      id: id,
+      className: className ?? this.className,
       label: label ?? this.label,
       onTap: onTap ?? this.onTap,
       variant: variant ?? this.variant,
@@ -111,13 +130,18 @@ class FxButton extends StatelessWidget {
   }
 
   @override
+  State<FxButton> createState() => _FxButtonState();
+}
+
+class _FxButtonState extends State<FxButton> {
+  @override
   Widget build(BuildContext context) {
     // 1. Resolve Brand Colors (Base)
     Color brandColor;
     Color onBrandColor;
     Color? borderColor;
 
-    switch (variant) {
+    switch (widget.variant) {
       case FxButtonVariant.primary:
         brandColor = FxTokens.colors.blue600;
         onBrandColor = Colors.white;
@@ -159,7 +183,7 @@ class FxButton extends StatelessWidget {
     EdgeInsets padding;
     double height;
 
-    switch (size) {
+    switch (widget.size) {
       case FxButtonSize.xs:
         fontSize = 12;
         iconSize = 14;
@@ -197,14 +221,14 @@ class FxButton extends StatelessWidget {
       height: height,
       backgroundColor: brandColor,
       padding: padding,
-      borderRadius: BorderRadius.circular(isRounded ? 9999 : 10),
+      borderRadius: BorderRadius.circular(widget.isRounded ? 9999 : 10),
       border: borderColor != null
           ? Border.all(color: borderColor, width: 1)
           : null,
       transition: const Duration(milliseconds: 150),
       // Implicit Interactivity
       hover:
-          variant == FxButtonVariant.ghost || variant == FxButtonVariant.outline
+          widget.variant == FxButtonVariant.ghost || widget.variant == FxButtonVariant.outline
           ? FxStyle(
               backgroundColor: brandColor == Colors.transparent
                   ? FxTokens.colors.slate50
@@ -212,14 +236,14 @@ class FxButton extends StatelessWidget {
             )
           : FxStyle(opacity: 0.9),
       pressed: const FxStyle(opacity: 0.7, shadows: []),
-    ).merge(style);
+    ).merge(widget.style);
 
     // 4. Build Content Layout
     Widget content = Fx.row(
       style: const FxStyle(mainAxisSize: MainAxisSize.min),
       gap: 8,
       children: [
-        if (isLoading)
+        if (widget.isLoading)
           SizedBox(
             width: iconSize,
             height: iconSize,
@@ -228,11 +252,11 @@ class FxButton extends StatelessWidget {
               valueColor: AlwaysStoppedAnimation<Color>(onBrandColor),
             ),
           )
-        else if (icon != null)
-          icon!,
+        else if (widget.icon != null)
+          widget.icon!,
 
         Fx.text(
-          label,
+          widget.label,
           style: FxStyle(
             color: onBrandColor,
             fontSize: fontSize,
@@ -241,15 +265,17 @@ class FxButton extends StatelessWidget {
           ),
         ),
 
-        if (!isLoading && trailingIcon != null) trailingIcon!,
+        if (!widget.isLoading && widget.trailingIcon != null) widget.trailingIcon!,
       ],
     ).center();
 
     // 5. Build with Box (handles hover/pressed/responsive automatically)
     return Box(
+      id: widget.id,
+      className: widget.className,
       style: baseStyle,
-      responsive: responsive,
-      onTap: isLoading ? null : onTap,
+      responsive: widget.responsive,
+      onTap: widget.isLoading ? null : widget.onTap,
       child: content,
     );
   }

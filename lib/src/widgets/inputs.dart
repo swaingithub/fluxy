@@ -4,12 +4,18 @@ import '../reactive/signal.dart';
 import '../dsl/fx.dart';
 import '../reactive/forms.dart';
 
+import '../widgets/fx_widget.dart';
+
 /// Reactive TextField that binds directly to a Signal<String>.
-class FxTextField extends StatefulWidget {
+class FxTextField extends FxWidget {
   final Signal<String> signal;
   final String? placeholder;
+  final String? label;
+  final IconData? icon;
+  final FxStyle style;
+  final FxResponsiveStyle? responsive;
   final InputDecoration? decoration;
-  final TextStyle? style;
+  final TextStyle? textStyle;
   final bool obscureText;
   final TextInputType? keyboardType;
   final int? maxLines;
@@ -20,10 +26,16 @@ class FxTextField extends StatefulWidget {
 
   const FxTextField({
     super.key,
+    super.id,
+    super.className,
     required this.signal,
     this.placeholder,
+    this.label,
+    this.icon,
+    this.style = FxStyle.none,
+    this.responsive,
     this.decoration,
-    this.style,
+    this.textStyle,
     this.obscureText = false,
     this.keyboardType,
     this.maxLines = 1,
@@ -32,6 +44,58 @@ class FxTextField extends StatefulWidget {
     this.focusNode,
     this.validators,
   });
+
+  @override
+  FxTextField copyWithStyle(FxStyle additionalStyle) {
+    return copyWith(style: style.merge(additionalStyle));
+  }
+
+  @override
+  FxTextField copyWithResponsive(FxResponsiveStyle additionalResponsive) {
+    return copyWith(
+      responsive: responsive?.merge(additionalResponsive) ?? additionalResponsive,
+    );
+  }
+
+  FxTextField copyWith({
+    Signal<String>? signal,
+    String? placeholder,
+    String? label,
+    IconData? icon,
+    FxStyle? style,
+    FxResponsiveStyle? responsive,
+    InputDecoration? decoration,
+    TextStyle? textStyle,
+    bool? obscureText,
+    TextInputType? keyboardType,
+    int? maxLines,
+    VoidCallback? onSubmitted,
+    List<TextInputFormatter>? inputFormatters,
+    FocusNode? focusNode,
+    List<Validator<String>>? validators,
+    String? className,
+  }) {
+    return FxTextField(
+      key: key,
+      id: id,
+      className: className ?? this.className,
+      signal: signal ?? this.signal,
+      placeholder: placeholder ?? this.placeholder,
+      label: label ?? this.label,
+      icon: icon ?? this.icon,
+      style: style ?? this.style,
+      responsive: responsive ?? this.responsive,
+      decoration: decoration ?? this.decoration,
+      textStyle: textStyle ?? this.textStyle,
+      obscureText: obscureText ?? this.obscureText,
+      keyboardType: keyboardType ?? this.keyboardType,
+      maxLines: maxLines ?? this.maxLines,
+      onSubmitted: onSubmitted ?? this.onSubmitted,
+      inputFormatters: inputFormatters ?? this.inputFormatters,
+      focusNode: focusNode ?? this.focusNode,
+      validators: validators ?? this.validators,
+    );
+  }
 
   @override
   State<FxTextField> createState() => _FxTextFieldState();
@@ -100,7 +164,9 @@ class _FxTextFieldState extends State<FxTextField> {
       }
 
       final defaultDecoration = InputDecoration(
+        labelText: widget.label,
         hintText: widget.placeholder,
+        prefixIcon: widget.icon != null ? Icon(widget.icon) : null,
         border: const OutlineInputBorder(),
         errorText: errorText,
       );
@@ -108,13 +174,17 @@ class _FxTextFieldState extends State<FxTextField> {
       return TextField(
         controller: _controller,
         obscureText: widget.obscureText,
-        style: widget.style,
+        style: widget.textStyle,
         keyboardType: widget.keyboardType,
         maxLines: widget.maxLines,
         inputFormatters: widget.inputFormatters,
         focusNode: widget.focusNode,
         decoration:
-            widget.decoration?.copyWith(errorText: errorText) ??
+            widget.decoration?.copyWith(
+              labelText: widget.label,
+              prefixIcon: widget.icon != null ? Icon(widget.icon) : null,
+              errorText: errorText,
+            ) ??
             defaultDecoration,
         onSubmitted: (_) {
           if (widget.signal is FluxField) {

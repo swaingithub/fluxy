@@ -10,6 +10,10 @@ import '../widgets/list_box.dart';
 import '../widgets/button.dart';
 import '../routing/fluxy_router.dart';
 import '../di/fluxy_di.dart';
+import '../widgets/avatar.dart';
+import '../widgets/table.dart';
+import '../widgets/fx_widget.dart';
+import 'fx.dart';
 
 /// Extension to provide a fluent DSL experience for any Widget.
 extension FluxyWidgetExtension on Widget {
@@ -43,13 +47,10 @@ extension FluxyWidgetExtension on Widget {
       );
     }
 
-    if (self is Box) return self.copyWith(style: self.style.merge(style));
-    if (self is TextBox) return self.copyWith(style: self.style.merge(style));
-    if (self is FlexBox) return self.copyWith(style: self.style.merge(style));
-    if (self is GridBox) return self.copyWith(style: self.style.merge(style));
-    if (self is StackBox) return self.copyWith(style: self.style.merge(style));
-    if (self is ListBox) return self.copyWith(style: self.style.merge(style));
-    if (self is FxButton) return self.copyWith(style: self.style.merge(style));
+    // New Attribute Accumulation Logic
+    if (self is FxWidget) {
+      return self.copyWithStyle(style);
+    }
 
     // Wrap generic widget
     return Box(style: style, child: self);
@@ -85,33 +86,32 @@ extension FluxyWidgetExtension on Widget {
       );
     }
 
-    if (self is Box)
-      return self.copyWith(
-        responsive: self.responsive?.merge(responsive) ?? responsive,
-      );
-    if (self is TextBox)
-      return self.copyWith(
-        responsive: self.responsive?.merge(responsive) ?? responsive,
-      );
-    if (self is FlexBox)
-      return self.copyWith(
-        responsive: self.responsive?.merge(responsive) ?? responsive,
-      );
-    if (self is GridBox)
-      return self.copyWith(
-        responsive: self.responsive?.merge(responsive) ?? responsive,
-      );
-    if (self is StackBox)
-      return self.copyWith(
-        responsive: self.responsive?.merge(responsive) ?? responsive,
-      );
-    if (self is ListBox)
-      return self.copyWith(
-        responsive: self.responsive?.merge(responsive) ?? responsive,
-      );
+    // New Attribute Accumulation Logic
+    if (self is FxWidget) {
+      return self.copyWithResponsive(responsive);
+    }
 
     // Wrap generic widget
     return Box(responsive: responsive, child: self);
+  }
+
+  /// Internal helper to apply a shadow to the widget.
+  Widget _applyShadow({
+    Color color = const Color(0x1F000000),
+    double blur = 4,
+    Offset offset = const Offset(0, 2),
+  }) {
+    return _applyGenericStyle(
+      FxStyle(
+        shadows: [
+          BoxShadow(
+            color: color,
+            blurRadius: blur,
+            offset: offset,
+          ),
+        ],
+      ),
+    );
   }
 
   // --- Proxy Properties for New Syntax ---
@@ -267,10 +267,21 @@ extension FluxyWidgetExtension on Widget {
   /// Grid Modifiers
   Widget gridCols(int value) =>
       _applyGenericStyle(FxStyle(crossAxisCount: value));
+  Widget cols(int value) => gridCols(value);
   Widget colSpan(int value) =>
       _applyGenericStyle(FxStyle(flex: value)); // Generic span using flex
 
   // --- Advanced Modifiers ---
+
+  Widget stagger([double interval = 0.05]) {
+    final self = this;
+    if (self is FlexBox) {
+      return self.copyWith(
+        children: Fx.stagger(self.children, interval: interval),
+      );
+    }
+    return this;
+  }
 
   Widget pack() =>
       _applyGenericStyle(const FxStyle(mainAxisSize: MainAxisSize.min));
@@ -359,24 +370,29 @@ extension FluxyWidgetExtension on Widget {
   }
 
   FxStyle _extractStyle(Widget w) {
-    if (w is Box) return w.style;
-    if (w is TextBox) return w.style;
-    if (w is FlexBox) return w.style;
-    if (w is GridBox) return w.style;
-    if (w is StackBox) return w.style;
-    if (w is ListBox) return w.style;
-    if (w is FxButton) return w.style;
+    if (w is FxWidget) return w.style;
     return FxStyle.none;
   }
 
   Widget onTap(VoidCallback callback) {
     final self = this;
-    if (self is Box) return self.copyWith(onTap: callback);
-    if (self is FlexBox) return self.copyWith(onTap: callback);
-    if (self is GridBox) return self.copyWith(onTap: callback);
-    if (self is StackBox) return self.copyWith(onTap: callback);
-    if (self is ListBox) return self.copyWith(onTap: callback);
-    if (self is FxButton) return self.copyWith(onTap: callback);
+    if (self is FxWidget) {
+      // If it's a Box, FlexBox, etc., it might have a native onTap field
+      // We should use structural recursion to find the right way to apply it.
+      // For FxWidget, we can use copyWithStyle if it's purely about interactive states,
+      // but many Fluxy widgets have a dedicated onTap constructor param.
+      
+      // Let's check for specific types that support onTap natively
+      if (self is Box) return self.copyWith(onTap: callback);
+      if (self is FlexBox) return self.copyWith(onTap: callback);
+      if (self is GridBox) return self.copyWith(onTap: callback);
+      if (self is StackBox) return self.copyWith(onTap: callback);
+      if (self is ListBox) return self.copyWith(onTap: callback);
+      if (self is FxButton) return self.copyWith(onTap: callback);
+      if (self is FxAvatar) return self.copyWith(onTap: callback);
+      if (self is FxTable) return self.copyWith(onRowTap: callback);
+    }
+    
     return GestureDetector(onTap: callback, child: self);
   }
 }
@@ -436,7 +452,7 @@ class FxShadowProxy {
     Color color = const Color(0x1F000000),
     double blur = 4,
     Offset offset = const Offset(0, 2),
-  }) => _widget.shadow(color: color, blur: blur, offset: offset);
+  }) => _widget._applyShadow(color: color, blur: blur, offset: offset);
 
   Widget get sm => _widget.shadowSmall();
   Widget get md => _widget.shadowMedium();

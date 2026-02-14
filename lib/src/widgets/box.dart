@@ -5,13 +5,12 @@ import '../engine/style_resolver.dart';
 import '../engine/decoration_builder.dart';
 import '../engine/diff_engine.dart';
 import '../reactive/signal.dart';
+import 'fx_widget.dart';
 
 /// The foundational building block of Fluxy.
 /// Similar to a <div> in web development.
-class Box extends StatefulWidget {
-  final String? id;
+class Box extends FxWidget {
   final FxStyle style;
-  final String? className;
   final FxResponsiveStyle? responsive;
   final dynamic child;
   final dynamic children;
@@ -19,14 +18,26 @@ class Box extends StatefulWidget {
 
   const Box({
     super.key,
-    this.id,
+    super.id,
+    super.className,
     this.style = FxStyle.none,
-    this.className,
     this.responsive,
     this.child = const SizedBox.shrink(),
     this.children = const [],
     this.onTap,
   });
+
+  @override
+  Box copyWithStyle(FxStyle additionalStyle) {
+    return copyWith(style: style.merge(additionalStyle));
+  }
+
+  @override
+  Box copyWithResponsive(FxResponsiveStyle additionalResponsive) {
+    return copyWith(
+      responsive: responsive?.merge(additionalResponsive) ?? additionalResponsive,
+    );
+  }
 
   Box copyWith({
     FxStyle? style,
@@ -37,6 +48,7 @@ class Box extends StatefulWidget {
     VoidCallback? onTap,
   }) {
     return Box(
+      key: key,
       id: id,
       style: style ?? this.style,
       className: className ?? this.className,
