@@ -706,7 +706,7 @@ extension FluxyWidgetExtension on Widget {
   Widget glowOnHover([Color? color]) => onHover(
     (s) => s.withShadows([
       BoxShadow(
-        color: (color ?? Colors.blue).withOpacity(0.3),
+        color: (color ?? Colors.blue).withValues(alpha: 0.3),
         blurRadius: 15,
         spreadRadius: 2,
       ),
