@@ -77,16 +77,26 @@ class FxBadge extends FxWidget {
 class _FxBadgeState extends State<FxBadge> {
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      clipBehavior: Clip.none,
-      children: [
-        widget.child,
-        Positioned(
-          top: widget.offset.dy,
-          right: -widget.offset.dx,
-          child: _buildBadge(),
-        ),
-      ],
+    final s = FxStyleResolver.resolve(
+      context,
+      style: widget.style,
+      className: widget.className,
+      responsive: widget.responsive,
+    );
+
+    return Box(
+      style: s,
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          widget.child,
+          Positioned(
+            top: widget.offset.dy,
+            right: -widget.offset.dx,
+            child: _buildBadge(),
+          ),
+        ],
+      ),
     );
   }
 
@@ -115,13 +125,6 @@ class _FxBadgeState extends State<FxBadge> {
       diameter ??= 8;
     }
 
-    final s = FxStyleResolver.resolve(
-      context,
-      style: widget.style,
-      className: widget.className,
-      responsive: widget.responsive,
-    );
-
     return Box(
       style: FxStyle(
         backgroundColor: widget.color ?? Colors.red,
@@ -133,7 +136,7 @@ class _FxBadgeState extends State<FxBadge> {
         shadows: const [
           BoxShadow(color: Colors.black26, blurRadius: 4, offset: Offset(0, 2)),
         ],
-      ).merge(s),
+      ),
       child: badgeContent,
     );
   }

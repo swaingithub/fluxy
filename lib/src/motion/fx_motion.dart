@@ -46,6 +46,8 @@ class FxMotion extends StatefulWidget {
   final Offset? slide;
   final double? scale;
   final double? rotate;
+  final bool repeat;
+  final bool reverse;
 
   const FxMotion({
     super.key,
@@ -59,6 +61,8 @@ class FxMotion extends StatefulWidget {
     this.slide,
     this.scale,
     this.rotate,
+    this.repeat = false,
+    this.reverse = false,
   });
 
   @override
@@ -105,9 +109,18 @@ class _FxMotionState extends State<FxMotion>
         1.0, // end
         0.0, // velocity
       );
-      _controller.animateWith(simulation);
+      _controller.animateWith(simulation).whenComplete(() {
+        if (widget.repeat && mounted) {
+          _controller.value = 0;
+          _start();
+        }
+      });
     } else {
-      _controller.forward();
+      if (widget.repeat) {
+        _controller.repeat(reverse: widget.reverse);
+      } else {
+        _controller.forward();
+      }
     }
   }
 
@@ -192,6 +205,8 @@ extension FxMotionExtension on Widget {
     Offset? slide,
     double? scale,
     double? rotate,
+    bool repeat = false,
+    bool reverse = false,
   }) {
     final self = this;
 
@@ -209,6 +224,8 @@ extension FxMotionExtension on Widget {
           slide: slide,
           scale: scale,
           rotate: rotate,
+          repeat: repeat,
+          reverse: reverse,
         ),
       );
     }
@@ -227,6 +244,8 @@ extension FxMotionExtension on Widget {
           slide: slide,
           scale: scale,
           rotate: rotate,
+          repeat: repeat,
+          reverse: reverse,
         ),
       );
     }
@@ -249,6 +268,8 @@ extension FxMotionExtension on Widget {
           slide: slide,
           scale: scale,
           rotate: rotate,
+          repeat: repeat,
+          reverse: reverse,
         ),
       );
     }
@@ -270,6 +291,8 @@ extension FxMotionExtension on Widget {
       slide: slide,
       scale: scale,
       rotate: rotate,
+      repeat: repeat,
+      reverse: reverse,
       child: this,
     );
   }

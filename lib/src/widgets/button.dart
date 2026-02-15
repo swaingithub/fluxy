@@ -13,12 +13,14 @@ enum FxButtonVariant {
   text,
   ghost,
   outline,
+  none, // New: Completely unstyled variant
 }
 
-enum FxButtonSize { xs, sm, md, lg, xl }
+enum FxButtonSize { xs, sm, md, lg, xl, none } // New: 'none' size
 
 class FxButton extends FxWidget {
-  final String label;
+  final String? label; // Now optional if child is provided
+  final Widget? child; // New: Custom child support
   final VoidCallback? onTap;
   final FxButtonVariant variant;
   final FxButtonSize size;
@@ -33,7 +35,8 @@ class FxButton extends FxWidget {
     super.key,
     super.id,
     super.className,
-    required this.label,
+    this.label,
+    this.child,
     this.onTap,
     this.variant = FxButtonVariant.primary,
     this.size = FxButtonSize.md,
@@ -71,10 +74,14 @@ class FxButton extends FxWidget {
   FxButton get primary => copyWith(variant: FxButtonVariant.primary);
   FxButton get secondary => copyWith(variant: FxButtonVariant.secondary);
   FxButton get danger => copyWith(variant: FxButtonVariant.danger);
+  FxButton get warning => copyWith(variant: FxButtonVariant.warning);
   FxButton get success => copyWith(variant: FxButtonVariant.success);
   FxButton get ghost => copyWith(variant: FxButtonVariant.ghost);
   FxButton get outline => copyWith(variant: FxButtonVariant.outline);
   FxButton get text => copyWith(variant: FxButtonVariant.text);
+  FxButton get none => copyWith(variant: FxButtonVariant.none);
+
+  FxButton withChild(Widget child) => copyWith(child: child);
 
   FxButton loading([bool value = true]) => copyWith(isLoading: value);
 
@@ -101,6 +108,7 @@ class FxButton extends FxWidget {
 
   FxButton copyWith({
     String? label,
+    Widget? child,
     VoidCallback? onTap,
     FxButtonVariant? variant,
     FxButtonSize? size,
@@ -117,6 +125,7 @@ class FxButton extends FxWidget {
       id: id,
       className: className ?? this.className,
       label: label ?? this.label,
+      child: child ?? this.child,
       onTap: onTap ?? this.onTap,
       variant: variant ?? this.variant,
       size: size ?? this.size,
@@ -145,6 +154,10 @@ class _FxButtonState extends State<FxButton> {
       case FxButtonVariant.primary:
         brandColor = FxTokens.colors.blue600;
         onBrandColor = Colors.white;
+        break;
+      case FxButtonVariant.none:
+        brandColor = Colors.transparent;
+        onBrandColor = FxTokens.colors.text;
         break;
       case FxButtonVariant.secondary:
         brandColor = FxTokens.colors.slate100;
@@ -214,60 +227,79 @@ class _FxButtonState extends State<FxButton> {
         padding = const EdgeInsets.symmetric(horizontal: 16, vertical: 10);
         height = 40;
         break;
+      case FxButtonSize.none:
+        fontSize = 14;
+        iconSize = 18;
+        padding = EdgeInsets.zero;
+        height = 0; // Will be overridden if style.height exists
+        break;
     }
 
     // 3. Construct Composite Style
     final baseStyle = FxStyle(
-      height: height,
+      height: height > 0 ? height : null,
       backgroundColor: brandColor,
       padding: padding,
-      borderRadius: BorderRadius.circular(widget.isRounded ? 9999 : 10),
+      borderRadius: widget.variant == FxButtonVariant.none 
+          ? null 
+          : BorderRadius.circular(widget.isRounded ? 9999 : 10),
       border: borderColor != null
           ? Border.all(color: borderColor, width: 1)
           : null,
       transition: const Duration(milliseconds: 150),
       // Implicit Interactivity
       hover:
-          widget.variant == FxButtonVariant.ghost || widget.variant == FxButtonVariant.outline
+          widget.variant == FxButtonVariant.ghost || widget.variant == FxButtonVariant.outline || widget.variant == FxButtonVariant.none
           ? FxStyle(
-              backgroundColor: brandColor == Colors.transparent
+              backgroundColor: brandColor == Colors.transparent || widget.variant == FxButtonVariant.none
                   ? FxTokens.colors.slate50
                   : brandColor.withValues(alpha: 0.9),
             )
           : FxStyle(opacity: 0.9),
+      cursor: SystemMouseCursors.click,
       pressed: const FxStyle(opacity: 0.7, shadows: []),
     ).merge(widget.style);
 
     // 4. Build Content Layout
-    Widget content = Fx.row(
-      style: const FxStyle(mainAxisSize: MainAxisSize.min),
-      gap: 8,
-      children: [
-        if (widget.isLoading)
-          SizedBox(
-            width: iconSize,
-            height: iconSize,
-            child: CircularProgressIndicator(
-              strokeWidth: 2,
-              valueColor: AlwaysStoppedAnimation<Color>(onBrandColor),
+    final isFullWidth = baseStyle.width == double.infinity;
+    
+    Widget? content = widget.child;
+    
+    if (content == null) {
+      content = Fx.row(
+        size: isFullWidth ? MainAxisSize.max : MainAxisSize.min,
+        justify: MainAxisAlignment.center, // ALWAYS CENTER content in button
+        gap: 8,
+        children: [
+          if (widget.isLoading)
+            SizedBox(
+              width: iconSize,
+              height: iconSize,
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                valueColor: AlwaysStoppedAnimation<Color>(onBrandColor),
+              ),
+            )
+          else if (widget.icon != null)
+            widget.icon!,
+
+          Fx.text(
+            widget.label ?? '',
+            style: FxStyle(
+              color: onBrandColor,
+              fontSize: fontSize,
+              fontWeight: FontWeight.w600,
+              letterSpacing: -0.2,
             ),
-          )
-        else if (widget.icon != null)
-          widget.icon!,
-
-        Fx.text(
-          widget.label,
-          style: FxStyle(
-            color: onBrandColor,
-            fontSize: fontSize,
-            fontWeight: FontWeight.w600,
-            letterSpacing: -0.2,
           ),
-        ),
 
-        if (!widget.isLoading && widget.trailingIcon != null) widget.trailingIcon!,
-      ],
-    ).center();
+          if (!widget.isLoading && widget.trailingIcon != null) widget.trailingIcon!,
+        ],
+      );
+    }
+
+    // Wrap in center to handle custom children or fixed sizes
+    content = Center(child: content);
 
     // 5. Build with Box (handles hover/pressed/responsive automatically)
     return Box(

@@ -97,14 +97,6 @@ class _FlexBoxState extends State<FlexBox> {
       );
     }
 
-    if (s.flex != null || s.flexGrow != null) {
-      current = Flexible(
-        flex: s.flexGrow ?? s.flex ?? 1,
-        fit: s.flexFit ?? FlexFit.tight,
-        child: current,
-      );
-    }
-
     return widget.onTap != null
         ? GestureDetector(
             behavior: HitTestBehavior.opaque,

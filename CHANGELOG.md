@@ -1,3 +1,21 @@
+## 0.1.7
+
+* **Next-Gen Button System (Atomic Interaction API)**:
+    * **Centering Engine Fix**: Completely re-engineered the internal layout of `FxButton` to ensure stable content centering regardless of width or height modifiers.
+    * **Tailwind-style DSL**: Added expressive buttonizers directly to `String` and `Widget` (e.g., `"Save".primaryBtn()` and `myImage.btn()`).
+    * **Interaction-Only Primitive**: Introduced `Fx.btn()` (FxButtonVariant.none) for building interactive cards and custom navigation items using the framework's hover/pressed logic.
+    * **Custom Content Injection**: Switched buttons to a content-first architecture, allowing icons and complex layouts via the `.withChild()` modifier.
+* **Premium Image & Visual FX Engine**:
+    * **Native Filters**: Introduced high-performance native modifiers for images: `.blur(radius)`, `.grayscale()`, and `.circle()`.
+    * **Smart Shimmers**: Integrated `Fx.loader.shimmer()` as the default engine for network image loading states.
+    * **Chainable Transitions**: Added the `.transition(Duration)` modifier to all generic widgets, enabling automatic interpolation of all styling changes (backgrounds, padding, etc.).
+    * **Enhanced Motion**: Upgraded `FxMotion` with native support for looping, repeating, and reversing animations for "pulse" and "attention" effects.
+* **Architecture & Productivity Polish**:
+    * **Contrast Shortcuts**: Added `.whiteText()` and `.blackText()` for high-visibility typography.
+    * **Layout Intelligence**: Refined `.expanded()`, `.flex()`, and `.shrink()` to automatically handle structural recursion and `ParentData` validation.
+    * **Sequence DSL**: Unified the `.stagger(interval)` modifier for `Fx.row` and `Fx.col` to create fluid staggered entrance animations.
+    * **FxBadge Stability**: Fixed a critical CSS-like collision bug where outer styles were being merged into the badge dot rather than the parent container.
+
 ## 0.1.6
 
 * **Bulletproof Architecture (Refactoring)**:

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../responsive/responsive_engine.dart';
 import '../styles/style.dart';
 import '../styles/tokens.dart'; // Tokens
 import 'modifiers.dart'; // Extension
@@ -15,6 +16,9 @@ import '../widgets/dropdown.dart';
 import '../widgets/bottom_bar.dart';
 import '../widgets/avatar.dart';
 import '../widgets/badge.dart';
+import '../widgets/fx_image.dart';
+import '../widgets/fx_shimmer.dart';
+import '../widgets/scroll.dart';
 
 // Re-export specific styles/tokens for easy access if needed
 export '../styles/style.dart';
@@ -82,6 +86,113 @@ class Fx extends StatefulWidget {
     Widget? desktop,
   }) => FxLayout(mobile: mobile, tablet: tablet, desktop: desktop);
 
+  /// A common dashboard layout with sidebar and main content.
+  /// Automatically handles Drawer on mobile and Row on desktop.
+  static Widget dashboard({
+    required Widget sidebar,
+    required Widget body,
+    Widget? navbar,
+    bool sidebarVisible = true,
+  }) {
+    return layout(
+      mobile: scaffold(
+        appBar: navbar != null
+            ? PreferredSize(
+                preferredSize: const Size.fromHeight(64), child: navbar)
+            : null,
+        drawer: Drawer(child: sidebar),
+        body: body,
+      ),
+      desktop: scaffold(
+        body: Fx.row(
+          children: [
+            if (sidebarVisible) sidebar,
+            Expanded(
+              child: Fx.col(
+                children: [
+                  if (navbar != null) navbar,
+                  Expanded(child: body),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Structural Responsive Helpers
+  /// -----------------------------
+
+  /// Shows children only on mobile devices (< 600px).
+  static Widget mobile(dynamic children) => _responsiveWrapper(mobile: children);
+
+  /// Shows children only on tablet devices (600px - 1200px).
+  static Widget tablet(dynamic children) => _responsiveWrapper(tablet: children);
+
+  /// Shows children only on desktop devices (>= 1200px).
+  static Widget desktop(dynamic children) => _responsiveWrapper(desktop: children);
+
+  /// Helper to wrap children in a responsive layout.
+  static Widget _responsiveWrapper({dynamic mobile, dynamic tablet, dynamic desktop}) {
+    Widget toWidget(dynamic value) {
+      if (value == null) return const SizedBox.shrink();
+      if (value is Widget) return value;
+      if (value is List<Widget>) return Fx.col(children: value);
+      return Fx.text(value.toString());
+    }
+
+    return Fx.layout(
+      mobile: toWidget(mobile),
+      tablet: tablet != null ? toWidget(tablet) : (mobile != null ? const SizedBox.shrink() : toWidget(desktop)),
+      desktop: desktop != null ? toWidget(desktop) : (tablet != null || mobile != null ? const SizedBox.shrink() : const SizedBox.shrink()),
+    );
+  }
+
+  /// A responsive value utility.
+  /// Usage: `final gap = Fx.responsiveValue(context, xs: 10, md: 20)`
+  static T responsiveValue<T>(
+    BuildContext context, {
+    required T xs,
+    T? sm,
+    T? md,
+    T? lg,
+    T? xl,
+  }) =>
+      ResponsiveEngine.value<T>(context,
+          xs: xs, sm: sm, md: md, lg: lg, xl: xl);
+
+  /// Alias for responsiveValue
+  static T on<T>(
+    BuildContext context, {
+    required T mobile,
+    T? tablet,
+    T? desktop,
+  }) => responsiveValue(context, xs: mobile, md: tablet, lg: desktop);
+
+  /// A responsive container that centers content and adds a max-width on large screens.
+  /// Perfect for web applications.
+  static Widget container({
+    required Widget child,
+    double? maxWidth,
+    FxStyle style = FxStyle.none,
+  }) {
+    return Fx(() {
+      final context = FluxyReactiveContext.currentContext;
+      if (context == null) return child;
+      final autoWidth = ResponsiveEngine.containerWidth(context);
+      return Center(
+        child: Box(
+          style: style.merge(FxStyle(
+            width: maxWidth ?? autoWidth,
+            alignment: Alignment.topCenter,
+          )),
+          child: child,
+        ),
+      );
+    });
+  }
+
   /// Advanced Grid Layout System.
   static const grid = _FxGridHelper();
 
@@ -93,6 +204,7 @@ class Fx extends StatefulWidget {
     double gap = 0,
     FxStyle style = FxStyle.none,
     MainAxisSize size = MainAxisSize.max,
+    bool responsive = false,
   }) => FxRow(
     children: children,
     justify: justify,
@@ -100,7 +212,32 @@ class Fx extends StatefulWidget {
     gap: gap,
     style: style,
     size: size,
+    responsive: responsive,
   );
+
+  /// A quick sidebar template for desktop.
+  static Widget sidebar({
+    required List<Widget> items,
+    Widget? header,
+    Widget? footer,
+    double width = 280,
+    FxStyle style = FxStyle.none,
+  }) {
+    return Box(
+      style: FxStyle(
+        width: width,
+        height: double.infinity,
+        direction: Axis.vertical,
+        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 12),
+        backgroundColor: Colors.white,
+      ).merge(style),
+      children: [
+        if (header != null) header,
+        Expanded(child: Fx.list(children: items, gap: 4)),
+        if (footer != null) footer,
+      ],
+    );
+  }
 
   /// Vertical Layout (Column).
   static Widget col({
@@ -121,8 +258,12 @@ class Fx extends StatefulWidget {
 
   // --- Core Primitives ---
 
-  /// A reactive text element.
-  /// Supports: Fx.text("Hello").font.lg.bold
+  /// Creates a reactive text widget.
+  /// 
+  /// [data] - The text to display (String, Signal<String>, etc.)
+  /// [style] - Optional [FxStyle] to apply.
+  /// [className] - Optional Tailwind-like utility classes.
+  /// [responsive] - Optional responsive style.
   static Widget text(
     dynamic data, {
     FxStyle style = FxStyle.none,
@@ -137,8 +278,14 @@ class Fx extends StatefulWidget {
     );
   }
 
-  /// A reactive container.
-  /// Supports: Fx.box(child: ...).pad.md
+  /// Creates a reactive container widget.
+  /// 
+  /// [style] - Optional [FxStyle] to apply.
+  /// [className] - Optional Tailwind-like utility classes.
+  /// [responsive] - Optional responsive style.
+  /// [child] - The widget to display inside the box.
+  /// [children] - Multiple widgets to display (will be wrapped in a column by default).
+  /// [onTap] - Callback when the box is tapped.
   static Widget box({
     FxStyle style = FxStyle.none,
     String? className,
@@ -168,11 +315,8 @@ class Fx extends StatefulWidget {
   /// Explicitly intended for Rows.
   static Widget hgap(double size) => SizedBox(width: size);
 
-  /// A conditional builder.
-  /// Rebuilds when the signal changes.
-  static Widget cond(Signal<bool> signal, Widget trueChild, Widget falseChild) {
-    return Fx(() => signal.value ? trueChild : falseChild);
-  }
+  /// Conditional helper.
+  static _FxCondHelper get cond => const _FxCondHelper();
 
   /// Stack layout.
   static Widget stack({
@@ -186,6 +330,54 @@ class Fx extends StatefulWidget {
     style: style,
     fit: fit,
   );
+
+  /// A pre-configured Scaffold with a centered container for the body.
+  /// Ideal for standard web pages.
+  static Widget page({
+    required Widget child,
+    PreferredSizeWidget? appBar,
+    Widget? floatingActionButton,
+    Widget? drawer,
+    Widget? bottomNavigationBar,
+    bool useContainer = true,
+    double? maxWidth,
+    Color? backgroundColor,
+    FxStyle style = FxStyle.none,
+  }) {
+    return scaffold(
+      appBar: appBar,
+      body: useContainer
+          ? container(child: child, maxWidth: maxWidth, style: style)
+          : child,
+      floatingActionButton: floatingActionButton,
+      drawer: drawer,
+      bottomNavigationBar: bottomNavigationBar,
+      backgroundColor: backgroundColor,
+    );
+  }
+
+  /// A quick navbar template for web/desktop.
+  static Widget navbar({
+    required Widget logo,
+    required List<Widget> actions,
+    double? height = 64,
+    FxStyle style = FxStyle.none,
+  }) {
+    return Box(
+      style: FxStyle(
+        height: height,
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        backgroundColor: Colors.white,
+        justifyContent: MainAxisAlignment.spaceBetween,
+        alignItems: CrossAxisAlignment.center,
+        direction: Axis.horizontal,
+      ).merge(style),
+      children: [
+        logo,
+        Fx.row(children: actions, gap: 20),
+      ],
+    );
+  }
 
   /// A wrapper for Scaffold.
   static Widget scaffold({
@@ -312,10 +504,13 @@ class Fx extends StatefulWidget {
     required Widget child,
     Axis direction = Axis.vertical,
     FxStyle style = FxStyle.none,
+    bool showScrollbar = true,
   }) {
-    return Box(
+    return FxScroll(
+      direction: direction,
       style: style,
-      child: SingleChildScrollView(scrollDirection: direction, child: child),
+      showScrollbar: showScrollbar,
+      child: child,
     );
   }
 
@@ -333,33 +528,62 @@ class Fx extends StatefulWidget {
     return i;
   }
 
-  /// Image primitive.
-  static Widget image(
+  /// Advanced Image primitive with support for network, asset, and file sources.
+  /// Supports chainable filters (blur, grayscale), states (loading, error), and responsive sources.
+  static FxImage image(
     String src, {
     double? width,
     double? height,
     BoxFit fit = BoxFit.cover,
     double radius = 0,
     String? semanticLabel,
+    Widget? loading,
+    Widget? error,
+    Widget? placeholder,
   }) {
-    final img = Image.network(
+    return FxImage(
       src,
-      width: width,
-      height: height,
-      fit: fit,
-      semanticLabel: semanticLabel,
-      errorBuilder: (c, o, s) => Container(
+      style: FxStyle(
         width: width,
         height: height,
-        color: Colors.grey[200],
-        child: const Icon(Icons.broken_image, color: Colors.grey),
+        fit: fit,
+        borderRadius: radius > 0 ? BorderRadius.circular(radius) : null,
+        loading: loading,
+        error: error,
+        placeholder: placeholder,
       ),
     );
+  }
 
-    if (radius > 0) {
-      return ClipRRect(borderRadius: BorderRadius.circular(radius), child: img);
-    }
-    return img;
+  /// Responsive image that chooses source based on current breakpoint.
+  static FxImage responsiveImage({
+    required String xs,
+    String? sm,
+    String? md,
+    String? lg,
+    String? xl,
+    double? width,
+    double? height,
+    BoxFit fit = BoxFit.cover,
+  }) {
+    return FxImage(
+      xs,
+      responsive: FxResponsiveStyle(
+        xs: FxStyle(width: width, height: height, fit: fit, imageSrc: xs),
+        sm: sm != null
+            ? FxStyle(width: width, height: height, fit: fit, imageSrc: sm)
+            : null,
+        md: md != null
+            ? FxStyle(width: width, height: height, fit: fit, imageSrc: md)
+            : null,
+        lg: lg != null
+            ? FxStyle(width: width, height: height, fit: fit, imageSrc: lg)
+            : null,
+        xl: xl != null
+            ? FxStyle(width: width, height: height, fit: fit, imageSrc: xl)
+            : null,
+      ),
+    );
   }
 
   /// Hero primitive.
@@ -368,6 +592,18 @@ class Fx extends StatefulWidget {
   }
 
   // --- Buttons (Phase 5) ---
+
+  /// A raw, unstyled button that provides interaction states (hover, pressed) 
+  /// and cursor: pointer without any prescribed design.
+  static FxButton btn({Widget? child, String? label, VoidCallback? onTap}) {
+    return FxButton(
+      child: child,
+      label: label,
+      onTap: onTap,
+      variant: FxButtonVariant.none,
+      size: FxButtonSize.none,
+    );
+  }
 
   static FxButton button(String label, {VoidCallback? onTap}) =>
       primaryButton(label, onTap: onTap);
@@ -390,6 +626,22 @@ class Fx extends StatefulWidget {
 
   static FxButton textButton(String label, {VoidCallback? onTap}) {
     return FxButton(label: label, onTap: onTap, variant: FxButtonVariant.text);
+  }
+
+  static FxButton outlineButton(String label, {VoidCallback? onTap}) {
+    return FxButton(label: label, onTap: onTap, variant: FxButtonVariant.outline);
+  }
+
+  static FxButton ghostButton(String label, {VoidCallback? onTap}) {
+    return FxButton(label: label, onTap: onTap, variant: FxButtonVariant.ghost);
+  }
+
+  static FxButton dangerButton(String label, {VoidCallback? onTap}) {
+    return FxButton(label: label, onTap: onTap, variant: FxButtonVariant.danger);
+  }
+
+  static FxButton successButton(String label, {VoidCallback? onTap}) {
+    return FxButton(label: label, onTap: onTap, variant: FxButtonVariant.success);
   }
 
   // --- Overlays & Feedback ---
@@ -818,6 +1070,10 @@ class Fx extends StatefulWidget {
 class _FxGridHelper {
   const _FxGridHelper();
 
+  /// Standard grid with fixed column count.
+  /// [columns] - Number of columns (default 2).
+  /// [gap] - Spacing between items.
+  /// [childAspectRatio] - Aspect ratio of grid items (width/height).
   FxGrid call({
     required List<Widget> children,
     int? columns = 2,
@@ -832,6 +1088,8 @@ class _FxGridHelper {
     childAspectRatio: childAspectRatio,
   );
 
+  /// Auto-responsive grid that fills as many columns as possible.
+  /// [minItemWidth] - Minimum width of each item.
   FxGrid auto({
     required List<Widget> children,
     required double minItemWidth,
@@ -846,6 +1104,8 @@ class _FxGridHelper {
     childAspectRatio: childAspectRatio,
   );
 
+  /// Breakpoint-based grid.
+  /// [xs], [sm], [md], [lg], [xl] - Column counts for each breakpoint.
   FxGrid responsive({
     required List<Widget> children,
     int? xs,
@@ -925,9 +1185,12 @@ class _FxState extends State<Fx> with ReactiveSubscriberMixin {
   @override
   Widget build(BuildContext context) {
     FluxyReactiveContext.push(this);
+    final prevContext = FluxyReactiveContext.currentContext;
+    FluxyReactiveContext.currentContext = context;
     try {
       return widget.builder();
     } finally {
+      FluxyReactiveContext.currentContext = prevContext;
       FluxyReactiveContext.pop();
     }
   }
@@ -964,6 +1227,10 @@ class _FxLoaderHelper {
   void show({String? label, bool blocking = true}) =>
       FxOverlay.showLoader(label: label, blocking: blocking);
   void hide() => FxOverlay.hideLoader();
+
+  /// Returns a shimmer widget for skeleton screens.
+  Widget shimmer({double? width, double? height, double? radius}) =>
+      FxShimmer(width: width, height: height, borderRadius: radius != null ? BorderRadius.circular(radius) : null);
 }
 
 class _FxDialogHelper {
@@ -1024,5 +1291,35 @@ class _FxDialogHelper {
       ),
     );
     return result ?? false;
+  }
+}
+class _FxCondHelper {
+  const _FxCondHelper();
+
+  /// Simple boolean condition builder.
+  Widget call(Signal<bool> signal, Widget trueChild,
+          [Widget falseChild = const SizedBox.shrink()]) =>
+      Fx(() => signal.value ? trueChild : falseChild);
+
+  /// Multiple conditions. The first one that is true wins.
+  Widget multiple(Map<dynamic, Widget> cases,
+      {Widget fallback = const SizedBox.shrink()}) {
+    return Fx(() {
+      for (var entry in cases.entries) {
+        final cond = entry.key;
+        if (cond is Signal<bool> && cond.value) return entry.value;
+        if (cond is Signal<dynamic> && cond.value != null && cond.value != false) {
+          return entry.value;
+        }
+        if (cond is bool && cond) return entry.value;
+      }
+      return fallback;
+    });
+  }
+
+  /// Switches based on a signal's value.
+  Widget switcher<T>(Signal<T> signal, Map<T, Widget> cases,
+      {Widget fallback = const SizedBox.shrink()}) {
+    return Fx(() => cases[signal.value] ?? fallback);
   }
 }

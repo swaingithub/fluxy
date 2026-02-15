@@ -1,5 +1,6 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import '../styles/style.dart';
+import '../styles/tokens.dart';
 import 'tailwind_parser.dart';
 
 /// FxStyleResolver is responsible for merging and resolving the final
@@ -37,7 +38,62 @@ class FxStyleResolver {
       finalStyle = finalStyle.merge(style);
     }
 
-    return finalStyle;
+    // 5. Final Theme Resolution (colors, fonts, etc.)
+    return _resolveTheme(context, finalStyle);
+  }
+
+  static FxStyle _resolveTheme(BuildContext context, FxStyle style) {
+    Color? color = style.color;
+    Color? bgColor = style.backgroundColor;
+
+    if (color is FxThemeColor) {
+      color = _resolveColor(context, color);
+    }
+    if (bgColor is FxThemeColor) {
+      bgColor = _resolveColor(context, bgColor);
+    }
+
+    // Resolve interactive styles recursively
+    FxStyle? hover = style.hover;
+    if (hover != null) hover = _resolveTheme(context, hover);
+
+    FxStyle? pressed = style.pressed;
+    if (pressed != null) pressed = _resolveTheme(context, pressed);
+
+    return style.copyWith(
+      color: color,
+      backgroundColor: bgColor,
+      hover: hover,
+      pressed: pressed,
+    );
+  }
+
+  static Color _resolveColor(BuildContext context, FxThemeColor themeColor) {
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+
+    switch (themeColor.key) {
+      case FxThemeColorKey.primary:
+        return scheme.primary;
+      case FxThemeColorKey.secondary:
+        return scheme.secondary;
+      case FxThemeColorKey.success:
+        return const Color(0xFF10B981); // Evergreen success color
+      case FxThemeColorKey.error:
+        return scheme.error;
+      case FxThemeColorKey.warning:
+        return const Color(0xFFF59E0B);
+      case FxThemeColorKey.info:
+        return const Color(0xFF3B82F6);
+      case FxThemeColorKey.background:
+        return scheme.surface;
+      case FxThemeColorKey.surface:
+        return scheme.surfaceContainerHighest;
+      case FxThemeColorKey.text:
+        return scheme.onSurface;
+      case FxThemeColorKey.muted:
+        return scheme.onSurfaceVariant;
+    }
   }
 
   /// Resolves the final style considering interactive states.

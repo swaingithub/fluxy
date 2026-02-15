@@ -38,6 +38,7 @@ class FluxyReactiveContext {
   static bool _isFlushScheduled = false;
   static void Function(Signal signal)? onSignalRead;
   static void Function(Signal signal, dynamic value)? onSignalUpdate;
+  static BuildContext? currentContext;
 
   static void push(FluxySubscriber subscriber) {
     if (_stack.contains(subscriber)) {

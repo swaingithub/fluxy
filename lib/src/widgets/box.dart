@@ -158,6 +158,17 @@ class _BoxState extends State<Box> with ReactiveSubscriberMixin {
       current = AspectRatio(aspectRatio: aspectVal, child: current);
     }
 
+    // Apply Transformation (Scale/Rotation)
+    if (s.transformScale != null || s.transformRotation != null) {
+      current = Transform(
+        alignment: Alignment.center,
+        transform: Matrix4.identity()
+          ..scale(s.transformScale ?? 1.0)
+          ..rotateZ(s.transformRotation ?? 0.0),
+        child: current,
+      );
+    }
+
     // Apply Visuals using FxDecorationBuilder
     final transitionVal = s.transition;
     if (transitionVal != null) {
@@ -204,16 +215,6 @@ class _BoxState extends State<Box> with ReactiveSubscriberMixin {
           onTap: widget.onTap,
           child: current,
         ),
-      );
-    }
-
-    // Apply Flex/Stack wrappers LAST (They must be direct children of Flex/Stack)
-    final flexVal = s.flex;
-    if (flexVal != null) {
-      current = Flexible(
-        flex: flexVal,
-        fit: s.flexFit ?? FlexFit.tight,
-        child: current,
       );
     }
 

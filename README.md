@@ -41,7 +41,7 @@ Add Fluxy to your `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  fluxy: ^0.1.5
+  fluxy: ^0.1.7
 ```
 
 Then, activate the Fluxy CLI globally for project orchestration:
@@ -161,6 +161,44 @@ Fx.text("Fade In")
     delay: 1.sec,
     fade: 0.0
   )
+
+---
+
+## What's New in 0.1.7
+
+### 1. High-Performance Image FX
+Apply cinematic filters directly to your image widgets using native modifiers.
+
+```dart
+Fx.image("https://api.dicebear.com/7.x/pixel-art/svg")
+  .blur(4)        // Real-time Gaussian blur
+  .grayscale()    // Instant B&W filter
+  .circle()       // Perfect circular clipping
+  .size(120)
+```
+
+### 2. Automatic Transitions & Interactivity
+Turn any static widget into an animated component with a single chainable modifier.
+
+```dart
+Fx.box()
+  .bg(Colors.blue)
+  .p(isExpanded ? 40 : 20)
+  .rounded(isExpanded ? 32 : 8)
+  .transition(400.ms) // Every style change above is now smoothly interpolated
+```
+
+### 3. Advanced Typography & Layout
+Rapidly prototype with high-contrast text and fluid entrance animations.
+
+```dart
+Fx.col(
+  children: [
+    Fx.text("Dashboard").whiteText().font.xxl().bold(),
+    Fx.text("Ready for launch").blackText().muted(),
+  ]
+).stagger(0.1) // Sub-elements slide-in sequentially
+```
 ```
 
 ---

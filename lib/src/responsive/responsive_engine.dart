@@ -17,6 +17,13 @@ class ResponsiveEngine {
   static double lg = 1200;
   static double xl = 1536;
 
+  /// Standard container max-widths.
+  static double containerXs = double.infinity;
+  static double containerSm = 540;
+  static double containerMd = 720;
+  static double containerLg = 960;
+  static double containerXl = 1140;
+
   /// Detects the current breakpoint based on screen width.
   static Breakpoint getBreakpoint(double width) {
     if (width >= xl) return Breakpoint.xl;
@@ -29,6 +36,16 @@ class ResponsiveEngine {
   /// Convenience method to get breakpoint from context.
   static Breakpoint of(BuildContext context) {
     return getBreakpoint(MediaQuery.of(context).size.width);
+  }
+
+  /// Gets the recommended container width for the current breakpoint.
+  static double containerWidth(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    if (width >= xl) return containerXl;
+    if (width >= lg) return containerLg;
+    if (width >= md) return containerMd;
+    if (width >= sm) return containerSm;
+    return containerXs;
   }
 
   /// Selects a value based on the current breakpoint.

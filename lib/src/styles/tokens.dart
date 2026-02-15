@@ -105,8 +105,24 @@ class _ShadowTokens {
   ];
 }
 
+
 class _ColorTokens {
   const _ColorTokens();
+  
+  // Semantic Colors (Resolved at runtime)
+  Color get primary => const FxThemeColor(FxThemeColorKey.primary);
+  Color get secondary => const FxThemeColor(FxThemeColorKey.secondary);
+  Color get success => const FxThemeColor(FxThemeColorKey.success);
+  Color get error => const FxThemeColor(FxThemeColorKey.error);
+  Color get warning => const FxThemeColor(FxThemeColorKey.warning);
+  Color get info => const FxThemeColor(FxThemeColorKey.info);
+  
+  // Neutrals (Resolved at runtime)
+  Color get background => const FxThemeColor(FxThemeColorKey.background);
+  Color get surface => const FxThemeColor(FxThemeColorKey.surface);
+  Color get text => const FxThemeColor(FxThemeColorKey.text);
+  Color get muted => const FxThemeColor(FxThemeColorKey.muted);
+
   Color get white => const Color(0xFFFFFFFF);
   Color get black => const Color(0xFF000000);
   Color get transparent => const Color(0x00000000);
@@ -129,3 +145,22 @@ class _ColorTokens {
   Color get blue600 => const Color(0xFF2563EB);
   Color get blue700 => const Color(0xFF1D4ED8);
 }
+
+enum FxThemeColorKey {
+  primary,
+  secondary,
+  success,
+  error,
+  warning,
+  info,
+  background,
+  surface,
+  text,
+  muted,
+}
+
+class FxThemeColor extends Color {
+  final FxThemeColorKey key;
+  const FxThemeColor(this.key) : super(0x00000000); // Value is 0 because it's resolved at runtime
+}
+

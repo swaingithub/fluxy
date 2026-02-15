@@ -96,10 +96,6 @@ class _GridBoxState extends State<GridBox> {
       );
     }
 
-    if (s.flex != null) {
-      current = Expanded(flex: s.flex!, child: current);
-    }
-
     return widget.onTap != null
         ? GestureDetector(onTap: widget.onTap, child: current)
         : current;

@@ -14,6 +14,35 @@ import '../widgets/table.dart';
 import '../widgets/fx_widget.dart';
 import 'fx.dart';
 
+extension FluxyStringExtension on String {
+  /// Transforms a string into a primary button.
+  FxButton primaryBtn({VoidCallback? onTap}) =>
+      Fx.primaryButton(this, onTap: onTap);
+
+  /// Transforms a string into a secondary button.
+  FxButton secondaryBtn({VoidCallback? onTap}) =>
+      Fx.secondaryButton(this, onTap: onTap);
+
+  /// Transforms a string into a danger button.
+  FxButton dangerBtn({VoidCallback? onTap}) =>
+      Fx.dangerButton(this, onTap: onTap);
+
+  /// Transforms a string into a success button.
+  FxButton successBtn({VoidCallback? onTap}) =>
+      Fx.successButton(this, onTap: onTap);
+
+  /// Transforms a string into an outline button.
+  FxButton outlineBtn({VoidCallback? onTap}) =>
+      Fx.outlineButton(this, onTap: onTap);
+
+  /// Transforms a string into a ghost button.
+  FxButton ghostBtn({VoidCallback? onTap}) =>
+      Fx.ghostButton(this, onTap: onTap);
+
+  /// Transforms a string into a raw button.
+  FxButton btn({VoidCallback? onTap}) => Fx.btn(label: this, onTap: onTap);
+}
+
 /// Extension to provide a fluent DSL experience for any Widget.
 extension FluxyWidgetExtension on Widget {
   /// Internal helper to apply style to any supported widget or wrap in Box.
@@ -43,6 +72,79 @@ extension FluxyWidgetExtension on Widget {
         width: self.width,
         height: self.height,
         child: self.child._applyGenericStyle(style),
+      );
+    }
+
+    // --- Intercept Flex Styles to prevent ParentData issues ---
+    // If we're applying a style with flex/flexGrow, we wrap externally here.
+    if (style.flex != null || style.flexGrow != null) {
+      final flexVal = style.flexGrow ?? style.flex ?? 1;
+      final fitVal =
+          style.flexFit ??
+          (style.flexGrow != null ? FlexFit.loose : FlexFit.tight);
+
+      // Create a new style without flex properties to avoid infinite recursion
+      final innerStyle = FxStyle(
+        width: style.width,
+        height: style.height,
+        padding: style.padding,
+        margin: style.margin,
+        backgroundColor: style.backgroundColor,
+        gradient: style.gradient,
+        shadows: style.shadows,
+        glass: style.glass,
+        borderRadius: style.borderRadius,
+        border: style.border,
+        justifyContent: style.justifyContent,
+        alignItems: style.alignItems,
+        mainAxisSize: style.mainAxisSize,
+        direction: style.direction,
+        // Explicitly omit flex, flexGrow, flexShrink, flexFit
+        gap: style.gap,
+        crossAxisCount: style.crossAxisCount,
+        minColumnWidth: style.minColumnWidth,
+        childAspectRatio: style.childAspectRatio,
+        alignment: style.alignment,
+        clipBehavior: style.clipBehavior,
+        top: style.top,
+        right: style.right,
+        bottom: style.bottom,
+        left: style.left,
+        zIndex: style.zIndex,
+        color: style.color,
+        fontSize: style.fontSize,
+        fontWeight: style.fontWeight,
+        textAlign: style.textAlign,
+        fontFamily: style.fontFamily,
+        overflow: style.overflow,
+        maxLines: style.maxLines,
+        letterSpacing: style.letterSpacing,
+        wordSpacing: style.wordSpacing,
+        textDecoration: style.textDecoration,
+        lineHeight: style.lineHeight,
+        hover: style.hover,
+        pressed: style.pressed,
+        transition: style.transition,
+        cursor: style.cursor,
+        opacity: style.opacity,
+        aspectRatio: style.aspectRatio,
+        transformScale: style.transformScale,
+        transformRotation: style.transformRotation,
+        fit: style.fit,
+        imageBlur: style.imageBlur,
+        grayscale: style.grayscale,
+        loading: style.loading,
+        error: style.error,
+        placeholder: style.placeholder,
+        imageSrc: style.imageSrc,
+      );
+
+      return Flexible(
+        flex: flexVal,
+        fit: fitVal,
+        child: self is FxWidget
+            ? self.copyWithStyle(innerStyle)
+            : Box(style: innerStyle, child: self),
       );
     }
 
@@ -129,67 +231,254 @@ extension FluxyWidgetExtension on Widget {
 
   // --- Spacing Modifiers ---
 
-  Widget padding(double value) =>
-      _applyGenericStyle(FxStyle(padding: EdgeInsets.all(value)));
-  Widget paddingX(double value) => _applyGenericStyle(
-    FxStyle(padding: EdgeInsets.symmetric(horizontal: value)),
-  );
-  Widget paddingY(double value) => _applyGenericStyle(
-    FxStyle(padding: EdgeInsets.symmetric(vertical: value)),
+  /// Padding modifier with Tailwind-like responsive overrides.
+  /// Example: .p(16, md: 24, lg: 32)
+  Widget p(double xs, {double? md, double? lg}) {
+    if (md == null && lg == null) {
+      return _applyGenericStyle(FxStyle(padding: EdgeInsets.all(xs)));
+    }
+    return _applyResponsive(
+      FxResponsiveStyle(
+        xs: FxStyle(padding: EdgeInsets.all(xs)),
+        md: md != null ? FxStyle(padding: EdgeInsets.all(md)) : null,
+        lg: lg != null ? FxStyle(padding: EdgeInsets.all(lg)) : null,
+      ),
+    );
+  }
+
+  Widget px(double xs, {double? md, double? lg}) {
+    if (md == null && lg == null) {
+      return _applyGenericStyle(
+        FxStyle(padding: EdgeInsets.symmetric(horizontal: xs)),
+      );
+    }
+    return _applyResponsive(
+      FxResponsiveStyle(
+        xs: FxStyle(padding: EdgeInsets.symmetric(horizontal: xs)),
+        md: md != null
+            ? FxStyle(padding: EdgeInsets.symmetric(horizontal: md))
+            : null,
+        lg: lg != null
+            ? FxStyle(padding: EdgeInsets.symmetric(horizontal: lg))
+            : null,
+      ),
+    );
+  }
+
+  Widget py(double xs, {double? md, double? lg}) {
+    if (md == null && lg == null) {
+      return _applyGenericStyle(
+        FxStyle(padding: EdgeInsets.symmetric(vertical: xs)),
+      );
+    }
+    return _applyResponsive(
+      FxResponsiveStyle(
+        xs: FxStyle(padding: EdgeInsets.symmetric(vertical: xs)),
+        md: md != null
+            ? FxStyle(padding: EdgeInsets.symmetric(vertical: md))
+            : null,
+        lg: lg != null
+            ? FxStyle(padding: EdgeInsets.symmetric(vertical: lg))
+            : null,
+      ),
+    );
+  }
+
+  /// Aliases for Padding
+  Widget padding(double v, {double? md, double? lg}) => p(v, md: md, lg: lg);
+  Widget pad(double v, {double? md, double? lg}) => p(v, md: md, lg: lg);
+  Widget paddingX(double v, {double? md, double? lg}) => px(v, md: md, lg: lg);
+  Widget paddingY(double v, {double? md, double? lg}) => py(v, md: md, lg: lg);
+
+  /// Margin modifier with responsive overrides.
+  Widget m(double xs, {double? md, double? lg}) {
+    if (md == null && lg == null) {
+      return _applyGenericStyle(FxStyle(margin: EdgeInsets.all(xs)));
+    }
+    return _applyResponsive(
+      FxResponsiveStyle(
+        xs: FxStyle(margin: EdgeInsets.all(xs)),
+        md: md != null ? FxStyle(margin: EdgeInsets.all(md)) : null,
+        lg: lg != null ? FxStyle(margin: EdgeInsets.all(lg)) : null,
+      ),
+    );
+  }
+
+  Widget mx(double xs, {double? md, double? lg}) {
+    if (md == null && lg == null) {
+      return _applyGenericStyle(
+        FxStyle(margin: EdgeInsets.symmetric(horizontal: xs)),
+      );
+    }
+    return _applyResponsive(
+      FxResponsiveStyle(
+        xs: FxStyle(margin: EdgeInsets.symmetric(horizontal: xs)),
+        md: md != null
+            ? FxStyle(margin: EdgeInsets.symmetric(horizontal: md))
+            : null,
+        lg: lg != null
+            ? FxStyle(margin: EdgeInsets.symmetric(horizontal: lg))
+            : null,
+      ),
+    );
+  }
+
+  Widget my(double xs, {double? md, double? lg}) {
+    if (md == null && lg == null) {
+      return _applyGenericStyle(
+        FxStyle(margin: EdgeInsets.symmetric(vertical: xs)),
+      );
+    }
+    return _applyResponsive(
+      FxResponsiveStyle(
+        xs: FxStyle(margin: EdgeInsets.symmetric(vertical: xs)),
+        md: md != null
+            ? FxStyle(margin: EdgeInsets.symmetric(vertical: md))
+            : null,
+        lg: lg != null
+            ? FxStyle(margin: EdgeInsets.symmetric(vertical: lg))
+            : null,
+      ),
+    );
+  }
+
+  /// Aliases for Margin
+  Widget margin(double v, {double? md, double? lg}) => m(v, md: md, lg: lg);
+  Widget marginX(double v, {double? md, double? lg}) => mx(v, md: md, lg: lg);
+  Widget marginY(double v, {double? md, double? lg}) => my(v, md: md, lg: lg);
+
+  /// Single-side Margins
+  Widget mb(double xs, {double? md, double? lg}) {
+    if (md == null && lg == null)
+      return _applyGenericStyle(FxStyle(margin: EdgeInsets.only(bottom: xs)));
+    return _applyResponsive(
+      FxResponsiveStyle(
+        xs: FxStyle(margin: EdgeInsets.only(bottom: xs)),
+        md: md != null ? FxStyle(margin: EdgeInsets.only(bottom: md)) : null,
+        lg: lg != null ? FxStyle(margin: EdgeInsets.only(bottom: lg)) : null,
+      ),
+    );
+  }
+
+  Widget mt(double xs, {double? md, double? lg}) {
+    if (md == null && lg == null)
+      return _applyGenericStyle(FxStyle(margin: EdgeInsets.only(top: xs)));
+    return _applyResponsive(
+      FxResponsiveStyle(
+        xs: FxStyle(margin: EdgeInsets.only(top: xs)),
+        md: md != null ? FxStyle(margin: EdgeInsets.only(top: md)) : null,
+        lg: lg != null ? FxStyle(margin: EdgeInsets.only(top: lg)) : null,
+      ),
+    );
+  }
+
+  Widget ml(double xs, {double? md, double? lg}) {
+    if (md == null && lg == null)
+      return _applyGenericStyle(FxStyle(margin: EdgeInsets.only(left: xs)));
+    return _applyResponsive(
+      FxResponsiveStyle(
+        xs: FxStyle(margin: EdgeInsets.only(left: xs)),
+        md: md != null ? FxStyle(margin: EdgeInsets.only(left: md)) : null,
+        lg: lg != null ? FxStyle(margin: EdgeInsets.only(left: lg)) : null,
+      ),
+    );
+  }
+
+  Widget mr(double xs, {double? md, double? lg}) {
+    if (md == null && lg == null)
+      return _applyGenericStyle(FxStyle(margin: EdgeInsets.only(right: xs)));
+    return _applyResponsive(
+      FxResponsiveStyle(
+        xs: FxStyle(margin: EdgeInsets.only(right: xs)),
+        md: md != null ? FxStyle(margin: EdgeInsets.only(right: md)) : null,
+        lg: lg != null ? FxStyle(margin: EdgeInsets.only(right: lg)) : null,
+      ),
+    );
+  }
+
+  Widget rounded(double xs, {double? md, double? lg}) {
+    if (md == null && lg == null)
+      return _applyGenericStyle(
+        FxStyle(borderRadius: BorderRadius.circular(xs)),
+      );
+    return _applyResponsive(
+      FxResponsiveStyle(
+        xs: FxStyle(borderRadius: BorderRadius.circular(xs)),
+        md: md != null
+            ? FxStyle(borderRadius: BorderRadius.circular(md))
+            : null,
+        lg: lg != null
+            ? FxStyle(borderRadius: BorderRadius.circular(lg))
+            : null,
+      ),
+    );
+  }
+
+  Widget circle() => _applyGenericStyle(
+    const FxStyle(borderRadius: BorderRadius.all(Radius.circular(9999))),
   );
 
-  /// Aliases
-  Widget p(double v) => padding(v);
-  Widget px(double v) => paddingX(v);
-  Widget py(double v) => paddingY(v);
-  Widget pad(double v) => padding(v);
+  Widget radius(double xs, {double? md, double? lg}) =>
+      rounded(xs, md: md, lg: lg);
+  Widget borderRadius(double xs, {double? md, double? lg}) =>
+      rounded(xs, md: md, lg: lg);
+  Widget roundedFull() => rounded(999);
 
-  Widget margin(double value) =>
-      _applyGenericStyle(FxStyle(margin: EdgeInsets.all(value)));
-  Widget marginX(double value) => _applyGenericStyle(
-    FxStyle(margin: EdgeInsets.symmetric(horizontal: value)),
-  );
-  Widget marginY(double value) => _applyGenericStyle(
-    FxStyle(margin: EdgeInsets.symmetric(vertical: value)),
-  );
+  Widget border({Color? color, double width = 1, Border? border}) {
+    if (border != null) return _applyGenericStyle(FxStyle(border: border));
+    return _applyGenericStyle(
+      FxStyle(
+        border: Border.all(
+          color: color ?? const Color(0xFF000000),
+          width: width,
+        ),
+      ),
+    );
+  }
 
-  /// Aliases
-  Widget m(double v) => margin(v);
-  Widget mx(double v) => marginX(v);
-  Widget my(double v) => marginY(v);
-  Widget mb(double value) =>
-      _applyGenericStyle(FxStyle(margin: EdgeInsets.only(bottom: value)));
-  Widget mt(double value) =>
-      _applyGenericStyle(FxStyle(margin: EdgeInsets.only(top: value)));
-  Widget ml(double value) =>
-      _applyGenericStyle(FxStyle(margin: EdgeInsets.only(left: value)));
-  Widget mr(double value) =>
-      _applyGenericStyle(FxStyle(margin: EdgeInsets.only(right: value)));
-
-  Widget radius(double value) =>
-      _applyGenericStyle(FxStyle(borderRadius: BorderRadius.circular(value)));
-  Widget rounded(double value) => radius(value);
-  Widget borderRadius(double value) => radius(value);
-  Widget roundedFull() => radius(999);
+  Widget borderColor(Color color) =>
+      _applyGenericStyle(FxStyle(border: Border.all(color: color)));
 
   // --- Dimension Modifiers ---
 
-  Widget w(double value) => _applyGenericStyle(FxStyle(width: value));
-  Widget h(double value) => _applyGenericStyle(FxStyle(height: value));
-  Widget fullWidth() =>
-      _applyGenericStyle(const FxStyle(width: double.infinity));
-  Widget fullHeight() =>
-      _applyGenericStyle(const FxStyle(height: double.infinity));
-  Widget wFull() => fullWidth();
-  Widget hFull() => fullHeight();
-
-  Widget size(double w, [double? h]) {
-    if (h == null) {
-      if (this is TextBox) return _applyGenericStyle(FxStyle(fontSize: w));
-      return _applyGenericStyle(FxStyle(width: w, height: w));
-    }
-    return _applyGenericStyle(FxStyle(width: w, height: h));
+  Widget w(double xs, {double? md, double? lg}) {
+    if (md == null && lg == null) return _applyGenericStyle(FxStyle(width: xs));
+    return _applyResponsive(
+      FxResponsiveStyle(
+        xs: FxStyle(width: xs),
+        md: md != null ? FxStyle(width: md) : null,
+        lg: lg != null ? FxStyle(width: lg) : null,
+      ),
+    );
   }
+
+  Widget h(double xs, {double? md, double? lg}) {
+    if (md == null && lg == null)
+      return _applyGenericStyle(FxStyle(height: xs));
+    return _applyResponsive(
+      FxResponsiveStyle(
+        xs: FxStyle(height: xs),
+        md: md != null ? FxStyle(height: md) : null,
+        lg: lg != null ? FxStyle(height: lg) : null,
+      ),
+    );
+  }
+
+  Widget wFull() => _applyGenericStyle(const FxStyle(width: double.infinity));
+  Widget hFull() => _applyGenericStyle(const FxStyle(height: double.infinity));
+  Widget fullWidth() => wFull();
+  Widget fullHeight() => hFull();
+
+  Widget size(double xs, {double? h, double? md, double? lg}) {
+    if (h == null) {
+      if (this is TextBox) return fontSize(xs, md: md, lg: lg);
+      return w(xs, md: md, lg: lg).h(xs, md: md, lg: lg);
+    }
+    return w(xs, md: md, lg: lg).h(h); 
+  }
+
+  Widget opacity(double value) => _applyGenericStyle(FxStyle(opacity: value));
+  Widget op(double value) => opacity(value);
 
   // --- Styling Modifiers ---
 
@@ -197,6 +486,34 @@ extension FluxyWidgetExtension on Widget {
       _applyGenericStyle(FxStyle(backgroundColor: color));
   Widget backgroundWhite() => background(const Color(0xFFFFFFFF));
   Widget backgroundBlack() => background(const Color(0xFF000000));
+  Widget gradient(Gradient value) =>
+      _applyGenericStyle(FxStyle(gradient: value));
+
+  // --- Image Modifiers ---
+  Widget fit(BoxFit value) => _applyGenericStyle(FxStyle(fit: value));
+  Widget cover() => fit(BoxFit.cover);
+  Widget contain() => fit(BoxFit.contain);
+  Widget fill() => fit(BoxFit.fill);
+
+  Widget blur(double value) => _applyGenericStyle(FxStyle(imageBlur: value));
+  Widget grayscale() => _applyGenericStyle(const FxStyle(grayscale: true));
+  Widget glass([double blur = 10]) => _applyGenericStyle(FxStyle(glass: blur));
+
+  Widget imgLoading(Widget widget) =>
+      _applyGenericStyle(FxStyle(loading: widget));
+  Widget imgError(Widget widget) => _applyGenericStyle(FxStyle(error: widget));
+  Widget imgPlaceholder(Widget widget) =>
+      _applyGenericStyle(FxStyle(placeholder: widget));
+
+  Widget scale(double value) =>
+      _applyGenericStyle(FxStyle(transformScale: value));
+  Widget rotate(double value) =>
+      _applyGenericStyle(FxStyle(transformRotation: value));
+
+  // --- Flex/Layout Modifiers ---
+  Widget flex([int value = 1]) => Flexible(flex: value, child: this);
+  Widget expanded([int value = 1]) => Expanded(flex: value, child: this);
+  Widget shrink() => Flexible(fit: FlexFit.loose, child: this);
 
   FxShadowProxy get shadow => FxShadowProxy(this);
 
@@ -207,11 +524,30 @@ extension FluxyWidgetExtension on Widget {
   Widget shadowLarge() =>
       _applyGenericStyle(FxStyle(shadows: FxTokens.shadow.lg));
 
+  Widget card() => _applyGenericStyle(
+    FxStyle(
+      backgroundColor: Colors.white,
+      borderRadius: BorderRadius.circular(12),
+      shadows: FxTokens.shadow.md,
+      padding: const EdgeInsets.all(16),
+    ),
+  );
+
   // --- Typography ---
 
   FxFontProxy get font => FxFontProxy(this);
 
-  Widget fontSize(double size) => _applyGenericStyle(FxStyle(fontSize: size));
+  Widget fontSize(double xs, {double? md, double? lg}) {
+    if (md == null && lg == null)
+      return _applyGenericStyle(FxStyle(fontSize: xs));
+    return _applyResponsive(
+      FxResponsiveStyle(
+        xs: FxStyle(fontSize: xs),
+        md: md != null ? FxStyle(fontSize: md) : null,
+        lg: lg != null ? FxStyle(fontSize: lg) : null,
+      ),
+    );
+  }
   Widget fontWeight(FontWeight weight) =>
       _applyGenericStyle(FxStyle(fontWeight: weight));
   Widget color(Color value) => _applyGenericStyle(FxStyle(color: value));
@@ -229,6 +565,58 @@ extension FluxyWidgetExtension on Widget {
   Widget semiBold() => fontWeight(FontWeight.w600);
   Widget medium() => fontWeight(FontWeight.w500);
   Widget light() => fontWeight(FontWeight.w300);
+
+  // --- Advanced Text Modifiers ---
+  Widget spacing(double value) =>
+      _applyGenericStyle(FxStyle(letterSpacing: value));
+  Widget wordSpacing(double value) =>
+      _applyGenericStyle(FxStyle(wordSpacing: value));
+  Widget decoration(TextDecoration value) =>
+      _applyGenericStyle(FxStyle(textDecoration: value));
+  Widget maxLines(int value) => _applyGenericStyle(FxStyle(maxLines: value));
+  Widget ellipsis() =>
+      _applyGenericStyle(const FxStyle(overflow: TextOverflow.ellipsis));
+
+  // --- Button/Input State Modifiers ---
+  Widget loading([bool value = true]) {
+    final self = this;
+    if (self is FxButton) return self.loading(value);
+    return this;
+  }
+
+  Widget disabled([bool value = true]) {
+    final self = this;
+    if (self is FxButton)
+      return self.copyWith(onTap: value ? null : self.onTap);
+    return this;
+  }
+
+  Widget icon(IconData data, {double? size, Color? color}) {
+    final self = this;
+    if (self is FxButton) {
+      return self.withIcon(Icon(data, size: size, color: color));
+    }
+    return this;
+  }
+
+  // --- Themed Colors ---
+  Widget primary() => color(FxTokens.colors.primary);
+  Widget secondary() => color(FxTokens.colors.secondary);
+  Widget success() => color(FxTokens.colors.success);
+  Widget error() => color(FxTokens.colors.error);
+  Widget warning() => color(FxTokens.colors.warning);
+  Widget info() => color(FxTokens.colors.info);
+  Widget whiteText() => color(const Color(0xFFFFFFFF));
+  Widget blackText() => color(const Color(0xFF000000));
+
+  // --- Design Tokens (Typography) ---
+  Widget h1() => fontSize(FxTokens.font.x4l).bold();
+  Widget h2() => fontSize(FxTokens.font.xxxl).bold();
+  Widget h3() => fontSize(FxTokens.font.xxl).bold();
+  Widget heading() => h2();
+  Widget body() => fontSize(FxTokens.font.md);
+  Widget caption() => fontSize(FxTokens.font.xs).color(FxTokens.colors.muted);
+  Widget muted() => color(FxTokens.colors.muted);
 
   // --- Flex Layout Modifiers ---
 
@@ -294,6 +682,13 @@ extension FluxyWidgetExtension on Widget {
   Widget show(bool condition) => condition ? this : const SizedBox.shrink();
   Widget hide(bool condition) => condition ? const SizedBox.shrink() : this;
 
+  /// Responsive visibility
+  Widget hideXs() => responsive(xs: (w) => w.opacity(0));
+  Widget hideSm() => responsive(sm: (w) => w.opacity(0));
+  Widget hideMd() => responsive(md: (w) => w.opacity(0));
+  Widget hideLg() => responsive(lg: (w) => w.opacity(0));
+  Widget hideXl() => responsive(xl: (w) => w.opacity(0));
+
   Widget onPressed(FxStyle Function(FxStyle s) builder) {
     final s = builder(FxStyle.none);
     return _applyGenericStyle(FxStyle(pressed: s));
@@ -304,11 +699,48 @@ extension FluxyWidgetExtension on Widget {
     return _applyGenericStyle(FxStyle(hover: s));
   }
 
+  Widget transition(Duration duration) =>
+      _applyGenericStyle(FxStyle(transition: duration));
+
+  Widget liftOnHover([double amount = 1.05]) => onHover((s) => s.scale(amount));
+  Widget glowOnHover([Color? color]) => onHover(
+    (s) => s.withShadows([
+      BoxShadow(
+        color: (color ?? Colors.blue).withOpacity(0.3),
+        blurRadius: 15,
+        spreadRadius: 2,
+      ),
+    ]),
+  );
+
   Widget align(AlignmentGeometry alignment) =>
       _applyGenericStyle(FxStyle(alignment: alignment));
   Widget center() => align(Alignment.center);
+
+  // --- Buttonizers ---
+
+  /// Wraps any widget in a raw button interaction layer.
+  FxButton btn({VoidCallback? onTap}) => Fx.btn(child: this, onTap: onTap);
+
+  /// Quick button variant wrappers
+  FxButton primaryBtn({VoidCallback? onTap}) =>
+      Fx.primaryButton("", onTap: onTap).copyWith(child: this);
+  FxButton secondaryBtn({VoidCallback? onTap}) =>
+      Fx.secondaryButton("", onTap: onTap).copyWith(child: this);
+  FxButton dangerBtn({VoidCallback? onTap}) =>
+      Fx.dangerButton("", onTap: onTap).copyWith(child: this);
+  FxButton successBtn({VoidCallback? onTap}) =>
+      Fx.successButton("", onTap: onTap).copyWith(child: this);
+  FxButton outlineBtn({VoidCallback? onTap}) =>
+      Fx.outlineButton("", onTap: onTap).copyWith(child: this);
+  FxButton ghostBtn({VoidCallback? onTap}) =>
+      Fx.ghostButton("", onTap: onTap).copyWith(child: this);
   Widget pointer() =>
       _applyGenericStyle(const FxStyle(cursor: SystemMouseCursors.click));
+
+  /// Allows conditional chaining.
+  /// Example: .then((w) => condition ? w.expand() : w)
+  Widget then(Widget Function(Widget w) builder) => builder(this);
 
   Widget paddingOnly({
     double left = 0,
@@ -352,6 +784,7 @@ extension FluxyWidgetExtension on Widget {
 
   /// Responsive styling modifier.
   Widget responsive({
+    Widget Function(Widget w)? xs,
     Widget Function(Widget w)? sm,
     Widget Function(Widget w)? md,
     Widget Function(Widget w)? lg,
@@ -359,7 +792,7 @@ extension FluxyWidgetExtension on Widget {
   }) {
     return _applyResponsive(
       FxResponsiveStyle(
-        xs: FxStyle.none,
+        xs: xs != null ? _extractStyle(xs(this)) : FxStyle.none,
         sm: sm != null ? _extractStyle(sm(this)) : null,
         md: md != null ? _extractStyle(md(this)) : null,
         lg: lg != null ? _extractStyle(lg(this)) : null,
@@ -371,6 +804,13 @@ extension FluxyWidgetExtension on Widget {
   FxStyle _extractStyle(Widget w) {
     if (w is FxWidget) return w.style;
     return FxStyle.none;
+  }
+
+  Widget children(List<Widget> value) {
+    final self = this;
+    if (self is Box) return self.copyWith(children: value);
+    if (self is FlexBox) return self.copyWith(children: value);
+    return Box(children: value);
   }
 
   Widget onTap(VoidCallback callback) {
@@ -411,6 +851,12 @@ class FxBgProxy {
   Widget get slate100 => _widget.background(FxTokens.colors.slate100);
   Widget get slate800 => _widget.background(FxTokens.colors.slate800);
   Widget get blue500 => _widget.background(FxTokens.colors.blue500);
+
+  Widget get primary => _widget.background(FxTokens.colors.primary);
+  Widget get secondary => _widget.background(FxTokens.colors.secondary);
+  Widget get success => _widget.background(FxTokens.colors.success);
+  Widget get error => _widget.background(FxTokens.colors.error);
+  Widget get surface => _widget.background(FxTokens.colors.surface);
 
   Widget color(Color value) => _widget.background(value);
 }
@@ -464,45 +910,62 @@ class FxFontProxy {
   FxFontProxy(this._widget);
 
   // Sizes
-  Widget get xs => _widget.textXs();
-  Widget get sm => _widget.textSm();
-  Widget get md => _widget.textBase();
-  Widget get lg => _widget.textLg();
-  Widget get xl => _widget.textXl();
+  Widget xs() => _widget.textXs();
+  Widget sm() => _widget.textSm();
+  Widget md() => _widget.textBase();
+  Widget lg() => _widget.textLg();
+  Widget xl() => _widget.textXl();
+  Widget xxl() => _widget.fontSize(FxTokens.font.xxl);
+  Widget xxxl() => _widget.fontSize(FxTokens.font.xxxl);
+
+  // Semantic
+  Widget h1() => _widget.h1();
+  Widget h2() => _widget.h2();
+  Widget h3() => _widget.h3();
+  Widget h4() => _widget.fontSize(FxTokens.font.lg).bold();
+  Widget body() => _widget.body();
+  Widget caption() => _widget.caption();
+  Widget muted() => _widget.muted();
+
+  // Colors
+  Widget primary() => _widget.primary();
+  Widget secondary() => _widget.secondary();
+  Widget error() => _widget.error();
+  Widget success() => _widget.success();
 
   // Weights (Chainable)
-  Widget get bold => _widget.bold();
-  Widget get semiBold => _widget.semiBold();
-  Widget get medium => _widget.medium();
-  Widget get normal => _widget.fontWeight(FontWeight.normal);
-  Widget get light => _widget.light();
+  Widget bold() => _widget.bold();
+  Widget semiBold() => _widget.semiBold();
+  Widget medium() => _widget.medium();
+  Widget normal() => _widget.fontWeight(FontWeight.normal);
+  Widget light() => _widget.light();
 }
 
 /// Extensions on FxStyle to allow fluent composition in callbacks.
 extension FluxyStyleFluentExtension on FxStyle {
-  FxStyle padding(double value) => copyWith(padding: EdgeInsets.all(value));
-  FxStyle paddingX(double value) =>
+  FxStyle pad(double value) => copyWith(padding: EdgeInsets.all(value));
+  FxStyle padX(double value) =>
       copyWith(padding: EdgeInsets.symmetric(horizontal: value));
-  FxStyle paddingY(double value) =>
+  FxStyle padY(double value) =>
       copyWith(padding: EdgeInsets.symmetric(vertical: value));
 
-  FxStyle margin(double value) => copyWith(margin: EdgeInsets.all(value));
-  FxStyle marginX(double value) =>
+  FxStyle marg(double value) => copyWith(margin: EdgeInsets.all(value));
+  FxStyle margX(double value) =>
       copyWith(margin: EdgeInsets.symmetric(horizontal: value));
-  FxStyle marginY(double value) =>
+  FxStyle margY(double value) =>
       copyWith(margin: EdgeInsets.symmetric(vertical: value));
 
   FxStyle radius(double value) =>
       copyWith(borderRadius: BorderRadius.circular(value));
 
   FxStyle bg(Color color) => copyWith(backgroundColor: color);
-  FxStyle color(Color color) => copyWith(color: color);
+  FxStyle textColor(Color color) => copyWith(color: color);
 
   FxStyle size(double value) => copyWith(fontSize: value);
   FxStyle weight(FontWeight weight) => copyWith(fontWeight: weight);
 
-  FxStyle width(double value) => copyWith(width: value);
-  FxStyle height(double value) => copyWith(height: value);
+  FxStyle w(double value) => copyWith(width: value);
+  FxStyle h(double value) => copyWith(height: value);
   FxStyle wFull() => copyWith(width: double.infinity);
   FxStyle hFull() => copyWith(height: double.infinity);
   FxStyle op(double value) => copyWith(opacity: value);
@@ -510,9 +973,16 @@ extension FluxyStyleFluentExtension on FxStyle {
   // Flex Fluent
   FxStyle justify(MainAxisAlignment val) => copyWith(justifyContent: val);
   FxStyle items(CrossAxisAlignment val) => copyWith(alignItems: val);
-  FxStyle gap(double val) => copyWith(gap: val);
+  FxStyle spacing(double val) => copyWith(gap: val);
   FxStyle direction(Axis val) => copyWith(direction: val);
   FxStyle gridCols(int val) => copyWith(crossAxisCount: val);
+
+  FxStyle scale(double val) => copyWith(transformScale: val);
+  FxStyle rotate(double val) => copyWith(transformRotation: val);
+  FxStyle withShadows(List<BoxShadow> val) => copyWith(shadows: val);
+  FxStyle border({Color? color, double width = 1}) => copyWith(
+    border: Border.all(color: color ?? const Color(0x00000000), width: width),
+  );
 }
 
 /// Helper for context extensions

@@ -8,3 +8,10 @@
 .packages
 pubspec.lock
 build/
+
+# Extra Examples
+example/lib/dashboard_mock.dart
+example/lib/design_system_demo.dart
+example/lib/fluxy_play.dart
+example/lib/marketplace_data.dart
+example/lib/responsive_demo.dart

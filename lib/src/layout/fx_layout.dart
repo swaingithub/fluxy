@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'breakpoint.dart';
+import '../responsive/responsive_engine.dart';
 
 class FxLayout extends StatelessWidget {
   final Widget mobile;
@@ -15,10 +15,14 @@ class FxLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final device = FxBreakpoint.deviceType(context);
+    final bp = ResponsiveEngine.of(context);
     
-    if (device == FxDeviceType.desktop && desktop != null) return desktop!;
-    if (device == FxDeviceType.tablet && tablet != null) return tablet!;
+    if ((bp == Breakpoint.lg || bp == Breakpoint.xl) && desktop != null) {
+      return desktop!;
+    }
+    if ((bp == Breakpoint.sm || bp == Breakpoint.md) && tablet != null) {
+      return tablet!;
+    }
     return mobile;
   }
 }

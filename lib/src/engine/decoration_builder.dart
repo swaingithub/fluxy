@@ -30,6 +30,8 @@ class FxDecorationBuilder {
       fontWeight: style.fontWeight,
       fontFamily: style.fontFamily,
       letterSpacing: style.letterSpacing,
+      wordSpacing: style.wordSpacing,
+      decoration: style.textDecoration,
       height: style.lineHeight,
     );
   }

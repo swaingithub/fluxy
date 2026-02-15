@@ -111,99 +111,75 @@ class WalletDashboard extends StatelessWidget {
             // Branding & Profile Header
             Fx.row(
               children: [
-                Fx.column(
+                Fx.col(
                   gap: 4,
                   children: [
-                    Fx.text("Welcome back,")
-                        .fontSize(14)
-                        .color(const Color(0xFF64748B))
-                        .weight(FontWeight.w500),
-                    Fx.text(
-                      "Alex Riviera",
-                    ).fontSize(26).bold().color(const Color(0xFF0F172A)),
+                    Fx.text("Welcome back,").font.sm().muted().semiBold(),
+                    Fx.text("Alex Riviera").font.xxl().bold().primary(),
                   ],
-                ).expand(),
+                ).expanded(),
                 Fx.avatar(
                   fallback: "AR",
                   size: FxAvatarSize.lg,
-                  shape: FxAvatarShape.rounded,
                   onTap: () => Fx.toast("Profile tapped"),
-                ).shadow(
-                  color: const Color(0xFF6366F1).withValues(alpha: 0.3),
-                  blur: 20,
-                ),
+                ).shadow.md,
               ],
             ),
             const SizedBox(height: 36),
 
-            // Main Balance Gradient Card
-            Fx.box(
-                  child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+            // Main Balance Card
+            Fx.box()
+                .bg(const Color(0xFF1E293B))
+                .rounded(32)
+                .p(24)
+                .shadow
+                .lg
+                .children([
+                  Fx.row(
                     children: [
-                      Fx.row(
-                        children: [
-                          const Text(
-                            "AVAILABLE BALANCE",
-                            style: TextStyle(
-                              fontSize: 11,
-                              fontWeight: FontWeight.bold,
-                              letterSpacing: 1.5,
-                              color: Color(0xFF94A3B8),
-                            ),
-                          ),
-                          const Spacer(),
-                          Fx.box(
-                                child: const Icon(
-                                  Icons.nfc_rounded,
-                                  color: Colors.white,
-                                  size: 20,
-                                ),
-                              )
-                              .size(36, 36)
-                              .background(Colors.white.withValues(alpha: 0.1))
-                              .borderRadius(10)
-                              .center(),
-                        ],
-                      ),
-                      const SizedBox(height: 12),
-                      Fx.text(() => "₹ ${balance.value.toStringAsFixed(2)}")
-                          .fontSize(38) // Reduced from 44
+                      Fx.text("AVAILABLE BALANCE").font
+                          .xs()
                           .bold()
-                          .color(Colors.white),
-                      const SizedBox(height: 24),
-                      Fx.row(
-                        gap: 20, // Reduced from 24
-                        children: [
-                          _miniStat(
-                            "Income",
-                            "₹ ${income.value.toInt()}",
-                            const Color(0xFF10B981),
-                          ),
-                          _miniStat(
-                            "Expense",
-                            "₹ ${expense.value.toInt()}",
-                            const Color(0xFFEF4444),
-                          ),
-                        ],
+                          .color(const Color(0xFF94A3B8))
+                          .spacing(1.5),
+                      const Spacer(),
+                      Fx.icon(
+                        Icons.nfc_rounded,
+                        color: Colors.white,
+                        size: 20,
+                      ).p(8).bg(Colors.white.withOpacity(0.1)).rounded(10),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  Fx.text(() => "₹ ${balance.value.toStringAsFixed(2)}")
+                      .font
+                      .xxl()
+                      .bold()
+                      .whiteText()
+                      .animate(fade: 0, slide: const Offset(0, 10)),
+                  const SizedBox(height: 24),
+                  Fx.row(
+                    gap: 20,
+                    children: [
+                      _miniStat(
+                        "Income",
+                        "₹ ${income.value.toInt()}",
+                        FxTokens.colors.success,
+                      ),
+                      _miniStat(
+                        "Expense",
+                        "₹ ${expense.value.toInt()}",
+                        FxTokens.colors.error,
                       ),
                     ],
                   ),
-                )
-                .background(const Color(0xFF1E293B))
-                .borderRadius(36)
-                .padding(24) // Reduced from 32
-                .shadow(
-                  color: const Color(0xFF000000).withValues(alpha: 0.15),
-                  blur: 40,
-                ),
+                ]),
 
             const SizedBox(height: 36),
 
-            // Quick Actions Grid-like row
+            // Quick Actions
             Fx.row(
-              style: const FxStyle(
-                justifyContent: MainAxisAlignment.spaceBetween,
-              ),
+              justify: MainAxisAlignment.spaceBetween,
               children: [
                 _actionCircle(
                   Icons.send_rounded,
@@ -226,14 +202,10 @@ class WalletDashboard extends StatelessWidget {
                   const Color(0xFF64748B),
                 ),
               ],
-            ),
+            ).stagger(0.1),
 
             const SizedBox(height: 24),
-            // Example Button as requested
-            Fx.button(
-              "Add New Card",
-              onTap: () {},
-            ).fullWidth().sizeLg().shadowMedium(),
+            "Add New Card".primaryBtn().wFull().shadow.md,
 
             const SizedBox(height: 48),
 
@@ -284,68 +256,68 @@ class WalletDashboard extends StatelessWidget {
                   "Toast",
                   () => Fx.toast("Fluxy toast message!"),
                   badgeCount: 3,
-                ),
+                ).animate(fade: 0, scale: 0.8),
                 _actionButton(
                   Icons.window_outlined,
                   "Modal",
                   () => Fx.modal(
                     context,
-                    child: Fx.box(
-                      child: Fx.column(
-                        children: [
-                          Fx.text("Fluxy Modal").bold().fontSize(18),
-                          const SizedBox(height: 12),
-                          Fx.text(
-                            "Declarative & Simple.",
-                          ).textCenter().color(Colors.grey),
-                          const SizedBox(height: 24),
-                          Fx.button(
-                            "Close",
-                            onTap: () => Navigator.pop(context),
-                          ).fullWidth(),
-                        ],
-                      ).pack(),
-                    ).p(24).backgroundWhite().rounded(24).w(300),
+                    child: Fx.box()
+                        .p(24)
+                        .backgroundWhite()
+                        .rounded(24)
+                        .w(300)
+                        .children([
+                          Fx.col(
+                            children: [
+                              Fx.text("Fluxy Modal").bold().font.xl(),
+                              const SizedBox(height: 12),
+                              Fx.text("Declarative & Simple.").center().muted(),
+                              const SizedBox(height: 24),
+                              "Close"
+                                  .primaryBtn(
+                                    onTap: () => Navigator.pop(context),
+                                  )
+                                  .wFull(),
+                            ],
+                          ),
+                        ]),
                   ),
-                ),
+                ).animate(fade: 0, scale: 0.8, delay: 0.1),
                 _actionButton(
                   Icons.vertical_align_bottom_outlined,
                   "Sheet",
                   () => Fx.bottomSheet(
                     context,
-                    child: Fx.box(
-                      child: Fx.column(
+                    child: Fx.box().p(24).h(300).wFull().children([
+                      Fx.col(
                         children: [
-                          Fx.box()
-                              .w(40)
-                              .h(4)
-                              .bg(Colors.grey[300]!)
-                              .roundedFull(),
+                          Fx.box().w(40).h(4).bg(Colors.grey[300]!).circle(),
                           const SizedBox(height: 24),
-                          Fx.text("Bottom Sheet").bold().fontSize(20),
+                          Fx.text("Bottom Sheet").bold().font.xxl(),
                           const SizedBox(height: 12),
-                          Fx.text("Swipe down to close.").color(Colors.grey),
+                          Fx.text("Swipe down to close.").muted(),
                           const SizedBox(height: 40),
-                          Fx.button(
-                            "Got it",
-                            onTap: () => Navigator.pop(context),
-                          ).fullWidth(),
+                          "Got it"
+                              .primaryBtn(onTap: () => Navigator.pop(context))
+                              .wFull(),
                         ],
-                      ).pack(),
-                    ).p(24).h(300).wFull(),
+                      ),
+                    ]),
                   ),
-                ),
+                ).animate(fade: 0, scale: 0.8, delay: 0.2),
               ],
-            ).p(16).bg(Colors.white).rounded(20).shadowMedium(),
+            ).p(16).bg(Colors.white).rounded(24).shadow.sm,
 
-            const SizedBox(height: 32),
-            Fx.button(
-              "View Full Layout Demo",
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const LayoutShowcase()),
-              ),
-            ).secondary.fullWidth(),
+            Fx.gap(32),
+            "View Full Layout Demo"
+                .secondaryBtn(
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const LayoutShowcase()),
+                  ),
+                )
+                .wFull(),
 
             const SizedBox(height: 100), // Bottom padding
           ],
@@ -360,55 +332,54 @@ class WalletDashboard extends StatelessWidget {
     VoidCallback onTap, {
     int? badgeCount,
   }) {
-    Widget iconWidget = Fx.icon(icon, size: 28, color: const Color(0xFF2563EB));
+    // 1. Create the base icon widget with the circular background
+    Widget buttonContent = Fx.icon(icon, size: 28, color: const Color(0xFF2563EB))
+        .p(12)
+        .bg(const Color(0xFFEFF6FF))
+        .circle();
 
+    // 2. Add badge if needed relative to the circle
     if (badgeCount != null && badgeCount > 0) {
-      iconWidget = Fx.badge(
-        child: iconWidget,
+      buttonContent = Fx.badge(
+        child: buttonContent,
         label: badgeCount.toString(),
         color: Colors.red,
-        offset: const Offset(6, -6),
+        offset: const Offset(4, -4), // Adjusted for circular offset
       );
     }
 
-    return Fx.box(
-      onTap: onTap,
-      child: Fx.column(
-        children: [
-          iconWidget.p(12).bg(const Color(0xFFEFF6FF)).roundedFull(),
-          const SizedBox(height: 8),
-          Fx.text(label).fontSize(12).semiBold().color(Colors.grey[700]!),
-        ],
-      ),
-    ).pointer();
+    return Fx.box().onTap(onTap).children([
+      buttonContent,
+      const SizedBox(height: 8),
+      Fx.text(label).font.xs().semiBold().muted(),
+    ]);
   }
 
   Widget _miniStat(String label, String value, Color col) {
-    return Fx.column(
+    return Fx.col(
       gap: 6,
       children: [
-        Fx.text(
-          label,
-        ).fontSize(11).color(const Color(0xFF94A3B8)).weight(FontWeight.w600),
-        Fx.text(value).fontSize(17).bold().color(col),
+        Fx.text(label).font.xs().muted().bold(),
+        Fx.text(value).font.md().bold().color(col),
       ],
     );
   }
 
   Widget _actionCircle(IconData icon, String label, Color color) {
-    return Fx.column(
-      gap: 10,
+    return Fx.col(
+      gap: 12,
       children: [
-        Fx.box(child: Icon(icon, color: color, size: 28))
-            .size(68, 68)
-            .background(Colors.white)
-            .borderRadius(22)
-            .shadow(color: Colors.black.withValues(alpha: 0.03), blur: 15)
+        Fx.box()
+            .size(68)
+            .bg(color.withOpacity(0.1))
+            .circle()
             .center()
-            .pointer(),
-        Fx.text(label).fontSize(13).bold().color(const Color(0xFF64748B)),
+            .child(Icon(icon, color: color, size: 28))
+            .onHover((s) => s.scale(1.15).bg(color.withOpacity(0.15)))
+            .transition(300.ms),
+        Fx.text(label).font.sm().bold().color(const Color(0xFF1E293B)),
       ],
-    ).expand();
+    ).expanded();
   }
 
   Widget _transactionTile(
@@ -419,45 +390,37 @@ class WalletDashboard extends StatelessWidget {
     Color col,
   ) {
     final isNegative = amount < 0;
-    return Fx.box(
-          child: Fx.row(
+    return Fx.box()
+        .bg(Colors.white)
+        .rounded(28)
+        .p(18)
+        .shadow
+        .sm
+        .mb(12)
+        .child(
+          Fx.row(
             children: [
-              Fx.box(child: Icon(icon, color: col, size: 26))
-                  .size(54, 54)
-                  .background(col.withValues(alpha: 0.12))
-                  .borderRadius(18)
-                  .center(),
+              Fx.icon(
+                icon,
+                color: col,
+                size: 26,
+              ).p(14).bg(col.withOpacity(0.12)).rounded(18),
               const SizedBox(width: 18),
-              Fx.column(
+              Fx.col(
                 gap: 4,
                 children: [
-                  Fx.text(
-                    title,
-                  ).fontSize(16).bold().color(const Color(0xFF0F172A)),
-                  Fx.text(subtitle)
-                      .fontSize(12)
-                      .color(const Color(0xFF94A3B8))
-                      .weight(FontWeight.w500),
+                  Fx.text(title).font.md().bold().primary(),
+                  Fx.text(subtitle).font.xs().muted().semiBold(),
                 ],
-              ).expand(),
+              ).expanded(),
               Fx.text(
-                    "${isNegative ? '' : '+'}${isNegative ? '-' : ''} ₹ ${amount.abs().toStringAsFixed(2)}",
-                  )
-                  .fontSize(16)
-                  .bold()
-                  .color(
-                    isNegative
-                        ? const Color(0xFF0F172A)
-                        : const Color(0xFF10B981),
-                  ),
+                "${isNegative ? '' : '+'}${isNegative ? '-' : ''} ₹ ${amount.abs().toStringAsFixed(2)}",
+              ).font.md().bold().color(
+                isNegative ? const Color(0xFF0F172A) : FxTokens.colors.success,
+              ),
             ],
           ),
-        )
-        .background(Colors.white)
-        .borderRadius(28)
-        .padding(18)
-        .shadow(color: Colors.black.withValues(alpha: 0.02), blur: 10)
-        .mb(12);
+        );
   }
 }
 
@@ -484,25 +447,23 @@ class _LayoutShowcaseState extends State<LayoutShowcase> {
       ),
       drawer: Fx.drawer(
         width: 280,
-        child: Fx.column(
+        child: Fx.col(
           children: [
             Fx.box()
                 .h(200)
                 .bg(const Color(0xFF1E293B))
                 .wFull()
+                .center()
                 .child(
-                  Fx.column(
-                    justify: MainAxisAlignment.center,
+                  Fx.col(
                     children: [
                       Fx.icon(
                         Icons.person,
                         size: 64,
                         color: Colors.white,
-                      ).p(16).bg(Colors.white24).roundedFull(),
+                      ).p(16).bg(Colors.white24).circle(),
                       const SizedBox(height: 16),
-                      Fx.text(
-                        "Fluxy User",
-                      ).color(Colors.white).bold().fontSize(18),
+                      Fx.text("Fluxy User").whiteText().bold().font.xl(),
                     ],
                   ),
                 ),
@@ -578,130 +539,105 @@ class PortfolioStats extends StatelessWidget {
         padding: const EdgeInsets.all(24),
         child: Column(
           children: [
-            Fx.text(
-              "Market Insights",
-            ).fontSize(30).bold().color(const Color(0xFF0F172A)),
+            Fx.text("Market Insights").font.xxxl().bold().primary(),
             const SizedBox(height: 48),
 
             // Dynamic Chart Card
-            Fx.box(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+            Fx.box()
+                .height(280)
+                .bg(Colors.white)
+                .rounded(36)
+                .p(28)
+                .shadow
+                .sm
+                .children([
+                  Fx.text(
+                    "PORTFOLIO PERFORMANCE",
+                  ).font.xs().bold().muted().spacing(1.5),
+                  const SizedBox(height: 12),
+                  Fx.row(
                     children: [
-                      const Text(
-                        "PORTFOLIO PERFORMANCE",
-                        style: TextStyle(
-                          fontSize: 10,
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 1.5,
-                          color: Color(0xFF94A3B8),
-                        ),
-                      ),
-                      const SizedBox(height: 12),
-                      Fx.row(
-                        children: [
-                          Fx.text(
-                            "+ ₹ 12,400.00",
-                          ).fontSize(28).bold().color(const Color(0xFF10B981)),
-                          const SizedBox(width: 12),
-                          Fx.box(
-                                child: Fx.text("↑ 14.2%")
-                                    .color(const Color(0xFF10B981))
-                                    .fontSize(12)
-                                    .bold(),
-                              )
-                              .background(
-                                const Color(0xFF10B981).withValues(alpha: 0.1),
-                              )
-                              .borderRadius(8)
-                              .paddingX(8)
-                              .paddingY(4),
-                        ],
-                      ),
-                      const Spacer(),
-                      Fx.row(
-                        gap: 8, // Reduced from 12
-                        children: [
-                          _chartBar(60),
-                          _chartBar(90),
-                          _chartBar(70),
-                          _chartBar(130),
-                          _chartBar(110),
-                          _chartBar(80),
-                          _chartBar(120),
-                          _chartBar(105),
-                        ],
-                      ).center(),
+                      Fx.text("+ ₹ 12,400.00").font.xl().bold().success(),
+                      const SizedBox(width: 12),
+                      Fx.box()
+                          .bg(FxTokens.colors.success.withOpacity(0.1))
+                          .rounded(8)
+                          .px(8)
+                          .py(4)
+                          .child(Fx.text("↑ 14.2%").font.xs().bold().success()),
                     ],
                   ),
-                )
-                .height(280)
-                .background(Colors.white)
-                .borderRadius(36)
-                .padding(28)
-                .shadow(color: Colors.black.withValues(alpha: 0.04), blur: 30),
+                  const Spacer(),
+                  Fx.row(
+                    gap: 8,
+                    children: [
+                      _chartBar(60),
+                      _chartBar(90),
+                      _chartBar(70),
+                      _chartBar(130),
+                      _chartBar(110),
+                      _chartBar(80),
+                      _chartBar(120),
+                      _chartBar(105),
+                    ],
+                  ).center(),
+                ]),
 
             const SizedBox(height: 40),
 
             // Reactive Signal Adjustment Control
-            Fx.box(
-              child: Column(
+            Fx.box().bg(const Color(0xFFF1F5F9)).rounded(36).p(32).children([
+              Fx.col(
                 children: [
-                  Fx.text(
-                    "Live Budget Control",
-                  ).fontSize(18).bold().color(const Color(0xFF1E293B)),
+                  Fx.text("Live Budget Control").font.lg().bold().primary(),
                   const SizedBox(height: 8),
                   Fx.text(
                     "Simulate instant financial adjustments",
-                  ).fontSize(13).color(const Color(0xFF64748B)),
+                  ).font.sm().muted(),
                   const SizedBox(height: 32),
                   Fx.row(
-                    gap: 24, // Reduced from 40
+                    gap: 24,
                     children: [
-                      Fx.box(
-                            onTap: () => balance.value -= 500,
-                            child: const Icon(
+                      Fx.box()
+                          .onTap(() => balance.value -= 500)
+                          .bg(const Color(0xFF1E293B))
+                          .size(56)
+                          .rounded(18)
+                          .shadow
+                          .md
+                          .center()
+                          .child(
+                            const Icon(
                               Icons.remove_rounded,
                               color: Colors.white,
                               size: 28,
                             ),
-                          )
-                          .background(const Color(0xFF1E293B))
-                          .size(56, 56)
-                          .borderRadius(18)
-                          .shadow(
-                            color: Colors.black.withValues(alpha: 0.2),
-                            blur: 15,
-                          )
-                          .pointer(),
+                          ),
 
                       Fx.text(
                         () => "₹ ${balance.value.toInt()}",
-                      ).fontSize(28).bold().color(const Color(0xFF0F172A)),
+                      ).font.xxl().bold().primary(),
 
-                      Fx.box(
-                            onTap: () => balance.value += 500,
-                            child: const Icon(
+                      Fx.box()
+                          .onTap(() => balance.value += 500)
+                          .bg(const Color(0xFF6366F1))
+                          .size(56)
+                          .rounded(18)
+                          .shadow
+                          .md
+                          .center()
+                          .child(
+                            const Icon(
                               Icons.add_rounded,
                               color: Colors.white,
                               size: 28,
                             ),
-                          )
-                          .background(const Color(0xFF6366F1))
-                          .size(56, 56)
-                          .borderRadius(18)
-                          .shadow(
-                            color: const Color(
-                              0xFF6366F1,
-                            ).withValues(alpha: 0.4),
-                            blur: 20,
-                          )
-                          .pointer(),
+                          ),
                     ],
                   ).center(),
                 ],
               ),
-            ).background(const Color(0xFFF1F5F9)).borderRadius(36).padding(32),
+            ]),
 
             const SizedBox(height: 40),
 
@@ -725,40 +661,42 @@ class PortfolioStats extends StatelessWidget {
   }
 
   Widget _chartBar(double height) {
-    return Fx.box(
-          child: Align(
+    return Fx.box()
+        .height(height)
+        .bg(FxTokens.colors.primary.withOpacity(0.1))
+        .rounded(8)
+        .expanded()
+        .child(
+          Align(
             alignment: Alignment.bottomCenter,
             child: AnimBar(height: height),
           ),
-        )
-        .height(height)
-        .background(const Color(0xFF6366F1).withValues(alpha: 0.1))
-        .borderRadius(8)
-        .expand();
+        );
   }
 
   Widget _fancyCard(String title, IconData icon, String detail, Color accent) {
-    return Fx.box(
-          child: Fx.row(
+    return Fx.box()
+        .bg(Colors.white)
+        .rounded(28)
+        .p(24)
+        .shadow
+        .sm
+        .child(
+          Fx.row(
             children: [
-              Fx.box(child: Icon(icon, color: accent, size: 28))
-                  .size(50, 50)
-                  .background(accent.withValues(alpha: 0.1))
-                  .borderRadius(16)
-                  .center(),
+              Fx.icon(
+                icon,
+                color: accent,
+                size: 28,
+              ).p(11).bg(accent.withOpacity(0.1)).rounded(16),
               const SizedBox(width: 20),
-              Fx.column(
+              Fx.col(
                 gap: 4,
                 children: [
-                  Fx.text(
-                    title,
-                  ).bold().fontSize(17).color(const Color(0xFF0F172A)),
-                  Fx.text(detail)
-                      .fontSize(13)
-                      .color(const Color(0xFF64748B))
-                      .weight(FontWeight.w500),
+                  Fx.text(title).font.md().bold().primary(),
+                  Fx.text(detail).font.xs().muted().semiBold(),
                 ],
-              ).expand(),
+              ).expanded(),
               const Icon(
                 Icons.chevron_right_rounded,
                 color: Color(0xFFCBD5E1),
@@ -766,11 +704,7 @@ class PortfolioStats extends StatelessWidget {
               ),
             ],
           ),
-        )
-        .background(Colors.white)
-        .borderRadius(28)
-        .padding(24)
-        .shadow(color: Colors.black.withValues(alpha: 0.03), blur: 20);
+        );
   }
 }
 

@@ -52,6 +52,8 @@ class FxStyle {
   final TextOverflow? overflow;
   final int? maxLines;
   final double? letterSpacing;
+  final double? wordSpacing;
+  final TextDecoration? textDecoration;
   final double? lineHeight; // line-height
 
   // Interactive Styles
@@ -59,10 +61,21 @@ class FxStyle {
   final FxStyle? pressed;
   final Duration? transition;
 
+  // Image Specific
+  final String? imageSrc;
+  final BoxFit? fit;
+  final double? imageBlur;
+  final bool? grayscale;
+  final Widget? loading;
+  final Widget? error;
+  final Widget? placeholder;
+
   // Utilities
   final MouseCursor? cursor;
   final double? _opacity;
   final double? aspectRatio;
+  final double? transformScale;
+  final double? transformRotation;
 
   const FxStyle({
     double? width,
@@ -101,6 +114,8 @@ class FxStyle {
     this.overflow,
     this.maxLines,
     this.letterSpacing,
+    this.wordSpacing,
+    this.textDecoration,
     this.lineHeight,
     this.hover,
     this.pressed,
@@ -109,6 +124,15 @@ class FxStyle {
     this.cursor,
     double? opacity,
     this.aspectRatio,
+    this.transformScale,
+    this.transformRotation,
+    this.fit,
+    this.imageBlur,
+    this.grayscale,
+    this.loading,
+    this.error,
+    this.placeholder,
+    this.imageSrc,
   })  : _width = width,
         _height = height,
         _padding = padding,
@@ -186,6 +210,8 @@ class FxStyle {
     TextOverflow? overflow,
     int? maxLines,
     double? letterSpacing,
+    double? wordSpacing,
+    TextDecoration? textDecoration,
     double? lineHeight,
     FxStyle? hover,
     FxStyle? pressed,
@@ -193,6 +219,15 @@ class FxStyle {
     MouseCursor? cursor,
     double? opacity,
     double? aspectRatio,
+    double? transformScale,
+    double? transformRotation,
+    BoxFit? fit,
+    double? imageBlur,
+    bool? grayscale,
+    Widget? loading,
+    Widget? error,
+    Widget? placeholder,
+    String? imageSrc,
   }) {
     return FxStyle(
       width: width ?? this.width,
@@ -232,6 +267,8 @@ class FxStyle {
       overflow: overflow ?? this.overflow,
       maxLines: maxLines ?? this.maxLines,
       letterSpacing: letterSpacing ?? this.letterSpacing,
+      wordSpacing: wordSpacing ?? this.wordSpacing,
+      textDecoration: textDecoration ?? this.textDecoration,
       lineHeight: lineHeight ?? this.lineHeight,
       hover: hover ?? this.hover,
       pressed: pressed ?? this.pressed,
@@ -239,6 +276,15 @@ class FxStyle {
       cursor: cursor ?? this.cursor,
       opacity: opacity ?? this.opacity,
       aspectRatio: aspectRatio ?? this.aspectRatio,
+      transformScale: transformScale ?? this.transformScale,
+      transformRotation: transformRotation ?? this.transformRotation,
+      fit: fit ?? this.fit,
+      imageBlur: imageBlur ?? this.imageBlur,
+      grayscale: grayscale ?? this.grayscale,
+      loading: loading ?? this.loading,
+      error: error ?? this.error,
+      placeholder: placeholder ?? this.placeholder,
+      imageSrc: imageSrc ?? this.imageSrc,
     );
   }
 
@@ -287,6 +333,8 @@ class FxStyle {
       overflow: other.overflow,
       maxLines: other.maxLines,
       letterSpacing: other.letterSpacing,
+      wordSpacing: other.wordSpacing,
+      textDecoration: other.textDecoration,
       lineHeight: other.lineHeight,
       hover: other.hover,
       pressed: other.pressed,
@@ -294,6 +342,15 @@ class FxStyle {
       cursor: other.cursor,
       opacity: other.opacity,
       aspectRatio: other.aspectRatio,
+      transformScale: other.transformScale,
+      transformRotation: other.transformRotation,
+      fit: other.fit,
+      imageBlur: other.imageBlur,
+      grayscale: other.grayscale,
+      loading: other.loading,
+      error: other.error,
+      placeholder: other.placeholder,
+      imageSrc: other.imageSrc,
     );
   }
 

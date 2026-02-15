@@ -100,16 +100,18 @@ class _FxTableState<T> extends State<FxTable<T>> {
           constraints: const BoxConstraints(
             minWidth: 600,
           ), // Min width to trigger scroll
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              // Header
-              _buildHeader(),
-              // Rows
-              ...widget.data.asMap().entries.map(
-                (entry) => _buildRow(entry.key, entry.value),
-              ),
-            ],
+          child: IntrinsicWidth(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                // Header
+                _buildHeader(),
+                // Rows
+                ...widget.data.asMap().entries.map(
+                  (entry) => _buildRow(entry.key, entry.value),
+                ),
+              ],
+            ),
           ),
         ),
       ),

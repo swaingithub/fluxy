@@ -72,6 +72,8 @@ class FxGrid extends FxWidget {
     double gap = 0,
     FxStyle style = FxStyle.none,
     double childAspectRatio = 1.0,
+    bool shrinkWrap = true,
+    ScrollPhysics? physics,
   }) {
     return FxGrid(
       children: children,
@@ -83,6 +85,8 @@ class FxGrid extends FxWidget {
       gap: gap,
       style: style,
       childAspectRatio: childAspectRatio,
+      shrinkWrap: shrinkWrap,
+      physics: physics ?? const NeverScrollableScrollPhysics(),
       columns: null, // Use breakpoint values
     );
   }
