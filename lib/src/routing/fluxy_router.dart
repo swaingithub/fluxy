@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../reactive/signal.dart';
 import '../dsl/fx.dart';
 import '../engine/controller.dart';
+import '../di/fluxy_di.dart';
 
 typedef FluxyRouteBuilder =
     Widget Function(Map<String, String> params, Object? args);
@@ -400,11 +401,15 @@ class _GuardWrapperState extends State<_GuardWrapper> {
 
   void _initController() {
     if (widget.route.controller != null) {
-      _controller = widget.route.controller!();
-      // Registration in DI happens automatically if user uses FluxyDI.put inside the factory,
-      // but here we ensure lifecycle hooks are called.
-      if (!_controller!.isInitialized) {
-        _controller!.onInit();
+      final instance = widget.route.controller!();
+      _controller = instance;
+      
+      // Registers in DI using runtimeType so find<T>() works in View
+      FluxyDI.putByRuntimeType(instance);
+      
+      // Lifecycle hooks
+      if (!instance.isInitialized) {
+        instance.onInit();
       }
       
       // Trigger onReady after first frame
@@ -416,7 +421,9 @@ class _GuardWrapperState extends State<_GuardWrapper> {
 
   @override
   void dispose() {
-    _controller?.onDispose();
+    if (_controller != null) {
+      FluxyDI.deleteByRuntimeType(_controller);
+    }
     _isAuthorized.dispose();
     super.dispose();
   }

@@ -22,6 +22,17 @@ class FluxyDI {
     return instance;
   }
 
+  /// Registers an instance using its runtime type.
+  /// Internal use for framework-managed controllers.
+  static void putByRuntimeType(dynamic instance, {String? tag}) {
+    final key = _getKey(instance.runtimeType, tag);
+    _registry[key] = _DependencyHolder<dynamic>(instance: instance, tag: tag);
+    
+    if (instance is FluxController && !instance.isInitialized) {
+      instance.onInit();
+    }
+  }
+
   /// Registers a lazy singleton (created only when first accessed).
   static void lazyPut<T>(FactoryFunc<T> factory, {String? tag}) {
     final key = _getKey(T, tag);
@@ -56,6 +67,20 @@ class FluxyDI {
 
   /// Checks if a dependency is registered.
   static bool exists<T>({String? tag}) => _registry.containsKey(_getKey(T, tag));
+
+  /// Internal helper to remove a dependency by its runtime type.
+  static void deleteByRuntimeType(dynamic instance, {String? tag}) {
+    final key = _getKey(instance.runtimeType, tag);
+    final holder = _registry.remove(key);
+    if (holder != null && holder.instance != null) {
+      final inst = holder.instance;
+      if (inst is FluxController) {
+        inst.onDispose();
+      } else if (inst is FluxyDisposable) {
+        inst.onDispose();
+      }
+    }
+  }
 }
 
 class FluxyDIException implements Exception {

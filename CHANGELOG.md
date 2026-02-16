@@ -1,3 +1,8 @@
+## 0.1.11 - Routing & DI Stabilization
+
+*   **Automatic Route Controller Registration**: Fixed `FluxyDIException` where controllers defined in `FxRoute` weren't being registered in the DI container. The framework now automatically handles `FluxyDI.put` and `FluxyDI.delete` for these controllers.
+*   **Enhanced DI Engine**: Added `putByRuntimeType` and `deleteByRuntimeType` to `FluxyDI` for better internal framework orchestration.
+
 ## 0.1.10 - Stability & Blueprint Polish
 
 *   **Fixed Critical Engine Packaging**: Corrected `.pubignore` logic that was accidentally excluding the core OTA/SDUI engine files.

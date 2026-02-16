@@ -76,7 +76,7 @@ Kill UI jank by moving heavy tasks to background threads natively.
 ### Installation
 ```yaml
 dependencies:
-  fluxy: ^0.1.10
+  fluxy: ^0.1.11
 ```
 
 ### 1. Initialize the Engine
