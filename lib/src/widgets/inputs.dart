@@ -6,9 +6,9 @@ import '../reactive/forms.dart';
 
 import '../widgets/fx_widget.dart';
 
-/// Reactive TextField that binds directly to a Signal<String>.
+/// Reactive TextField that binds directly to a Flux/Signal.
 class FxTextField extends FxWidget {
-  final Signal<String> signal;
+  final Flux<String> signal;
   final String? placeholder;
   final String? label;
   final IconData? icon;
@@ -58,7 +58,7 @@ class FxTextField extends FxWidget {
   }
 
   FxTextField copyWith({
-    Signal<String>? signal,
+    Flux<String>? signal,
     String? placeholder,
     String? label,
     IconData? icon,
@@ -103,15 +103,15 @@ class FxTextField extends FxWidget {
 
 class _FxTextFieldState extends State<FxTextField> {
   late TextEditingController _controller;
-  Effect? _subscription;
+  FluxEffect? _subscription;
 
   @override
   void initState() {
     super.initState();
     _controller = TextEditingController(text: widget.signal.value);
 
-    // Efficiently bind signal updates to controller
-    _subscription = effect(() {
+    // Efficiently bind flux updates to controller
+    _subscription = fluxEffect(() {
       final newVal = widget.signal.value;
       if (_controller.text != newVal) {
         _controller.value = _controller.value.copyWith(
@@ -202,12 +202,10 @@ class _FxTextFieldState extends State<FxTextField> {
     });
   }
 }
-// ... FxCheckbox and FxSlider omitted for brevity if unchanged, but file overwrite means I must include them.
-// I will include them to keep the file valid.
 
-/// Reactive Checkbox that binds directly to a Signal<bool>.
+/// Reactive Checkbox that binds directly to a Flux/Signal.
 class FxCheckbox extends StatelessWidget {
-  final Signal<bool> signal;
+  final Flux<bool> signal;
   final Color? activeColor;
 
   const FxCheckbox({super.key, required this.signal, this.activeColor});
@@ -224,9 +222,9 @@ class FxCheckbox extends StatelessWidget {
   }
 }
 
-/// Reactive Slider that binds directly to a Signal<double>.
+/// Reactive Slider that binds directly to a Flux/Signal.
 class FxSlider extends StatelessWidget {
-  final Signal<double> signal;
+  final Flux<double> signal;
   final double min;
   final double max;
   final int? divisions;

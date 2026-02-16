@@ -7,14 +7,14 @@ enum PluralRule { zero, one, two, few, many, other }
 
 /// The centralized language and translation manager for Fluxy.
 class FluxyI18n {
-  static final Signal<Locale> _locale = flux(const Locale('en', 'US'));
-  static final Signal<Map<String, Map<String, dynamic>>> _translations = flux(
+  static final Flux<Locale> _locale = flux(const Locale('en', 'US'));
+  static final Flux<Map<String, Map<String, dynamic>>> _translations = flux(
     {},
   );
-  static final Signal<bool> _isInitialized = flux(false);
+  static final Flux<bool> _isInitialized = flux(false);
 
   /// Current locale signal.
-  static Signal<Locale> get localeSignal => _locale;
+  static Flux<Locale> get localeSignal => _locale;
 
   /// Current active locale.
   static Locale get currentLocale => _locale.value;

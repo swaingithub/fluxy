@@ -15,3 +15,5 @@ example/lib/design_system_demo.dart
 example/lib/fluxy_play.dart
 example/lib/marketplace_data.dart
 example/lib/responsive_demo.dart
+example/lib/state_management_demo.dart
+example/pubspec.lock

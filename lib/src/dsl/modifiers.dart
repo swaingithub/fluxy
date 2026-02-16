@@ -175,25 +175,27 @@ extension FluxyWidgetExtension on Widget {
         child: self.child._applyResponsive(responsive),
       );
     }
-    if (self is Positioned) {
-      return Positioned(
-        left: self.left,
-        top: self.top,
-        right: self.right,
-        bottom: self.bottom,
-        width: self.width,
-        height: self.height,
-        child: self.child._applyResponsive(responsive),
-      );
-    }
-
-    // New Attribute Accumulation Logic
-    if (self is FxWidget) {
-      return self.copyWithResponsive(responsive);
-    }
-
-    // Wrap generic widget
     return Box(responsive: responsive, child: self);
+  }
+
+  /// Positions a widget within a Stack.
+  Widget positioned({
+    double? top,
+    double? right,
+    double? bottom,
+    double? left,
+    double? width,
+    double? height,
+  }) {
+    return Positioned(
+      top: top,
+      right: right,
+      bottom: bottom,
+      left: left,
+      width: width,
+      height: height,
+      child: this,
+    );
   }
 
   /// Internal helper to apply a shadow to the widget.

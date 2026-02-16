@@ -3,11 +3,11 @@ import 'signal.dart';
 typedef Validator<T> = String? Function(T value);
 
 /// A reactive form field with validation capabilities.
-class FluxField<T> extends Signal<T> {
+class FluxField<T> extends Flux<T> {
   final List<Validator<T>> _validators = [];
-  final Signal<String?> _error = flux(null);
-  final Signal<bool> _isDirty = flux(false);
-  final Signal<bool> _isTouched = flux(false);
+  final Flux<String?> _error = flux(null);
+  final Flux<bool> _isDirty = flux(false);
+  final Flux<bool> _isTouched = flux(false);
 
   FluxField(super.initialValue);
 

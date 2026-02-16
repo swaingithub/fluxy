@@ -41,13 +41,58 @@ Add Fluxy to your `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  fluxy: ^0.1.7
+  fluxy: ^0.1.8
 ```
 
 Then, activate the Fluxy CLI globally for project orchestration:
 
 ```bash
 dart pub global activate fluxy
+```
+
+---
+
+Fluxy 0.1.8 introduces the **Ultra-Scale State Mangement**, providing production-grade persistence and backgrounding.
+
+### 1. Global State Hydration
+Automatically restore your app state from disk. Just add a `persistKey` and initialize with `Fluxy.init()`.
+
+```dart
+void main() async {
+  await Fluxy.init(); // Loads all persistent state automatically
+  runApp(MyApp());
+}
+
+final theme = flux('dark', persistKey: 'user_theme');
+```
+
+### 2. Isolate Workers
+Run heavy computations without dropping frames using background threads.
+
+```dart
+final result = fluxWorker((n) => fibonacci(n), 40);
+
+Fx.async(result,
+  loading: () => Loader(),
+  data: (val) => Text("Result: $val"),
+  error: (e) => Text("Error: $e"),
+)
+```
+
+### 3. Native History (Undo/Redo)
+Reactive state history built directly into the core primitives.
+
+```dart
+final editor = fluxHistory("Write something...");
+
+Fx.button("Undo", onTap: editor.canUndo ? editor.undo : null)
+```
+
+### 4. Middleware Interceptors
+Hook into every state change globally for custom analytics or logging.
+
+```dart
+Fluxy.use(MyAnalyticsMiddleware());
 ```
 
 ---

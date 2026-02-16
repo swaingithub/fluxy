@@ -29,21 +29,26 @@ class FxOverlay {
             Center(
               child:
                   customLoader ??
-                  Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const CircularProgressIndicator(color: Colors.white),
-                      if (label != null) ...[
-                        const SizedBox(height: 16),
-                        Text(
-                          label,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 14,
+                  Material(
+                    color: Colors.transparent,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const CircularProgressIndicator(color: Colors.white),
+                        if (label != null) ...[
+                          const SizedBox(height: 16),
+                          Text(
+                            label,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              decoration: TextDecoration.none,
+                            ),
                           ),
-                        ),
+                        ],
                       ],
-                    ],
+                    ),
                   ),
             ),
           ],
@@ -51,13 +56,25 @@ class FxOverlay {
       },
     );
 
-    _navigatorKey.currentState?.overlay?.insert(_loadingEntry!);
+    final overlay = _navigatorKey.currentState?.overlay;
+    if (overlay != null) {
+      overlay.insert(_loadingEntry!);
+    } else {
+      _loadingEntry = null;
+    }
   }
 
   /// Hides the global loading overlay.
   static void hideLoader() {
-    _loadingEntry?.remove();
-    _loadingEntry = null;
+    if (_loadingEntry != null) {
+      try {
+        _loadingEntry?.remove();
+      } catch (_) {
+        // Already removed or not mounted
+      } finally {
+        _loadingEntry = null;
+      }
+    }
   }
 
   /// Shows a toast notification.
@@ -82,13 +99,16 @@ class FxOverlay {
       textColor: textColor,
     );
 
-    _navigatorKey.currentState?.overlay?.insert(entry.overlayEntry);
-    _activeToasts.add(entry);
+    final overlay = _navigatorKey.currentState?.overlay;
+    if (overlay != null) {
+      overlay.insert(entry.overlayEntry);
+      _activeToasts.add(entry);
 
-    // Auto-remove after duration
-    Future.delayed(duration, () {
-      _removeToast(entry);
-    });
+      // Auto-remove after duration
+      Future.delayed(duration, () {
+        _removeToast(entry);
+      });
+    }
   }
 
   static _ToastEntry _createToastEntry({
@@ -127,8 +147,12 @@ class FxOverlay {
 
   static void _removeToast(_ToastEntry entry) {
     if (_activeToasts.contains(entry)) {
-      entry.overlayEntry.remove();
       _activeToasts.remove(entry);
+      try {
+        entry.overlayEntry.remove();
+      } catch (_) {
+        // Already removed
+      }
     }
   }
 

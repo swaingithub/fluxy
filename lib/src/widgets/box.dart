@@ -163,7 +163,7 @@ class _BoxState extends State<Box> with ReactiveSubscriberMixin {
       current = Transform(
         alignment: Alignment.center,
         transform: Matrix4.identity()
-          ..scale(s.transformScale ?? 1.0)
+          ..scale(s.transformScale ?? 1.0, s.transformScale ?? 1.0)
           ..rotateZ(s.transformRotation ?? 0.0),
         child: current,
       );

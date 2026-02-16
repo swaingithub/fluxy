@@ -1,12 +1,13 @@
 import 'dart:async';
 import 'package:flutter/widgets.dart';
+import 'package:flutter/foundation.dart';
 import 'signal.dart';
 import '../dsl/fx.dart';
 
 /// Represents the state of an asynchronous operation.
 enum AsyncStatus { idling, loading, success, error }
 
-/// Configuration for async signal behavior.
+/// Configuration for async flux behavior.
 class AsyncConfig {
   /// Number of retry attempts on failure (default: 0)
   final int retries;
@@ -40,10 +41,11 @@ class AsyncConfig {
   });
 }
 
-/// A production-ready signal that manages asynchronous data fetching and state.
-class AsyncSignal<T> extends Signal<T?> {
-  final Signal<AsyncStatus> _status = flux(AsyncStatus.idling);
-  final Signal<Object?> _error = flux(null);
+/// A production-ready flux that manages asynchronous data fetching and state.
+/// Previously known as AsyncSignal.
+class AsyncFlux<T> extends Flux<T?> {
+  final Flux<AsyncStatus> _status = flux(AsyncStatus.idling);
+  final Flux<Object?> _error = flux(null);
   final AsyncConfig config;
 
   StreamSubscription<T>? _subscription;
@@ -53,7 +55,7 @@ class AsyncSignal<T> extends Signal<T?> {
   bool _isDisposed = false;
   int _retryCount = 0;
 
-  AsyncSignal([
+  AsyncFlux([
     super.initialValue,
     this.config = const AsyncConfig(),
     String? label,
@@ -81,11 +83,10 @@ class AsyncSignal<T> extends Signal<T?> {
     // Handle debouncing
     if (config.debounce != null) {
       _debounceTimer?.cancel();
-      final completer = Completer<void>();
       _debounceTimer = Timer(config.debounce!, () {
-        _executeFetch(task).then((_) => completer.complete());
+        _executeFetch(task);
       });
-      return completer.future;
+      return;
     }
 
     return _executeFetch(task);
@@ -143,7 +144,7 @@ class AsyncSignal<T> extends Signal<T?> {
             : config.retryDelay;
 
         debugPrint(
-          'Fluxy [AsyncSignal] Retry $_retryCount/${config.retries} after ${delay.inSeconds}s',
+          'Fluxy [AsyncFlux] Retry $_retryCount/${config.retries} after ${delay.inSeconds}s',
         );
 
         await Future.delayed(delay);
@@ -156,7 +157,7 @@ class AsyncSignal<T> extends Signal<T?> {
         _error.value = e;
         _status.value = AsyncStatus.error;
         config.onError?.call(e, stack);
-        debugPrint('Fluxy [AsyncSignal] Error: $e');
+        debugPrint('Fluxy [AsyncFlux] Error: $e');
       }
     }
   }
@@ -166,7 +167,7 @@ class AsyncSignal<T> extends Signal<T?> {
     if (_lastTask != null) {
       return fetch(_lastTask!);
     } else {
-      debugPrint('Fluxy [AsyncSignal] No task to reload');
+      debugPrint('Fluxy [AsyncFlux] No task to reload');
     }
   }
 
@@ -176,7 +177,7 @@ class AsyncSignal<T> extends Signal<T?> {
     _status.value = AsyncStatus.idling;
   }
 
-  /// Binds to a stream and updates the signal state on each event.
+  /// Binds to a stream and updates the flux state on each event.
   void bindStream(Stream<T> stream) {
     if (_isDisposed) return;
 
@@ -219,41 +220,153 @@ class AsyncSignal<T> extends Signal<T?> {
     required Widget Function(Object error) error,
     Widget Function()? idling,
   }) {
-    return Fx(() {
-      if (isLoading) return loading();
-      if (hasError) return error(this.error!);
-      if (hasData) return data(value as T);
-      return idling?.call() ?? loading();
-    });
+    return Fx(() => when(
+          loading: loading,
+          data: data,
+          error: error,
+          idling: idling,
+        ));
   }
 
-  /// Disposes the signal and cancels all pending operations.
+  /// Functional switcher for handling different states.
+  R when<R>({
+    required R Function() loading,
+    required R Function(T data) data,
+    required R Function(Object error) error,
+    R Function()? idling,
+  }) {
+    if (isLoading) return loading();
+    if (hasError) return error(this.error!);
+    if (hasData) return data(value as T);
+    return idling?.call() ?? loading();
+  }
+
+  /// Disposes the flux and cancels all pending operations.
   void dispose() {
     _isDisposed = true;
     _cancelInternal();
   }
 }
 
-/// Creates a new reactive async signal from a future task.
-AsyncSignal<T> asyncFlux<T>(
+@Deprecated('Use AsyncFlux instead')
+typedef AsyncSignal<T> = AsyncFlux<T>;
+
+/// Creates a new reactive async flux from a future task.
+AsyncFlux<T> asyncFlux<T>(
   Future<T> Function() task, {
   T? initialValue,
   AsyncConfig config = const AsyncConfig(),
   String? label,
 }) {
-  final signal = AsyncSignal<T>(initialValue, config, label);
-  signal.fetch(task);
-  return signal;
+  final flux = AsyncFlux<T>(initialValue, config, label);
+  flux.fetch(task);
+  return flux;
 }
 
-/// Creates a new reactive async signal from a stream.
-AsyncSignal<T> streamFlux<T>(
+/// Creates a new reactive async flux from a stream.
+AsyncFlux<T> streamFlux<T>(
   Stream<T> stream, {
   T? initialValue,
   AsyncConfig config = const AsyncConfig(),
   String? label,
 }) {
-  final signal = AsyncSignal<T>(initialValue, config, label);
-  signal.bindStream(stream);
-  return signal;
+  final flux = AsyncFlux<T>(initialValue, config, label);
+  flux.bindStream(stream);
+  return flux;
+}
+
+/// A worker runs a heavy computation in a separate isolate and returns the result as an AsyncFlux.
+/// This prevents UI jank for CPU-intensive tasks like data processing or image manipulation.
+AsyncFlux<T> fluxWorker<P, T>(
+  ComputeCallback<P, T> task,
+  P message, {
+  T? initialValue,
+  AsyncConfig config = const AsyncConfig(),
+  String? label,
+}) {
+  return asyncFlux<T>(
+    () => compute(task, message),
+    initialValue: initialValue,
+    config: config,
+    label: label,
+  );
+}
+
+/// A mixin for StatefulWidget States to easily manage local fluxes that 
+/// are automatically disposed when the widget is removed.
+mixin FluxyLocalMixin<T extends StatefulWidget> on State<T> {
+  final List<Flux> _localFluxes = [];
+
+  /// Creates a local flux that will be disposed when this widget is disposed.
+  Flux<S> fluxLocal<S>(S initialValue, {String? label}) {
+    final f = flux(initialValue, label: label);
+    _localFluxes.add(f);
+    return f;
+  }
+
+  /// Creates a local async flux that will be disposed when this widget is disposed.
+  AsyncFlux<S> fluxLocalAsync<S>(
+    Future<S> Function() task, {
+    S? initialValue,
+    AsyncConfig config = const AsyncConfig(),
+    String? label,
+  }) {
+    final f = asyncFlux(task, initialValue: initialValue, config: config, label: label);
+    _localFluxes.add(f);
+    return f;
+  }
+
+  /// Creates a local background worker that will be disposed when this widget is disposed.
+  AsyncFlux<T> fluxLocalWorker<P, T>(
+    ComputeCallback<P, T> task,
+    P message, {
+    T? initialValue,
+    AsyncConfig config = const AsyncConfig(),
+    String? label,
+  }) {
+    final f = fluxWorker(task, message,
+        initialValue: initialValue, config: config, label: label);
+    _localFluxes.add(f);
+    return f;
+  }
+
+  /// Creates a local computed flux that will be disposed when this widget is disposed.
+  FluxComputed<S> fluxLocalComputed<S>(
+    S Function() fn, {
+    String? label,
+    void Function(Object error, StackTrace stack)? onError,
+    bool validate = false,
+  }) {
+    final f = fluxComputed(fn, label: label, onError: onError, validate: validate);
+    _localFluxes.add(f);
+    return f;
+  }
+
+  /// Creates a local selector that will be disposed when this widget is disposed.
+  FluxComputed<S> fluxLocalSelector<T, S>(
+    Flux<T> source,
+    S Function(T value) selector, {
+    String? label,
+  }) {
+    final f = fluxSelector(source, selector, label: label);
+    _localFluxes.add(f);
+    return f;
+  }
+
+  /// Creates a local history flux that will be disposed when this widget is disposed.
+  FluxHistory<S> fluxLocalHistory<S>(S initialValue,
+      {int maxHistory = 100, String? label}) {
+    final f = fluxHistory(initialValue, maxHistory: maxHistory, label: label);
+    _localFluxes.add(f);
+    return f;
+  }
+
+  @override
+  void dispose() {
+    for (final f in _localFluxes) {
+      f.dispose();
+    }
+    _localFluxes.clear();
+    super.dispose();
+  }
 }

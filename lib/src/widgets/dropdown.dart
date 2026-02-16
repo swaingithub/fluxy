@@ -8,7 +8,7 @@ import '../engine/style_resolver.dart';
 
 class FxDropdown<T> extends FxWidget {
   final T? value;
-  final Signal<T>? signal;
+  final Flux<T>? signal;
   final List<T> items;
   final ValueChanged<T?>? onChanged;
   final String Function(T)? itemLabel;
@@ -53,7 +53,7 @@ class FxDropdown<T> extends FxWidget {
 
   FxDropdown<T> copyWith({
     T? value,
-    Signal<T>? signal,
+    Flux<T>? signal,
     List<T>? items,
     ValueChanged<T?>? onChanged,
     String Function(T)? itemLabel,
@@ -94,7 +94,7 @@ class _FxDropdownState<T> extends State<FxDropdown<T>>
   bool _isOpen = false;
   late AnimationController _animationController;
   late Animation<double> _expandAnimation;
-  Effect? _subscription;
+  FluxEffect? _subscription;
 
   @override
   void initState() {
@@ -109,7 +109,7 @@ class _FxDropdownState<T> extends State<FxDropdown<T>>
     );
 
     if (widget.signal != null) {
-      _subscription = effect(() {
+      _subscription = fluxEffect(() {
         widget.signal!.value; // Track dependency
         if (mounted) setState(() {});
       });

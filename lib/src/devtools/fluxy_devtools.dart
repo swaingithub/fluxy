@@ -25,10 +25,10 @@ class _FluxyDevToolsState extends State<FluxyDevTools> {
   @override
   void initState() {
     super.initState();
-    FluxyReactiveContext.onSignalUpdate = (signal, value) {
+    FluxyReactiveContext.onFluxUpdate = (flux, value) {
       if (mounted) {
         setState(() {
-          _logs.insert(0, "[UPDATE] ${signal.label ?? signal.id} -> $value");
+          _logs.insert(0, "[UPDATE] ${flux.label ?? flux.id} -> $value");
           if (_logs.length > 50) _logs.removeLast();
         });
       }
@@ -91,7 +91,7 @@ class _FluxyDevToolsState extends State<FluxyDevTools> {
                   children: [
                     const TabBar(
                       tabs: [
-                        Tab(text: "Active Signals"),
+                        Tab(text: "Active Fluxes"),
                         Tab(text: "Timeline Logs"),
                       ],
                     ),
@@ -130,7 +130,7 @@ class _FluxyDevToolsState extends State<FluxyDevTools> {
           Row(
             children: [
               Text(
-                '${SignalRegistry.all.length} Signals',
+                '${FluxRegistry.all.length} Fluxes',
                 style: const TextStyle(color: Colors.white70, fontSize: 12),
               ),
               const SizedBox(width: 8),
@@ -161,12 +161,12 @@ class _FluxyDevToolsState extends State<FluxyDevTools> {
   }
 
   Widget _buildSignalList() {
-    final signals = SignalRegistry.all;
+    final signals = FluxRegistry.all;
 
     if (signals.isEmpty) {
       return const Center(
         child: Text(
-          "No active signals",
+          "No active fluxes",
           style: TextStyle(color: Colors.white54),
         ),
       );
@@ -178,7 +178,7 @@ class _FluxyDevToolsState extends State<FluxyDevTools> {
       itemBuilder: (context, index) {
         final signal = signals[index];
         final subsCount = signal.subscribers.length;
-        final isComputed = signal is Computed;
+        final isComputed = signal is FluxComputed;
 
         return Container(
           margin: const EdgeInsets.only(bottom: 8),
@@ -219,7 +219,7 @@ class _FluxyDevToolsState extends State<FluxyDevTools> {
                       borderRadius: BorderRadius.circular(4),
                     ),
                     child: Text(
-                      isComputed ? "COMPUTED" : "SIGNAL",
+                      isComputed ? "COMPUTED" : "FLUX",
                       style: TextStyle(
                         color: isComputed
                             ? Colors.purpleAccent

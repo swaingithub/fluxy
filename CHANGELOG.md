@@ -1,3 +1,19 @@
+## 0.1.8
+
+*   **Ultra-Scale State Management (Branded Flux API)**:
+    *   **Consistent Naming**: Standardized core primitives to `Flux`, `FluxComputed`, `FluxEffect`, `AsyncFlux`, and `FluxHistory`. Legacy names (`Signal`, `Computed`, `Effect`, `AsyncSignal`, `HistoryFlux`) are now deprecated.
+    *   **Fluxy.init()**: Added a global initialization entry point that must be called at the start of `main()`. This handles framework setup and state hydration.
+    *   **Global State Hydration**: Introduced `FluxyPersistence.hydrate()` and integrated it into `Fluxy.init()`. Any flux with a `persistKey` is now automatically restored on app startup.
+    *   **Advanced Middleware Engine**: Launched `Fluxy.use()` and `FluxyMiddleware`. Intercept every state change globally for custom analytics, logging, or debugging.
+    *   **Isolate Workers (60 FPS Processing)**: Introduced `fluxWorker` and `fluxLocalWorker` for running CPU-intensive tasks in background Isolates without UI jank.
+    *   **Optimized State Access**: Added `.peek()` for non-reactive reads and `untracked()` for running logic without dependency registration.
+    *   **Reactive History Enhancements**: `FluxHistory` getters (`canUndo`, `canRedo`) are now fully reactive, enabling automatic UI updates for undo/redo buttons.
+    *   **FluxyLocalMixin Support**: Expanded the mixin to support `fluxLocalHistory`, `fluxLocalSelector`, `fluxLocalComputed`, and `fluxLocalWorker` for automatic lifecycle management.
+    *   **Functional Async Handling**: Added `.when()` and improved `.on()` in `AsyncFlux` for cleaner pattern matching on async states (loading, data, error).
+*   **Infrastructure & Polish**:
+    *   **Internal Refactoring**: Updated core engine to use the new branded naming internally.
+    *   **Performance Metrics**: `FluxComputed` now logs performance warnings if a re-evaluation takes longer than 1ms in debug mode.
+
 ## 0.1.7
 
 * **Next-Gen Button System (Atomic Interaction API)**:

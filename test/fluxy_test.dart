@@ -12,7 +12,7 @@ void main() {
 
   test('Computed signal test', () {
     final count = flux(1);
-    final doubled = computed(() => count.value * 2);
+    final doubled = fluxComputed(() => count.value * 2);
 
     expect(doubled.value, 2);
 

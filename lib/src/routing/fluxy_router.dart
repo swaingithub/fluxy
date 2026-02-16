@@ -6,7 +6,7 @@ import '../dsl/fx.dart';
 typedef FluxyRouteBuilder =
     Widget Function(Map<String, String> params, Object? args);
 typedef FluxyGuard = FutureOr<bool> Function();
-typedef FluxyMiddleware = FutureOr<bool> Function(String path);
+typedef FluxyRouteMiddleware = FutureOr<bool> Function(String path);
 typedef FluxyTransitionBuilder =
     Widget Function(
       BuildContext context,
@@ -116,7 +116,7 @@ class FluxyRouter {
       GlobalKey<NavigatorState>();
   static final Map<String, GlobalKey<NavigatorState>> _nestedKeys = {};
   static final List<FxRoute> _routes = [];
-  static final List<FluxyMiddleware> _middlewares = [];
+  static final List<FluxyRouteMiddleware> _middlewares = [];
   static final List<NavigatorObserver> _observers = [];
   static FxRoute? _unknownRoute;
 
@@ -132,7 +132,7 @@ class FluxyRouter {
     _unknownRoute = unknownRoute;
   }
 
-  static void use(FluxyMiddleware middleware) {
+  static void use(FluxyRouteMiddleware middleware) {
     _middlewares.add(middleware);
   }
 
@@ -381,7 +381,7 @@ class _GuardWrapper extends StatefulWidget {
 }
 
 class _GuardWrapperState extends State<_GuardWrapper> {
-  final Signal<bool?> _isAuthorized = flux(null);
+  final Flux<bool?> _isAuthorized = flux(null);
 
   @override
   void initState() {
@@ -419,7 +419,7 @@ class _GuardWrapperState extends State<_GuardWrapper> {
 }
 
 class _GuardReactiveView extends StatelessWidget {
-  final Signal<bool?> isAuthorized;
+  final Flux<bool?> isAuthorized;
   final VoidCallback onCheck;
   final Widget Function() builder;
 

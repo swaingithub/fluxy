@@ -935,13 +935,13 @@ class Fx extends StatefulWidget {
   }
 
   static Widget password({
-    required Signal<String> signal,
+    required Flux<String> signal,
     String? placeholder = "Password",
   }) {
     return input(signal: signal, placeholder: placeholder, obscureText: true);
   }
 
-  static Widget checkbox({required Signal<bool> signal, String? label}) {
+  static Widget checkbox({required Flux<bool> signal, String? label}) {
     final cb = FxCheckbox(signal: signal);
     if (label != null) {
       return row(children: [cb, text(label).textSm()], gap: 8);
@@ -949,7 +949,7 @@ class Fx extends StatefulWidget {
     return cb;
   }
 
-  static Widget switcher({required Signal<bool> signal}) {
+  static Widget switcher({required Flux<bool> signal}) {
     return Fx(
       () => Switch(value: signal.value, onChanged: (v) => signal.value = v),
     );
@@ -1032,7 +1032,7 @@ class Fx extends StatefulWidget {
 
   /// Async UI Builder
   static Widget async<T>(
-    AsyncSignal<T> signal, {
+    AsyncFlux<T> signal, {
     required Widget Function() loading,
     required Widget Function(Object error) error,
     required Widget Function(T data) data,
@@ -1297,7 +1297,7 @@ class _FxCondHelper {
   const _FxCondHelper();
 
   /// Simple boolean condition builder.
-  Widget call(Signal<bool> signal, Widget trueChild,
+  Widget call(Flux<bool> signal, Widget trueChild,
           [Widget falseChild = const SizedBox.shrink()]) =>
       Fx(() => signal.value ? trueChild : falseChild);
 
@@ -1307,8 +1307,8 @@ class _FxCondHelper {
     return Fx(() {
       for (var entry in cases.entries) {
         final cond = entry.key;
-        if (cond is Signal<bool> && cond.value) return entry.value;
-        if (cond is Signal<dynamic> && cond.value != null && cond.value != false) {
+        if (cond is Flux<bool> && cond.value) return entry.value;
+        if (cond is Flux<dynamic> && cond.value != null && cond.value != false) {
           return entry.value;
         }
         if (cond is bool && cond) return entry.value;
@@ -1318,7 +1318,7 @@ class _FxCondHelper {
   }
 
   /// Switches based on a signal's value.
-  Widget switcher<T>(Signal<T> signal, Map<T, Widget> cases,
+  Widget switcher<T>(Flux<T> signal, Map<T, Widget> cases,
       {Widget fallback = const SizedBox.shrink()}) {
     return Fx(() => cases[signal.value] ?? fallback);
   }

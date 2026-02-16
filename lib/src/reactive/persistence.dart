@@ -1,6 +1,6 @@
 part of 'signal.dart';
 
-/// Configuration for signal persistence.
+/// Configuration for flux persistence.
 class PersistenceConfig {
   final String key;
   final bool secure;
@@ -68,14 +68,20 @@ class DefaultStorageAdapter implements StorageAdapter {
   }
 }
 
-/// The persistence engine for Fluxy signals.
+/// The persistence engine for Fluxy.
 class FluxyPersistence {
   static StorageAdapter _adapter = DefaultStorageAdapter();
   static bool _isInitialized = false;
+  static final List<WeakReference<PersistentFlux>> _persistentFluxes = [];
+
+  static void _register(PersistentFlux flux) {
+    _persistentFluxes.add(WeakReference(flux));
+  }
 
   /// Sets a custom storage adapter (e.g., Hive, SQLite).
   static void setAdapter(StorageAdapter adapter) {
     _adapter = adapter;
+    _isInitialized = false; // Re-initialize with new adapter
   }
 
   /// Initializes the storage engine.
@@ -84,6 +90,21 @@ class FluxyPersistence {
       await _adapter.init();
       _isInitialized = true;
     }
+  }
+
+  /// Forces all registered persistent fluxes to reload their data.
+  /// This is the key to global "State Hydration".
+  static Future<void> hydrate() async {
+    if (!_isInitialized) await init();
+    
+    final futures = <Future<void>>[];
+    for (final ref in _persistentFluxes) {
+      final flux = ref.target;
+      if (flux != null) {
+        futures.add(flux.load());
+      }
+    }
+    await Future.wait(futures);
   }
 
   static Future<void> save(
@@ -118,32 +139,46 @@ class FluxyPersistence {
   }
 }
 
-/// A signal that automatically persists its value.
-class PersistentSignal<T> extends Signal<T> {
+/// A middleware that automatically persists any flux with a 'persistKey' metadata.
+class HydrationMiddleware extends FluxyMiddleware {
+  @override
+  void onUpdate(Flux flux, dynamic oldValue, dynamic newValue) {
+    if (flux is PersistentFlux) return; // Already handled by the class itself
+    
+    // We check if the flux has a persistKey metadata 
+    // (This requires adding a persistKey field to the base Flux class)
+    if (flux.persistKey != null) {
+      FluxyPersistence.save(flux.persistKey!, newValue);
+    }
+  }
+}
+
+/// A flux that automatically persists its value.
+/// Previously known as PersistentSignal.
+class PersistentFlux<T> extends Flux<T> {
   final PersistenceConfig config;
   Timer? _debounceTimer;
 
-  PersistentSignal(super.initialValue, this.config, {super.label}) {
+  PersistentFlux(super.initialValue, this.config, {super.label}) {
+    FluxyPersistence._register(this);
     if (config.autoLoad) {
-      _load();
+      load();
     }
   }
 
-  Future<void> _load() async {
+  /// Loads the value from storage.
+  Future<void> load() async {
     final stored = await FluxyPersistence.load(
       config.key,
       secure: config.secure,
     );
     if (stored != null) {
       try {
-        // Handle basic types directly, map conversions might be needed for objects
-        // For simple signals (int, bool, String, Map, List), jsonDecode works fine.
         value = stored as T;
       } catch (e) {
         debugPrint(
           "Fluxy [Persistence] Type mismatch for key '${config.key}': $e",
         );
-        // Fallback to initial value if type fails
       }
     }
   }
@@ -166,3 +201,5 @@ class PersistentSignal<T> extends Signal<T> {
     }
   }
 }
+
+typedef PersistentSignal<T> = PersistentFlux<T>;

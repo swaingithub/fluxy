@@ -3,7 +3,7 @@ import '../reactive/signal.dart';
 
 /// Controller for the global Fluxy theme state.
 class FxTheme {
-  static final Signal<ThemeMode> _mode = flux(
+  static final Flux<ThemeMode> _mode = flux(
     ThemeMode.system,
     persistKey: 'fx_theme_mode',
   );
@@ -28,5 +28,5 @@ class FxTheme {
   }
 
   /// Internal signal for the app to listen to.
-  static Signal<ThemeMode> get signal => _mode;
+  static Flux<ThemeMode> get signal => _mode;
 }

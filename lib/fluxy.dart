@@ -34,6 +34,7 @@ export 'src/widgets/inputs.dart';
 export 'src/widgets/dropdown.dart';
 export 'src/widgets/bottom_bar.dart';
 export 'src/widgets/avatar.dart';
+export 'src/widgets/button.dart';
 export 'src/widgets/fx_image.dart';
 export 'src/widgets/badge.dart';
 export 'src/widgets/table.dart';
@@ -46,6 +47,9 @@ export 'src/reactive/signal.dart';
 export 'src/reactive/async_signal.dart';
 export 'src/reactive/collections.dart';
 export 'src/reactive/forms.dart';
+
+// Data & Offline-First
+export 'src/data/repository.dart';
 
 // Infrastructure
 export 'src/di/fluxy_di.dart';
@@ -74,9 +78,27 @@ import 'src/di/fluxy_di.dart';
 import 'src/routing/fluxy_router.dart';
 import 'src/i18n/fluxy_i18n.dart';
 import 'src/ota/fluxy_remote.dart';
+import 'src/reactive/signal.dart';
 
 /// The global entry point for the Fluxy framework.
 class Fluxy {
+  /// Initializes the Fluxy framework, including storage and core engines.
+  /// Must be called at the start of main().
+  ///
+  /// Example:
+  /// ```dart
+  /// void main() async {
+  ///   await Fluxy.init();
+  ///   runApp(MyApp());
+  /// }
+  /// ```
+  static Future<void> init() async {
+    WidgetsFlutterBinding.ensureInitialized();
+    await FluxyPersistence.init();
+    // Pre-load all known persistent states
+    await FluxyPersistence.hydrate();
+  }
+
   // OTA Shortcuts
   static Future<void> update(String manifestUrl) =>
       FluxyRemote.update(manifestUrl);
@@ -104,6 +126,12 @@ class Fluxy {
 
   static void lazyPut<T>(T Function() factory, {String? tag}) =>
       FluxyDI.lazyPut<T>(factory, tag: tag);
+
+  // State Management Shortcuts
+  static void use(FluxyMiddleware middleware) =>
+      FluxyReactiveContext.addMiddleware(middleware);
+
+  static R untracked<R>(R Function() fn) => FluxyReactiveContext.untracked(fn);
 
   // I18n Shortcuts
   static void setLocale(Locale locale) => FluxyI18n.setLocale(locale);

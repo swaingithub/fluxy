@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:collection';
 import 'package:flutter/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -6,25 +7,32 @@ import 'dart:async';
 import '../di/fluxy_di.dart';
 
 part 'persistence.dart';
+part 'history.dart';
 
-/// A tracking context to keep track of which signals are being accessed during a build.
+/// A tracking context to keep track of which flux/signals are being accessed during a build.
 abstract class FluxySubscriber {
   void notify();
-  void registerDependency(Signal signal);
+  void registerDependency(Flux flux);
+}
+
+/// Global middleware interface for intercepting flux updates.
+abstract class FluxyMiddleware {
+  /// Called before the flux value is updated.
+  void onUpdate(Flux flux, dynamic oldValue, dynamic newValue);
 }
 
 /// A mixin that provides automatic dependency management for reactive subscribers.
 mixin ReactiveSubscriberMixin implements FluxySubscriber {
-  final Set<Signal> _dependencies = {};
+  final Set<Flux> _dependencies = {};
 
   @override
-  void registerDependency(Signal signal) {
-    _dependencies.add(signal);
+  void registerDependency(Flux flux) {
+    _dependencies.add(flux);
   }
 
   /// Clears all current dependencies. Should be called before re-evaluating or rebuilding.
   void clearDependencies() {
-    for (final dep in List<Signal>.from(_dependencies)) {
+    for (final dep in List<Flux>.from(_dependencies)) {
       dep.removeSubscriber(this);
     }
     _dependencies.clear();
@@ -34,11 +42,22 @@ mixin ReactiveSubscriberMixin implements FluxySubscriber {
 class FluxyReactiveContext {
   static final List<FluxySubscriber> _stack = [];
   static final Set<FluxySubscriber> _pendingUpdates = {};
+  static final List<FluxyMiddleware> _middlewares = [];
   static bool _isBatching = false;
   static bool _isFlushScheduled = false;
-  static void Function(Signal signal)? onSignalRead;
-  static void Function(Signal signal, dynamic value)? onSignalUpdate;
+  
+  static void Function(Flux flux)? onFluxRead;
+  static void Function(Flux flux, dynamic value)? onFluxUpdate;
   static BuildContext? currentContext;
+
+  /// Registers a global middleware to intercept all state changes.
+  static void addMiddleware(FluxyMiddleware middleware) => _middlewares.add(middleware);
+  
+  /// Removes a registered middleware.
+  static void removeMiddleware(FluxyMiddleware middleware) => _middlewares.remove(middleware);
+
+  /// Returns the list of active middlewares.
+  static List<FluxyMiddleware> get middlewares => List.unmodifiable(_middlewares);
 
   static void push(FluxySubscriber subscriber) {
     if (_stack.contains(subscriber)) {
@@ -55,6 +74,22 @@ class FluxyReactiveContext {
   }
 
   static FluxySubscriber? get current => _stack.isEmpty ? null : _stack.last;
+
+  /// Runs the given function without tracking any flux dependencies.
+  static R untracked<R>(R Function() fn) {
+    // We push a "dummy" null-like state by just suspending the current subscriber
+    final current = _stack.isEmpty ? null : _stack.last;
+    if (current == null) return fn();
+    
+    // Temporarily hide the stack to prevent tracking
+    final oldStack = List<FluxySubscriber>.from(_stack);
+    _stack.clear();
+    try {
+      return fn();
+    } finally {
+      _stack.addAll(oldStack);
+    }
+  }
 
   /// Starts a batch of updates. Changes won't trigger rebuilds until the batch completes.
   static void batch(VoidCallback fn) {
@@ -94,39 +129,56 @@ class FluxyReactiveContext {
 }
 
 /// The atomic unit of reactivity in Fluxy.
-class Signal<T> {
-  T? _value; // Internal nullable value to support lazy Computed initialization
+/// Previously known as Signal.
+class Flux<T> {
+  T? _value; // Internal nullable value to support lazy FluxComputed initialization
   final Set<FluxySubscriber> _subscribers = {};
   final String id;
   final String? label;
+  String? persistKey;
 
-  Signal(T initialValue, {this.label})
+  Flux(T initialValue, {this.label, this.persistKey})
     : _value = initialValue,
       id =
-          'sig_${DateTime.now().microsecondsSinceEpoch}_${initialValue.hashCode}' {
-    SignalRegistry.register(this);
+          'flux_${DateTime.now().microsecondsSinceEpoch}_${initialValue.hashCode}' {
+    FluxRegistry.register(this);
   }
 
-  /// Internal constructor for Computed that allows lazy initialization
-  Signal._internal({this.label})
-    : id = 'comp_${DateTime.now().microsecondsSinceEpoch}' {
-    SignalRegistry.register(this);
+  /// Internal constructor for FluxComputed
+  Flux._internal({this.label}) : id = 'comp_${DateTime.now().microsecondsSinceEpoch}' {
+    FluxRegistry.register(this);
   }
 
-  T get value {
+  /// Manually registers the current reactive context as a dependency of this flux.
+  void reportRead() {
     final current = FluxyReactiveContext.current;
     if (current != null) {
       _subscribers.add(current);
       current.registerDependency(this);
     }
-    FluxyReactiveContext.onSignalRead?.call(this);
+  }
+
+  T get value {
+    reportRead();
+    FluxyReactiveContext.onFluxRead?.call(this);
     return _value as T;
   }
 
+  /// Returns the current value without registering a dependency in the reactive context.
+  T peek() => _value as T;
+
   set value(T newValue) {
     if (_deepEquals(_value, newValue)) return;
+    
+    final oldValue = _value;
+    
+    // Global Middlewares (Intercept everything for Analytics/Logging)
+    for (final m in FluxyReactiveContext.middlewares) {
+      m.onUpdate(this, oldValue, newValue);
+    }
+
     _value = newValue;
-    FluxyReactiveContext.onSignalUpdate?.call(this, newValue);
+    FluxyReactiveContext.onFluxUpdate?.call(this, newValue);
     notifySubscribers();
   }
 
@@ -142,23 +194,30 @@ class Signal<T> {
     _subscribers.remove(sub);
   }
 
+  /// Disposes the flux and removes it from the registry.
+  void dispose() {
+    _subscribers.clear();
+    FluxRegistry.remove(this);
+  }
+
   // Shorthand for value access/mutation
   T call([T? newValue]) {
     if (newValue != null) value = newValue;
     return value;
   }
 
-  /// Manually listen to signal changes.
+  /// Manually listen to flux changes.
   void listen(void Function(T value) fn) {
-    effect(() => fn(value));
+    fluxEffect(() => fn(value));
   }
 
   @override
   String toString() => value.toString();
 }
 
-/// A derived signal that automatically updates when its dependencies change.
-class Computed<T> extends Signal<T> with ReactiveSubscriberMixin {
+/// A derived flux that automatically updates when its dependencies change.
+/// Previously known as Computed.
+class FluxComputed<T> extends Flux<T> with ReactiveSubscriberMixin {
   final T Function() _compute;
   final void Function(Object error, StackTrace stack)? _onError;
 
@@ -166,7 +225,7 @@ class Computed<T> extends Signal<T> with ReactiveSubscriberMixin {
   bool _isComputing = false;
   Object? _lastError;
 
-  Computed(
+  FluxComputed(
     this._compute, {
     super.label,
     void Function(Object error, StackTrace stack)? onError,
@@ -198,7 +257,7 @@ class Computed<T> extends Signal<T> with ReactiveSubscriberMixin {
   void _reevaluate() {
     if (_isComputing) {
       debugPrint(
-        'Fluxy [Computed] Warning: Reentrant computation detected for ${label ?? id}',
+        'Fluxy [FluxComputed] Warning: Reentrant computation detected for ${label ?? id}',
       );
       return;
     }
@@ -228,14 +287,14 @@ class Computed<T> extends Signal<T> with ReactiveSubscriberMixin {
       if (duration.inMicroseconds > 1000) {
         // Only log if > 1ms
         debugPrint(
-          'Fluxy [Computed] ${label ?? id} took ${duration.inMilliseconds}ms',
+          'Fluxy [FluxComputed] ${label ?? id} took ${duration.inMilliseconds}ms',
         );
       }
     } catch (e, stack) {
       _lastError = e;
       _isDirty = false; // Don't keep retrying on every access
 
-      debugPrint('Fluxy [Computed] Error in ${label ?? id}: $e');
+      debugPrint('Fluxy [FluxComputed] Error in ${label ?? id}: $e');
 
       // Call error handler if provided
       _onError?.call(e, stack);
@@ -276,11 +335,12 @@ class Computed<T> extends Signal<T> with ReactiveSubscriberMixin {
 }
 
 /// A persistent side-effect that runs whenever its dependencies change.
-class Effect with ReactiveSubscriberMixin {
+/// Previously known as Effect.
+class FluxEffect with ReactiveSubscriberMixin {
   final VoidCallback _effect;
   bool _isDisposed = false;
 
-  Effect(this._effect) {
+  FluxEffect(this._effect) {
     _run();
   }
 
@@ -308,50 +368,84 @@ class Effect with ReactiveSubscriberMixin {
   }
 }
 
+// --- Backward Compatibility Aliases ---
+@Deprecated('Use Flux instead')
+typedef Signal<T> = Flux<T>;
+
+@Deprecated('Use FluxComputed instead')
+typedef Computed<T> = FluxComputed<T>;
+
+@Deprecated('Use FluxEffect instead')
+typedef Effect = FluxEffect;
+
 // --- Global Functions ---
 
-/// Creates a new reactive signal.
-Signal<T> flux<T>(
+/// Creates a new reactive flux/signal.
+Flux<T> flux<T>(
   T initialValue, {
   String? persistKey,
   bool secure = false,
   String? label,
 }) {
   if (persistKey != null) {
-    return PersistentSignal<T>(
+    return PersistentFlux<T>(
       initialValue,
       PersistenceConfig(key: persistKey, secure: secure),
       label: label,
     );
   }
-  return Signal<T>(initialValue, label: label);
+  return Flux<T>(initialValue, label: label);
 }
 
-/// Creates a derived signal computed from other signals.
+FluxComputed<T> fluxComputed<T>(
+  T Function() fn, {
+  String? label,
+  void Function(Object error, StackTrace stack)? onError,
+  bool validate = false,
+}) => FluxComputed<T>(fn, label: label, onError: onError, validate: validate);
+
+/// A selector allows you to derive a sub-value from a flux and only trigger updates
+/// when that specific sub-value changes.
+/// This prevents unnecessary rebuilds when other parts of the source flux change.
+FluxComputed<S> fluxSelector<T, S>(
+  Flux<T> source,
+  S Function(T value) selector, {
+  String? label,
+}) => fluxComputed(() => selector(source.value), label: label);
+
+/// Legacy alias for fluxComputed
+@Deprecated('Use fluxComputed instead')
 Computed<T> computed<T>(
   T Function() fn, {
   String? label,
   void Function(Object error, StackTrace stack)? onError,
   bool validate = false,
-}) => Computed<T>(fn, label: label, onError: onError, validate: validate);
+}) => fluxComputed<T>(fn, label: label, onError: onError, validate: validate);
 
 /// Registers a side-effect that tracks its dependencies.
-Effect effect(VoidCallback fn) => Effect(fn);
+FluxEffect fluxEffect(VoidCallback fn) => FluxEffect(fn);
 
-/// Batches multiple signal updates to prevent redundant rebuilds.
+/// Legacy alias for fluxEffect
+@Deprecated('Use fluxEffect instead')
+Effect effect(VoidCallback fn) => fluxEffect(fn);
+
+/// Batches multiple flux updates to prevent redundant rebuilds.
 void batch(VoidCallback fn) => FluxyReactiveContext.batch(fn);
 
-/// Operator overloading for numeric signals to create Computed values automatically.
-extension SignalNumeric<T extends num> on Signal<T> {
-  Computed<num> operator +(dynamic other) => _numericOp((a, b) => a + b, other);
-  Computed<num> operator -(dynamic other) => _numericOp((a, b) => a - b, other);
-  Computed<num> operator *(dynamic other) => _numericOp((a, b) => a * b, other);
-  Computed<num> operator /(dynamic other) => _numericOp((a, b) => a / b, other);
+/// Runs the given function without tracking any dependencies.
+R untracked<R>(R Function() fn) => FluxyReactiveContext.untracked(fn);
 
-  Computed<num> _numericOp(num Function(num a, num b) op, dynamic other) {
-    return computed(() {
+/// Operator overloading for numeric fluxes to create FluxComputed values automatically.
+extension FluxNumeric<T extends num> on Flux<T> {
+  FluxComputed<num> operator +(dynamic other) => _numericOp((a, b) => a + b, other);
+  FluxComputed<num> operator -(dynamic other) => _numericOp((a, b) => a - b, other);
+  FluxComputed<num> operator *(dynamic other) => _numericOp((a, b) => a * b, other);
+  FluxComputed<num> operator /(dynamic other) => _numericOp((a, b) => a / b, other);
+
+  FluxComputed<num> _numericOp(num Function(num a, num b) op, dynamic other) {
+    return fluxComputed(() {
       final a = value;
-      final b = other is Signal ? other.value : other;
+      final b = other is Flux ? other.value : other;
       return op(a as num, b as num);
     });
   }
@@ -398,39 +492,43 @@ bool _deepEquals(dynamic a, dynamic b) {
   return a == b;
 }
 
-/// Fluent extensions for creating signals.
+/// Fluent extensions for creating fluxes.
 extension FluxyPrimitiveExtension<T> on T {
-  Signal<T> get obs => flux(this);
+  Flux<T> get obs => flux(this);
 }
 
 /// DI Shorthands
 T use<T>({String? tag}) => FluxyDI.find<T>(tag: tag);
 void inject<T>(T instance, {String? tag}) => FluxyDI.put<T>(instance, tag: tag);
 
-/// Tracks all active signals for debugging and devtools integration.
-class SignalRegistry {
-  static final List<WeakReference<Signal>> _signals = [];
+/// Tracks all active fluxes for debugging and devtools integration.
+class FluxRegistry {
+  static final List<WeakReference<Flux>> _fluxes = [];
 
-  static void register(Signal signal) {
-    if (_signals.length % 50 == 0) _prune();
-    _signals.add(WeakReference(signal));
+  static void register(Flux flux) {
+    if (_fluxes.length % 50 == 0) _prune();
+    _fluxes.add(WeakReference(flux));
   }
 
   static void _prune() {
-    _signals.removeWhere((ref) => ref.target == null);
+    _fluxes.removeWhere((ref) => ref.target == null);
   }
 
-  static List<Signal> get all {
+  static void remove(Flux flux) {
+    _fluxes.removeWhere((ref) => ref.target == flux);
+  }
+
+  static List<Flux> get all {
     _prune();
-    return _signals.map((ref) => ref.target).whereType<Signal>().toList();
+    return _fluxes.map((ref) => ref.target).whereType<Flux>().toList();
   }
 
-  static Signal? find(String id) {
+  static Flux? find(String id) {
     _prune();
     try {
-      return _signals
+      return _fluxes
           .map((ref) => ref.target)
-          .whereType<Signal>()
+          .whereType<Flux>()
           .firstWhere((s) => s.id == id);
     } catch (_) {
       return null;

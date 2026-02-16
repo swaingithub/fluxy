@@ -2,7 +2,7 @@ import 'dart:collection';
 import 'signal.dart';
 
 /// A reactive list that automatically triggers updates when its contents change.
-class FluxList<T> extends Signal<List<T>> with ListMixin<T> {
+class FluxList<T> extends Flux<List<T>> with ListMixin<T> {
   bool _isBatching = false;
 
   FluxList(super.initialValue);
@@ -130,7 +130,7 @@ class FluxList<T> extends Signal<List<T>> with ListMixin<T> {
 }
 
 /// A reactive map that automatically triggers updates when its contents change.
-class FluxMap<K, V> extends Signal<Map<K, V>> with MapMixin<K, V> {
+class FluxMap<K, V> extends Flux<Map<K, V>> with MapMixin<K, V> {
   bool _isBatching = false;
 
   FluxMap(super.initialValue);

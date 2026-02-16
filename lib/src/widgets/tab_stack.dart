@@ -41,7 +41,7 @@ class FxNestedStack extends StatelessWidget {
 
 /// A scaffold that implements parallel navigation stacks for tabs.
 class FxTabScaffold extends StatelessWidget {
-  final Signal<int> currentIndex;
+  final Flux<int> currentIndex;
   final List<FxTabItem> tabs;
   final Widget Function(BuildContext, int)? bottomNavBuilder;
 

@@ -30,10 +30,10 @@ class ReactiveDebugConfig {
 }
 
 /// Represents a node in the dependency graph.
-class SignalNode {
+class FluxNode {
   final String id;
   final String? label;
-  final String type; // 'signal', 'computed', 'effect'
+  final String type; // 'flux', 'computed', 'effect'
   final dynamic currentValue;
   final Set<String> dependencies;
   final Set<String> dependents;
@@ -41,7 +41,7 @@ class SignalNode {
   DateTime lastUpdated;
   int updateCount;
 
-  SignalNode({
+  FluxNode({
     required this.id,
     this.label,
     required this.type,
@@ -155,7 +155,7 @@ class FluxyDebug {
   static ReactiveDebugConfig _config = const ReactiveDebugConfig();
   static bool _isEnabled = false;
 
-  static final Map<String, SignalNode> _signalGraph = {};
+  static final Map<String, FluxNode> _signalGraph = {};
   static final List<TimelineEvent> _timeline = [];
   static final PerformanceMetrics _metrics = PerformanceMetrics();
   static final List<String> _disposedSignals = [];
@@ -168,8 +168,8 @@ class FluxyDebug {
     _isEnabled = true;
 
     // Hook into reactive context
-    FluxyReactiveContext.onSignalRead = _onSignalRead;
-    FluxyReactiveContext.onSignalUpdate = _onSignalUpdate;
+    FluxyReactiveContext.onFluxRead = _onFluxRead;
+    FluxyReactiveContext.onFluxUpdate = _onFluxUpdate;
 
     debugPrint('Fluxy Debug Mode Enabled');
   }
@@ -177,8 +177,8 @@ class FluxyDebug {
   /// Disables the debug system.
   static void disable() {
     _isEnabled = false;
-    FluxyReactiveContext.onSignalRead = null;
-    FluxyReactiveContext.onSignalUpdate = null;
+    FluxyReactiveContext.onFluxRead = null;
+    FluxyReactiveContext.onFluxUpdate = null;
     debugPrint('Fluxy Debug Mode Disabled');
   }
 
@@ -191,15 +191,15 @@ class FluxyDebug {
     }
     _extensionsInitialized = true;
 
-    // Return all active signals
+    // Return all active fluxes/signals
     registerExtension('ext.fluxy.getSignals', (method, parameters) async {
-      final signals = SignalRegistry.all
+      final signals = FluxRegistry.all
           .map(
             (s) => {
               'id': s.id,
               'label': s.label,
               'value': s.toString(),
-              'type': s is Computed ? 'Computed' : 'Signal',
+              'type': s is FluxComputed ? 'Computed' : 'Flux',
               'subscribers': s.subscribers.length,
             },
           )
@@ -220,11 +220,11 @@ class FluxyDebug {
           );
         }
 
-        final signal = SignalRegistry.find(id);
+        final signal = FluxRegistry.find(id);
         if (signal == null) {
           return ServiceExtensionResponse.error(
             ServiceExtensionResponse.invalidParams,
-            'Signal not found',
+            'Flux not found',
           );
         }
 
@@ -266,24 +266,24 @@ class FluxyDebug {
     debugPrint('Fluxy DevTools Extensions Registered 🛠️');
   }
 
-  /// Registers a signal in the dependency graph.
-  static void registerSignal(Signal signal, String type) {
+  /// Registers a flux in the dependency graph.
+  static void registerFlux(Flux flux, String type) {
     if (!_isEnabled || !_config.enableSignalGraph) {
       return;
     }
 
-    _signalGraph[signal.id] = SignalNode(
-      id: signal.id,
-      label: signal.label,
+    _signalGraph[flux.id] = FluxNode(
+      id: flux.id,
+      label: flux.label,
       type: type,
-      currentValue: signal is Computed ? 'lazy' : signal.value,
+      currentValue: flux is FluxComputed ? 'lazy' : flux.value,
       dependencies: {},
       dependents: {},
       createdAt: DateTime.now(),
       lastUpdated: DateTime.now(),
     );
 
-    if (type == 'signal') {
+    if (type == 'flux') {
       _metrics.totalSignals++;
     }
     if (type == 'computed') {
@@ -323,7 +323,7 @@ class FluxyDebug {
     }
   }
 
-  static void _onSignalRead(Signal signal) {
+  static void _onFluxRead(Flux flux) {
     if (!_isEnabled) {
       return;
     }
@@ -336,22 +336,22 @@ class FluxyDebug {
       _addTimelineEvent(
         TimelineEvent(
           timestamp: DateTime.now(),
-          signalId: signal.id,
-          signalLabel: signal.label,
+          signalId: flux.id,
+          signalLabel: flux.label,
           eventType: 'read',
-          newValue: signal.value,
+          newValue: flux.value,
         ),
       );
     }
   }
 
-  static void _onSignalUpdate(Signal signal, dynamic value) {
+  static void _onFluxUpdate(Flux flux, dynamic value) {
     if (!_isEnabled) {
       return;
     }
 
     if (_config.enableSignalGraph) {
-      final node = _signalGraph[signal.id];
+      final node = _signalGraph[flux.id];
       if (node != null) {
         node.lastUpdated = DateTime.now();
         node.updateCount++;
@@ -360,16 +360,16 @@ class FluxyDebug {
 
     if (_config.enablePerformanceMetrics) {
       _metrics.totalUpdates++;
-      _metrics.signalUpdateCounts[signal.id] =
-          (_metrics.signalUpdateCounts[signal.id] ?? 0) + 1;
+      _metrics.signalUpdateCounts[flux.id] =
+          (_metrics.signalUpdateCounts[flux.id] ?? 0) + 1;
     }
 
     if (_config.enableTimeline) {
       _addTimelineEvent(
         TimelineEvent(
           timestamp: DateTime.now(),
-          signalId: signal.id,
-          signalLabel: signal.label,
+          signalId: flux.id,
+          signalLabel: flux.label,
           eventType: 'update',
           newValue: value,
         ),
@@ -420,7 +420,7 @@ class FluxyDebug {
   }
 
   /// Returns the current dependency graph.
-  static Map<String, SignalNode> getDependencyGraph() {
+  static Map<String, FluxNode> getDependencyGraph() {
     return Map.unmodifiable(_signalGraph);
   }
 
