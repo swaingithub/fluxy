@@ -275,6 +275,10 @@ AsyncFlux<T> streamFlux<T>(
   return flux;
 }
 
+/// Runs a heavy task in a separate isolate and returns a Future.
+/// Branded version of Flutter's compute function for Fluxy projects.
+Future<T> fluxIsolate<T>(T Function() task) => compute((_) => task(), null);
+
 /// A worker runs a heavy computation in a separate isolate and returns the result as an AsyncFlux.
 /// This prevents UI jank for CPU-intensive tasks like data processing or image manipulation.
 AsyncFlux<T> fluxWorker<P, T>(

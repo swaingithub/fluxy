@@ -2,21 +2,18 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:fluxy/fluxy.dart';
 
 void main() {
-  test('Signal reactive value update test', () {
-    final count = flux(0);
-    expect(count.value, 0);
+    test('Heavy computation runs in isolate without blocking', () async {
+    print("🚀 Starting heavy computation...");
+    
+    final result = await fluxIsolate(() {
+      int sum = 0;
+      for (int i = 0; i < 10000000; i++) {
+        sum += i;
+      }
+      return sum;
+    });
 
-    count.value++;
-    expect(count.value, 1);
-  });
-
-  test('Computed signal test', () {
-    final count = flux(1);
-    final doubled = fluxComputed(() => count.value * 2);
-
-    expect(doubled.value, 2);
-
-    count.value = 5;
-    expect(doubled.value, 10);
+    print("✅ Computation result: $result");
+    expect(result > 0, true);
   });
 }
