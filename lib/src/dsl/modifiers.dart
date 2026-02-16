@@ -571,10 +571,12 @@ extension FluxyWidgetExtension on Widget {
   // --- Advanced Text Modifiers ---
   Widget spacing(double value) =>
       _applyGenericStyle(FxStyle(letterSpacing: value));
+  Widget letterSpacing(double value) => spacing(value);
   Widget wordSpacing(double value) =>
       _applyGenericStyle(FxStyle(wordSpacing: value));
   Widget decoration(TextDecoration value) =>
       _applyGenericStyle(FxStyle(textDecoration: value));
+  Widget italic() => _applyGenericStyle(const FxStyle(fontStyle: FontStyle.italic));
   Widget maxLines(int value) => _applyGenericStyle(FxStyle(maxLines: value));
   Widget ellipsis() =>
       _applyGenericStyle(const FxStyle(overflow: TextOverflow.ellipsis));
@@ -917,8 +919,15 @@ class FxFontProxy {
   Widget md() => _widget.textBase();
   Widget lg() => _widget.textLg();
   Widget xl() => _widget.textXl();
-  Widget xxl() => _widget.fontSize(FxTokens.font.xxl);
-  Widget xxxl() => _widget.fontSize(FxTokens.font.xxxl);
+  Widget xl2() => _widget.fontSize(FxTokens.font.xxl);
+  Widget xl3() => _widget.fontSize(FxTokens.font.xxxl);
+  Widget xl4() => _widget.fontSize(FxTokens.font.x4l);
+  Widget xl5() => _widget.fontSize(FxTokens.font.x5l);
+  Widget xl6() => _widget.fontSize(FxTokens.font.x6l);
+  
+  // Legacy/Aliases
+  Widget xxl() => xl2();
+  Widget xxxl() => xl3();
 
   // Semantic
   Widget h1() => _widget.h1();
@@ -935,7 +944,7 @@ class FxFontProxy {
   Widget error() => _widget.error();
   Widget success() => _widget.success();
 
-  // Weights (Chainable)
+  // Weights
   Widget bold() => _widget.bold();
   Widget semiBold() => _widget.semiBold();
   Widget medium() => _widget.medium();

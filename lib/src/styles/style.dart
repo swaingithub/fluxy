@@ -61,6 +61,7 @@ class FxStyle {
   final double? wordSpacing;
   final TextDecoration? textDecoration;
   final double? lineHeight; // line-height
+  final FontStyle? _fontStyle;
 
   // Interactive Styles
   final FxStyle? hover;
@@ -127,6 +128,7 @@ class FxStyle {
     this.wordSpacing,
     this.textDecoration,
     this.lineHeight,
+    FontStyle? fontStyle,
     this.hover,
     this.pressed,
     this.transition,
@@ -158,6 +160,7 @@ class FxStyle {
         _fontSize = fontSize,
         _fontWeight = fontWeight,
         _textAlign = textAlign,
+        _fontStyle = fontStyle,
         _opacity = opacity;
 
   /// Getters to maintain compatibility
@@ -176,6 +179,7 @@ class FxStyle {
   double? get fontSize => _fontSize;
   FontWeight? get fontWeight => _fontWeight;
   TextAlign? get textAlign => _textAlign;
+  FontStyle? get fontStyle => _fontStyle;
   double? get opacity => _opacity;
 
   /// An empty style object.
@@ -227,6 +231,7 @@ class FxStyle {
     double? wordSpacing,
     TextDecoration? textDecoration,
     double? lineHeight,
+    FontStyle? fontStyle,
     FxStyle? hover,
     FxStyle? pressed,
     Duration? transition,
@@ -288,6 +293,7 @@ class FxStyle {
       wordSpacing: wordSpacing ?? this.wordSpacing,
       textDecoration: textDecoration ?? this.textDecoration,
       lineHeight: lineHeight ?? this.lineHeight,
+      fontStyle: fontStyle ?? _fontStyle,
       hover: hover ?? this.hover,
       pressed: pressed ?? this.pressed,
       transition: transition ?? this.transition,
@@ -358,6 +364,7 @@ class FxStyle {
       wordSpacing: other.wordSpacing,
       textDecoration: other.textDecoration,
       lineHeight: other.lineHeight,
+      fontStyle: other._fontStyle,
       hover: other.hover,
       pressed: other.pressed,
       transition: other.transition,

@@ -47,6 +47,7 @@ class FxDecorationBuilder {
       wordSpacing: style.wordSpacing,
       decoration: style.textDecoration,
       height: style.lineHeight,
+      fontStyle: style.fontStyle,
     );
   }
 

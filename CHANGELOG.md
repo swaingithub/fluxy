@@ -1,3 +1,15 @@
+## 0.1.10 - Stability & Blueprint Polish
+
+*   **Fixed Critical Engine Packaging**: Corrected `.pubignore` logic that was accidentally excluding the core OTA/SDUI engine files.
+*   **Blueprint Syntax Stabilization**:
+    *   Reverted `FxFontProxy` getters back to methods (`font.xl4()`) to ensure stable chaining and prevent runtime invocation errors.
+    *   Updated `login`, `feed`, and `default` blueprints to follow the 0.1.10 method-call standard.
+*   **Expanded Styling DSL**:
+    *   Added `xl4`, `xl5`, and `xl6` font sizes to the design system.
+    *   Introduced the `.italic()` text modifier.
+    *   Introduced `.letterSpacing()` as a semantic alias for better developer experience.
+*   **Reliability Improvements**: Fixed type-mismatch errors in the `feed` blueprint and improved the fallback logic for feature scaffolding.
+
 ## 0.1.9 - The Application Platform
 
 *   **Native Fluxy Networking (`FluxyHttp`)**:

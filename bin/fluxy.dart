@@ -3,7 +3,7 @@ import 'package:args/args.dart';
 import 'package:path/path.dart' as p;
 import 'package:fluxy/src/cli/cloud.dart';
 
-const String version = '0.1.9';
+const String version = '0.1.10';
 
 void main(List<String> arguments) async {
   final parser = ArgParser()
@@ -236,7 +236,7 @@ class ${camel}View extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Fx.text('LOGIN').font.xl3.bold().letterSpacing(4),
+              Fx.text('LOGIN').font.xl3().bold().letterSpacing(4),
               Fx.text('Enter your credentials').muted(),
               Fx.gap(40),
               
@@ -423,19 +423,19 @@ class ${camel}View extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Fx.text('FLUXY').font.xl4.bold().letterSpacing(8).color(Colors.blue),
-            Fx.text('FRAMEWORK').font.sm.letterSpacing(4).muted(),
+            Fx.text('FLUXY').font.xl4().bold().letterSpacing(8).color(Colors.blue),
+            Fx.text('FRAMEWORK').font.sm().letterSpacing(4).muted(),
             Fx.gap(60),
-            Fx.text('$camel Feature Scaffolding').font.lg.bold(),
+            Fx.text('$camel Feature Scaffolding').font.lg().bold(),
             Fx.gap(10),
             Fx(() => Fx.text(controller.status.value)).muted().italic(),
             Fx.gap(40),
-            Fx(() => Fx.text('\${controller.count.value}')).font.xl4.bold().animate(fade: 0),
+            Fx(() => Fx.text('\${controller.count.value}')).font.xl4().bold().animate(fade: 0),
             Fx.gap(20),
             Fx.button('INCREMENT', onTap: controller.increment)
               .w(160).rounded(0).background(Colors.black),
             Fx.gap(100),
-            Fx.text('Structural Authority for Flutter').font.xs.muted().letterSpacing(1),
+            Fx.text('Structural Authority for Flutter').font.xs().muted().letterSpacing(1),
           ],
         ),
       ),
