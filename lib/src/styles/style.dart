@@ -16,6 +16,12 @@ class FxStyle {
   final BorderRadius? _borderRadius;
   final BoxBorder? border;
 
+  // Individual Borders
+  final BorderSide? borderTop;
+  final BorderSide? borderBottom;
+  final BorderSide? borderLeft;
+  final BorderSide? borderRight;
+
   // Layout direction
   final Axis? direction;
 
@@ -88,6 +94,10 @@ class FxStyle {
     this.glass,
     BorderRadius? borderRadius,
     this.border,
+    this.borderTop,
+    this.borderBottom,
+    this.borderLeft,
+    this.borderRight,
     MainAxisAlignment? justifyContent,
     CrossAxisAlignment? alignItems,
     this.mainAxisSize,
@@ -183,6 +193,10 @@ class FxStyle {
     double? glass,
     BorderRadius? borderRadius,
     BoxBorder? border,
+    BorderSide? borderTop,
+    BorderSide? borderBottom,
+    BorderSide? borderLeft,
+    BorderSide? borderRight,
     Axis? direction,
     MainAxisAlignment? justifyContent,
     CrossAxisAlignment? alignItems,
@@ -240,6 +254,10 @@ class FxStyle {
       glass: glass ?? this.glass,
       borderRadius: borderRadius ?? _borderRadius,
       border: border ?? this.border,
+      borderTop: borderTop ?? this.borderTop,
+      borderBottom: borderBottom ?? this.borderBottom,
+      borderLeft: borderLeft ?? this.borderLeft,
+      borderRight: borderRight ?? this.borderRight,
       justifyContent: justifyContent ?? _justifyContent,
       alignItems: alignItems ?? _alignItems,
       mainAxisSize: mainAxisSize ?? this.mainAxisSize,
@@ -306,6 +324,10 @@ class FxStyle {
       glass: other.glass,
       borderRadius: other._borderRadius,
       border: other.border,
+      borderTop: other.borderTop,
+      borderBottom: other.borderBottom,
+      borderLeft: other.borderLeft,
+      borderRight: other.borderRight,
       justifyContent: other._justifyContent,
       alignItems: other._alignItems,
       mainAxisSize: other.mainAxisSize,

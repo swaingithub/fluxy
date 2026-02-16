@@ -2,11 +2,13 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import '../reactive/signal.dart';
 import '../dsl/fx.dart';
+import '../engine/controller.dart';
 
 typedef FluxyRouteBuilder =
     Widget Function(Map<String, String> params, Object? args);
 typedef FluxyGuard = FutureOr<bool> Function();
 typedef FluxyRouteMiddleware = FutureOr<bool> Function(String path);
+typedef FluxyControllerFactory = FluxController Function();
 typedef FluxyTransitionBuilder =
     Widget Function(
       BuildContext context,
@@ -36,6 +38,10 @@ class FxRoute {
   final FluxyTransitionBuilder? transitionBuilder;
   final Duration? transitionDuration;
   final List<FxRoute> children; // Nested routes
+  
+  /// A factory that creates the controller for this specific route.
+  /// Fluxy will automatically manage its lifecycle (init/dispose).
+  final FluxyControllerFactory? controller;
 
   const FxRoute({
     required this.path,
@@ -46,6 +52,7 @@ class FxRoute {
     this.transitionBuilder,
     this.transitionDuration,
     this.children = const [],
+    this.controller,
   });
 
   // Quick constructors for transitions
@@ -382,11 +389,36 @@ class _GuardWrapper extends StatefulWidget {
 
 class _GuardWrapperState extends State<_GuardWrapper> {
   final Flux<bool?> _isAuthorized = flux(null);
+  FluxController? _controller;
 
   @override
   void initState() {
     super.initState();
     _checkGuards();
+    _initController();
+  }
+
+  void _initController() {
+    if (widget.route.controller != null) {
+      _controller = widget.route.controller!();
+      // Registration in DI happens automatically if user uses FluxyDI.put inside the factory,
+      // but here we ensure lifecycle hooks are called.
+      if (!_controller!.isInitialized) {
+        _controller!.onInit();
+      }
+      
+      // Trigger onReady after first frame
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _controller?.onReady();
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller?.onDispose();
+    _isAuthorized.dispose();
+    super.dispose();
   }
 
   Future<void> _checkGuards() async {

@@ -1,3 +1,5 @@
+import '../engine/controller.dart';
+
 typedef FactoryFunc<T> = T Function();
 
 /// A production-grade Dependency Injection container for Fluxy.
@@ -8,9 +10,16 @@ class FluxyDI {
       "${type.toString()}${tag ?? ''}";
 
   /// Registers a singleton instance.
-  static void put<T>(T instance, {String? tag}) {
+  static T put<T>(T instance, {String? tag}) {
     final key = _getKey(T, tag);
     _registry[key] = _DependencyHolder<T>(instance: instance, tag: tag);
+    
+    // Auto-init for non-lazy puts
+    if (instance is FluxController && !instance.isInitialized) {
+      instance.onInit();
+    }
+    
+    return instance;
   }
 
   /// Registers a lazy singleton (created only when first accessed).
@@ -35,10 +44,18 @@ class FluxyDI {
   static void delete<T>({String? tag}) {
     final key = _getKey(T, tag);
     final holder = _registry.remove(key);
-    if (holder != null && holder.instance is FluxyDisposable) {
-      (holder.instance as FluxyDisposable).onDispose();
+    if (holder != null && holder.instance != null) {
+      final inst = holder.instance;
+      if (inst is FluxController) {
+        inst.onDispose();
+      } else if (inst is FluxyDisposable) {
+        inst.onDispose();
+      }
     }
   }
+
+  /// Checks if a dependency is registered.
+  static bool exists<T>({String? tag}) => _registry.containsKey(_getKey(T, tag));
 }
 
 class FluxyDIException implements Exception {
@@ -58,6 +75,11 @@ class _DependencyHolder<T> {
   T get() {
     if (instance == null && factory != null) {
       instance = factory!();
+      
+      // Hook into FluxController lifecycle
+      if (instance is FluxController && !(instance as FluxController).isInitialized) {
+        (instance as FluxController).onInit();
+      }
     }
     if (instance == null) {
       throw FluxyDIException(
@@ -71,11 +93,4 @@ class _DependencyHolder<T> {
 /// Interface for dependencies that need cleanup.
 abstract class FluxyDisposable {
   void onDispose();
-}
-
-/// Base class for controllers with lifecycle management.
-abstract class FluxyController extends FluxyDisposable {
-  void onInit() {}
-  @override
-  void onDispose() {}
 }

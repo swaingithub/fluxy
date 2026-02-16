@@ -54,6 +54,8 @@ export 'src/data/repository.dart';
 // Infrastructure
 export 'src/di/fluxy_di.dart';
 export 'src/routing/fluxy_router.dart';
+export 'src/engine/controller.dart';
+export 'src/networking/fluxy_http.dart';
 
 // Responsive & Layout Engines
 export 'src/responsive/responsive_engine.dart';
@@ -79,6 +81,7 @@ import 'src/routing/fluxy_router.dart';
 import 'src/i18n/fluxy_i18n.dart';
 import 'src/ota/fluxy_remote.dart';
 import 'src/reactive/signal.dart';
+import 'src/networking/fluxy_http.dart';
 
 /// The global entry point for the Fluxy framework.
 class Fluxy {
@@ -135,6 +138,9 @@ class Fluxy {
 
   // I18n Shortcuts
   static void setLocale(Locale locale) => FluxyI18n.setLocale(locale);
+
+  /// The global HTTP client for networking.
+  static final http = FluxyHttp();
 
   /// Enables the Fluxy Debug Inspector overlay.
   static Widget debug({required Widget child}) => FluxyDevTools(child: child);

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../networking/fluxy_http.dart';
 import '../responsive/responsive_engine.dart';
 import '../styles/style.dart';
 import '../styles/tokens.dart'; // Tokens
@@ -76,6 +77,9 @@ class Fx extends StatefulWidget {
 
   /// Sets the theme mode.
   static void setThemeMode(ThemeMode mode) => FxTheme.setMode(mode);
+
+  /// Access to global HTTP client.
+  static FluxyHttp get http => FluxyHttp();
 
   // --- Responsive Layouts ---
 

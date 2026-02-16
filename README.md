@@ -1,319 +1,127 @@
-# Fluxy: The Full-Stack Application Platform for Flutter
+# Fluxy: The Application Framework for Flutter
 
-Fluxy is a comprehensive development platform designed to extend the capabilities of Flutter. It unifies high-performance reactive state management, a declarative **Atomic Styling DSL**, cloud-based CI/CD orchestration, and Over-The-Air (OTA) distribution into a single, cohesive engine.
-
-Fluxy is built for engineering teams who require rapid iteration, simplified state synchronization, and sophisticated infrastructure for mobile application deployment.
-
-[![Pub Version](https://img.shields.io/pub/v/fluxy?color=blue)](https://pub.dev/packages/fluxy)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+Fluxy is a comprehensive, production-grade application platform unifying the entire development lifecycle. It moves beyond "state management" to provide a complete structural foundation, including **Native High-Performance Networking, Atomic Reactivity, Lifecycle Controllers, Offline-First Repositories, and Zero-Glue Tooling.**
 
 ---
 
-## Technical Overview
+## 🚀 The Framework Philosophy
 
-Modern application development often faces challenges with widget tree depth, state management boilerplate, and sluggish deployment cycles. Fluxy addresses these bottlenecks by bringing a "SwiftUI-like" experience to Flutter.
+Fluxy isn't just a library; it's a **Structural Authority** for Flutter. It solves the "Classical Rebuild Problem" and eliminates the need for third-party networking bloat by providing native, industry-standard engines out of the box.
 
-### Core Pillars
+### 🏛️ The Fluxy Standard (Official Architecture)
 
-1. **Signals-Based Reactivity**: An atomic state management system based on dependency tracking, eliminating the need for `setState`, `ChangeNotifier`, or complex boilerplate.
-2. **Atomic Styling DSL**: A hyper-expressive, chainable API for building interfaces. Use shorthands like `.p(16)`, `.mt(8)`, and `.shadowXL()` to build complex UIs with 70% less code.
-3. **Fluxy Cloud**: An automated build and deployment orchestration layer using GitHub Actions for serverless CI/CD.
-4. **Instant OTA (Server-Driven UI)**: A SDUI engine that allows developers to update application logic and interfaces instantly without re-submitting to App Stores.
-5. **Integrated DevTools**: A premium reactive graph inspector and state debugger built directly into the framework.
+Fluxy is opinionated about structure. To ensure scalability and "Senior Grade" code quality, we officially recommend the **Core/Features** pattern:
+
+```text
+lib/
+ ├── core/            # Platform-wide services, middleware, and global themes
+ └── features/        # Business domains (Feature-based decomposition)
+      └── dashboard/
+           ├── dashboard.controller.dart  # Business logic & UI State
+           ├── dashboard.repository.dart  # Data Layer (Remote/Local)
+           ├── dashboard.view.dart        # Pure UI Components (DSL)
+           └── dashboard.routes.dart      # Feature-specific route map
+```
+
+### ⚡ CLI Power (Generating Solutions)
+
+Don't just scaffold folders; scaffold **solutions.**
+```bash
+# Generate a complete login feature with UI, logic, and networking
+fluxy g auth login
+
+# Generate a social news feed with shimmer loaders and native sync
+fluxy g news feed
+```
 
 ---
 
-## Feature Comparison
+## 💎 Core Framework Pillars
 
-| Capability | Standard Flutter | Fluxy Platform |
-| :--- | :--- | :--- |
-| **State Management** | Provider / BLoC / Riverpod | **Signals (Atomic Dependency Tracking)** |
-| **UI Paradigm** | Nested Widget Trees | **Chainable Atomic DSL (Fluent)** |
-| **Build Pipeline** | Manual Native Compilation | **Fluxy Cloud (GitHub Actions Integration)** |
-| **Distribution** | App Store / Play Store Review | **Instant OTA (Server-Driven UI)** |
-| **Developer Tools** | External DevTools | **Integrated In-App Reactive Inspector** |
+### 1. Native Fluxy Networking (`Fx.http`)
+A zero-dependency, high-performance HTTP client built directly into the framework.
+*   **Zero Glues**: Automatically serialized JSON and error handling.
+*   **Interceptors**: Native request/response hooks.
+*   **Global Config**: Set base URLs and timeouts once.
+
+```dart
+final response = await Fx.http.get('/profile');
+print(response.data['username']); // Already decoded Map
+```
+
+### 2. Architectural Controllers (`FluxController`)
+Define exactly where logic lives. Fluxy automatically manages the lifecycle of your controllers when bound to routes.
+
+```dart
+class AuthController extends FluxController {
+  final user = flux<User?>(null);
+
+  @override
+  void onInit() {
+    loadUser(); // Called when injected/routed
+  }
+}
+```
+
+### 3. High-Performance Isolate Workers (`fluxIsolate`)
+Kill UI jank by moving heavy tasks to background threads natively.
+
+*   **`fluxIsolate`**: Simple fire-and-forget background tasks (Standard `Future`).
+*   **`fluxWorker`**: Reactive background workers with built-in loading/error states.
 
 ---
 
-## Installation
+## 🛠️ Usage Quickstart
 
-Add Fluxy to your `pubspec.yaml` file:
-
+### Installation
 ```yaml
 dependencies:
-  fluxy: ^0.1.8
+  fluxy: ^0.1.9
 ```
 
-Then, activate the Fluxy CLI globally for project orchestration:
-
-```bash
-dart pub global activate fluxy
-```
-
----
-
-Fluxy 0.1.8 introduces the **Ultra-Scale State Mangement**, providing production-grade persistence and backgrounding.
-
-### 1. Global State Hydration
-Automatically restore your app state from disk. Just add a `persistKey` and initialize with `Fluxy.init()`.
-
+### 1. Initialize the Engine
 ```dart
 void main() async {
-  await Fluxy.init(); // Loads all persistent state automatically
-  runApp(MyApp());
+  await Fluxy.init(); // Setup Persistence & Middleware
+  runApp(FluxyApp(routes: myRoutes));
 }
-
-final theme = flux('dark', persistKey: 'user_theme');
 ```
 
-### 2. Isolate Workers
-Run heavy computations without dropping frames using background threads.
-
+### 2. Atomic Reactivity
 ```dart
-final result = fluxWorker((n) => fibonacci(n), 40);
+final count = flux(0);
 
-Fx.async(result,
-  loading: () => Loader(),
-  data: (val) => Text("Result: $val"),
-  error: (e) => Text("Error: $e"),
-)
+Fx(() => Fx.text("Value: ${count.value}")).center()
 ```
 
-### 3. Native History (Undo/Redo)
-Reactive state history built directly into the core primitives.
-
-```dart
-final editor = fluxHistory("Write something...");
-
-Fx.button("Undo", onTap: editor.canUndo ? editor.undo : null)
-```
-
-### 4. Middleware Interceptors
-Hook into every state change globally for custom analytics or logging.
-
-```dart
-Fluxy.use(MyAnalyticsMiddleware());
-```
-
----
-
-Fluxy 0.1.5 introduces the **Next-Gen Layout System**, a declarative, named-parameter approach to building responsive interfaces.
-
-### 1. Advanced Grid Engine
-Build responsive grids without complex logic.
-
-```dart
-// Automatic column calculation based on available width
-Fx.grid.auto(
-  minItemWidth: 160,
-  gap: 16,
-  children: products.map(ProductCard.new).toList(),
-)
-
-// Explicit responsive control
-Fx.grid.responsive(
-  xs: 1, sm: 2, md: 3, lg: 4,
-  gap: 20,
-  children: cards,
-)
-```
-
-### 2. Semantic Layout Presets
-Rapidly scaffold common UI patterns with pre-configured defaults.
-
-```dart
-Fx.grid.cards(children: products)
-Fx.grid.gallery(cols: 3, children: images)
-Fx.grid.dashboard(children: charts)
-```
-
-### 3. Adaptive Layout Switcher
-Seamlessly transition between device types.
-
-```dart
-Fx.layout(
-  mobile: Fx.col(children: [Menu(), Gallery()]),
-  tablet: Fx.grid(cols: 2, children: [Menu(), Gallery()]),
-  desktop: Fx.grid(cols: 4, children: [Sidebar(), Menu(), Gallery()]),
-)
-```
-
-### 4. Explicit Flex Layouts
-Avoid deep nesting and ambiguous modifiers.
-
-```dart
-Fx.row(
-  justify: MainAxisAlignment.spaceBetween,
-  items: CrossAxisAlignment.center,
-  gap: 12,
-  children: [Logo(), NavLinks(), Profile()]
-)
-```
-
----
-
-## What's New in 2.0 DSL
-
-### 1. Enhanced Input System
-A production-grade text input supporting validation, formatting, and focus control.
-
-```dart
-Fx.input(
-  signal: email,
-  placeholder: "Enter email",
-  keyboardType: TextInputType.emailAddress,
-  inputFormatters: [LengthLimitingTextInputFormatter(50)],
-  validators: [
-    (val) => val.contains('@') ? null : "Invalid email",
-    (val) => val.length > 5 ? null : "Too short"
-  ]
-)
-```
-
-### 2. Spacing & Layout DSL
-Gone are the days of manual `SizedBox`. Use fluent gaps and spacing.
-
-```dart
-Fx.row(
-  children: [
-    Fx.text("Item 1"),
-    Fx.gap(16),       // Intelligent Gap
-    Fx.text("Item 2"),
-    Fx.hgap(8),       // Horizontal Gap
-    Fx.text("Item 3"),
-  ]
-).gap(12) // Flex gap
-```
-
-### 3. Declarative Conditionals
-Cleaner conditional rendering without ternary clutter.
-
-```dart
-Fx.cond(
-  isLoading,
-  Fx.text("Loading..."),
-  Fx.button("Submit")
-)
-```
-
-### 4. Duration Extensions
-Readable time definitions.
-
-```dart
-Fx.text("Fade In")
-  .animate(
-    duration: 500.ms,
-    delay: 1.sec,
-    fade: 0.0
-  )
-
----
-
-## What's New in 0.1.7
-
-### 1. High-Performance Image FX
-Apply cinematic filters directly to your image widgets using native modifiers.
-
-```dart
-Fx.image("https://api.dicebear.com/7.x/pixel-art/svg")
-  .blur(4)        // Real-time Gaussian blur
-  .grayscale()    // Instant B&W filter
-  .circle()       // Perfect circular clipping
-  .size(120)
-```
-
-### 2. Automatic Transitions & Interactivity
-Turn any static widget into an animated component with a single chainable modifier.
+### 3. Declarative Styling DSL
+Build beautiful, high-performance interfaces with 70% less code.
 
 ```dart
 Fx.box()
-  .bg(Colors.blue)
-  .p(isExpanded ? 40 : 20)
-  .rounded(isExpanded ? 32 : 8)
-  .transition(400.ms) // Every style change above is now smoothly interpolated
-```
-
-### 3. Advanced Typography & Layout
-Rapidly prototype with high-contrast text and fluid entrance animations.
-
-```dart
-Fx.col(
-  children: [
-    Fx.text("Dashboard").whiteText().font.xxl().bold(),
-    Fx.text("Ready for launch").blackText().muted(),
-  ]
-).stagger(0.1) // Sub-elements slide-in sequentially
-```
+  .w(300).h(200).p(16)
+  .glass(10).rounded(24)
+  .background(Colors.indigo)
+  .animate(fade: 0.0, slide: const Offset(0, 0.2))
+  .child(Fx.text("Premium UI").bold().whiteText())
 ```
 
 ---
 
-## Core Framework Usage
+## ✨ Feature Matrix
 
-### Atomic Styling DSL
-
-```dart
-Fx.scaffold(
-  appBar: Fx.appBar(title: "Fluxy 2.0"),
-  body: Fx.col(children: [
-    Fx.text("Upgrade Complete").font.xl.bold.center(),
-    
-    // Scrollable list with container styling
-    Fx.list(children: [
-      Fx.text("Feature A").p(12).bg.slate50,
-      Fx.text("Feature B").p(12).bg.slate50,
-    ])
-    .gap(8)
-    .padding(16)
-    .border(Colors.grey)
-    .expand() // Fills remaining space
-  ])
-)
-```
-
-### Reactive State Management
-
-Fluxy utilizes **Signals** to manage state. A signal is an atomic value that tracks its subscribers and notifies them only when the value changes.
-
-```dart
-// Define a reactive signal
-final count = flux(0);
-
-// Consume in a reactive UI
-Fx.column(
-  children: [
-    Fx.text(() => "Current Value: ${count.value}").font(32).bold(),
-    Fx.button("Increment", onTap: () => count.value++)
-  ]
-).center();
-```
+| Feature | Description |
+| :--- | :--- |
+| **Native Networking** | Zero-dependency high-performance HTTP client (`Fx.http`). |
+| **Blueprints** | Scaffolds complete feature solutions (Login, Feed, etc.). |
+| **Atomic Signals** | High-performance state tracking with zero-rebuild overhead. |
+| **Controllers** | Formalized business logic layer with lifecycle hooks. |
+| **Repositories** | Standardized offline-first patterns with recursive sync. |
+| **Local OTA Server** | Instant local development for Server-Driven UI (`fluxy serve`). |
 
 ---
 
-## Command Line Interface (CLI)
+## 🛡️ Senior Grade Reliability
+Fluxy includes built-in Middleware, Global Error Boundaries, Deep Persistence, and an integrated **Reactive Inspector** to ensure your production environment is always healthy.
 
-The Fluxy CLI facilitates project scaffolding and cloud integration.
-
-- **Initialization**: `fluxy init <app_name>` - Scaffolds a new project with the Fluxy architecture.
-- **Development**: `fluxy run` - Optimized development runner.
-- **Cloud Builds**: `fluxy cloud build <android|ios>` - Configures GitHub Actions for automated cloud builds.
-- **Deployment**: `fluxy cloud deploy` - Sets up automated deployment to TestFlight and Google Play.
-
----
-
-## Documentation and Community
-
-- **Official Documentation**: [fluxy-doc.vercel.app](https://fluxy-doc.vercel.app/)
-- **Source Repository**: [github.com/swaingithub/fluxy](https://github.com/swaingithub/fluxy)
-- **Issue Tracking**: [Report a Bug](https://github.com/swaingithub/fluxy/issues)
-
----
-
-## License
-
-Fluxy is released under the **MIT License**.
-Copyright © 2026. All rights reserved.
-
----
-
-**Build faster. Write cleaner. Scale confidently.**
+**Build faster. Architecture smarter. Scale with Fluxy.**

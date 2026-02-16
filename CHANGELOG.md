@@ -1,3 +1,30 @@
+## 0.1.9 - The Application Platform
+
+*   **Native Fluxy Networking (`FluxyHttp`)**:
+    *   **Zero-Dependency Client**: Launched a high-performance HTTP engine built directly on `dart:io`. No more `dio` or `http` required.
+    *   **Auto-Orchestration**: Seamless integration with `Fluxy.http` and `Fx.http` for global API access.
+    *   **Global Interceptors**: Native support for request/response interceptors (perfect for Auth and Logging).
+    *   **Automatic JSON**: Requests and responses are automatically serialized/deserialized.
+*   **CLI Intelligence & Scaffolding**:
+    *   **Fluxy Blueprints**: Introduced architectural scaffolding with `fluxy g <name> <type>`. Generate complete working solutions for `login` and `feed`.
+    *   **Local OTA Server**: Launched `fluxy serve` for instant local development and testing of Over-The-Air updates.
+    *   **Project Structure Authority**: Fluxy now enforces the `core/features` directory convention for scalable enterprise apps.
+*   **Architectural Authority**:
+    *   **FluxController**: Formalized logic layer with native lifecycle hooks (`onInit`, `onReady`, `onDispose`).
+    *   **FluxRepository**: Standardized offline-first data layer with synchronized Local/Remote orchestration.
+    *   **Routing Controller Factory**: `FxRoute` now handles automatic controller creation and disposal.
+*   **Performance & Thread Management**:
+    *   **fluxIsolate**: Added a branded, high-level wrapper for background isolate execution.
+    *   **fluxWorker**: Enhanced reactive workers for long-running isolate tasks with state tracking.
+*   **Styling & UI Engine Polish**:
+    *   **Atomic Border DSL**: Added `.borderTop`, `.borderBottom`, `.borderLeft`, and `.borderRight` to `FxStyle`.
+    *   **Type-Safe Parameters**: Standardized all spacing and sizing modifiers for strict double/EdgeInsets validation.
+    *   **Instance-Based Networking**: Refined `FluxyHttp` to allow instance-based access for better testing and multi-client support.
+*   **Documentation & Identity**:
+    *   **README Revamp**: Pivoted messaging from "Library" to "Application Framework."
+    *   **Project Structure Guidelines**: Defined the official `lib/features` and `lib/core` directory conventions.
+    *   **Framework Philosophy**: Published the "Structural Authority" roadmap for enterprise scalability.
+
 ## 0.1.8
 
 *   **Ultra-Scale State Management (Branded Flux API)**:

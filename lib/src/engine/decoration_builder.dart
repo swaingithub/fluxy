@@ -8,6 +8,20 @@ class FxDecorationBuilder {
   static BoxDecoration build(FxStyle style) {
     BoxBorder? border = style.border;
 
+    // Merge individual sides if they exist and no global border is set
+    if (border == null &&
+        (style.borderTop != null ||
+            style.borderBottom != null ||
+            style.borderLeft != null ||
+            style.borderRight != null)) {
+      border = Border(
+        top: style.borderTop ?? BorderSide.none,
+        bottom: style.borderBottom ?? BorderSide.none,
+        left: style.borderLeft ?? BorderSide.none,
+        right: style.borderRight ?? BorderSide.none,
+      );
+    }
+
     // Inject debug border if active
     if (FluxyDebugConfig.showLayoutBorders) {
       border = Border.all(color: const Color(0xFFFF00FF), width: 1);

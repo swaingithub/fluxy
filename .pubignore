@@ -1,15 +1,29 @@
-# Temporary files
-*.txt
+# IDE Files
+.idea/
+.vscode/
+*.swp
+*.swo
 
-# Flutter / Dart defaults
+# MacOS / Windows Junk
+.DS_Store
+Thumbs.db
+
+# Flutter / Dart system
 .dart_tool/
 .flutter-plugins
 .flutter-plugins-dependencies
+.metadata
 .packages
 pubspec.lock
 build/
 
-# Extra Examples
+# Local Dev Files
+ota/
+lib/features/
+*.log
+
+# Exclude specific heavy example components to keep package light
+# if they are not essential for the published library example
 example/lib/dashboard_mock.dart
 example/lib/design_system_demo.dart
 example/lib/fluxy_play.dart
