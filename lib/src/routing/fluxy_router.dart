@@ -405,7 +405,7 @@ class _GuardWrapperState extends State<_GuardWrapper> {
       _controller = instance;
       
       // Registers in DI using runtimeType so find<T>() works in View
-      FluxyDI.putByRuntimeType(instance);
+      FluxyDI.putByRuntimeType(instance, scope: FxScope.route);
       
       // Lifecycle hooks
       if (!instance.isInitialized) {

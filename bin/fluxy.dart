@@ -3,7 +3,7 @@ import 'package:args/args.dart';
 import 'package:path/path.dart' as p;
 import 'package:fluxy/src/cli/cloud.dart';
 
-const String version = '0.1.11';
+const String version = '0.2.0';
 
 void main(List<String> arguments) async {
   final parser = ArgParser()
@@ -83,7 +83,10 @@ void printUsage(ArgParser parser) {
   print('Usage: fluxy <command> [arguments]\n');
   print('Commands:');
   print('  init <name>      Scaffold a complete Fluxy application (Expo-style).');
-  print('  generate <feat>  (g) Create a new feature domain with full architecture.');
+  print('  generate <feat>  (g) Create a new feature domain (login, feed, default).');
+  print('  generate plugin <name> Create a new Fluxy plugin scaffold.');
+  print('  generate layout <name> Create a responsive layout template.');
+  print('  generate model <name>  Create a reactive data model.');
   print('  run              Launch the application.');
   print('  serve            Start a local OTA development server.');
   print('  build            Compile the application.');
@@ -139,9 +142,75 @@ Future<void> _handleGenerate(List<String> args) async {
     return;
   }
   final name = args.first.toLowerCase();
-  final type = args.length > 1 ? args[1].toLowerCase() : 'default';
+  if (name == 'plugin') {
+    if (args.length < 2) {
+      print('Error: Plugin name required. Usage: fluxy generate plugin <name>');
+      return;
+    }
+    await _createPlugin(args[1].toLowerCase());
+    return;
+  }
   
+  if (name == 'layout') {
+    if (args.length < 2) {
+      print('Error: Layout name required. Usage: fluxy generate layout <name>');
+      return;
+    }
+    await _createLayout(args[1].toLowerCase());
+    return;
+  }
+
+  if (name == 'model') {
+    if (args.length < 2) {
+      print('Error: Model name required. Usage: fluxy generate model <name>');
+      return;
+    }
+    await _createModel(args[1].toLowerCase());
+    return;
+  }
+  final type = args.length > 1 ? args[1].toLowerCase() : 'default';
+
+  if (name == 'controller') {
+    if (args.length < 2) {
+      print('Error: Controller name required. Usage: fluxy generate controller <name>');
+      return;
+    }
+    await _createController(args[1].toLowerCase());
+    return;
+  }
+
   await _createFeature('.', name, type: type);
+}
+
+Future<void> _createPlugin(String name) async {
+  final pluginDir = Directory(p.join('lib', 'plugins'))..createSync(recursive: true);
+  final camel = name[0].toUpperCase() + name.substring(1);
+  final fileName = '${name}_plugin.dart';
+
+  File(p.join(pluginDir.path, fileName)).writeAsStringSync('''
+import 'package:fluxy/fluxy.dart';
+
+/// ${camel}Plugin - Extends Fluxy lifecycle
+class ${camel}Plugin extends FluxyPlugin {
+  @override
+  String get name => "${camel}Plugin";
+
+  @override
+  Future<void> onRegister() async {
+    // Register dependencies, initialize loggers, etc.
+    print("🔌 ${camel}Plugin Registered");
+  }
+
+  @override
+  void onAppReady() {
+    // Called after Fluxy.init() finishes
+    print("🚀 ${camel}Plugin Ready");
+  }
+}
+''');
+
+  print('✅ Generated plugin: ${camel}Plugin at lib/plugins/$fileName');
+  print('To use: Fluxy.register(${camel}Plugin()); in main.dart');
 }
 
 Future<void> _createFeature(String path, String name, {String type = 'default'}) async {
@@ -532,16 +601,27 @@ import 'core/theme/app_theme.dart';
 import 'features/home/home.routes.dart';
 
 void main() async {
+  // 1. Initialize Framework & Persistence
   await Fluxy.init();
+
+  // 2. Setup Global Error Pipeline (Optional but Recommended)
+  Fluxy.onError((error, stack) {
+    debugPrint("Fluxy Global Error: \$error");
+  });
   
-  runApp(FluxyApp(
-    title: 'Fluxy App',
-    theme: AppTheme.light,
-    initialRoute: homeRoutes.first,
-    routes: [
-      ...homeRoutes,
-    ],
-  ));
+  runApp(
+    // 3. Wrap with debug() for Premium DevTools
+    Fluxy.debug(
+      child: FluxyApp(
+        title: 'Fluxy App',
+        theme: AppTheme.light,
+        initialRoute: homeRoutes.first,
+        routes: [
+          ...homeRoutes,
+        ],
+      ),
+    ),
+  );
 }
 """;
 
@@ -555,3 +635,93 @@ class AppTheme {
   );
 }
 """;
+
+Future<void> _createLayout(String name) async {
+  final layoutDir = Directory(p.join('lib', 'core', 'layouts'))..createSync(recursive: true);
+  final camel = name[0].toUpperCase() + name.substring(1);
+  final fileName = '${name}_layout.dart';
+
+  File(p.join(layoutDir.path, fileName)).writeAsStringSync('''
+import 'package:flutter/material.dart';
+import 'package:fluxy/fluxy.dart';
+
+class ${camel}Layout extends StatelessWidget {
+  final Widget child;
+  const ${camel}Layout({super.key, required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Fx.layout(
+        mobile: _buildMobile(),
+        tablet: _buildTablet(),
+        desktop: _buildDesktop(),
+      ),
+    );
+  }
+
+  Widget _buildMobile() => child;
+  Widget _buildTablet() => Row(children: [const SizedBox(width: 250, child: Drawer()), Expanded(child: child)]);
+  Widget _buildDesktop() => Row(children: [const SizedBox(width: 300, child: Drawer()), Expanded(child: child)]);
+}
+''');
+
+  print('✅ Generated layout: ${camel}Layout at lib/core/layouts/$fileName');
+}
+
+Future<void> _createModel(String name) async {
+  final modelDir = Directory(p.join('lib', 'core', 'models'))..createSync(recursive: true);
+  final camel = name[0].toUpperCase() + name.substring(1);
+  final fileName = '${name}.dart';
+
+  File(p.join(modelDir.path, fileName)).writeAsStringSync('''
+import 'package:fluxy/fluxy.dart';
+
+class $camel {
+  final id = flux(0);
+  final title = flux("");
+  final createdAt = DateTime.now();
+
+  $camel({int? id, String? title}) {
+    if (id != null) this.id.value = id;
+    if (title != null) this.title.value = title;
+  }
+
+  Map<String, dynamic> toJson() => {
+    'id': id.value,
+    'title': title.value,
+  };
+
+  static $camel fromJson(Map<String, dynamic> json) {
+    return $camel(
+      id: json['id'],
+      title: json['title'],
+    );
+  }
+}
+''');
+
+  print('✅ Generated model: $camel at lib/core/models/$fileName');
+}
+
+Future<void> _createController(String name) async {
+  final controllerDir = Directory(p.join('lib', 'core', 'controllers'))..createSync(recursive: true);
+  final camel = name[0].toUpperCase() + name.substring(1);
+  final fileName = '${name}.controller.dart';
+
+  File(p.join(controllerDir.path, fileName)).writeAsStringSync('''
+import 'package:fluxy/fluxy.dart';
+
+class ${camel}Controller extends FluxController {
+  final isLoading = flux(false);
+
+  @override
+  void onInit() {
+    super.onInit();
+    print("${camel}Controller Initialized");
+  }
+}
+''');
+
+  print('✅ Generated controller: ${camel}Controller at lib/core/controllers/$fileName');
+}

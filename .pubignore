@@ -17,10 +17,22 @@ Thumbs.db
 pubspec.lock
 build/
 
+# Example App Platform Boilerplate (Excluded for lean publishing)
+example/android/
+example/ios/
+example/web/
+example/windows/
+example/linux/
+example/macos/
+example/build/
+example/.dart_tool/
+example/pubspec.lock
+
 # Local Dev Files
 /ota/
 lib/features/
 *.log
+publish_dry_run.txt
 
 # Exclude specific heavy example components to keep package light
 # if they are not essential for the published library example

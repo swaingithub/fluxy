@@ -34,6 +34,7 @@ import '../layout/fx_grid.dart';
 import '../layout/fx_row.dart';
 import '../layout/fx_col.dart';
 import '../layout/fx_stack.dart';
+import '../engine/error_pipeline.dart';
 import '../layout/fx_layout.dart';
 
 /// The hyper-minimal Fx API for Fluxy.
@@ -80,6 +81,9 @@ class Fx extends StatefulWidget {
 
   /// Access to global HTTP client.
   static FluxyHttp get http => FluxyHttp();
+
+  /// Registers a global error handler.
+  static void onError(FluxyErrorHandler handler) => FluxyError.onError(handler);
 
   // --- Responsive Layouts ---
 

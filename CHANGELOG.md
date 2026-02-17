@@ -1,3 +1,25 @@
+## 0.2.0 - Professional Inspector & Architectural Authority
+
+*   **Premium DevTools & Fluxy Inspector**:
+    *   **Revamped UX**: Launched a high-end glassmorphic debug interface with real-time system mirrors.
+    *   **DI Registry Inspector**: Inspect every registered dependency, its lifecycle scope (`app`, `route`, `factory`), and initialization status.
+    *   **Network Activity Logs**: Full inspection of HTTP requests, including latency tracking and request/response body payloads.
+    *   **State Update Timeline**: Real-time log of every flux update across the system.
+*   **Scoped Dependency Injection (`FxScope`)**:
+    *   **Enforced Lifecycles**: Introduced structured scopes to manage memory automatically.
+    *   **Automatic Route Cleanup**: `FxScope.route` dependencies are now cleanly disposed when the parent route is popped.
+    *   **Circular Dependency Detection**: The DI engine now identifies and blocks infinite resolution loops.
+*   **Unified Error Pipeline**:
+    *   **Global Intelligence**: Integrated system to capture Flutter framework, Platform, and manual application errors.
+    *   **`Fx.onError`**: Expressive shorthand for piping all app errors to external sinks (like Sentry or Firebase).
+*   **Modular Plugin Architecture**:
+    *   **`FluxyPlugin`**: New interface for building framework extensions that hook into `onRegister`, `onAppReady`, and `onDispose`.
+*   **Framework-Grade Testing**:
+    *   **Support for `FluxyTest`**: Added testing utilities to ensure DI isolation and clean state resets between test suits.
+*   **Proactive CLI Polish**:
+    *   **New Blueprints**: Added generation support for `plugin`, `layout`, `model`, and `controller`.
+    *   **Architecture Templates**: `fluxy init` now scaffolds projects with the global error pipeline and debug inspector pre-configured.
+
 ## 0.1.11 - Routing & DI Stabilization
 
 *   **Automatic Route Controller Registration**: Fixed `FluxyDIException` where controllers defined in `FxRoute` weren't being registered in the DI container. The framework now automatically handles `FluxyDI.put` and `FluxyDI.delete` for these controllers.

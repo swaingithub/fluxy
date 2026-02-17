@@ -63,6 +63,8 @@ export 'src/responsive/breakpoint_resolver.dart';
 export 'src/engine/style_resolver.dart';
 export 'src/engine/decoration_builder.dart';
 export 'src/engine/diff_engine.dart';
+export 'src/engine/plugin.dart';
+export 'src/engine/error_pipeline.dart';
 
 // Debugging Tools
 export 'src/debug/debug_config.dart';
@@ -82,31 +84,46 @@ import 'src/i18n/fluxy_i18n.dart';
 import 'src/ota/fluxy_remote.dart';
 import 'src/reactive/signal.dart';
 import 'src/networking/fluxy_http.dart';
+import 'src/engine/plugin.dart';
+import 'src/engine/error_pipeline.dart';
 
 /// The global entry point for the Fluxy framework.
 class Fluxy {
+  // --- Core Lifecycle ---
+
   /// Initializes the Fluxy framework, including storage and core engines.
   /// Must be called at the start of main().
-  ///
-  /// Example:
-  /// ```dart
-  /// void main() async {
-  ///   await Fluxy.init();
-  ///   runApp(MyApp());
-  /// }
-  /// ```
   static Future<void> init() async {
     WidgetsFlutterBinding.ensureInitialized();
+    
+    // 1. Hook into Global Errors
+    FluxyError.hookIntoFlutter();
+
+    // 2. Setup Debug Tooling
+    if (!kReleaseMode) {
+      FluxyHttp.configure(interceptors: [FluxyNetworkLogger()]);
+    }
+
+    // 3. Initialize Persistence
     await FluxyPersistence.init();
-    // Pre-load all known persistent states
     await FluxyPersistence.hydrate();
+
+    // 3. Register & Boot Plugins
+    for (final plugin in _plugins) {
+      await plugin.onRegister();
+    }
+
+    // 4. Signal App Ready to Plugins
+    for (final plugin in _plugins) {
+      plugin.onAppReady();
+    }
   }
 
-  // OTA Shortcuts
+  // --- OTA Shortcuts ---
   static Future<void> update(String manifestUrl) =>
       FluxyRemote.update(manifestUrl);
 
-  // Navigation Shortcuts
+  // --- Navigation Shortcuts ---
   static Future<T?> to<T>(String routeName, {Object? arguments}) =>
       FluxyRouter.to<T>(routeName, arguments: arguments);
 
@@ -121,23 +138,46 @@ class Fluxy {
 
   static void back<T>([T? result]) => FluxyRouter.back<T>(result);
 
-  // DI Shortcuts
+  // --- DI Shortcuts ---
   static T find<T>({String? tag}) => FluxyDI.find<T>(tag: tag);
 
-  static void put<T>(T instance, {String? tag}) =>
-      FluxyDI.put<T>(instance, tag: tag);
+  static T put<T>(T instance, {String? tag, FxScope scope = FxScope.app}) =>
+      FluxyDI.put<T>(instance, tag: tag, scope: scope);
 
-  static void lazyPut<T>(T Function() factory, {String? tag}) =>
-      FluxyDI.lazyPut<T>(factory, tag: tag);
+  static void lazyPut<T>(T Function() factory, {String? tag, FxScope scope = FxScope.app}) =>
+      FluxyDI.lazyPut<T>(factory, tag: tag, scope: scope);
 
-  // State Management Shortcuts
+  // --- State Management Shortcuts ---
   static void use(FluxyMiddleware middleware) =>
       FluxyReactiveContext.addMiddleware(middleware);
 
   static R untracked<R>(R Function() fn) => FluxyReactiveContext.untracked(fn);
 
-  // I18n Shortcuts
+  // --- I18n Shortcuts ---
   static void setLocale(Locale locale) => FluxyI18n.setLocale(locale);
+
+  // --- Plugin System ---
+  static final List<FluxyPlugin> _plugins = [];
+
+  /// Registers a plugin to extend Fluxy's functionality.
+  static void register(FluxyPlugin plugin) {
+    if (!_plugins.any((p) => p.name == plugin.name)) {
+      _plugins.add(plugin);
+    }
+  }
+
+  /// Finds a registered plugin by name.
+  static T? findPlugin<T extends FluxyPlugin>() =>
+      _plugins.whereType<T>().firstOrNull;
+
+  // --- Error Pipeline ---
+  
+  /// Registers a global error handler for the entire framework and app.
+  static void onError(FluxyErrorHandler handler) => FluxyError.onError(handler);
+
+  /// Reports a manual error to the global pipeline.
+  static void reportError(Object error, [StackTrace? stack]) =>
+      FluxyError.report(error, stack);
 
   /// The global HTTP client for networking.
   static final http = FluxyHttp();

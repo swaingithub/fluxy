@@ -140,6 +140,65 @@ class FluxyHttp {
     });
     return map;
   }
+
+  /// Specialized history for DevTools
+  static final List<FxNetworkLog> _history = [];
+  static List<FxNetworkLog> get history => List.unmodifiable(_history);
+
+  static void _log(FxNetworkLog log) {
+    _history.insert(0, log);
+    if (_history.length > 50) _history.removeLast();
+  }
+}
+
+/// A log entry for network calls, visible in DevTools.
+class FxNetworkLog {
+  final String method;
+  final String url;
+  final int statusCode;
+  final Duration duration;
+  final DateTime timestamp;
+  final dynamic requestBody;
+  final dynamic responseBody;
+
+  FxNetworkLog({
+    required this.method,
+    required this.url,
+    required this.statusCode,
+    required this.duration,
+    required this.timestamp,
+    this.requestBody,
+    this.responseBody,
+  });
+}
+
+/// Automatically logs network activity for Fluxy DevTools.
+class FluxyNetworkLogger extends FluxyInterceptor {
+  final _stopwatchMap = <FxRequest, Stopwatch>{};
+
+  @override
+  Future<FxRequest> onRequest(FxRequest request) async {
+    _stopwatchMap[request] = Stopwatch()..start();
+    return request;
+  }
+
+  @override
+  Future<FxResponse> onResponse(FxResponse response) async {
+    final sw = _stopwatchMap.remove(response.request);
+    sw?.stop();
+
+    FluxyHttp._log(FxNetworkLog(
+      method: response.request.method,
+      url: response.request.uri.toString(),
+      statusCode: response.statusCode,
+      duration: sw?.elapsed ?? Duration.zero,
+      timestamp: DateTime.now(),
+      requestBody: response.request.body,
+      responseBody: response.data,
+    ));
+
+    return response;
+  }
 }
 
 /// Represents an HTTP Request in Fluxy.

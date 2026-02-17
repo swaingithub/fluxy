@@ -1,16 +1,16 @@
 # Fluxy: The Application Framework for Flutter
 
-Fluxy is a comprehensive, production-grade application platform unifying the entire development lifecycle. It moves beyond "state management" to provide a complete structural foundation, including **Native High-Performance Networking, Atomic Reactivity, Lifecycle Controllers, Offline-First Repositories, and Zero-Glue Tooling.**
+Fluxy is a comprehensive, production-grade application platform designed to unify the entire development lifecycle. It provides a complete structural foundation, moving beyond simple state management to offer native high-performance networking, atomic reactivity, lifecycle controllers, offline-first repositories, and integrated developer tooling.
 
 ---
 
-## 🚀 The Framework Philosophy
+## Framework Philosophy
 
-Fluxy isn't just a library; it's a **Structural Authority** for Flutter. It solves the "Classical Rebuild Problem" and eliminates the need for third-party networking bloat by providing native, industry-standard engines out of the box.
+Fluxy serves as a structural authority for the Flutter ecosystem. It is designed to solve common architectural challenges, such as the classical rebuild problem, while eliminating the need for excessive third-party dependencies by providing robust, native engines for core tasks.
 
-### 🏛️ The Fluxy Standard (Official Architecture)
+### The Fluxy Standard (Official Architecture)
 
-Fluxy is opinionated about structure. To ensure scalability and "Senior Grade" code quality, we officially recommend the **Core/Features** pattern:
+Fluxy promotes an opinionated structure to ensure scalability and maintainable code quality. The recommended pattern is the Core/Features decomposition:
 
 ```text
 lib/
@@ -23,34 +23,35 @@ lib/
            └── dashboard.routes.dart      # Feature-specific route map
 ```
 
-### ⚡ CLI Power (Generating Solutions)
+### CLI Support (Solution Generation)
 
-Don't just scaffold folders; scaffold **solutions.**
+The Fluxy CLI facilitates rapid development by scaffolding entire architectural solutions.
+
 ```bash
-# Generate a complete login feature with UI, logic, and networking
+# Generate a complete feature domain with UI, logic, and networking
 fluxy g auth login
 
-# Generate a social news feed with shimmer loaders and native sync
-fluxy g news feed
+# Generate a responsive layout template
+fluxy g layout main
 ```
 
 ---
 
-## 💎 Core Framework Pillars
+## Core Framework Pillars
 
-### 1. Native Fluxy Networking (`Fx.http`)
-A zero-dependency, high-performance HTTP client built directly into the framework.
-*   **Zero Glues**: Automatically serialized JSON and error handling.
-*   **Interceptors**: Native request/response hooks.
-*   **Global Config**: Set base URLs and timeouts once.
+### 1. Project-Based Networking (FluxyHttp)
+A high-performance HTTP client built directly into the framework.
+*   **Automatic Serialization**: Native support for JSON serialization and error handling.
+*   **Global Interceptors**: Comprehensive request and response hook management.
+*   **Unified Configuration**: Centralized management for base URLs, headers, and timeouts.
 
 ```dart
 final response = await Fx.http.get('/profile');
-print(response.data['username']); // Already decoded Map
+print(response.data['username']); // Automatically decoded
 ```
 
-### 2. Architectural Controllers (`FluxController`)
-Define exactly where logic lives. Fluxy automatically manages the lifecycle of your controllers when bound to routes.
+### 2. Architectural Controllers (FluxController)
+Fluxy provides a formalized logic layer with native lifecycle management. Controllers are automatically managed by the framework when associated with routes.
 
 ```dart
 class AuthController extends FluxController {
@@ -58,32 +59,42 @@ class AuthController extends FluxController {
 
   @override
   void onInit() {
-    loadUser(); // Called when injected/routed
+    loadUser(); // Executed upon association
   }
 }
 ```
 
-### 3. High-Performance Isolate Workers (`fluxIsolate`)
-Kill UI jank by moving heavy tasks to background threads natively.
-
-*   **`fluxIsolate`**: Simple fire-and-forget background tasks (Standard `Future`).
-*   **`fluxWorker`**: Reactive background workers with built-in loading/error states.
+### 3. Integrated Developer Tools (Fluxy Inspector)
+The framework includes a premium debugging interface available in non-release modes.
+*   **DI Container Inspection**: Review active dependencies and their lifecycle scopes.
+*   **Network Activity Monitoring**: Track real-time network requests and payloads.
+*   **Reactive Timeline**: Inspect state updates throughout the application lifecycle.
 
 ---
 
-## 🛠️ Usage Quickstart
+## Technical Quickstart
 
 ### Installation
+Add Fluxy to your project's dependencies:
+
 ```yaml
 dependencies:
-  fluxy: ^0.1.11
+  fluxy: ^0.2.0
 ```
 
-### 1. Initialize the Engine
+### 1. Framework Initialization
 ```dart
 void main() async {
-  await Fluxy.init(); // Setup Persistence & Middleware
-  runApp(FluxyApp(routes: myRoutes));
+  await Fluxy.init(); // Initialize persistence and framework engines
+  
+  runApp(
+    Fluxy.debug( // Enable professional devtools
+      child: FluxyApp(
+        initialRoute: homeRoutes.first,
+        routes: [...homeRoutes],
+      ),
+    ),
+  );
 }
 ```
 
@@ -91,11 +102,11 @@ void main() async {
 ```dart
 final count = flux(0);
 
-Fx(() => Fx.text("Value: ${count.value}")).center()
+Fx(() => Fx.text("Current Value: ${count.value}")).center()
 ```
 
 ### 3. Declarative Styling DSL
-Build beautiful, high-performance interfaces with 70% less code.
+Construct complex interfaces with a highly efficient, modifier-based syntax.
 
 ```dart
 Fx.box()
@@ -103,25 +114,25 @@ Fx.box()
   .glass(10).rounded(24)
   .background(Colors.indigo)
   .animate(fade: 0.0, slide: const Offset(0, 0.2))
-  .child(Fx.text("Premium UI").bold().whiteText())
+  .child(Fx.text("Professional UI").bold().whiteText())
 ```
 
 ---
 
-## ✨ Feature Matrix
+## Feature Overview
 
 | Feature | Description |
 | :--- | :--- |
-| **Native Networking** | Zero-dependency high-performance HTTP client (`Fx.http`). |
-| **Blueprints** | Scaffolds complete feature solutions (Login, Feed, etc.). |
-| **Atomic Signals** | High-performance state tracking with zero-rebuild overhead. |
-| **Controllers** | Formalized business logic layer with lifecycle hooks. |
-| **Repositories** | Standardized offline-first patterns with recursive sync. |
-| **Local OTA Server** | Instant local development for Server-Driven UI (`fluxy serve`). |
+| **Native Networking** | High-performance, zero-dependency HTTP client with integrated logging. |
+| **Architectural Scaffolding** | CLI-driven generation of feature domains, layouts, and models. |
+| **Atomic Reactivity** | Fine-grained state management with zero-rebuild overhead. |
+| **Scoped Dependency Injection** | Managed dependency lifecycles (App, Route, Factory) with cleanup. |
+| **Unified Error Pipeline** | Centralized global error handling for production stability. |
+| **Integrated Inspector** | Real-time debugging interface for DI, Networking, and State. |
 
 ---
 
-## 🛡️ Senior Grade Reliability
-Fluxy includes built-in Middleware, Global Error Boundaries, Deep Persistence, and an integrated **Reactive Inspector** to ensure your production environment is always healthy.
+## Enterprise Reliability
+Fluxy is built for production environments, featuring global middleware, error boundaries, secure persistence, and comprehensive testing utilities. It provides the structural integrity required for large-scale application development.
 
-**Build faster. Architecture smarter. Scale with Fluxy.**
+**Standardize your architecture with Fluxy.**
