@@ -1,7 +1,23 @@
+## 0.2.2 - DevTools Overhaul & 1.0 Stability Prep
+
+*   **Premium DevTools Overhaul**: 
+    *   **High-End Glassmorphism**: Completely redesigned the inspector with high-performance blur effects and a sleek Material 3 modern aesthetic.
+    *   **Real-time Update Flashing**: Signals now briefly flash blue in the list when their value changes, giving you instant visual feedback on state flow.
+    *   **JSON Prettifier**: Network request and response bodies are now automatically formatted with indentation for easier inspection.
+    *   **Advanced Timeline Controls**: Added search, pause/resume, and clear functionality to the state update timeline.
+    *   **Persistent Search**: Individual search bars for Fluxes, DI Container, and Network logs now persist their state across tab switches.
+    *   **ClipBoard API Integration**: Added "Copy to Clipboard" buttons for signal values, network bodies, and log entries with floating snackbar feedback.
+*   **Infrastructure & Bug Fixes**:
+    *   **Self-Contained ScaffoldMessenger**: Fixed "No ScaffoldMessenger found" exception by implementing an internal GlobalKey-managed system. The DevTools is now fully context-independent.
+    *   **Layout Safety**: Moved the DevTools Floating Action Button (FAB) up by 60dp to prevent overlap with standard `BottomNavigationBar` items.
+    *   **Enhanced Error Boundaries**: Improved crash-resistance in the DI and Network detail views for malformed data.
+
 ## 0.2.1 - Hotfix & Optimization
 
-*   **Hotfix**: Resolved "No Directionality widget found" assertion error in `FluxyDevTools`. The inspector is now safe to use as a top-level wrapper.
+*   **Hotfix**: Resolved "No Overlay widget found" and "No MaterialLocalizations found" errors in `FluxyDevTools`. The inspector is now fully self-contained and safe to use anywhere in the widget tree.
 *   **Optimization**: Reduced published package size by ~40% (103 KB) by excluding platform-specific boilerplate in the example directory.
+*   **Branding**: Updated DevTools terminology to use 'Flux' instead of generic 'Signal'.
+*   **DevTools Power-Up**: Added **Search** and **Live Value Editing**. You can now filter fluxes by name/ID and update boolean/string/numeric values directly from the inspector!
 
 ## 0.2.0 - Professional Inspector & Architectural Authority
 

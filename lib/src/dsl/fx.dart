@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/foundation.dart';
 import '../networking/fluxy_http.dart';
 import '../responsive/responsive_engine.dart';
 import '../styles/style.dart';
@@ -41,8 +42,9 @@ import '../layout/fx_layout.dart';
 /// Designed for maximum builder velocity and zero boilerplate reactivity.
 class Fx extends StatefulWidget {
   final Widget Function() builder;
+  final String? label;
 
-  const Fx(this.builder, {super.key});
+  const Fx(this.builder, {super.key, this.label});
 
   @override
   State<Fx> createState() => _FxState();
@@ -1179,9 +1181,33 @@ class _FxGridHelper {
 }
 
 class _FxState extends State<Fx> with ReactiveSubscriberMixin {
+  bool _isThrottledWarning = false;
+
+  @override
+  String? get debugName => widget.label ?? "FxBuilder";
+
   @override
   void notify() {
-    if (mounted) setState(() {});
+    if (!mounted) return;
+
+    final now = DateTime.now();
+    if (lastRebuildTime != null) {
+      final diff = now.difference(lastRebuildTime!);
+      if (diff.inSeconds < 1) {
+        rebuildCount++;
+        if (rebuildCount > 10 && !_isThrottledWarning) {
+          _isThrottledWarning = true;
+          // Flash warning in console too
+          debugPrint("Fluxy [Profiler] Warning: '${debugName}' is rebuilding too frequently (>10/s)!");
+        }
+      } else {
+        rebuildCount = 0;
+        _isThrottledWarning = false;
+      }
+    }
+    lastRebuildTime = now;
+    
+    setState(() {});
   }
 
   @override
@@ -1196,7 +1222,30 @@ class _FxState extends State<Fx> with ReactiveSubscriberMixin {
     final prevContext = FluxyReactiveContext.currentContext;
     FluxyReactiveContext.currentContext = context;
     try {
-      return widget.builder();
+      Widget content = widget.builder();
+      
+      // Flash Warning Badge if rebuilding too fast (Debug only)
+      if (!kReleaseMode && _isThrottledWarning) {
+        return Stack(
+          clipBehavior: Clip.none,
+          children: [
+            Container(
+              decoration: BoxDecoration(border: Border.all(color: Colors.red, width: 2)),
+              child: content,
+            ),
+            Positioned(
+              top: -10, right: -10,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                decoration: BoxDecoration(color: Colors.red, borderRadius: BorderRadius.circular(4)),
+                child: const Text("SLOW", style: TextStyle(color: Colors.white, fontSize: 8, fontWeight: FontWeight.bold)),
+              ),
+            ),
+          ],
+        );
+      }
+      
+      return content;
     } finally {
       FluxyReactiveContext.currentContext = prevContext;
       FluxyReactiveContext.pop();

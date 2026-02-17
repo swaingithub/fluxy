@@ -79,7 +79,7 @@ Add Fluxy to your project's dependencies:
 
 ```yaml
 dependencies:
-  fluxy: ^0.2.1
+  fluxy: ^0.2.2
 ```
 
 ### 1. Framework Initialization
@@ -100,7 +100,7 @@ void main() async {
 
 ### 2. Atomic Reactivity
 ```dart
-final count = flux(0);
+final count = flux(0, label: "Counter"); // 'label' makes it readable in DevTools
 
 Fx(() => Fx.text("Current Value: ${count.value}")).center()
 ```

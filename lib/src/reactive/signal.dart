@@ -13,6 +13,7 @@ part 'history.dart';
 abstract class FluxySubscriber {
   void notify();
   void registerDependency(Flux flux);
+  String? get debugName => null;
 }
 
 /// Global middleware interface for intercepting flux updates.
@@ -24,6 +25,12 @@ abstract class FluxyMiddleware {
 /// A mixin that provides automatic dependency management for reactive subscribers.
 mixin ReactiveSubscriberMixin implements FluxySubscriber {
   final Set<Flux> _dependencies = {};
+  Set<Flux> get debugDependencies => Set.unmodifiable(_dependencies);
+  int rebuildCount = 0;
+  DateTime? lastRebuildTime;
+
+  @override
+  String? get debugName => null;
 
   @override
   void registerDependency(Flux flux) {
@@ -46,8 +53,8 @@ class FluxyReactiveContext {
   static bool _isBatching = false;
   static bool _isFlushScheduled = false;
   
-  static void Function(Flux flux)? onFluxRead;
-  static void Function(Flux flux, dynamic value)? onFluxUpdate;
+  static void Function(dynamic flux)? onFluxRead;
+  static void Function(dynamic flux, dynamic value)? onFluxUpdate;
   static BuildContext? currentContext;
 
   /// Registers a global middleware to intercept all state changes.
@@ -184,6 +191,10 @@ class Flux<T> {
 
   Set<FluxySubscriber> get subscribers => Set.from(_subscribers);
 
+  /// Returns the debug names of all current subscribers.
+  List<String> get consumerNames =>
+      _subscribers.map((s) => s.debugName ?? 'Anonymous').toList();
+
   void notifySubscribers() {
     for (final sub in List<FluxySubscriber>.from(_subscribers)) {
       FluxyReactiveContext.schedule(sub);
@@ -232,6 +243,9 @@ class FluxComputed<T> extends Flux<T> with ReactiveSubscriberMixin {
     bool validate = false,
   }) : _onError = onError,
        super._internal();
+
+  @override
+  String? get debugName => label ?? "FluxComputed";
 
   @override
   T get value {
@@ -340,6 +354,9 @@ class FluxEffect with ReactiveSubscriberMixin {
   final VoidCallback _effect;
   bool _isDisposed = false;
 
+  @override
+  String? get debugName => "FluxEffect";
+
   FluxEffect(this._effect) {
     _run();
   }
@@ -381,6 +398,14 @@ typedef Effect = FluxEffect;
 // --- Global Functions ---
 
 /// Creates a new reactive flux/signal.
+///
+/// Use [label] to give this flux a readable name in [FluxyDevTools] (Inspector).
+/// Without a label, it will appear as "Flux #<id>" which is harder to debug.
+///
+/// Example:
+/// ```dart
+/// final count = flux(0, label: "Counter");
+/// ```
 Flux<T> flux<T>(
   T initialValue, {
   String? persistKey,

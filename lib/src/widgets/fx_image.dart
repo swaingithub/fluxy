@@ -59,6 +59,8 @@ class FxImage extends FxWidget {
 
 class _FxImageState extends State<FxImage> with ReactiveSubscriberMixin {
   @override
+  String? get debugName => widget.id ?? "FxImage";
+  @override
   void notify() {
     if (mounted) setState(() {});
   }

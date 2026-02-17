@@ -67,6 +67,9 @@ class _BoxState extends State<Box> with ReactiveSubscriberMixin {
   bool _isHovered = false;
   bool _isPressed = false;
 
+  @override
+  String? get debugName => widget.id ?? "Box";
+
   // Cache the resolved style and built widget
   FxStyle? _lastResolvedBase;
   Widget? _cachedWidget;

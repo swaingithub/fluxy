@@ -168,8 +168,8 @@ class FluxyDebug {
     _isEnabled = true;
 
     // Hook into reactive context
-    FluxyReactiveContext.onFluxRead = _onFluxRead;
-    FluxyReactiveContext.onFluxUpdate = _onFluxUpdate;
+    FluxyReactiveContext.onFluxRead = (flux) => _onFluxRead(flux as Flux);
+    FluxyReactiveContext.onFluxUpdate = (flux, value) => _onFluxUpdate(flux as Flux, value);
 
     debugPrint('Fluxy Debug Mode Enabled');
   }
@@ -475,7 +475,7 @@ class FluxyDebug {
     }
 
     debugPrint('=== Fluxy Debug Summary ===');
-    debugPrint('Signals: ${_metrics.totalSignals}');
+    debugPrint('Fluxes: ${_metrics.totalSignals}');
     debugPrint('Computed: ${_metrics.totalComputed}');
     debugPrint('Effects: ${_metrics.totalEffects}');
     debugPrint('Total Updates: ${_metrics.totalUpdates}');
@@ -484,7 +484,7 @@ class FluxyDebug {
       'Avg Compute Time: ${_metrics.averageComputeTime.inMicroseconds}μs',
     );
     debugPrint('Circular Errors: ${_metrics.circularDependencyErrors}');
-    debugPrint('Active Signals: ${_signalGraph.length}');
+    debugPrint('Active Fluxes: ${_signalGraph.length}');
     debugPrint('Timeline Events: ${_timeline.length}');
 
     final leaks = detectMemoryLeaks();
