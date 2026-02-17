@@ -33,6 +33,8 @@ example/pubspec.lock
 lib/features/
 *.log
 publish_dry_run.txt
+analysis_check.txt
+dry_run_output.txt
 
 # Exclude specific heavy example components to keep package light
 # if they are not essential for the published library example

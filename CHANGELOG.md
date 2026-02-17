@@ -1,4 +1,4 @@
-## 0.2.2 - DevTools Overhaul & 1.0 Stability Prep
+## 0.2.3 - DevTools Overhaul & 1.0 Stability Prep
 
 *   **Premium DevTools Overhaul**: 
     *   **High-End Glassmorphism**: Completely redesigned the inspector with high-performance blur effects and a sleek Material 3 modern aesthetic.
@@ -11,6 +11,10 @@
     *   **Self-Contained ScaffoldMessenger**: Fixed "No ScaffoldMessenger found" exception by implementing an internal GlobalKey-managed system. The DevTools is now fully context-independent.
     *   **Layout Safety**: Moved the DevTools Floating Action Button (FAB) up by 60dp to prevent overlap with standard `BottomNavigationBar` items.
     *   **Enhanced Error Boundaries**: Improved crash-resistance in the DI and Network detail views for malformed data.
+
+## 0.2.2 - Stability Refinements
+
+*   Internal stabilization and minor DevTools context fixes.
 
 ## 0.2.1 - Hotfix & Optimization
 

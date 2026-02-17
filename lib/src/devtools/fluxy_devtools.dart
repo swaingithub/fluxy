@@ -410,7 +410,7 @@ class _FluxyDevToolsState extends State<FluxyDevTools> {
                       Row(
                         children: [
                           const Text(
-                            "v0.2.2",
+                            "v0.2.3",
                             style: TextStyle(color: Colors.white54, fontSize: 10, fontWeight: FontWeight.w500),
                           ),
                           const SizedBox(width: 8),
