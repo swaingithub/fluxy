@@ -61,15 +61,18 @@ class _FluxyDevToolsState extends State<FluxyDevTools> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        widget.child,
-        if (_isOpen) ...[
-          _buildBlurBackground(),
-          _buildPanel(),
+    return Directionality(
+      textDirection: TextDirection.ltr,
+      child: Stack(
+        children: [
+          widget.child,
+          if (_isOpen) ...[
+            _buildBlurBackground(),
+            _buildPanel(),
+          ],
+          _buildFab(),
         ],
-        _buildFab(),
-      ],
+      ),
     );
   }
 
@@ -184,7 +187,7 @@ class _FluxyDevToolsState extends State<FluxyDevTools> {
                     style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
                   ),
                   Text(
-                    "v0.1.11 - Debug Engine",
+                    "v0.2.1 - Debug Engine",
                     style: TextStyle(color: Colors.white54, fontSize: 10),
                   ),
                 ],

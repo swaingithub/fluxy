@@ -3,7 +3,7 @@ import 'package:args/args.dart';
 import 'package:path/path.dart' as p;
 import 'package:fluxy/src/cli/cloud.dart';
 
-const String version = '0.2.0';
+const String version = '0.2.1';
 
 void main(List<String> arguments) async {
   final parser = ArgParser()

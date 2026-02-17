@@ -79,7 +79,7 @@ Add Fluxy to your project's dependencies:
 
 ```yaml
 dependencies:
-  fluxy: ^0.2.0
+  fluxy: ^0.2.1
 ```
 
 ### 1. Framework Initialization

@@ -1,3 +1,8 @@
+## 0.2.1 - Hotfix & Optimization
+
+*   **Hotfix**: Resolved "No Directionality widget found" assertion error in `FluxyDevTools`. The inspector is now safe to use as a top-level wrapper.
+*   **Optimization**: Reduced published package size by ~40% (103 KB) by excluding platform-specific boilerplate in the example directory.
+
 ## 0.2.0 - Professional Inspector & Architectural Authority
 
 *   **Premium DevTools & Fluxy Inspector**:
