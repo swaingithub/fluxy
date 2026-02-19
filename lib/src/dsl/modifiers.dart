@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import '../styles/tokens.dart';
 import '../widgets/box.dart';
@@ -12,6 +13,10 @@ import '../di/fluxy_di.dart';
 import '../widgets/avatar.dart';
 import '../widgets/table.dart';
 import '../widgets/fx_widget.dart';
+import '../engine/lift_engine.dart';
+import '../engine/layout_guard.dart';
+import '../engine/stability/interaction_guard.dart';
+import '../engine/haptics.dart';
 import 'fx.dart';
 
 extension FluxyStringExtension on String {
@@ -47,136 +52,110 @@ extension FluxyStringExtension on String {
 extension FluxyWidgetExtension on Widget {
   /// Internal helper to apply style to any supported widget or wrap in Box.
   Widget _applyGenericStyle(FxStyle style) {
-    final self = this;
+    return FxLift.lift(this, (child) {
+      final self = child;
 
-    // --- Structural Recursion for ParentDataWidgets ---
-    if (self is Expanded) {
-      return Expanded(
-        flex: self.flex,
-        child: self.child._applyGenericStyle(style),
-      );
-    }
-    if (self is Flexible) {
-      return Flexible(
-        flex: self.flex,
-        fit: self.fit,
-        child: self.child._applyGenericStyle(style),
-      );
-    }
-    if (self is Positioned) {
-      return Positioned(
-        left: self.left,
-        top: self.top,
-        right: self.right,
-        bottom: self.bottom,
-        width: self.width,
-        height: self.height,
-        child: self.child._applyGenericStyle(style),
-      );
-    }
+      // --- Intercept Flex Styles to prevent ParentData issues ---
+      // If we're applying a style with flex/flexGrow, we wrap externally here.
+      if (style.flex != null || style.flexGrow != null) {
+        final flexVal = style.flexGrow ?? style.flex ?? 1;
+        final fitVal =
+            style.flexFit ??
+            (style.flexGrow != null ? FlexFit.loose : FlexFit.tight);
 
-    // --- Intercept Flex Styles to prevent ParentData issues ---
-    // If we're applying a style with flex/flexGrow, we wrap externally here.
-    if (style.flex != null || style.flexGrow != null) {
-      final flexVal = style.flexGrow ?? style.flex ?? 1;
-      final fitVal =
-          style.flexFit ??
-          (style.flexGrow != null ? FlexFit.loose : FlexFit.tight);
+        // Create a new style without flex properties to avoid infinite recursion
+        final innerStyle = FxStyle(
+          width: style.width,
+          height: style.height,
+          minWidth: style.minWidth,
+          minHeight: style.minHeight,
+          maxWidth: style.maxWidth,
+          maxHeight: style.maxHeight,
+          padding: style.padding,
+          margin: style.margin,
+          backgroundColor: style.backgroundColor,
+          gradient: style.gradient,
+          shadows: style.shadows,
+          glass: style.glass,
+          borderRadius: style.borderRadius,
+          border: style.border,
+          justifyContent: style.justifyContent,
+          alignItems: style.alignItems,
+          mainAxisSize: style.mainAxisSize,
+          direction: style.direction,
+          // Explicitly omit flex, flexGrow, flexShrink, flexFit
+          gap: style.gap,
+          crossAxisCount: style.crossAxisCount,
+          minColumnWidth: style.minColumnWidth,
+          childAspectRatio: style.childAspectRatio,
+          alignment: style.alignment,
+          clipBehavior: style.clipBehavior,
+          top: style.top,
+          right: style.right,
+          bottom: style.bottom,
+          left: style.left,
+          zIndex: style.zIndex,
+          color: style.color,
+          fontSize: style.fontSize,
+          fontWeight: style.fontWeight,
+          textAlign: style.textAlign,
+          fontFamily: style.fontFamily,
+          overflow: style.overflow,
+          maxLines: style.maxLines,
+          letterSpacing: style.letterSpacing,
+          wordSpacing: style.wordSpacing,
+          textDecoration: style.textDecoration,
+          lineHeight: style.lineHeight,
+          hover: style.hover,
+          pressed: style.pressed,
+          transition: style.transition,
+          cursor: style.cursor,
+          opacity: style.opacity,
+          aspectRatio: style.aspectRatio,
+          transformScale: style.transformScale,
+          transformRotation: style.transformRotation,
+          fit: style.fit,
+          imageBlur: style.imageBlur,
+          grayscale: style.grayscale,
+          loading: style.loading,
+          error: style.error,
+          placeholder: style.placeholder,
+          imageSrc: style.imageSrc,
+        );
 
-      // Create a new style without flex properties to avoid infinite recursion
-      final innerStyle = FxStyle(
-        width: style.width,
-        height: style.height,
-        padding: style.padding,
-        margin: style.margin,
-        backgroundColor: style.backgroundColor,
-        gradient: style.gradient,
-        shadows: style.shadows,
-        glass: style.glass,
-        borderRadius: style.borderRadius,
-        border: style.border,
-        justifyContent: style.justifyContent,
-        alignItems: style.alignItems,
-        mainAxisSize: style.mainAxisSize,
-        direction: style.direction,
-        // Explicitly omit flex, flexGrow, flexShrink, flexFit
-        gap: style.gap,
-        crossAxisCount: style.crossAxisCount,
-        minColumnWidth: style.minColumnWidth,
-        childAspectRatio: style.childAspectRatio,
-        alignment: style.alignment,
-        clipBehavior: style.clipBehavior,
-        top: style.top,
-        right: style.right,
-        bottom: style.bottom,
-        left: style.left,
-        zIndex: style.zIndex,
-        color: style.color,
-        fontSize: style.fontSize,
-        fontWeight: style.fontWeight,
-        textAlign: style.textAlign,
-        fontFamily: style.fontFamily,
-        overflow: style.overflow,
-        maxLines: style.maxLines,
-        letterSpacing: style.letterSpacing,
-        wordSpacing: style.wordSpacing,
-        textDecoration: style.textDecoration,
-        lineHeight: style.lineHeight,
-        hover: style.hover,
-        pressed: style.pressed,
-        transition: style.transition,
-        cursor: style.cursor,
-        opacity: style.opacity,
-        aspectRatio: style.aspectRatio,
-        transformScale: style.transformScale,
-        transformRotation: style.transformRotation,
-        fit: style.fit,
-        imageBlur: style.imageBlur,
-        grayscale: style.grayscale,
-        loading: style.loading,
-        error: style.error,
-        placeholder: style.placeholder,
-        imageSrc: style.imageSrc,
-      );
+        return FxSafeExpansion(
+          flex: flexVal,
+          fit: fitVal,
+          direction: style.direction,
+          child: self is FxWidget
+              ? self.copyWithStyle(innerStyle)
+              : Box(style: innerStyle, child: self),
+        );
+      }
 
-      return Flexible(
-        flex: flexVal,
-        fit: fitVal,
-        child: self is FxWidget
-            ? self.copyWithStyle(innerStyle)
-            : Box(style: innerStyle, child: self),
-      );
-    }
+      // New Attribute Accumulation Logic
+      if (self is FxWidget) {
+        return self.copyWithStyle(style);
+      }
 
-    // New Attribute Accumulation Logic
-    if (self is FxWidget) {
-      return self.copyWithStyle(style);
-    }
-
-    // Wrap generic widget
-    return Box(style: style, child: self);
+      // Wrap generic widget
+      return Box(style: style, child: self);
+    });
   }
+
+  /// Applies a custom style object to the widget.
+  Widget style(FxStyle style) => _applyGenericStyle(style);
 
   /// Internal helper to apply responsive style.
   Widget _applyResponsive(FxResponsiveStyle responsive) {
-    final self = this;
-
-    // --- Structural Recursion for ParentDataWidgets ---
-    if (self is Expanded) {
-      return Expanded(
-        flex: self.flex,
-        child: self.child._applyResponsive(responsive),
-      );
-    }
-    if (self is Flexible) {
-      return Flexible(
-        flex: self.flex,
-        fit: self.fit,
-        child: self.child._applyResponsive(responsive),
-      );
-    }
-    return Box(responsive: responsive, child: self);
+    return FxLift.lift(this, (child) {
+      if (child is FxWidget) {
+        return child.copyWithResponsive(responsive);
+      }
+      return Box(responsive: responsive, child: child);
+    });
   }
+
 
   /// Positions a widget within a Stack.
   Widget positioned({
@@ -286,6 +265,60 @@ extension FluxyWidgetExtension on Widget {
     );
   }
 
+  Widget pt(double xs, {double? md, double? lg}) {
+    if (md == null && lg == null) {
+      return _applyGenericStyle(FxStyle(padding: EdgeInsets.only(top: xs)));
+    }
+    return _applyResponsive(
+      FxResponsiveStyle(
+        xs: FxStyle(padding: EdgeInsets.only(top: xs)),
+        md: md != null ? FxStyle(padding: EdgeInsets.only(top: md)) : null,
+        lg: lg != null ? FxStyle(padding: EdgeInsets.only(top: lg)) : null,
+      ),
+    );
+  }
+
+  Widget pb(double xs, {double? md, double? lg}) {
+    if (md == null && lg == null) {
+      return _applyGenericStyle(FxStyle(padding: EdgeInsets.only(bottom: xs)));
+    }
+    return _applyResponsive(
+      FxResponsiveStyle(
+        xs: FxStyle(padding: EdgeInsets.only(bottom: xs)),
+        md: md != null ? FxStyle(padding: EdgeInsets.only(bottom: md)) : null,
+        lg: lg != null ? FxStyle(padding: EdgeInsets.only(bottom: lg)) : null,
+      ),
+    );
+  }
+
+  Widget pl(double xs, {double? md, double? lg}) {
+    if (md == null && lg == null) {
+      return _applyGenericStyle(FxStyle(padding: EdgeInsets.only(left: xs)));
+    }
+    return _applyResponsive(
+      FxResponsiveStyle(
+        xs: FxStyle(padding: EdgeInsets.only(left: xs)),
+        md: md != null ? FxStyle(padding: EdgeInsets.only(left: md)) : null,
+        lg: lg != null ? FxStyle(padding: EdgeInsets.only(left: lg)) : null,
+      ),
+    );
+  }
+
+  Widget pr(double xs, {double? md, double? lg}) {
+    if (md == null && lg == null) {
+      return _applyGenericStyle(FxStyle(padding: EdgeInsets.only(right: xs)));
+    }
+    return _applyResponsive(
+      FxResponsiveStyle(
+        xs: FxStyle(padding: EdgeInsets.only(right: xs)),
+        md: md != null ? FxStyle(padding: EdgeInsets.only(right: md)) : null,
+        lg: lg != null ? FxStyle(padding: EdgeInsets.only(right: lg)) : null,
+      ),
+    );
+  }
+
+
+
   /// Aliases for Padding
   Widget padding(double v, {double? md, double? lg}) => p(v, md: md, lg: lg);
   Widget pad(double v, {double? md, double? lg}) => p(v, md: md, lg: lg);
@@ -344,27 +377,10 @@ extension FluxyWidgetExtension on Widget {
     );
   }
 
-  /// Aliases for Margin
-  Widget margin(double v, {double? md, double? lg}) => m(v, md: md, lg: lg);
-  Widget marginX(double v, {double? md, double? lg}) => mx(v, md: md, lg: lg);
-  Widget marginY(double v, {double? md, double? lg}) => my(v, md: md, lg: lg);
-
-  /// Single-side Margins
-  Widget mb(double xs, {double? md, double? lg}) {
-    if (md == null && lg == null)
-      return _applyGenericStyle(FxStyle(margin: EdgeInsets.only(bottom: xs)));
-    return _applyResponsive(
-      FxResponsiveStyle(
-        xs: FxStyle(margin: EdgeInsets.only(bottom: xs)),
-        md: md != null ? FxStyle(margin: EdgeInsets.only(bottom: md)) : null,
-        lg: lg != null ? FxStyle(margin: EdgeInsets.only(bottom: lg)) : null,
-      ),
-    );
-  }
-
   Widget mt(double xs, {double? md, double? lg}) {
-    if (md == null && lg == null)
+    if (md == null && lg == null) {
       return _applyGenericStyle(FxStyle(margin: EdgeInsets.only(top: xs)));
+    }
     return _applyResponsive(
       FxResponsiveStyle(
         xs: FxStyle(margin: EdgeInsets.only(top: xs)),
@@ -374,9 +390,23 @@ extension FluxyWidgetExtension on Widget {
     );
   }
 
+  Widget mb(double xs, {double? md, double? lg}) {
+    if (md == null && lg == null) {
+      return _applyGenericStyle(FxStyle(margin: EdgeInsets.only(bottom: xs)));
+    }
+    return _applyResponsive(
+      FxResponsiveStyle(
+        xs: FxStyle(margin: EdgeInsets.only(bottom: xs)),
+        md: md != null ? FxStyle(margin: EdgeInsets.only(bottom: md)) : null,
+        lg: lg != null ? FxStyle(margin: EdgeInsets.only(bottom: lg)) : null,
+      ),
+    );
+  }
+
   Widget ml(double xs, {double? md, double? lg}) {
-    if (md == null && lg == null)
+    if (md == null && lg == null) {
       return _applyGenericStyle(FxStyle(margin: EdgeInsets.only(left: xs)));
+    }
     return _applyResponsive(
       FxResponsiveStyle(
         xs: FxStyle(margin: EdgeInsets.only(left: xs)),
@@ -387,8 +417,9 @@ extension FluxyWidgetExtension on Widget {
   }
 
   Widget mr(double xs, {double? md, double? lg}) {
-    if (md == null && lg == null)
+    if (md == null && lg == null) {
       return _applyGenericStyle(FxStyle(margin: EdgeInsets.only(right: xs)));
+    }
     return _applyResponsive(
       FxResponsiveStyle(
         xs: FxStyle(margin: EdgeInsets.only(right: xs)),
@@ -397,6 +428,15 @@ extension FluxyWidgetExtension on Widget {
       ),
     );
   }
+
+
+
+  /// Aliases for Margin
+  Widget margin(double v, {double? md, double? lg}) => m(v, md: md, lg: lg);
+  Widget marginX(double v, {double? md, double? lg}) => mx(v, md: md, lg: lg);
+  Widget marginY(double v, {double? md, double? lg}) => my(v, md: md, lg: lg);
+
+
 
   Widget rounded(double xs, {double? md, double? lg}) {
     if (md == null && lg == null)
@@ -479,8 +519,35 @@ extension FluxyWidgetExtension on Widget {
     return w(xs, md: md, lg: lg).h(h); 
   }
 
-  Widget opacity(double value) => _applyGenericStyle(FxStyle(opacity: value));
+  /// Suffix transparency. Clamped between 0.0 and 1.0 for engine safety.
+  Widget opacity(double value) => _applyGenericStyle(FxStyle(opacity: value.clamp(0.0, 1.0)));
   Widget op(double value) => opacity(value);
+
+  /// Standard SafeArea wrapper.
+  Widget safe({bool top = true, bool bottom = true}) => 
+      FxLift.lift(this, (child) => SafeArea(top: top, bottom: bottom, child: child));
+
+  /// Full control SafeArea wrapper.
+  Widget safeArea({
+    bool left = true,
+    bool top = true,
+    bool right = true,
+    bool bottom = true,
+    EdgeInsets minimum = EdgeInsets.zero,
+    bool maintainBottomViewPadding = false,
+  }) =>
+      FxLift.lift(
+        this,
+        (child) => SafeArea(
+          left: left,
+          top: top,
+          right: right,
+          bottom: bottom,
+          minimum: minimum,
+          maintainBottomViewPadding: maintainBottomViewPadding,
+          child: child,
+        ),
+      );
 
   // --- Styling Modifiers ---
 
@@ -513,8 +580,8 @@ extension FluxyWidgetExtension on Widget {
       _applyGenericStyle(FxStyle(transformRotation: value));
 
   // --- Flex/Layout Modifiers ---
-  Widget flex([int value = 1]) => Flexible(flex: value, child: this);
-  Widget expanded([int value = 1]) => Expanded(flex: value, child: this);
+  Widget flex([int value = 1]) => _applyGenericStyle(FxStyle(flex: value, flexFit: FlexFit.loose));
+  Widget expanded([int value = 1]) => _applyGenericStyle(FxStyle(flex: value, flexFit: FlexFit.tight));
   Widget shrink() => Flexible(fit: FlexFit.loose, child: this);
 
   FxShadowProxy get shadow => FxShadowProxy(this);
@@ -626,9 +693,27 @@ extension FluxyWidgetExtension on Widget {
 
   Widget justify(MainAxisAlignment value) =>
       _applyGenericStyle(FxStyle(justifyContent: value));
-  Widget items(CrossAxisAlignment value) =>
+  /// Align children along the cross-axis.
+  Widget alignItems(CrossAxisAlignment value) =>
       _applyGenericStyle(FxStyle(alignItems: value));
+
+  @Deprecated('Use alignItems() instead for consistency with Fluxy styles.')
+  Widget items(CrossAxisAlignment value) => alignItems(value);
+
+  @Deprecated('Use Fx.gap() widget instead for better layout performance')
   Widget gap(double value) => _applyGenericStyle(FxStyle(gap: value));
+
+  /// Sets the min height of the widget.
+  Widget minH(double value) => _applyGenericStyle(FxStyle(minHeight: value));
+
+  /// Sets the max height of the widget.
+  Widget maxH(double value) => _applyGenericStyle(FxStyle(maxHeight: value));
+
+  /// Sets the min width of the widget.
+  Widget minW(double value) => _applyGenericStyle(FxStyle(minWidth: value));
+
+  /// Sets the max width of the widget.
+  Widget maxW(double value) => _applyGenericStyle(FxStyle(maxWidth: value));
 
   /// Justify Shorthands
   Widget justifyStart() => justify(MainAxisAlignment.start);
@@ -685,6 +770,7 @@ extension FluxyWidgetExtension on Widget {
 
   Widget show(bool condition) => condition ? this : const SizedBox.shrink();
   Widget hide(bool condition) => condition ? const SizedBox.shrink() : this;
+  Widget visibility(bool condition) => show(condition);
 
   /// Responsive visibility
   Widget hideXs() => responsive(xs: (w) => w.opacity(0));
@@ -741,6 +827,70 @@ extension FluxyWidgetExtension on Widget {
       Fx.ghostButton("", onTap: onTap).copyWith(child: this);
   Widget pointer() =>
       _applyGenericStyle(const FxStyle(cursor: SystemMouseCursors.click));
+
+  Widget mouseCursor(MouseCursor cursor) => 
+      _applyGenericStyle(FxStyle(cursor: cursor));
+
+  
+  Widget onDoubleTap(VoidCallback? action) => 
+      FxLift.lift(this, (child) => GestureDetector(onDoubleTap: action, child: child));
+      
+  Widget onLongPress(VoidCallback? action) =>
+      FxLift.lift(this, (child) => GestureDetector(onLongPress: action, child: child));
+
+  // --- Haptic Modifiers ---
+
+  /// Triggers a haptic feedback when the widget is tapped.
+  Widget haptic() => onTap(() => FxHaptic.medium());
+
+  /// Light haptic feedback.
+  Widget hapticLight() => onTap(() => FxHaptic.light());
+
+  /// Medium haptic feedback.
+  Widget hapticMedium() => onTap(() => FxHaptic.medium());
+
+  /// Heavy haptic feedback.
+  Widget hapticHeavy() => onTap(() => FxHaptic.heavy());
+
+  /// Error haptic feedback.
+  Widget hapticError() => onTap(() => FxHaptic.error());
+
+  /// A fused interaction modifier that applies a slight scale effect
+  /// and haptic feedback when pressed.
+  Widget pressScale({double amount = 0.97, bool haptic = true}) {
+    Widget w = onPressed((s) => s.scale(amount)).transition(const Duration(milliseconds: 100));
+    if (haptic) return w.hapticLight();
+    return w;
+  }
+
+  // --- Interaction Safety ---
+
+  /// A debounced tap that prevents "Double Tap Ghosting".
+  /// Useful for navigation and API submission buttons.
+  Widget onTapSafe(VoidCallback callback, {String? id}) {
+    return onTap(() {
+      FluxyInteractionGuard.debounce(id ?? callback.hashCode.toString(), callback);
+    });
+  }
+
+  /// Triggers when the mouse enter the widget area.
+  Widget onHoverEnter(VoidCallback? action) => 
+      FxLift.lift(this, (child) => MouseRegion(onEnter: (_) => action?.call(), child: child));
+
+  /// Triggers when the mouse leaves the widget area.
+  Widget onHoverExit(VoidCallback? action) => 
+      FxLift.lift(this, (child) => MouseRegion(onExit: (_) => action?.call(), child: child));
+
+  /// Accessibility
+  Widget tooltip(String message) => 
+      FxLift.lift(this, (child) => Tooltip(message: message, child: child));
+
+  /// Layout Helpers
+  Widget scrollable({Axis direction = Axis.vertical}) => 
+      FxLift.lift(this, (child) => SingleChildScrollView(scrollDirection: direction, child: child));
+
+  Widget intrinsicH() => FxLift.lift(this, (child) => IntrinsicHeight(child: child));
+  Widget intrinsicW() => FxLift.lift(this, (child) => IntrinsicWidth(child: child));
 
   /// Allows conditional chaining.
   /// Example: .then((w) => condition ? w.expand() : w)
@@ -994,6 +1144,22 @@ extension FluxyStyleFluentExtension on FxStyle {
   FxStyle border({Color? color, double width = 1}) => copyWith(
     border: Border.all(color: color ?? const Color(0x00000000), width: width),
   );
+
+  // Advanced Visuals
+  FxStyle glass([double blur = 10]) => copyWith(glass: blur);
+  FxStyle blur(double val) => copyWith(imageBlur: val);
+  FxStyle grayscale([bool val = true]) => copyWith(grayscale: val);
+  FxStyle transition(Duration val) => copyWith(transition: val);
+  FxStyle cursor(MouseCursor val) => copyWith(cursor: val);
+  FxStyle aspectRatio(double val) => copyWith(aspectRatio: val);
+
+  // Typography
+  FxStyle bold() => copyWith(fontWeight: FontWeight.bold);
+  FxStyle italic() => copyWith(fontStyle: FontStyle.italic);
+  FxStyle align(AlignmentGeometry val) => copyWith(alignment: val);
+  FxStyle textAlign(TextAlign val) => copyWith(textAlign: val);
+  FxStyle maxLines(int val) => copyWith(maxLines: val);
+  FxStyle overflow(TextOverflow val) => copyWith(overflow: val);
 }
 
 /// Helper for context extensions

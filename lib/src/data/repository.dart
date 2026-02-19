@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import '../reactive/signal.dart';
 import '../reactive/async_signal.dart';
 import '../engine/controller.dart';
+import '../engine/stability/data_guard.dart';
 
 /// A production-ready base class for Data Repositories in Fluxy.
 /// 
@@ -71,14 +72,28 @@ abstract class FluxRepository<T> extends FluxyRepository {
   Future<void> saveLocal(T data);
 
   /// Orchestrates a standard offline-first fetch: Local first, then Remote.
+  /// Uses FluxyDataGuard to handle transient network failures.
   Future<T> sync() async {
+    // 1. Try local cache first for instant UI response (Optimistic)
     try {
       await fetchLocal();
-      // Optional: return local first if available?
-      final remote = await fetchRemote();
+      // If we have cached data, we could potentially return it and update in background,
+      // but for a simple sync, let's just ensure we have it.
+    } catch (_) {
+      // Ignore local fetch errors
+    }
+
+    // 2. Fetch remote with stable retry logic
+    try {
+      final remote = await FluxyDataGuard.retry(
+        () => fetchRemote(),
+        label: "Sync remote ($T)",
+      );
+      
       await saveLocal(remote);
       return remote;
     } catch (e) {
+      // Final fallback to local if remote fails completely after retries
       return fetchLocal();
     }
   }

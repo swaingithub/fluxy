@@ -3,6 +3,7 @@ import '../styles/tokens.dart';
 import '../dsl/fx.dart';
 import 'box.dart';
 import '../widgets/fx_widget.dart';
+import '../engine/style_resolver.dart';
 
 enum FxButtonVariant {
   primary,
@@ -152,41 +153,41 @@ class _FxButtonState extends State<FxButton> {
 
     switch (widget.variant) {
       case FxButtonVariant.primary:
-        brandColor = FxTokens.colors.blue600;
-        onBrandColor = Colors.white;
+        brandColor = FxTokens.colors.primary;
+        onBrandColor = FxTokens.colors.white; // Or onPrimary if available
         break;
       case FxButtonVariant.none:
         brandColor = Colors.transparent;
         onBrandColor = FxTokens.colors.text;
         break;
       case FxButtonVariant.secondary:
-        brandColor = FxTokens.colors.slate100;
-        onBrandColor = FxTokens.colors.slate800;
+        brandColor = FxTokens.colors.secondary;
+        onBrandColor = FxTokens.colors.black; // Secondary usually needs contrast
         break;
       case FxButtonVariant.danger:
-        brandColor = const Color(0xFFEF4444);
-        onBrandColor = Colors.white;
+        brandColor = FxTokens.colors.error;
+        onBrandColor = FxTokens.colors.white;
         break;
       case FxButtonVariant.success:
-        brandColor = const Color(0xFF10B981);
-        onBrandColor = Colors.white;
+        brandColor = FxTokens.colors.success;
+        onBrandColor = FxTokens.colors.white;
         break;
       case FxButtonVariant.warning:
-        brandColor = const Color(0xFFF59E0B);
-        onBrandColor = Colors.white;
+        brandColor = FxTokens.colors.warning;
+        onBrandColor = FxTokens.colors.white;
         break;
       case FxButtonVariant.outline:
         brandColor = Colors.transparent;
-        borderColor = FxTokens.colors.slate300;
-        onBrandColor = FxTokens.colors.slate700;
+        borderColor = FxTokens.colors.muted;
+        onBrandColor = FxTokens.colors.text;
         break;
       case FxButtonVariant.ghost:
         brandColor = Colors.transparent;
-        onBrandColor = FxTokens.colors.slate600;
+        onBrandColor = FxTokens.colors.text;
         break;
       case FxButtonVariant.text:
         brandColor = Colors.transparent;
-        onBrandColor = FxTokens.colors.blue600;
+        onBrandColor = FxTokens.colors.primary;
         break;
     }
 
@@ -237,7 +238,7 @@ class _FxButtonState extends State<FxButton> {
 
     // 3. Construct Composite Style
     final baseStyle = FxStyle(
-      height: height > 0 ? height : null,
+      minHeight: height > 0 ? height : null,
       backgroundColor: brandColor,
       padding: padding,
       borderRadius: widget.variant == FxButtonVariant.none 
@@ -247,7 +248,11 @@ class _FxButtonState extends State<FxButton> {
           ? Border.all(color: borderColor, width: 1)
           : null,
       transition: const Duration(milliseconds: 150),
-      // Implicit Interactivity
+      // alignment removed to prevent vertical stretching in Columns
+      cursor: SystemMouseCursors.click,
+      justifyContent: MainAxisAlignment.center, // New: Use style-level centering
+      alignItems: CrossAxisAlignment.center,
+      direction: Axis.vertical, // Ensure children are vertically centered if height is given
       hover:
           widget.variant == FxButtonVariant.ghost || widget.variant == FxButtonVariant.outline || widget.variant == FxButtonVariant.none
           ? FxStyle(
@@ -256,7 +261,6 @@ class _FxButtonState extends State<FxButton> {
                   : brandColor.withValues(alpha: 0.9),
             )
           : FxStyle(opacity: 0.9),
-      cursor: SystemMouseCursors.click,
       pressed: const FxStyle(opacity: 0.7, shadows: []),
     ).merge(widget.style);
 
@@ -277,7 +281,9 @@ class _FxButtonState extends State<FxButton> {
               height: iconSize,
               child: CircularProgressIndicator(
                 strokeWidth: 2,
-                valueColor: AlwaysStoppedAnimation<Color>(onBrandColor),
+                valueColor: AlwaysStoppedAnimation<Color>(
+                  FxStyleResolver.resolveColor(context, onBrandColor),
+                ),
               ),
             )
           else if (widget.icon != null)
@@ -297,9 +303,6 @@ class _FxButtonState extends State<FxButton> {
         ],
       );
     }
-
-    // Wrap in center to handle custom children or fixed sizes
-    content = Center(child: content);
 
     // 5. Build with Box (handles hover/pressed/responsive automatically)
     return Box(

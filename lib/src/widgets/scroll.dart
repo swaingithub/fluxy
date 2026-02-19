@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import '../dsl/fx.dart';
 import '../widgets/box.dart';
-import '../reactive/signal.dart';
-import '../responsive/responsive_engine.dart';
+import '../engine/layout_guard.dart';
+import '../engine/style_resolver.dart';
+
+import '../engine/stability/stability.dart';
 
 /// A managed scrollable container with built-in scrollbar support and state management.
 class FxScroll extends StatefulWidget {
@@ -23,6 +25,7 @@ class FxScroll extends StatefulWidget {
   State<FxScroll> createState() => _FxScrollState();
 }
 
+
 class _FxScrollState extends State<FxScroll> {
   final ScrollController _controller = ScrollController();
 
@@ -34,27 +37,34 @@ class _FxScrollState extends State<FxScroll> {
 
   @override
   Widget build(BuildContext context) {
+    // Style resolution logic
+    FxStyleResolver.resolve(context, style: widget.style);
+
+    final scrollable = FluxyViewportGuard(
+      direction: widget.direction,
+      child: SingleChildScrollView(
+        controller: _controller,
+        scrollDirection: widget.direction,
+        physics: const AlwaysScrollableScrollPhysics(),
+        child: widget.child,
+      ),
+    );
+
+    Widget content = scrollable;
+    if (widget.showScrollbar) {
+      content = Scrollbar(
+        controller: _controller,
+        child: content,
+      );
+    }
+
     return Box(
       style: widget.style,
-      child: Fx(() {
-        final ctx = FluxyReactiveContext.currentContext;
-        final scrollable = SingleChildScrollView(
-          controller: _controller,
-          scrollDirection: widget.direction,
-          child: widget.child,
-        );
-        
-        if (widget.showScrollbar && ctx != null) {
-          final bp = ResponsiveEngine.of(ctx);
-          final isDesktop = bp == Breakpoint.lg || bp == Breakpoint.xl;
-          return Scrollbar(
-            controller: _controller,
-            thumbVisibility: isDesktop,
-            child: scrollable,
-          );
-        }
-        return scrollable;
-      }),
+      child: FxScrollInfo(
+        direction: widget.direction,
+        viewportConstraints: BoxConstraints.loose(MediaQuery.of(context).size),
+        child: content,
+      ),
     );
   }
 }

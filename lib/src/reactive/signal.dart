@@ -117,8 +117,10 @@ class FluxyReactiveContext {
     _pendingUpdates.add(subscriber);
     if (!_isBatching && !_isFlushScheduled) {
       _isFlushScheduled = true;
-      // Using microtask for immediate but batched execution
-      Future.microtask(_flush);
+      
+      // Use SchedulerBinding to ensure flushes happen at the end of the frame cycle
+      // This prevents interrupting the layout/paint phase.
+      WidgetsBinding.instance.addPostFrameCallback((_) => _flush());
     }
   }
 
@@ -400,23 +402,34 @@ typedef Effect = FluxEffect;
 /// Creates a new reactive flux/signal.
 ///
 /// Use [label] to give this flux a readable name in [FluxyDevTools] (Inspector).
-/// Without a label, it will appear as "Flux #<id>" which is harder to debug.
+///
+/// [persist] - Whether to automatically persist this value to local storage.
+/// [key] - The storage key to use for persistence. If not provided, [label] or a hash of the initial value is used.
+/// [secure] - Whether to use secure storage (keychain/keystore).
 ///
 /// Example:
 /// ```dart
-/// final count = flux(0, label: "Counter");
+/// final balance = flux(100.0, key: "user_balance", persist: true);
 /// ```
 Flux<T> flux<T>(
   T initialValue, {
-  String? persistKey,
+  String? key,
+  bool persist = false,
   bool secure = false,
   String? label,
+  T Function(dynamic json)? fromJson,
+  @Deprecated('Use key instead') String? persistKey,
 }) {
-  if (persistKey != null) {
+  final effectiveKey = key ?? persistKey;
+  if (persist || effectiveKey != null) {
     return PersistentFlux<T>(
       initialValue,
-      PersistenceConfig(key: persistKey, secure: secure),
+      PersistenceConfig(
+        key: effectiveKey ?? label ?? 'flux_${initialValue.hashCode}',
+        secure: secure,
+      ),
       label: label,
+      fromJson: fromJson,
     );
   }
   return Flux<T>(initialValue, label: label);

@@ -176,12 +176,9 @@ class _FxGridState extends State<FxGrid> {
       className: widget.className,
       responsive: widget.responsive,
     );
-    final width = MediaQuery.of(context).size.width;
 
-    // Attribute Accumulation: Style takes precedence over constructor args
-    int resolvedCols = s.crossAxisCount ?? widget.columns ?? 2;
-    
-    // 1. Check if it's a responsive grid
+    // 1. Resolve columns using Breakpoints (MediaQuery based - Safe & Fast)
+    int? resolvedCols;
     if (widget.xsCols != null ||
         widget.smCols != null ||
         widget.mdCols != null ||
@@ -195,19 +192,34 @@ class _FxGridState extends State<FxGrid> {
         lg: widget.lgCols,
         xl: widget.xlCols,
       );
-    }
-    // 2. Check if it's an auto grid
-    else if (widget.minItemWidth != null) {
-      resolvedCols = (width / (widget.minItemWidth! + widget.gap)).floor();
-      if (resolvedCols < 1) resolvedCols = 1;
+    } else if (widget.columns != null) {
+      resolvedCols = s.crossAxisCount ?? widget.columns;
     }
 
+    // 2. If it's an "auto" grid, we NEED LayoutBuilder for local constraints
+    if (resolvedCols == null && widget.minItemWidth != null) {
+      return LayoutBuilder(
+        builder: (context, constraints) {
+          final width = constraints.maxWidth;
+          if (width == 0) return const SizedBox.shrink();
+          
+          final cols = (width / (widget.minItemWidth! + widget.gap)).floor();
+          return _buildGrid(context, s, cols < 1 ? 1 : cols);
+        },
+      );
+    }
+
+    // 3. Fallback/Standard Grid build
+    return _buildGrid(context, s, resolvedCols ?? 2);
+  }
+
+  Widget _buildGrid(BuildContext context, FxStyle s, int columns) {
     // Also use gap from style if set
     final effectiveGap = s.gap ?? widget.gap;
 
     Widget grid = GridView.builder(
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: resolvedCols,
+        crossAxisCount: columns,
         mainAxisSpacing: effectiveGap,
         crossAxisSpacing: effectiveGap,
         childAspectRatio: widget.childAspectRatio,
@@ -227,10 +239,6 @@ class _FxGridState extends State<FxGrid> {
         decoration: FxDecorationBuilder.build(s),
         child: grid,
       );
-    }
-
-    if (s.flex != null) {
-      grid = Expanded(flex: s.flex!, child: grid);
     }
 
     return grid;

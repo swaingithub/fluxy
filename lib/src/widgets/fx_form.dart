@@ -5,19 +5,21 @@ import '../dsl/fx.dart';
 /// A wrapper for handling form state, validation, and submission.
 class FxForm extends StatelessWidget {
   final FluxForm? form;
-  final Widget child;
+  final Widget? child;
+  final List<Widget>? children;
   final VoidCallback? onSubmit;
   final bool autoValidate;
   final bool closeKeyboardOnTap;
 
   const FxForm({
     super.key,
-    required this.child,
+    this.child,
+    this.children,
     this.form,
     this.onSubmit,
     this.autoValidate = true,
     this.closeKeyboardOnTap = true,
-  });
+  }) : assert(child != null || children != null, 'Either child or children must be provided');
 
   void _handleSubmit(BuildContext context) {
     // Dismiss keyboard
@@ -49,7 +51,10 @@ class FxForm extends StatelessWidget {
         return _FormScope(
           form: form,
           onSubmit: () => _handleSubmit(context),
-          child: child,
+          child: child ??
+              (children != null
+                  ? Fx.col(children: children!)
+                  : const SizedBox.shrink()),
         );
       }),
     );

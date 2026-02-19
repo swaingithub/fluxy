@@ -26,22 +26,28 @@ example/linux/
 example/macos/
 example/build/
 example/.dart_tool/
+example/.flutter-plugins
+example/.flutter-plugins-dependencies
+example/.metadata
+example/.idea/
+example/*.iml
 example/pubspec.lock
 
 # Local Dev Files
 /ota/
 lib/features/
 *.log
+*.iml
+.DS_Store
+Thumbs.db
 publish_dry_run.txt
 analysis_check.txt
 dry_run_output.txt
 
 # Exclude specific heavy example components to keep package light
-# if they are not essential for the published library example
 example/lib/dashboard_mock.dart
 example/lib/design_system_demo.dart
 example/lib/fluxy_play.dart
 example/lib/marketplace_data.dart
 example/lib/responsive_demo.dart
 example/lib/state_management_demo.dart
-example/pubspec.lock

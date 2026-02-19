@@ -1,3 +1,56 @@
+## 0.2.4 - The Stability-First Engineering Engine
+
+*   **Data Visualization Primitives**: 
+    *   Introduced `Fx.chart()`, a high-performance, reactive charting primitive.
+    *   Supports Bar and Line charts with automatic layout and entry animations.
+    *   Accepts `Flux<List<FxChartPoint>>` for zero-boilerplate reactive charting.
+*   **Universal Style Engine™**: 
+    *   Mirrored all widget modifiers (like `.glass()`, `.blur()`, `.italic()`) into the `FxStyle` object.
+    *   This enables high-fidelity interactive styles where `onHover` effects can access the full visual power of the framework.
+*   **Automatic State Persistence**:
+    *   New `flux()` factory parameters: `key` and `persist: true`.
+    *   Magically serializes state to local storage without extra boilerplate.
+*   **Semantic Theme Proxies**:
+    *   Introduced `Fx.primary`, `Fx.secondary`, `Fx.success`, etc., as global color getters that automatically resolve against the current theme context.
+*   **Intelligence Layout Guards (Flex Solvers)**:
+    *   `FxRow` and `FxCol` now proactively detect "Infinite Constraint" violations when placed inside scrollables and auto-repair cross-axis stretching to prevent crashes.
+*   **Fused Interaction API**:
+    *   Introduced `.pressScale()`, a premium interaction modifier that fuses haptic feedback with a subtle scale-down effect.
+*   **Feature Extension**:
+    *   Added `Fx.safeArea()` static primitive and `.safeArea()` fluent modifier with full property control.
+
+*   **Fluxy Stability Kernel™ (Full Release)**:
+    *   **Layout Guard**: Proactively intercepts and auto-repairs "Unbounded Height/Width" and "Dual Infinity" crashes.
+    *   **Sliver-Aware Fx Builder**: Fixed a critical crash where `Fx()` used inside a `CustomScrollView` would fail with a `RenderBox vs RenderSliver` violation. The builder now automatically detects slivers and bypasses box-based guards safely.
+    *   **Relaxed & Strict Modes**: Introduced `FluxyLayoutGuard.strictMode` for precision development debugging.
+    *   **State Guard**: Detects and breaks rebuild loops and audits reactive subscribers in real-time.
+    *   **Async Guard**: Protects against "Async Dispose Races" by automatically canceling callbacks.
+    *   **Data Guard**: Native support for **Self-Healing Data** via `.retry()` and `.swr()` caching.
+    *   **Interaction Guard**: Prevents "Double-Tap Ghosting" with built-in debouncing logic.
+    *   **Semantic Error Mapping**: Improved translation of complex Flutter errors into human-readable Fluxy Alerts.
+*   **Next-Gen Viewport Architecture**:
+    *   **`Fx.scrollCenter()`**: New layout primitive for centered content without infinity crashes.
+    *   **`Fx.viewport`**: Direct access to CustomScrollView with native stability guards.
+    *   **`Fx.sliver`**: Universal sliver adapter for using any Widget safely inside Sliver layouts.
+*   **Advanced Native Primitives**:
+    *   **`Fx.infiniteList`**: Standardized, high-performance infinite scrolling.
+    *   **`Fx.refresh`**: Premium Pull-To-Refresh wrapper integrated into the Fx DSL.
+    *   **`Fx.parallax`**: High-performance scroll-linked motion for background layers.
+    *   **`Fx.safeArea`**: Full-control Safe Area primitive and `.safeArea()` modifier.
+*   **Professional Interaction & Motion**:
+    *   **Global Haptic Engine**: Native feedback modifiers (`.hapticLight()`, etc.).
+    *   **Animation Presets**: Launched `.fadeIn()`, `.slideUp()`, and `.zoomIn()` for 10x faster motion design.
+    *   **`Fx.reveal`**: Orchestrated stagger entrance animations for list children.
+*   **Stability DevTools**:
+    *   **Metrics Dashboard**: Real-time visualization of "Stability Saves".
+    *   **Auto-Repair Log**: Detailed history of every automatic fix performed by the kernel.
+*   **Quality of Life**:
+    *   **Lift Engine Optimization**: Better handling of nested `Positioned` and `Expanded` modifiers.
+    *   **Recursive Shadow Detection**: Fixed edge-case stack overflows in style merging.
+    *   Added `ScrollController` support to `Fx.list`.
+    *   Exposed `Spring` configurations globally via `Fx.spring`.
+    *   Internal stability fixes and minor performance improvements.
+
 ## 0.2.3 - DevTools Overhaul & 1.0 Stability Prep
 
 *   **Premium DevTools Overhaul**: 

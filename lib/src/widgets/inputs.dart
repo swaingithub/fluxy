@@ -3,8 +3,10 @@ import 'package:flutter/services.dart';
 import '../reactive/signal.dart';
 import '../dsl/fx.dart';
 import '../reactive/forms.dart';
+import '../engine/style_resolver.dart';
 
 import '../widgets/fx_widget.dart';
+import 'box.dart';
 
 /// Reactive TextField that binds directly to a Flux/Signal.
 class FxTextField extends FxWidget {
@@ -152,6 +154,9 @@ class _FxTextFieldState extends State<FxTextField> {
   Widget build(BuildContext context) {
     // Reactive build wrapper to listen for validation state
     return Fx(() {
+      final resolvedStyle = FxStyleResolver.resolve(context,
+          style: widget.style, className: widget.className);
+
       String? errorText;
 
       // Auto-validation integration
@@ -163,41 +168,69 @@ class _FxTextFieldState extends State<FxTextField> {
         }
       }
 
-      final defaultDecoration = InputDecoration(
+      // 1. Separate Structural Styles vs Text Styles
+      // We interpret FxStyle on FxTextField as styling the CONTAINER (Box),
+      // except for text-specific props like color/fontSize which go to the text.
+      final structuralStyle = resolvedStyle; 
+      
+      // 2. Build Decoration
+      // If the user provides a style with border/bg, we let Box handle it.
+      // We set InputDecoration to minimal to avoid double borders,
+      // UNLESS the user explicitly didn't style the box, then we might want default Flutter look?
+      // But Fluxy philosophy is "Box is the shell".
+      // So we default to InputBorder.none and let Box handle the look.
+      
+      final inputDecoration = (widget.decoration ?? const InputDecoration()).copyWith(
         labelText: widget.label,
         hintText: widget.placeholder,
         prefixIcon: widget.icon != null ? Icon(widget.icon) : null,
-        border: const OutlineInputBorder(),
         errorText: errorText,
+        // Allow user to override borders if they explicitly pass a decoration with borders
+        border: widget.decoration?.border ?? InputBorder.none,
+        enabledBorder: widget.decoration?.enabledBorder ?? InputBorder.none,
+        focusedBorder: widget.decoration?.focusedBorder ?? InputBorder.none,
+        errorBorder: widget.decoration?.errorBorder ?? InputBorder.none,
+        focusedErrorBorder: widget.decoration?.focusedErrorBorder ?? InputBorder.none,
+        filled: widget.decoration?.filled ?? false,
+        contentPadding: resolvedStyle.padding == EdgeInsets.zero 
+            ? const EdgeInsets.symmetric(horizontal: 12, vertical: 12)
+            : resolvedStyle.padding,
       );
 
-      return TextField(
-        controller: _controller,
-        obscureText: widget.obscureText,
-        style: widget.textStyle,
-        keyboardType: widget.keyboardType,
-        maxLines: widget.maxLines,
-        inputFormatters: widget.inputFormatters,
-        focusNode: widget.focusNode,
-        decoration:
-            widget.decoration?.copyWith(
-              labelText: widget.label,
-              prefixIcon: widget.icon != null ? Icon(widget.icon) : null,
-              errorText: errorText,
-            ) ??
-            defaultDecoration,
-        onSubmitted: (_) {
-          if (widget.signal is FluxField) {
-            (widget.signal as FluxField).touch();
-          }
-          widget.onSubmitted?.call();
-        },
-        onTapOutside: (_) {
-          if (widget.signal is FluxField) {
-            (widget.signal as FluxField).touch();
-          }
-          FocusScope.of(context).unfocus();
-        },
+      return Box(
+        style: structuralStyle.copyWith(
+          // We moved padding to contentPadding for better alignment, 
+          // so remove it from Box to avoid double padding.
+          padding: EdgeInsets.zero, 
+          width: structuralStyle.width ?? (structuralStyle.flex != null ? null : double.infinity), // Default to full width if not flex
+        ),
+        child: TextField(
+          controller: _controller,
+          obscureText: widget.obscureText,
+          style: TextStyle(
+            color: resolvedStyle.color,
+            fontSize: resolvedStyle.fontSize,
+            fontWeight: resolvedStyle.fontWeight,
+            fontFamily: resolvedStyle.fontFamily,
+          ),
+          keyboardType: widget.keyboardType,
+          maxLines: widget.maxLines,
+          inputFormatters: widget.inputFormatters,
+          focusNode: widget.focusNode,
+          decoration: inputDecoration,
+          onSubmitted: (_) {
+            if (widget.signal is FluxField) {
+              (widget.signal as FluxField).touch();
+            }
+            widget.onSubmitted?.call();
+          },
+          onTapOutside: (_) {
+            if (widget.signal is FluxField) {
+              (widget.signal as FluxField).touch();
+            }
+            FocusScope.of(context).unfocus();
+          },
+        ),
       );
     });
   }

@@ -16,19 +16,35 @@ class FluxyError {
 
   /// Reports an error to the pipeline.
   static void report(Object error, [StackTrace? stack]) {
+    final translated = _translateError(error);
+    
     debugPrint("-------------------------------------------");
-    debugPrint("🔴 Fluxy Error Captured:");
-    debugPrint(error.toString());
-    if (stack != null) debugPrint(stack.toString());
+    debugPrint(translated != null ? translated : "🔴 Fluxy Error Captured:");
+    if (translated == null) debugPrint(error.toString());
+    if (stack != null && translated == null) debugPrint(stack.toString());
     debugPrint("-------------------------------------------");
 
     for (var handler in _handlers) {
       try {
-        handler(error, stack);
+        handler(translated ?? error, stack);
       } catch (e) {
         debugPrint("❌ Error in FluxyErrorHandler: $e");
       }
     }
+  }
+
+  static String? _translateError(Object error) {
+    final msg = error.toString();
+    if (msg.contains("RenderBox was not laid out") || msg.contains("has infinite height") || msg.contains("vertical viewport was given unbounded height")) {
+      return "🔴 Fluxy Layout Alert: You are using .hFull() or .wFull() inside an FxScroll or similar scrollable. This causes infinite constraints. Use .h(minHeight) or Fx.scrollCenter() instead.";
+    }
+    if (msg.contains("ParentDataWidget") && msg.contains("Positioned")) {
+      return "🔴 Fluxy Layout Alert: You are using .positioned() on a widget that is not a direct child of a Stack. Flutter requires Positioned to be a direct child of Stack. Fluxy tries to lift this automatically, but check your hierarchy.";
+    }
+    if (msg.contains("ParentDataWidget") && (msg.contains("Expanded") || msg.contains("Flexible"))) {
+      return "🔴 Fluxy Layout Alert: You are using .expanded() or .flex() outside of a Row, Column, or Flex. These widgets only work in flex containers.";
+    }
+    return null;
   }
 
   /// Hooks into Flutter's global error reporting.

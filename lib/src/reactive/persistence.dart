@@ -157,9 +157,10 @@ class HydrationMiddleware extends FluxyMiddleware {
 /// Previously known as PersistentSignal.
 class PersistentFlux<T> extends Flux<T> {
   final PersistenceConfig config;
+  final T Function(dynamic json)? fromJson;
   Timer? _debounceTimer;
 
-  PersistentFlux(super.initialValue, this.config, {super.label}) {
+  PersistentFlux(super.initialValue, this.config, {super.label, this.fromJson}) {
     FluxyPersistence._register(this);
     if (config.autoLoad) {
       load();
@@ -174,7 +175,11 @@ class PersistentFlux<T> extends Flux<T> {
     );
     if (stored != null) {
       try {
-        value = stored as T;
+        if (fromJson != null) {
+          value = fromJson!(stored);
+        } else {
+          value = stored as T;
+        }
       } catch (e) {
         debugPrint(
           "Fluxy [Persistence] Type mismatch for key '${config.key}': $e",

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/physics.dart';
+import '../engine/lift_engine.dart';
 
 /// Physics configuration for spring animations.
 /// Designed to feel "alive" and responsive.
@@ -141,11 +142,12 @@ class _FxMotionState extends State<FxMotion>
     return AnimatedBuilder(
       animation: anim,
       builder: (context, child) {
-        Widget result = child!;
+        Widget result = child ?? const SizedBox.shrink();
 
         if (widget.fade != null) {
+          final opacityVal = Tween<double>(begin: widget.fade, end: 1.0).evaluate(anim);
           result = Opacity(
-            opacity: Tween<double>(begin: widget.fade, end: 1.0).evaluate(anim),
+            opacity: opacityVal.clamp(0.0, 1.0),
             child: result,
           );
         }
@@ -208,92 +210,93 @@ extension FxMotionExtension on Widget {
     bool repeat = false,
     bool reverse = false,
   }) {
-    final self = this;
+    return FxLift.lift(this, (child) {
+      Duration? actualDuration;
+      if (duration is Duration) {
+        actualDuration = duration;
+      } else if (duration is num) {
+        actualDuration = Duration(milliseconds: (duration * 1000).toInt());
+      }
 
-    // --- Structural Recursion for ParentDataWidgets ---
-    if (self is Expanded) {
-      return Expanded(
-        flex: self.flex,
-        child: self.child.animate(
+      return FxMotion(
+        duration: actualDuration ?? const Duration(milliseconds: 400),
+        curve: curve ?? Curves.easeOutCubic,
+        spring: spring,
+        delay: delay,
+        autoStart: autoStart,
+        fade: fade,
+        slide: slide,
+        scale: scale,
+        rotate: rotate,
+        repeat: repeat,
+        reverse: reverse,
+        child: child,
+      );
+    });
+  }
+
+  /// Preset: Fades the widget in.
+  Widget fadeIn({Object? duration, double? delay, Curve? curve}) =>
+      animate(fade: 0.0, duration: duration, delay: delay, curve: curve);
+
+  /// Preset: Slides the widget up from the bottom.
+  Widget slideUp({double offset = 30, Object? duration, double? delay, Curve? curve}) =>
+      animate(slide: Offset(0, offset), duration: duration, delay: delay, curve: curve);
+
+  /// Preset: Slides the widget down from the top.
+  Widget slideDown({double offset = 30, Object? duration, double? delay, Curve? curve}) =>
+      animate(slide: Offset(0, -offset), duration: duration, delay: delay, curve: curve);
+
+  /// Preset: Slides the widget in from the left.
+  Widget slideLeft({double offset = 30, Object? duration, double? delay, Curve? curve}) =>
+      animate(slide: Offset(-offset, 0), duration: duration, delay: delay, curve: curve);
+
+  /// Preset: Slides the widget in from the right.
+  Widget slideRight({double offset = 30, Object? duration, double? delay, Curve? curve}) =>
+      animate(slide: Offset(offset, 0), duration: duration, delay: delay, curve: curve);
+
+  /// Preset: Zooms the widget in from a small scale.
+  Widget zoomIn({double scale = 0.8, Object? duration, double? delay, Curve? curve}) =>
+      animate(scale: scale, duration: duration, delay: delay, curve: curve);
+
+  /// Preset: Zooms the widget out from a larger scale.
+  Widget zoomOut({double scale = 1.2, Object? duration, double? delay, Curve? curve}) =>
+      animate(scale: scale, duration: duration, delay: delay, curve: curve);
+}
+
+/// A specialized animated widget for revealing list items with staggered intervals.
+class FxReveal extends StatelessWidget {
+  final List<Widget> children;
+  final Duration interval;
+  final Duration duration;
+  final Curve curve;
+  final double? slide;
+  final double? fade;
+
+  const FxReveal({
+    super.key,
+    required this.children,
+    this.interval = const Duration(milliseconds: 50),
+    this.duration = const Duration(milliseconds: 400),
+    this.curve = Curves.easeOutCubic,
+    this.slide = 20,
+    this.fade = 0,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: List.generate(children.length, (index) {
+        return children[index].animate(
+          delay: (index * interval.inMilliseconds) / 1000,
           duration: duration,
           curve: curve,
-          spring: spring,
-          delay: delay,
-          autoStart: autoStart,
           fade: fade,
-          slide: slide,
-          scale: scale,
-          rotate: rotate,
-          repeat: repeat,
-          reverse: reverse,
-        ),
-      );
-    }
-
-    if (self is Flexible) {
-      return Flexible(
-        flex: self.flex,
-        fit: self.fit,
-        child: self.child.animate(
-          duration: duration,
-          curve: curve,
-          spring: spring,
-          delay: delay,
-          autoStart: autoStart,
-          fade: fade,
-          slide: slide,
-          scale: scale,
-          rotate: rotate,
-          repeat: repeat,
-          reverse: reverse,
-        ),
-      );
-    }
-
-    if (self is Positioned) {
-      return Positioned(
-        left: self.left,
-        top: self.top,
-        right: self.right,
-        bottom: self.bottom,
-        width: self.width,
-        height: self.height,
-        child: self.child.animate(
-          duration: duration,
-          curve: curve,
-          spring: spring,
-          delay: delay,
-          autoStart: autoStart,
-          fade: fade,
-          slide: slide,
-          scale: scale,
-          rotate: rotate,
-          repeat: repeat,
-          reverse: reverse,
-        ),
-      );
-    }
-
-    Duration? actualDuration;
-    if (duration is Duration) {
-      actualDuration = duration;
-    } else if (duration is num) {
-      actualDuration = Duration(milliseconds: (duration * 1000).toInt());
-    }
-
-    return FxMotion(
-      duration: actualDuration ?? const Duration(milliseconds: 400),
-      curve: curve ?? Curves.easeOutCubic,
-      spring: spring,
-      delay: delay,
-      autoStart: autoStart,
-      fade: fade,
-      slide: slide,
-      scale: scale,
-      rotate: rotate,
-      repeat: repeat,
-      reverse: reverse,
-      child: this,
+          slide: slide != null ? Offset(0, slide!) : null,
+        );
+      }),
     );
   }
 }

@@ -7,6 +7,8 @@ import 'dart:convert';
 import '../reactive/signal.dart';
 import '../di/fluxy_di.dart';
 import '../networking/fluxy_http.dart';
+import '../engine/layout_guard.dart';
+import '../engine/stability/stability_metrics.dart';
 
 /// The Fluxy Debug Inspector & DevTools (Premium Version).
 /// Provides real-time visibility into Fluxes, DI Registry, and Network.
@@ -202,7 +204,7 @@ class _FluxyDevToolsState extends State<FluxyDevTools> {
                   builder: (context, _, child) {
                     return Stack(
                       children: [
-                        child!,
+                        child ?? const SizedBox.shrink(),
                         
 
 
@@ -481,7 +483,7 @@ class _FluxyDevToolsState extends State<FluxyDevTools> {
   }
 
   Widget _buildTabBar() {
-    final tabs = ["Fluxes", "DI Container", "Network", "Timeline"];
+    final tabs = ["Fluxes", "DI Container", "Network", "Stability", "Timeline"];
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10),
       height: 50,
@@ -523,9 +525,130 @@ class _FluxyDevToolsState extends State<FluxyDevTools> {
       case 0: return _buildFluxList();
       case 1: return _buildDIList();
       case 2: return _buildNetworkList();
-      case 3: return _buildTimeline();
+      case 3: return _buildStabilityTab();
+      case 4: return _buildTimeline();
       default: return const SizedBox.shrink();
     }
+  }
+
+  Widget _buildStabilityTab() {
+    final s = FluxyStabilityMetrics.getSummary();
+    final violations = FluxyLayoutGuard.violations;
+
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text("Stability Kernel Status", 
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
+          const SizedBox(height: 8),
+          const Text("Live stats of automatic repairs and crash preventions.", 
+            style: TextStyle(color: Colors.white38, fontSize: 11)),
+          
+          const SizedBox(height: 20),
+          
+          // Metrics Grid
+          GridView.count(
+            crossAxisCount: 2,
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            mainAxisSpacing: 10,
+            crossAxisSpacing: 10,
+            childAspectRatio: 2.2,
+            children: [
+              _buildMetricCard("Layout Saves", s['layout_fixes'] ?? 0, Colors.blueAccent),
+              _buildMetricCard("Viewport Saves", s['viewport_fixes'] ?? 0, Colors.orangeAccent),
+              _buildMetricCard("State Saves", s['state_fixes'] ?? 0, Colors.redAccent),
+              _buildMetricCard("Async Saves", s['async_fixes'] ?? 0, Colors.purpleAccent),
+            ],
+          ),
+
+          const SizedBox(height: 24),
+          
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text("Recent Auto-Repairs", 
+                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14)),
+              _buildIconButton(
+                icon: Icons.delete_sweep_rounded,
+                onPressed: () => setState(() => FluxyLayoutGuard.clearLogs()),
+                color: Colors.white24,
+                tooltip: "Clear Logs",
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          
+          if (violations.isEmpty)
+            _buildEmpty("No layout violations detected. Your UI is healthy! 🚀")
+          else
+            ...violations.map((log) {
+              final parts = log.split('] -> ');
+              final violation = parts[0].replaceAll('[', '');
+              final fix = parts.length > 1 ? parts[1] : "";
+
+              return Container(
+                margin: const EdgeInsets.only(bottom: 12),
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.03),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        const Icon(Icons.shield_rounded, color: Colors.greenAccent, size: 14),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            violation,
+                            style: const TextStyle(color: Colors.blueAccent, fontWeight: FontWeight.bold, fontSize: 12),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(color: Colors.black26, borderRadius: BorderRadius.circular(6)),
+                      child: Text(
+                        fix,
+                        style: const TextStyle(color: Colors.white70, fontSize: 10, fontFamily: 'monospace'),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }).toList(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMetricCard(String label, int value, Color color) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.05),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: color.withValues(alpha: 0.15)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(label, style: TextStyle(color: color.withValues(alpha: 0.7), fontSize: 10, fontWeight: FontWeight.bold)),
+          const SizedBox(height: 4),
+          Text(value.toString(), style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w900, fontFamily: 'monospace')),
+        ],
+      ),
+    );
   }
 
   Widget _buildFluxList() {

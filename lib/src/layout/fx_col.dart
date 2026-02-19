@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import '../styles/style.dart';
 import '../engine/style_resolver.dart';
 import '../engine/decoration_builder.dart';
+import '../engine/layout_guard.dart';
 
 class FxCol extends StatelessWidget {
   final List<Widget> children;
@@ -18,12 +19,13 @@ class FxCol extends StatelessWidget {
     this.items = CrossAxisAlignment.center,
     this.gap = 0,
     this.style = FxStyle.none,
-    this.size = MainAxisSize.max,
+    this.size = MainAxisSize.min,
   });
 
   @override
   Widget build(BuildContext context) {
     final s = FxStyleResolver.resolve(context, style: style);
+    final resolvedItems = FluxyLayoutGuard.guardCrossAxis(context, Axis.vertical, items);
     
     Widget content;
     if (gap > 0) {
@@ -34,18 +36,24 @@ class FxCol extends StatelessWidget {
           spacedChildren.add(SizedBox(height: gap));
         }
       }
-      content = Column(
-        mainAxisAlignment: justify,
-        crossAxisAlignment: items,
-        mainAxisSize: size,
-        children: spacedChildren,
+      content = FxFlexInfo(
+        direction: Axis.vertical,
+        child: Column(
+          mainAxisAlignment: justify,
+          crossAxisAlignment: resolvedItems,
+          mainAxisSize: size,
+          children: spacedChildren,
+        ),
       );
     } else {
-      content = Column(
-        mainAxisAlignment: justify,
-        crossAxisAlignment: items,
-        mainAxisSize: size,
-        children: children,
+      content = FxFlexInfo(
+        direction: Axis.vertical,
+        child: Column(
+          mainAxisAlignment: justify,
+          crossAxisAlignment: resolvedItems,
+          mainAxisSize: size,
+          children: children,
+        ),
       );
     }
 
@@ -61,7 +69,12 @@ class FxCol extends StatelessWidget {
     }
 
     if (s.flex != null) {
-      content = Expanded(flex: s.flex!, child: content);
+      content = FxSafeExpansion(
+        flex: s.flex!,
+        direction: Axis.vertical,
+        fit: FlexFit.tight,
+        child: content,
+      );
     }
 
     return content;

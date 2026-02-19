@@ -1,4 +1,4 @@
-# Fluxy: The Application Framework for Flutter
+# Fluxy: The Stability-First Engineering Engine
 
 Fluxy is a comprehensive, production-grade application platform designed to unify the entire development lifecycle. It provides a complete structural foundation, moving beyond simple state management to offer native high-performance networking, atomic reactivity, lifecycle controllers, offline-first repositories, and integrated developer tooling.
 
@@ -68,7 +68,16 @@ class AuthController extends FluxController {
 The framework includes a premium debugging interface available in non-release modes.
 *   **DI Container Inspection**: Review active dependencies and their lifecycle scopes.
 *   **Network Activity Monitoring**: Track real-time network requests and payloads.
-*   **Reactive Timeline**: Inspect state updates throughout the application lifecycle.
+*   **Stability Dashboard**: Real-time visualization of auto-repaired layout violations and stability metrics.
+
+### 4. Fluxy Stability Kernel™ (SafeUI)
+Fluxy proactively prevents 80% of common Flutter layout crashes (unbounded height/width, nested scrollables) by introducing framework-level safeguards and an auto-repair engine.
+*   **Auto-Constraint Enforcement**: Widgets automatically fallback to safe dimensions in unbounded contexts.
+*   **Flex Solver Intelligence**: Automatically repairs "Infinite Constraint" violations in `FxRow` and `FxCol` when stretching inside scrollables.
+*   **Real-time Repairs**: All layout corrections are logged and visible in the Fluxy Inspector.
+
+### 5. Universal Style Engine™
+Fluxy mirrors all visual modifiers into the `FxStyle` object, enabling high-fidelity interactive state modeling. Use the same modifiers in `onHover` or `onPressed` builders that you use on the widgets themselves.
 
 ---
 
@@ -79,7 +88,7 @@ Add Fluxy to your project's dependencies:
 
 ```yaml
 dependencies:
-  fluxy: ^0.2.3
+  fluxy: ^0.2.4
 ```
 
 ### 1. Framework Initialization
@@ -88,7 +97,7 @@ void main() async {
   await Fluxy.init(); // Initialize persistence and framework engines
   
   runApp(
-    Fluxy.debug( // Enable professional devtools
+    Fluxy.debug( // Enable professional devtools + Layout Guard
       child: FluxyApp(
         initialRoute: homeRoutes.first,
         routes: [...homeRoutes],
@@ -98,23 +107,22 @@ void main() async {
 }
 ```
 
-### 2. Atomic Reactivity
+### 2. Atomic Reactivity & Magical Persistence
 ```dart
-final count = flux(0, label: "Counter"); // 'label' makes it readable in DevTools
+// Automatic offline-first persistence with one flag
+final balance = flux(100.0, key: "user_balance", persist: true); 
 
-Fx(() => Fx.text("Current Value: ${count.value}")).center()
+Fx(() => Fx.text("Balance: ${balance.value}")).center()
 ```
 
-### 3. Declarative Styling DSL
-Construct complex interfaces with a highly efficient, modifier-based syntax.
+### 3. Data Visualization (Fx.chart)
+Create high-performance, reactive charts with zero boilerplate.
 
 ```dart
-Fx.box()
-  .w(300).h(200).p(16)
-  .glass(10).rounded(24)
-  .background(Colors.indigo)
-  .animate(fade: 0.0, slide: const Offset(0, 0.2))
-  .child(Fx.text("Professional UI").bold().whiteText())
+Fx.chart(
+  data: mySignal, 
+  type: FxChartType.line
+).h(250).pressScale()
 ```
 
 ---
@@ -123,12 +131,14 @@ Fx.box()
 
 | Feature | Description |
 | :--- | :--- |
-| **Native Networking** | High-performance, zero-dependency HTTP client with integrated logging. |
-| **Architectural Scaffolding** | CLI-driven generation of feature domains, layouts, and models. |
-| **Atomic Reactivity** | Fine-grained state management with zero-rebuild overhead. |
-| **Scoped Dependency Injection** | Managed dependency lifecycles (App, Route, Factory) with cleanup. |
-| **Unified Error Pipeline** | Centralized global error handling for production stability. |
-| **Integrated Inspector** | Real-time debugging interface for DI, Networking, and State. |
+| **Stability Kernel™** | Full-stack crash protection: Layout, State, Async, Data, and Interaction guards. |
+| **Data Visualization** | High-performance, reactive Bar and Line charts with smooth entrance animations. |
+| **Style Engine™** | Modifier parity across widgets and styles for high-fidelity interactive design. |
+| **Magical Persistence** | Automatic state serialization and hydration via the `persist: true` flag. |
+| **Viewport Architecture** | Native support for robust, scrollable layouts via `Fx.viewport`, `Fx.scrollCenter`, and `Fx.sliver`. |
+| **Motion DSL** | Physics-based animation presets and orchestrated staggered reveals. |
+| **Semantic Proxies** | Global theme-aware color getters (`Fx.primary`, `Fx.success`) for rapid styling. |
+| **Native Primitives** | Premium Infinite List, Parallax, and Pull-to-Refresh with zero boilerplate. |
 
 ---
 

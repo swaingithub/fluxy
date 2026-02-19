@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import '../styles/style.dart';
 import '../engine/style_resolver.dart';
 import '../engine/decoration_builder.dart';
+import '../engine/layout_guard.dart';
 
 import '../widgets/fx_widget.dart';
 
@@ -16,6 +17,7 @@ class ListBox extends FxWidget {
   final bool shrinkWrap;
   final double? gap;
   final VoidCallback? onTap;
+  final ScrollController? controller;
 
   const ListBox({
     super.key,
@@ -31,6 +33,7 @@ class ListBox extends FxWidget {
     this.shrinkWrap = false,
     this.gap,
     this.onTap,
+    this.controller,
   });
 
   @override
@@ -57,6 +60,7 @@ class ListBox extends FxWidget {
     bool? shrinkWrap,
     double? gap,
     VoidCallback? onTap,
+    ScrollController? controller,
   }) {
     return ListBox(
       key: key,
@@ -72,6 +76,7 @@ class ListBox extends FxWidget {
       shrinkWrap: shrinkWrap ?? this.shrinkWrap,
       gap: gap ?? this.gap,
       onTap: onTap ?? this.onTap,
+      controller: controller ?? this.controller,
     );
   }
 
@@ -89,50 +94,64 @@ class _ListBoxState extends State<ListBox> {
       responsive: widget.responsive,
     );
 
-    final effectiveGap = widget.gap ?? s.gap ?? 0;
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final effectiveGap = widget.gap ?? s.gap ?? 0;
 
-    // Determine builder methodology
-    final bool useBuilder = widget.itemCount != null && widget.itemBuilder != null;
-    final int count = useBuilder ? widget.itemCount! : (widget.children?.length ?? 0);
-    final IndexedWidgetBuilder builder = useBuilder
-        ? widget.itemBuilder!
-        : (context, index) => widget.children![index];
+        // Determine builder methodology
+        final bool useBuilder = widget.itemCount != null && widget.itemBuilder != null;
+        final int count = useBuilder ? widget.itemCount! : (widget.children?.length ?? 0);
+        final IndexedWidgetBuilder builder = useBuilder
+            ? widget.itemBuilder!
+            : (context, index) => widget.children![index];
 
-    Widget current = ListView.separated(
-      scrollDirection: widget.scrollDirection,
-      physics: widget.physics,
-      shrinkWrap: widget.shrinkWrap,
-      padding: s.padding, // Apply padding to content
-      itemCount: count,
-      itemBuilder: builder,
-      separatorBuilder: (context, index) => effectiveGap > 0
-          ? (widget.scrollDirection == Axis.vertical
-                ? SizedBox(height: effectiveGap)
-                : SizedBox(width: effectiveGap))
-          : const SizedBox.shrink(),
+        // --- Resilience Logic: Evaluate safety policy ---
+        final policy = FluxyLayoutGuard.evaluateScrollable(constraints, widget.scrollDirection);
+        
+        // Auto-fix: Force shrinkWrap if policy dictates (inside an unbounded container)
+        final bool effectiveShrinkWrap = widget.shrinkWrap || policy.useShrinkWrap;
+        final ScrollPhysics? effectivePhysics = policy.physics ?? widget.physics;
+
+        Widget current = ListView.separated(
+          controller: widget.controller,
+          scrollDirection: widget.scrollDirection,
+          physics: effectivePhysics,
+          shrinkWrap: effectiveShrinkWrap,
+          padding: s.padding, // Apply padding to content
+          itemCount: count,
+          itemBuilder: builder,
+          separatorBuilder: (context, index) => effectiveGap > 0
+              ? (widget.scrollDirection == Axis.vertical
+                    ? SizedBox(height: effectiveGap)
+                    : SizedBox(width: effectiveGap))
+              : const SizedBox.shrink(),
+        );
+
+        // Apply wrapper style if necessary (bg, border, margin, size)
+        // Note: We do NOT apply padding here as it was applied to ListView
+        if (FxDecorationBuilder.hasVisuals(s) ||
+            s.width != null ||
+            s.height != null ||
+            s.margin != EdgeInsets.zero) {
+          current = Container(
+            width: s.width,
+            height: s.height,
+            margin: s.margin,
+            decoration: FxDecorationBuilder.build(s),
+            child: current,
+          );
+        }
+
+        if (s.flex != null) {
+          if (FluxyLayoutGuard.canExpand(constraints, widget.scrollDirection)) {
+            current = Expanded(flex: s.flex!, child: current);
+          }
+        }
+
+        return widget.onTap != null
+            ? GestureDetector(onTap: widget.onTap, child: current)
+            : current;
+      },
     );
-
-    // Apply wrapper style if necessary (bg, border, margin, size)
-    // Note: We do NOT apply padding here as it was applied to ListView
-    if (FxDecorationBuilder.hasVisuals(s) ||
-        s.width != null ||
-        s.height != null ||
-        s.margin != EdgeInsets.zero) {
-      current = Container(
-        width: s.width,
-        height: s.height,
-        margin: s.margin,
-        decoration: FxDecorationBuilder.build(s),
-        child: current,
-      );
-    }
-
-    if (s.flex != null) {
-      current = Expanded(flex: s.flex!, child: current);
-    }
-
-    return widget.onTap != null
-        ? GestureDetector(onTap: widget.onTap, child: current)
-        : current;
   }
 }

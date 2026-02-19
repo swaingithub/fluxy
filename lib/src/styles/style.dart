@@ -7,6 +7,10 @@ import '../responsive/breakpoint_resolver.dart';
 class FxStyle {
   final double? _width;
   final double? _height;
+  final double? _minWidth;
+  final double? _minHeight;
+  final double? _maxWidth;
+  final double? _maxHeight;
   final EdgeInsets? _padding;
   final EdgeInsets? _margin;
   final Color? backgroundColor;
@@ -87,6 +91,10 @@ class FxStyle {
   const FxStyle({
     double? width,
     double? height,
+    double? minWidth,
+    double? minHeight,
+    double? maxWidth,
+    double? maxHeight,
     EdgeInsets? padding,
     EdgeInsets? margin,
     this.backgroundColor,
@@ -147,6 +155,10 @@ class FxStyle {
     this.imageSrc,
   })  : _width = width,
         _height = height,
+        _minWidth = minWidth,
+        _minHeight = minHeight,
+        _maxWidth = maxWidth,
+        _maxHeight = maxHeight,
         _padding = padding,
         _margin = margin,
         _shadows = shadows,
@@ -166,6 +178,10 @@ class FxStyle {
   /// Getters to maintain compatibility
   double? get width => _width;
   double? get height => _height;
+  double? get minWidth => _minWidth;
+  double? get minHeight => _minHeight;
+  double? get maxWidth => _maxWidth;
+  double? get maxHeight => _maxHeight;
   EdgeInsets get padding => _padding ?? EdgeInsets.zero;
   EdgeInsets get margin => _margin ?? EdgeInsets.zero;
   List<BoxShadow>? get shadows => _shadows;
@@ -189,6 +205,12 @@ class FxStyle {
   FxStyle copyWith({
     double? width,
     double? height,
+    bool autoWidth = false,
+    bool autoHeight = false,
+    double? minWidth,
+    double? minHeight,
+    double? maxWidth,
+    double? maxHeight,
     EdgeInsets? padding,
     EdgeInsets? margin,
     Color? backgroundColor,
@@ -249,8 +271,12 @@ class FxStyle {
     String? imageSrc,
   }) {
     return FxStyle(
-      width: width ?? this.width,
-      height: height ?? this.height,
+      width: autoWidth ? null : (width ?? this.width),
+      height: autoHeight ? null : (height ?? this.height),
+      minWidth: minWidth ?? this.minWidth,
+      minHeight: minHeight ?? this.minHeight,
+      maxWidth: maxWidth ?? this.maxWidth,
+      maxHeight: maxHeight ?? this.maxHeight,
       padding: padding ?? _padding,
       margin: margin ?? _margin,
       backgroundColor: backgroundColor ?? this.backgroundColor,
@@ -318,6 +344,10 @@ class FxStyle {
     return copyWith(
       width: other.width,
       height: other.height,
+      minWidth: other.minWidth,
+      minHeight: other.minHeight,
+      maxWidth: other.maxWidth,
+      maxHeight: other.maxHeight,
       padding: other._padding == null || other._padding == EdgeInsets.zero
           ? null
           : other._padding,
@@ -390,6 +420,10 @@ class FxStyle {
           runtimeType == other.runtimeType &&
           width == other.width &&
           height == other.height &&
+          minWidth == other.minWidth &&
+          minHeight == other.minHeight &&
+          maxWidth == other.maxWidth &&
+          maxHeight == other.maxHeight &&
           _padding == other._padding &&
           _margin == other._margin &&
           backgroundColor == other.backgroundColor &&
@@ -437,6 +471,10 @@ class FxStyle {
   int get hashCode =>
       width.hashCode ^
       height.hashCode ^
+      minWidth.hashCode ^
+      minHeight.hashCode ^
+      maxWidth.hashCode ^
+      maxHeight.hashCode ^
       _padding.hashCode ^
       _margin.hashCode ^
       backgroundColor.hashCode ^

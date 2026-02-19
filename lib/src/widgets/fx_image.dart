@@ -136,8 +136,7 @@ class _FxImageState extends State<FxImage> with ReactiveSubscriberMixin {
       return Box(
         onTap: widget.onTap,
         style: s.copyWith(
-          // Don't pass down width/height to Box if we want Image to handle it?
-          // Actually Box should handle the outer constraints.
+          clipBehavior: s.clipBehavior ?? (s.borderRadius != null ? Clip.antiAlias : null),
         ),
         child: image,
       );

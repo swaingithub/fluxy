@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluxy/fluxy.dart';
+import 'stability_demo.dart';
 
 void main() async {
   await Fluxy.init(); // Setup Hydration & Middleware
@@ -116,8 +117,11 @@ class FluxyShowcase extends StatelessWidget {
                 ],
               ).animate(fade: 0.0, slide: const Offset(0, 0.2), delay: 0.2),
 
-              // Showcase: Background Worker & Overlay
-              Fx.button(
+              Fx.row(
+                justify: MainAxisAlignment.center,
+                gap: 12,
+                children: [
+                  Fx.button(
                     "DEPLOY WORKER",
                     onTap: () async {
                       Fx.loader.show(label: "Processing State...");
@@ -126,10 +130,19 @@ class FluxyShowcase extends StatelessWidget {
                       Fx.toast.success("Worker successfully handled the load!");
                     },
                   ).primary.rounded
+                  .sizeLg(),
+                  
+                  Fx.button(
+                    "STABILITY LAB",
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const StabilityDemo()),
+                    ),
+                  ).ghost
                   .sizeLg()
-                  .margin(10)
-                  .px(32)
-                  .animate(fade: 0.0, delay: 0.4),
+                  .textColor(Colors.cyanAccent),
+                ],
+              ).animate(fade: 0.0, delay: 0.4),
             ],
           ).center(), // Fluxy Center Redirection
         ],
@@ -146,7 +159,7 @@ class FluxyShowcase extends StatelessWidget {
     bool isPrimary = false,
     Color? color,
   }) {
-    final btn = Fx.box()
+    return Fx.box(onTap: onTap)
         .w(64)
         .h(64)
         .background(
@@ -163,8 +176,5 @@ class FluxyShowcase extends StatelessWidget {
                 : (isPrimary ? Colors.white : Colors.white70),
           ),
         );
-    
-    if (onTap == null) return btn;
-    return btn.onTap(onTap);
   }
 }

@@ -3,7 +3,6 @@ import 'package:flutter/widgets.dart';
 import '../styles/style.dart';
 import '../engine/style_resolver.dart';
 import '../engine/decoration_builder.dart';
-import '../engine/diff_engine.dart';
 import '../reactive/signal.dart';
 import 'fx_widget.dart';
 
@@ -70,8 +69,7 @@ class _BoxState extends State<Box> with ReactiveSubscriberMixin {
   @override
   String? get debugName => widget.id ?? "Box";
 
-  // Cache the resolved style and built widget
-  FxStyle? _lastResolvedBase;
+  // Cache the built widget
   Widget? _cachedWidget;
 
   @override
@@ -99,27 +97,15 @@ class _BoxState extends State<Box> with ReactiveSubscriberMixin {
         responsive: widget.responsive,
       );
 
-      final shouldRebuild =
-          _cachedWidget == null ||
-          DiffEngine.shouldRebuild(
-            oldStyle: _lastResolvedBase,
-            newStyle: base,
-            structuralChange: false,
-          );
-
-      _lastResolvedBase = base;
-
       final s = FxStyleResolver.resolveInteractive(
         base,
         isHovered: _isHovered,
         isPressed: _isPressed,
       );
 
-      if (shouldRebuild || _isHovered || _isPressed) {
-        _cachedWidget = _buildContent(s);
-      }
-
-      return _cachedWidget ?? const SizedBox.shrink();
+      _cachedWidget = _buildContent(s);
+      
+      return _cachedWidget!;
     } finally {
       FluxyReactiveContext.pop();
     }
@@ -179,6 +165,12 @@ class _BoxState extends State<Box> with ReactiveSubscriberMixin {
         duration: transitionVal,
         width: s.width,
         height: s.height,
+        constraints: BoxConstraints(
+          minWidth: s.minWidth ?? 0.0,
+          minHeight: s.minHeight ?? 0.0,
+          maxWidth: s.maxWidth ?? double.infinity,
+          maxHeight: s.maxHeight ?? double.infinity,
+        ),
         padding: s.padding,
         margin: s.margin,
         alignment: s.alignment,
@@ -190,6 +182,12 @@ class _BoxState extends State<Box> with ReactiveSubscriberMixin {
       current = Container(
         width: s.width,
         height: s.height,
+        constraints: BoxConstraints(
+          minWidth: s.minWidth ?? 0.0,
+          minHeight: s.minHeight ?? 0.0,
+          maxWidth: s.maxWidth ?? double.infinity,
+          maxHeight: s.maxHeight ?? double.infinity,
+        ),
         padding: s.padding,
         margin: s.margin,
         alignment: s.alignment,
@@ -242,7 +240,7 @@ class _BoxState extends State<Box> with ReactiveSubscriberMixin {
       direction: style.direction ?? Axis.vertical,
       mainAxisAlignment: style.justifyContent ?? MainAxisAlignment.start,
       crossAxisAlignment: style.alignItems ?? CrossAxisAlignment.center,
-      mainAxisSize: style.mainAxisSize ?? MainAxisSize.max,
+      mainAxisSize: style.mainAxisSize ?? MainAxisSize.min,
       children: [
         if (style.gap != null)
           ..._addGaps(

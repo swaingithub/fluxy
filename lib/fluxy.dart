@@ -38,8 +38,10 @@ export 'src/widgets/button.dart';
 export 'src/widgets/fx_image.dart';
 export 'src/widgets/badge.dart';
 export 'src/widgets/table.dart';
-export 'src/widgets/list_box.dart';
+export 'src/widgets/fx_chart.dart';
 export 'src/widgets/fx_form.dart'; // FxForm
+export 'src/widgets/scroll.dart'; // FxScroll
+export 'src/widgets/advanced.dart'; // FxRefresh, FxParallax, FxInfiniteList
 export 'src/feedback/overlays.dart'; // FxToast, FxLoader
 
 // Reactive Core
@@ -55,6 +57,7 @@ export 'src/data/repository.dart';
 export 'src/di/fluxy_di.dart';
 export 'src/routing/fluxy_router.dart';
 export 'src/engine/controller.dart';
+export 'src/engine/haptics.dart';
 export 'src/networking/fluxy_http.dart';
 
 // Responsive & Layout Engines
@@ -65,6 +68,9 @@ export 'src/engine/decoration_builder.dart';
 export 'src/engine/diff_engine.dart';
 export 'src/engine/plugin.dart';
 export 'src/engine/error_pipeline.dart';
+export 'src/engine/stability/stability.dart';
+export 'src/engine/stability/stability_metrics.dart';
+export 'src/test/stability_benchmarks.dart';
 
 // Debugging Tools
 export 'src/debug/debug_config.dart';
@@ -86,6 +92,8 @@ import 'src/reactive/signal.dart';
 import 'src/networking/fluxy_http.dart';
 import 'src/engine/plugin.dart';
 import 'src/engine/error_pipeline.dart';
+import 'src/engine/layout_guard.dart';
+import 'src/engine/stability/stability_metrics.dart';
 
 /// The global entry point for the Fluxy framework.
 class Fluxy {
@@ -182,6 +190,24 @@ class Fluxy {
   /// The global HTTP client for networking.
   static final http = FluxyHttp();
 
+  /// Enables or disables Strict Mode for the Layout Guard.
+  /// When true, layout violations throw an exception in development.
+  static void setStrictMode(bool enabled) => FluxyLayoutGuard.strictMode = enabled;
+
+  /// Prints a summary of all stability saves in the current session.
+  static void printStabilitySummary() {
+    final s = FluxyStabilityMetrics.getSummary();
+    debugPrint("-------------------------------------------");
+    debugPrint("🛡️ FLUXY STABILITY KERNEL SESSION SUMMARY");
+    debugPrint("-------------------------------------------");
+    debugPrint("🎨 Layout Saves:    ${s['layout_fixes']}");
+    debugPrint("📏 Viewport Saves:  ${s['viewport_fixes']}");
+    debugPrint("🔄 State Saves:     ${s['state_fixes']}");
+    debugPrint("⏳ Async Saves:     ${s['async_fixes']}");
+    debugPrint("🚀 Total Saves:     ${s['total_saves']}");
+    debugPrint("-------------------------------------------");
+  }
+
   /// Enables the Fluxy Debug Inspector overlay.
   static Widget debug({required Widget child}) => FluxyDevTools(child: child);
 }
@@ -240,58 +266,68 @@ class FluxyApp extends StatelessWidget {
           // Global Error Boundary - Senior Level Production Protection
           ErrorWidget.builder = (FlutterErrorDetails details) {
             return Material(
-              child: Container(
-                color: Colors.black,
-                padding: const EdgeInsets.all(24),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Icon(
-                      Icons.error_outline,
-                      color: Colors.redAccent,
-                      size: 48,
-                    ),
-                    const SizedBox(height: 16),
-                    const Text(
-                      "A production error occurred",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
+              child: LayoutBuilder(builder: (context, constraints) {
+                // If we are in an unbounded container (which likely caused the error), 
+                // clamp our height to 400px so we don't trigger another layout crash.
+                final safeH = constraints.hasBoundedHeight ? constraints.maxHeight : 400.0;
+                
+                return Container(
+                  height: safeH,
+                  color: Colors.black,
+                  padding: const EdgeInsets.all(24),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const Icon(
+                        Icons.error_outline,
+                        color: Colors.redAccent,
+                        size: 48,
                       ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      details.exception.toString(),
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.redAccent.withValues(alpha: 0.9),
-                        fontSize: 12,
-                        fontFamily: 'monospace',
-                      ),
-                    ),
-                    if (!kReleaseMode) ...[
                       const SizedBox(height: 16),
-                      Expanded(
-                        child: SingleChildScrollView(
-                          child: Text(
-                            details.stack.toString(),
-                            style: TextStyle(
-                              color: Colors.white.withValues(alpha: 0.5),
-                              fontSize: 10,
-                              fontFamily: 'monospace',
+                      const Text(
+                        "Fluxy Stability Intercept",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        details.exception.toString().split('\n').first,
+                        textAlign: TextAlign.center,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 2,
+                        style: TextStyle(
+                          color: Colors.redAccent.withValues(alpha: 0.9),
+                          fontSize: 12,
+                          fontFamily: 'monospace',
+                        ),
+                      ),
+                      if (!kReleaseMode) ...[
+                        const SizedBox(height: 16),
+                        Expanded(
+                          child: SingleChildScrollView(
+                            child: Text(
+                              details.stack.toString(),
+                              style: TextStyle(
+                                color: Colors.white.withValues(alpha: 0.5),
+                                fontSize: 10,
+                                fontFamily: 'monospace',
+                              ),
                             ),
                           ),
                         ),
-                      ),
+                      ],
                     ],
-                  ],
-                ),
-              ),
+                  ),
+                );
+              }),
             );
           };
 
-          return builder?.call(context, child) ?? child!;
+          return builder?.call(context, child) ?? child ?? const SizedBox.shrink();
         },
       ),
     );

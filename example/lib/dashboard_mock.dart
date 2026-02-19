@@ -60,14 +60,15 @@ class _HamburgerMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Fx.box(
+      onTap: () {
+        Scaffold.of(context).openDrawer();
+      },
       style: FxStyle(
         padding: const EdgeInsets.all(8),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Icon(Icons.menu, size: 24, color: Colors.blueGrey.shade700),
-    ).onHover((s) => s.bg(Colors.blueGrey.shade50)).onTap(() {
-      Scaffold.of(context).openDrawer();
-    }).pointer();
+    ).onHover((s) => s.bg(Colors.blueGrey.shade50)).pointer();
   }
 }
 
@@ -101,17 +102,18 @@ class _NavbarSearch extends StatelessWidget {
 
   Widget _buildMobileSearch(BuildContext context) {
     return Fx.box(
+      onTap: () {
+        showDialog(
+          context: context,
+          builder: (context) => const _SearchDialog(),
+        );
+      },
       style: FxStyle(
         padding: const EdgeInsets.all(8),
         borderRadius: BorderRadius.circular(8),
       ),
       child: const Icon(Icons.search, size: 20, color: Colors.blueGrey),
-    ).onHover((s) => s.bg(Colors.blueGrey.shade50)).onTap(() {
-      showDialog(
-        context: context,
-        builder: (context) => const _SearchDialog(),
-      );
-    }).pointer();
+    ).onHover((s) => s.bg(Colors.blueGrey.shade50)).pointer();
   }
 }
 
@@ -159,14 +161,15 @@ class _SearchDialogState extends State<_SearchDialog> {
               children: [
                 Fx.text("Search").font.h3(),
                 Fx.box(
+                  onTap: () {
+                    Navigator.of(context).pop();
+                  },
                   style: FxStyle(
                     padding: const EdgeInsets.all(4),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: const Icon(Icons.close, size: 20),
-                ).onHover((s) => s.bg(Colors.blueGrey.shade50)).onTap(() {
-                  Navigator.of(context).pop();
-                }).pointer(),
+                ).onHover((s) => s.bg(Colors.blueGrey.shade50)).pointer(),
               ],
             ),
             Fx.gap(16),
@@ -224,6 +227,10 @@ class _SearchDialogState extends State<_SearchDialog> {
 
   Widget _searchSuggestion(String text, IconData icon) {
     return Fx.box(
+      onTap: () {
+        Navigator.of(context).pop();
+        // Handle search with this suggestion
+      },
       style: FxStyle(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
         borderRadius: BorderRadius.circular(8),
@@ -235,10 +242,7 @@ class _SearchDialogState extends State<_SearchDialog> {
           Fx.text(text).font.sm(),
         ],
       ),
-    ).onHover((s) => s.bg(Colors.blueGrey.shade50)).onTap(() {
-      Navigator.of(context).pop();
-      // Handle search with this suggestion
-    }).pointer();
+    ).onHover((s) => s.bg(Colors.blueGrey.shade50)).pointer();
   }
 }
 
@@ -248,12 +252,13 @@ class _NavbarNotification extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Fx.box(
+      onTap: () {},
       style: FxStyle(
         padding: const EdgeInsets.all(8),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Icon(Icons.notifications_none_outlined, size: 22, color: Colors.blueGrey.shade600),
-    ).onHover((s) => s.bg(Colors.blueGrey.shade50)).onTap(() {}).pointer();
+    ).onHover((s) => s.bg(Colors.blueGrey.shade50)).pointer();
   }
 }
 
@@ -333,6 +338,7 @@ class _SidebarItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Box(
+      onTap: () {},
       style: FxStyle(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
         borderRadius: BorderRadius.circular(8),
@@ -348,7 +354,7 @@ class _SidebarItem extends StatelessWidget {
             .fontWeight(active ? FontWeight.w600 : FontWeight.w500)
             .color(active ? Colors.blue.shade700 : Colors.blueGrey.shade700),
       ],
-    ).onHover((s) => s.bg(active ? Colors.blue.shade100 : Colors.blueGrey.shade100)).onTap(() {}).pointer();
+    ).onHover((s) => s.bg(active ? Colors.blue.shade100 : Colors.blueGrey.shade100)).pointer();
   }
 }
 
@@ -360,6 +366,7 @@ class _SidebarFooter extends StatelessWidget {
     return Fx.col(
       children: [
         Fx.box(
+          onTap: () {},
           style: FxStyle(
             padding: const EdgeInsets.all(12),
             borderRadius: BorderRadius.circular(12),
@@ -371,7 +378,7 @@ class _SidebarFooter extends StatelessWidget {
               Fx.text("Get unlimited access").font.xs().muted().mt(4),
             ],
           ),
-        ).onTap(() {}),
+        ),
         Fx.gap(12),
         const _SidebarItem(icon: Icons.logout, label: "Logout"),
       ],
@@ -487,6 +494,7 @@ class _StatCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Fx.box(
+      onTap: () {},
       style: FxStyle(
         padding: const EdgeInsets.all(16),
         borderRadius: BorderRadius.circular(12),

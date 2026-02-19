@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/foundation.dart';
+export '../networking/fluxy_http.dart';
 import '../networking/fluxy_http.dart';
 import '../responsive/responsive_engine.dart';
 import '../styles/style.dart';
@@ -29,6 +30,7 @@ import '../styles/fx_theme.dart';
 import '../widgets/list_box.dart';
 import '../widgets/table.dart';
 import '../widgets/fx_form.dart';
+import '../widgets/advanced.dart';
 import '../feedback/overlays.dart';
 import '../reactive/forms.dart';
 import '../layout/fx_grid.dart';
@@ -36,7 +38,13 @@ import '../layout/fx_row.dart';
 import '../layout/fx_col.dart';
 import '../layout/fx_stack.dart';
 import '../engine/error_pipeline.dart';
+import '../widgets/fx_chart.dart';
+
+export '../widgets/fx_chart.dart';
 import '../layout/fx_layout.dart';
+import '../engine/stability/stability.dart';
+import '../engine/stability/data_guard.dart';
+import '../engine/haptics.dart';
 
 /// The hyper-minimal Fx API for Fluxy.
 /// Designed for maximum builder velocity and zero boilerplate reactivity.
@@ -55,6 +63,22 @@ class Fx extends StatefulWidget {
   static const radius = FxTokens.radius;
   static const font = FxTokens.font;
   static const shadow = FxTokens.shadow;
+
+  /// Global Haptic Feedback Engine.
+  static const haptic = FxHaptic;
+
+  // --- Semantic Theme Proxies ---
+  // These automatically resolve to the current theme's colors.
+  static Color get primary => FxTokens.colors.primary;
+  static Color get secondary => FxTokens.colors.secondary;
+  static Color get success => FxTokens.colors.success;
+  static Color get error => FxTokens.colors.error;
+  static Color get warning => FxTokens.colors.warning;
+  static Color get info => FxTokens.colors.info;
+  static Color get background => FxTokens.colors.background;
+  static Color get surface => FxTokens.colors.surface;
+  static Color get textColor => FxTokens.colors.text;
+  static Color get muted => FxTokens.colors.muted;
 
   // --- Global Feedback & Overlays ---
 
@@ -206,24 +230,53 @@ class Fx extends StatefulWidget {
   /// Advanced Grid Layout System.
   static const grid = _FxGridHelper();
 
+  /// Expose the Spring configuration for animations.
+  static const spring = Spring;
+
+  /// Staggered Reveal Animation for a list of widgets.
+  /// Usage: `Fx.reveal(children: [...])`
+  static Widget reveal({
+    required List<Widget> children,
+    Duration interval = const Duration(milliseconds: 50),
+    Duration duration = const Duration(milliseconds: 400),
+    Curve curve = Curves.easeOutCubic,
+    double? slide = 20,
+    double? fade = 0,
+  }) {
+    return FxReveal(
+      children: children,
+      interval: interval,
+      duration: duration,
+      curve: curve,
+      slide: slide,
+      fade: fade,
+    );
+  }
+
   /// Horizontal Layout (Row).
   static Widget row({
     required List<Widget> children,
     MainAxisAlignment justify = MainAxisAlignment.start,
-    CrossAxisAlignment items = CrossAxisAlignment.center,
+    @Deprecated('Use alignItems instead. This will be removed in future versions.')
+    CrossAxisAlignment? items,
+    CrossAxisAlignment alignItems = CrossAxisAlignment.center,
     double gap = 0,
     FxStyle style = FxStyle.none,
-    MainAxisSize size = MainAxisSize.max,
+    MainAxisSize size = MainAxisSize.min,
     bool responsive = false,
-  }) => FxRow(
-    children: children,
-    justify: justify,
-    items: items,
-    gap: gap,
-    style: style,
-    size: size,
-    responsive: responsive,
-  );
+  }) {
+    // Priority: alignItems (new) -> items (deprecated) -> default center
+    final resolvedItems = items ?? alignItems;
+    return FxRow(
+      children: children,
+      justify: justify,
+      items: resolvedItems,
+      gap: gap,
+      style: style,
+      size: size,
+      responsive: responsive,
+    );
+  }
 
   /// A quick sidebar template for desktop.
   static Widget sidebar({
@@ -253,18 +306,106 @@ class Fx extends StatefulWidget {
   static Widget col({
     required List<Widget> children,
     MainAxisAlignment justify = MainAxisAlignment.start,
-    CrossAxisAlignment items = CrossAxisAlignment.center,
+    @Deprecated('Use alignItems instead. This will be removed in future versions.')
+    CrossAxisAlignment? items,
+    CrossAxisAlignment alignItems = CrossAxisAlignment.center,
     double gap = 0,
     FxStyle style = FxStyle.none,
-    MainAxisSize size = MainAxisSize.max,
-  }) => FxCol(
-    children: children,
-    justify: justify,
-    items: items,
-    gap: gap,
-    style: style,
-    size: size,
-  );
+    MainAxisSize size = MainAxisSize.min,
+  }) {
+    // Priority: alignItems (new) -> items (deprecated) -> default center
+    final resolvedItems = items ?? alignItems;
+    return FxCol(
+      children: children,
+      justify: justify,
+      items: resolvedItems,
+      gap: gap,
+      style: style,
+      size: size,
+    );
+  }
+
+  /// A scrollable list.
+  /// Wraps [ListView.separated].
+  static Widget list({
+    List<Widget>? children,
+    int? itemCount,
+    IndexedWidgetBuilder? itemBuilder,
+    Axis scrollDirection = Axis.vertical,
+    FxStyle style = FxStyle.none,
+    double gap = 0,
+    bool shrinkWrap = false,
+    ScrollPhysics? physics,
+    VoidCallback? onTap,
+    String? className,
+    FxResponsiveStyle? responsive,
+    ScrollController? controller,
+  }) {
+    return ListBox(
+      children: children,
+      itemCount: itemCount,
+      itemBuilder: itemBuilder,
+      scrollDirection: scrollDirection,
+      style: style,
+      gap: gap,
+      shrinkWrap: shrinkWrap,
+      physics: physics,
+      onTap: onTap,
+      className: className,
+      responsive: responsive,
+      controller: controller,
+    );
+  }
+
+  /// A subscription-based infinite scroll list.
+  /// Ideal for lazy-loading feeds and paginated data.
+  static Widget infiniteList({
+    required int itemCount,
+    required IndexedWidgetBuilder itemBuilder,
+    required Future<void> Function() onLoadMore,
+    bool hasMore = true,
+    Widget? loadingIndicator,
+    FxStyle style = FxStyle.none,
+    ScrollController? controller,
+  }) {
+    return FxInfiniteList(
+      itemCount: itemCount,
+      itemBuilder: itemBuilder,
+      onLoadMore: onLoadMore,
+      hasMore: hasMore,
+      loadingIndicator: loadingIndicator,
+      style: style,
+      controller: controller,
+    );
+  }
+
+  /// A parallax wrapper for smooth scroll-based background animations.
+  static Widget parallax({
+    required Widget child,
+    required ScrollController controller,
+    double speed = 0.5,
+  }) {
+    return FxParallax(
+      controller: controller,
+      speed: speed,
+      child: child,
+    );
+  }
+
+  /// A premium Pull-To-Refresh wrapper.
+  static Widget refresh({
+    required Widget child,
+    required Future<void> Function() onRefresh,
+    Color? color,
+    Color? backgroundColor,
+  }) {
+    return FxRefresh(
+      onRefresh: onRefresh,
+      color: color,
+      backgroundColor: backgroundColor,
+      child: child,
+    );
+  }
 
   // --- Core Primitives ---
 
@@ -288,31 +429,6 @@ class Fx extends StatefulWidget {
     );
   }
 
-  /// Creates a reactive container widget.
-  /// 
-  /// [style] - Optional [FxStyle] to apply.
-  /// [className] - Optional Tailwind-like utility classes.
-  /// [responsive] - Optional responsive style.
-  /// [child] - The widget to display inside the box.
-  /// [children] - Multiple widgets to display (will be wrapped in a column by default).
-  /// [onTap] - Callback when the box is tapped.
-  static Widget box({
-    FxStyle style = FxStyle.none,
-    String? className,
-    FxResponsiveStyle? responsive,
-    Widget child = const SizedBox.shrink(),
-    List<Widget> children = const [],
-    VoidCallback? onTap,
-  }) {
-    return Box(
-      style: style,
-      className: className,
-      responsive: responsive,
-      child: child,
-      children: children,
-      onTap: onTap,
-    );
-  }
 
   // --- Layout Primitives ---
 
@@ -328,18 +444,52 @@ class Fx extends StatefulWidget {
   /// Conditional helper.
   static _FxCondHelper get cond => const _FxCondHelper();
 
-  /// Stack layout.
-  static Widget stack({
-    required List<Widget> children,
-    AlignmentGeometry alignment = AlignmentDirectional.topStart,
+  /// A generic box container.
+  static Box box({
+    dynamic child,
+    dynamic children,
     FxStyle style = FxStyle.none,
-    StackFit fit = StackFit.loose,
-  }) => FxStack(
-    children: children,
-    alignment: alignment,
-    style: style,
-    fit: fit,
-  );
+    String? className,
+    FxResponsiveStyle? responsive,
+    VoidCallback? onTap,
+  }) {
+    return Box(
+      child: child,
+      children: children,
+      style: style,
+      className: className,
+      responsive: responsive,
+      onTap: onTap,
+    );
+  }
+
+  /// A labeled form field helper.
+  static Widget field({
+    required String label,
+    required Flux<String> signal,
+    String? placeholder,
+    IconData? icon,
+    bool isPassword = false,
+    List<Validator<String>>? validators,
+    FxStyle style = FxStyle.none,
+  }) {
+    return Fx.col(
+      alignItems: CrossAxisAlignment.start,
+      gap: 6,
+      children: [
+        Fx.text(label).font.xs().font.bold().color(FxTokens.colors.muted).ml(4),
+        Fx.input(
+          signal: signal,
+          placeholder: placeholder,
+          icon: icon,
+          obscureText: isPassword,
+          validators: validators,
+          style: style,
+        ),
+      ],
+    );
+  }
+
 
   /// A pre-configured Scaffold with a centered container for the body.
   /// Ideal for standard web pages.
@@ -410,58 +560,6 @@ class Fx extends StatefulWidget {
     );
   }
 
-  /// Vertical list layout.
-  /// Vertical list layout.
-  static Widget list({
-    List<Widget>? children,
-    int? itemCount,
-    IndexedWidgetBuilder? itemBuilder,
-    FxStyle style = FxStyle.none,
-    String? className,
-    FxResponsiveStyle? responsive,
-    double? gap,
-    Axis direction = Axis.vertical,
-    ScrollPhysics? physics,
-    bool shrinkWrap = false,
-  }) {
-    // If builder pattern is used
-    if (itemCount != null && itemBuilder != null) {
-      // Create a builder-based ListBox (since ListBox wrapping ListView.separated needs explicit children)
-      // We can generate children if not too many, or we need to update ListBox.
-      // Since Fluxy aims for "zero boilerplate", let's use ListView.separated directly here
-      // wrapped in a container that handles FxStyle.
-      // BUT ListBox already handles styling logic.
-      // It's cleaner to update ListBox to support builder.
-      // For now, let's create a ListBox.builder analog here internally or update ListBox.
-
-      // Since modifying ListBox fully is cleaner, let's assume ListBox is updated.
-      // Checking ListBox widget again... It takes required children.
-      // I will update ListBox to accept optional children and builder.
-      // For this replace_file_content call, I will pass builder params to ListBox
-      // assuming I will update ListBox in the next step.
-      return ListBox(
-        children: children ?? [],
-        itemCount: itemCount,
-        itemBuilder: itemBuilder,
-        style: style.merge(FxStyle(gap: gap)),
-        className: className,
-        responsive: responsive,
-        scrollDirection: direction,
-        physics: physics,
-        shrinkWrap: shrinkWrap,
-      );
-    }
-
-    return ListBox(
-      children: children ?? [],
-      style: style.merge(FxStyle(gap: gap)),
-      className: className,
-      responsive: responsive,
-      scrollDirection: direction,
-      physics: physics,
-      shrinkWrap: shrinkWrap,
-    );
-  }
 
   /// Data Table.
   static Widget table<T>({
@@ -521,6 +619,60 @@ class Fx extends StatefulWidget {
       style: style,
       showScrollbar: showScrollbar,
       child: child,
+    );
+  }
+
+  /// NEW: Atomic Viewport Architecture
+  /// Uses CustomScrollView with Slivers for maximum stability.
+  static Widget viewport({
+    required List<Widget> slivers,
+    Axis direction = Axis.vertical,
+    ScrollController? controller,
+    bool showScrollbar = true,
+  }) {
+    final scroll = CustomScrollView(
+      controller: controller,
+      scrollDirection: direction,
+      slivers: slivers,
+    );
+
+    if (!showScrollbar) return scroll;
+    return Scrollbar(child: scroll);
+  }
+
+  /// NEW: Sliver Wrapper
+  static Widget sliver(Widget child) {
+    if (child is SliverToBoxAdapter || child is SliverList || child is SliverGrid) {
+      return child;
+    }
+    return SliverToBoxAdapter(child: child);
+  }
+
+  /// A common SaaS layout primitive: a centered card that is also scrollable.
+  /// Uses LayoutBuilder to ensure content is centered when small, but scrollable when large.
+  static Widget scrollCenter({
+    required Widget child,
+    FxStyle style = FxStyle.none,
+  }) {
+    return Box(
+      style: style,
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final minH = constraints.hasBoundedHeight ? constraints.maxHeight : 0.0;
+          final minW = constraints.hasBoundedWidth ? constraints.maxWidth : 0.0;
+          
+          return SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                minHeight: minH,
+                minWidth: minW,
+              ),
+              child: Center(child: child),
+            ),
+          );
+        },
+      ),
     );
   }
 
@@ -599,6 +751,113 @@ class Fx extends StatefulWidget {
   /// Hero primitive.
   static Widget hero({required String tag, required Widget child}) {
     return Hero(tag: tag, child: child);
+  }
+
+  /// Stack primitive.
+  static Widget stack({
+    required List<Widget> children,
+    AlignmentGeometry alignment = AlignmentDirectional.topStart,
+    StackFit fit = StackFit.loose,
+    FxStyle style = FxStyle.none,
+  }) {
+    return FxStack(
+      children: children,
+      alignment: alignment,
+      fit: fit,
+      style: style,
+    );
+  }
+
+  /// SafeArea primitive.
+  static Widget safe(
+    Widget child, {
+    bool left = true,
+    bool top = true,
+    bool right = true,
+    bool bottom = true,
+    EdgeInsets minimum = EdgeInsets.zero,
+    bool maintainBottomViewPadding = false,
+  }) {
+    return SafeArea(
+      left: left,
+      top: top,
+      right: right,
+      bottom: bottom,
+      minimum: minimum,
+      maintainBottomViewPadding: maintainBottomViewPadding,
+      child: child,
+    );
+  }
+
+  /// SafeArea primitive.
+  static Widget safeArea({
+    required Widget child,
+    bool left = true,
+    bool top = true,
+    bool right = true,
+    bool bottom = true,
+    EdgeInsets minimum = EdgeInsets.zero,
+    bool maintainBottomViewPadding = false,
+  }) {
+    return SafeArea(
+      left: left,
+      top: top,
+      right: right,
+      bottom: bottom,
+      minimum: minimum,
+      maintainBottomViewPadding: maintainBottomViewPadding,
+      child: child,
+    );
+  }
+
+  /// Spacer primitive.
+  static Widget spacer({int flex = 1}) {
+    return Spacer(flex: flex);
+  }
+
+  /// Expanded primitive.
+  static Widget expanded(Widget child, {int flex = 1}) {
+    return Expanded(flex: flex, child: child);
+  }
+
+  /// Flexible primitive.
+  static Widget flexible(Widget child, {int flex = 1, FlexFit fit = FlexFit.loose}) {
+    return Flexible(flex: flex, fit: fit, child: child);
+  }
+
+  /// Alignment primitive.
+  static Widget align(Widget child, AlignmentGeometry alignment) {
+    return Align(alignment: alignment, child: child);
+  }
+
+  /// Divider primitive.
+  static Widget divider({double thickness = 1.0, Color? color, double? indent, double? endIndent}) {
+    return Divider(
+      thickness: thickness,
+      color: color,
+      indent: indent,
+      endIndent: endIndent,
+    );
+  }
+
+  /// Data Visualization primitive.
+  /// Usage: `Fx.chart(data: mySignal, type: FxChartType.line)`
+  static FxChart chart({
+    required dynamic data,
+    FxChartType type = FxChartType.bar,
+    double height = 200,
+    bool showLabels = true,
+    bool showValues = true,
+    FxStyle style = FxStyle.none,
+  }) {
+    return FxChart(
+      data: data,
+      type: type,
+      height: height,
+      showLabels: showLabels,
+      showValues: showValues,
+      style: style,
+    );
   }
 
   // --- Buttons (Phase 5) ---
@@ -873,7 +1132,7 @@ class Fx extends StatefulWidget {
   // --- Inputs (Phase 5) ---
 
   static Widget input({
-    required Signal<String> signal,
+    required Flux<String> signal,
     String? placeholder,
     String? label,
     IconData? icon,
@@ -884,6 +1143,9 @@ class Fx extends StatefulWidget {
     List<TextInputFormatter>? inputFormatters,
     FocusNode? focusNode,
     VoidCallback? onSubmitted,
+    FxStyle style = FxStyle.none,
+    TextStyle? textStyle,
+    InputDecoration? decoration,
   }) {
     return FxTextField(
       signal: signal,
@@ -897,6 +1159,9 @@ class Fx extends StatefulWidget {
       focusNode: focusNode,
       onSubmitted: onSubmitted,
       validators: validators,
+      style: style,
+      textStyle: textStyle,
+      decoration: decoration,
     );
   }
 
@@ -1012,32 +1277,20 @@ class Fx extends StatefulWidget {
   // --- Utilities ---
 
   /// Staggers a list of widgets with a delay.
+  /// Ideal for entrance animations.
   static List<Widget> stagger(
     List<Widget> children, {
     double interval = 0.05,
-    double initialDelay = 0,
+    Offset slide = const Offset(0, 20),
+    double fade = 0.0,
   }) {
-    return children.asMap().entries.map((entry) {
-      final child = entry.value;
-      final index = entry.key;
-
-      if (child is FxMotion) {
-        final m = child;
-        return FxMotion(
-          duration: m.duration,
-          curve: m.curve,
-          spring: m.spring,
-          delay: (m.delay ?? 0) + initialDelay + (index * interval),
-          autoStart: m.autoStart,
-          fade: m.fade,
-          slide: m.slide,
-          scale: m.scale,
-          rotate: m.rotate,
-          child: m.child,
-        );
-      }
-      return child;
-    }).toList();
+    return List.generate(children.length, (index) {
+      return children[index].animate(
+        delay: index * interval,
+        slide: slide,
+        fade: fade,
+      );
+    });
   }
 
   /// Async UI Builder
@@ -1057,6 +1310,22 @@ class Fx extends StatefulWidget {
       FluxyRouter.to<T>(route, arguments: arguments, scope: scope);
   static void back<T>([T? result, String? scope]) =>
       FluxyRouter.back<T>(result, scope);
+
+  /// Executes an async operation with automatic retry logic.
+  static Future<T> retry<T>(
+    Future<T> Function() operation, {
+    int? retries,
+    Duration? delay,
+    String? label,
+  }) => FluxyDataGuard.retry(operation, retries: retries, delay: delay, label: label);
+
+  /// Stale-While-Revalidate pattern for data fetching.
+  static Future<void> swr<T>({
+    required Future<T?> local,
+    required Future<T> remote,
+    required void Function(T data) onData,
+    void Function(dynamic error)? onError,
+  }) => FluxyDataGuard.swr(local: local, remote: remote, onData: onData, onError: onError);
 
   /// Alias for Vertical Layout (Column).
   static Widget column({
@@ -1167,9 +1436,11 @@ class _FxGridHelper {
     gap: gap,
   );
 
+  /// Specialized grid for dashboards.
   FxGrid dashboard({
     required List<Widget> children,
     double gap = 20,
+    double childAspectRatio = 1.0,
   }) => FxGrid.responsive(
     children: children,
     xs: 1,
@@ -1177,6 +1448,7 @@ class _FxGridHelper {
     md: 3,
     lg: 4,
     gap: gap,
+    childAspectRatio: childAspectRatio,
   );
 }
 
@@ -1218,11 +1490,27 @@ class _FxState extends State<Fx> with ReactiveSubscriberMixin {
 
   @override
   Widget build(BuildContext context) {
+    FluxyStateGuard.recordRebuild(this);
     FluxyReactiveContext.push(this);
     final prevContext = FluxyReactiveContext.currentContext;
     FluxyReactiveContext.currentContext = context;
     try {
-      Widget content = widget.builder();
+      final child = widget.builder();
+      
+      // VITAL FIX: If the builder returns a Sliver, we cannot wrap it in 
+      // FluxyRenderGuard because it currently uses a RenderProxyBox.
+      // RenderBox parents cannot host RenderSliver children.
+      bool isSliver = child is SliverToBoxAdapter || 
+                     child is SliverList || 
+                     child is SliverGrid || 
+                     child is SliverPadding ||
+                     child is SliverAppBar ||
+                     child is SliverPersistentHeader ||
+                     child is SliverFillRemaining ||
+                     child is SliverFixedExtentList ||
+                     child is SliverPrototypeExtentList;
+
+      Widget content = isSliver ? child : FluxyRenderGuard(child: child);
       
       // Flash Warning Badge if rebuilding too fast (Debug only)
       if (!kReleaseMode && _isThrottledWarning) {
@@ -1380,3 +1668,4 @@ class _FxCondHelper {
     return Fx(() => cases[signal.value] ?? fallback);
   }
 }
+
