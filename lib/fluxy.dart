@@ -77,6 +77,16 @@ export 'src/debug/debug_config.dart';
 export 'src/debug/fluxy_inspector.dart';
 export 'src/debug/fluxy_debug.dart';
 
+// Core Plugins
+export 'src/plugins/fluxy_storage.dart';
+export 'src/plugins/fluxy_analytics.dart';
+export 'src/plugins/fluxy_permissions.dart';
+export 'src/plugins/fluxy_auth.dart';
+export 'src/plugins/fluxy_camera.dart';
+export 'src/plugins/fluxy_notifications.dart';
+export 'src/plugins/fluxy_connectivity.dart';
+export 'src/plugins/fluxy_biometric.dart';
+
 // Internationalization
 export 'src/i18n/fluxy_i18n.dart';
 // OTA
@@ -94,6 +104,7 @@ import 'src/engine/plugin.dart';
 import 'src/engine/error_pipeline.dart';
 import 'src/engine/layout_guard.dart';
 import 'src/engine/stability/stability_metrics.dart';
+import 'src/engine/plugin_registry.dart';
 
 /// The global entry point for the Fluxy framework.
 class Fluxy {
@@ -117,14 +128,10 @@ class Fluxy {
     await FluxyPersistence.hydrate();
 
     // 3. Register & Boot Plugins
-    for (final plugin in _plugins) {
-      await plugin.onRegister();
-    }
+    await FluxyPluginEngine.onRegisterAll();
 
     // 4. Signal App Ready to Plugins
-    for (final plugin in _plugins) {
-      plugin.onAppReady();
-    }
+    await FluxyPluginEngine.onAppReadyAll();
   }
 
   // --- OTA Shortcuts ---
@@ -165,18 +172,19 @@ class Fluxy {
   static void setLocale(Locale locale) => FluxyI18n.setLocale(locale);
 
   // --- Plugin System ---
-  static final List<FluxyPlugin> _plugins = [];
 
   /// Registers a plugin to extend Fluxy's functionality.
-  static void register(FluxyPlugin plugin) {
-    if (!_plugins.any((p) => p.name == plugin.name)) {
-      _plugins.add(plugin);
-    }
-  }
+  static void register(FluxyPlugin plugin) => FluxyPluginEngine.register(plugin);
 
   /// Finds a registered plugin by name.
-  static T? findPlugin<T extends FluxyPlugin>() =>
-      _plugins.whereType<T>().firstOrNull;
+  static T? findPlugin<T extends FluxyPlugin>() => FluxyPluginEngine.find<T>();
+
+  /// Automatically registers all plugins found in the workspace dependencies.
+  /// This calls the auto-generated registry created by the Fluxy CLI.
+  static void autoRegister() {
+    debugPrint("🚀 Fluxy: Auto-registering plugins...");
+    registerFluxyPlugins();
+  }
 
   // --- Error Pipeline ---
   

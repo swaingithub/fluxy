@@ -1,0 +1,17 @@
+name: fluxy_storage
+version: 1.0.0
+description: Core storage plugin for Fluxy providing unified KV storage.
+requires:
+  flutter: ">=3.16.0"
+  fluxy: ">=0.2.5"
+
+permissions:
+  android: []
+  ios: []
+
+native:
+  android: false
+  ios: false
+
+author: swaingithub
+repository: https://github.com/swaingithub/fluxy

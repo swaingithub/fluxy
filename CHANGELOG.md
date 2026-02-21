@@ -1,3 +1,30 @@
+## 0.2.5 - The Platform Era
+
+*   **Managed Runtime Architecture**:
+    *   Transitioned from a "Framework" to a "Managed Platform" for Flutter.
+    *   Introduced `FluxyPluginEngine` for industrial-grade feature management.
+    *   **Fluxy Plugin Auto-Registration**: `Fluxy.autoRegister()` now automatically loads and wires up all installed platform modules via a generated registry.
+    *   **Unified Platform API (`Fx.platform`)**: Centralized access to all core modules under a single, stable namespace.
+*   **Fluxy Platform Modules (Core 8)**:
+    *   **`fluxy_notifications` [MAJOR]**: Full compatibility with **v20.0+**. Added automatic permission handling for Android 13+ and iOS, improved timezone-aware scheduling, and robust "Exact Alarm" fallback logic.
+    *   **`fluxy_biometric` [MAJOR]**: Updated for **v3.0+**. Standardized platform prompts and integrated it into the Fluxy Error Pipeline.
+    *   **`fluxy_camera`**: Optimized real-time preview and integrated with the new `FxImage` engine.
+    *   **`fluxy_auth`**: Official authentication module with reactive session tracking.
+    *   **`fluxy_storage`**: Unified KV storage abstraction (Standard + Secure).
+    *   **`fluxy_analytics`**: High-level tracking module with standardized event API.
+    *   **`fluxy_permissions`**: Unified declarative permission handler.
+    *   **`fluxy_connectivity`**: Real-time reactive network status monitoring.
+*   **Media & Rendering Evolution**:
+    *   **Hybrid `FxImage` Engine**: New support for `file://` and `memory://` (via bytes). Capture a photo and view it instantly with zero extra code.
+    *   **`Fx.img()` Primitive**: The new high-speed standard for displaying assets, network, or camera results.
+    *   **`Fx.memoryImage()`**: Direct pixel-perfect rendering from byte data.
+*   **Platform Safety Kernel**:
+    *   **Background Receiver Injection**: The framework now automatically injects necessary Android BroadcastReceivers for notifications to persist across reboots.
+    *   **Remote Plugin Kill-switch**: Integrated with the OTA engine, plugins can now be remotely disabled via the manifest `disabled_plugins` array to instantly neutralize production crashes.
+*   **CLI Evolution (The Module Paradigm)**:
+    *   Pivoted from `fluxy plugin` to `fluxy module` to reflect the platform-first philosophy.
+    *   Added `fluxy module add <name>` which handles installation and automatic registry regeneration.
+
 ## 0.2.4 - The Stability-First Engineering Engine
 
 *   **Data Visualization Primitives**: 
@@ -272,7 +299,7 @@
 ## 0.0.6
 
 * **Fluxy Cloud**: Introduced `fluxy cloud` to automatically scaffold GitHub Actions for free Android/iOS builds and deployment.
-* **Fluxy Play**: Launched the companion preview app (equivalent to Expo Go) for instant manifest-based development.
+* **Fluxy Play**: Launched the companion preview app (the ultimate development mirror) for instant manifest-based development.
 * **OTA Engine**: Implemented the Server-Driven UI (SDUI) renderer and OTA manifest management system.
 * **Signal Registry**: Added a global signal registry with `WeakReference` support to enable advanced devtools and prevent memory leaks.
 

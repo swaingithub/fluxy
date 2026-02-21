@@ -1,0 +1,34 @@
+// Fluxy Framework — Android module
+// This file exists so Android's manifest merger picks up the package manifest
+// at fluxy/android/src/main/AndroidManifest.xml automatically.
+// No native code is compiled — this is a manifest-only module.
+group 'dev.fluxy.framework'
+version '1.0'
+
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:8.1.0'
+    }
+}
+
+rootProject.allprojects {
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
+apply plugin: 'com.android.library'
+
+android {
+    compileSdk 34
+    namespace 'dev.fluxy.framework'
+
+    defaultConfig {
+        minSdk 21
+    }
+}

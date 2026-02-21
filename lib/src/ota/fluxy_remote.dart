@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../engine/plugin.dart';
 
 /// Manages Over-The-Air updates and asset caching.
 class FluxyRemote {
@@ -31,7 +32,8 @@ class FluxyRemote {
   ///   "assets": {
   ///     "home.json": "https://api.example.com/assets/home.json",
   ///     "theme.json": "https://api.example.com/assets/theme.json"
-  ///   }
+  ///   },
+  ///   "disabled_plugins": ["fluxy_analytics"]
   /// }
   /// ```
   static Future<void> update(String manifestUrl) async {
@@ -63,10 +65,14 @@ class FluxyRemote {
         debugPrint(
           '[FluxyRemote] Update complete. Version is now $newVersion.',
         );
-      } else {
-        debugPrint(
-          '[FluxyRemote] Already up to date (Version $currentVersion).',
-        );
+      }
+      
+      // Always apply plugin status from latest manifest if available
+      if (manifest.containsKey('disabled_plugins')) {
+        final List<dynamic> disabled = manifest['disabled_plugins'];
+        for (final pluginName in disabled) {
+          FluxyPluginEngine.setPluginEnabled(pluginName.toString(), false);
+        }
       }
     } catch (e) {
       debugPrint('[FluxyRemote] Update failed: $e');

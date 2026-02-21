@@ -1,103 +1,74 @@
-# Fluxy: The Stability-First Engineering Engine
+# Fluxy: The Managed Application Platform for Flutter
 
-Fluxy is a comprehensive, production-grade application platform designed to unify the entire development lifecycle. It provides a complete structural foundation, moving beyond simple state management to offer native high-performance networking, atomic reactivity, lifecycle controllers, offline-first repositories, and integrated developer tooling.
+**Build enterprise-grade Flutter apps with the speed of a startup and the stability of a bank.**
 
----
-
-## Framework Philosophy
-
-Fluxy serves as a structural authority for the Flutter ecosystem. It is designed to solve common architectural challenges, such as the classical rebuild problem, while eliminating the need for excessive third-party dependencies by providing robust, native engines for core tasks.
-
-### The Fluxy Standard (Official Architecture)
-
-Fluxy promotes an opinionated structure to ensure scalability and maintainable code quality. The recommended pattern is the Core/Features decomposition:
-
-```text
-lib/
- ├── core/            # Platform-wide services, middleware, and global themes
- └── features/        # Business domains (Feature-based decomposition)
-      └── dashboard/
-           ├── dashboard.controller.dart  # Business logic & UI State
-           ├── dashboard.repository.dart  # Data Layer (Remote/Local)
-           ├── dashboard.view.dart        # Pure UI Components (DSL)
-           └── dashboard.routes.dart      # Feature-specific route map
-```
-
-### CLI Support (Solution Generation)
-
-The Fluxy CLI facilitates rapid development by scaffolding entire architectural solutions.
-
-```bash
-# Generate a complete feature domain with UI, logic, and networking
-fluxy g auth login
-
-# Generate a responsive layout template
-fluxy g layout main
-```
+Fluxy is a comprehensive, production-grade application platform designed to unify the entire development lifecycle. More than just a library, Fluxy provides a **Managed Runtime Architecture** that combines reactive state, declarative UI, a physics-based motion engine, and a suite of high-performance platform modules.
 
 ---
 
-## Core Framework Pillars
+## 🏛️ The Platform Philosophy
 
-### 1. Project-Based Networking (FluxyHttp)
-A high-performance HTTP client built directly into the framework.
-*   **Automatic Serialization**: Native support for JSON serialization and error handling.
-*   **Global Interceptors**: Comprehensive request and response hook management.
-*   **Unified Configuration**: Centralized management for base URLs, headers, and timeouts.
+Fluxy serves as the **structural authority** for the Flutter ecosystem. It eliminates the need for dozens of fragmented third-party dependencies by providing a robust, natively integrated suite of core engines.
 
-```dart
-final response = await Fx.http.get('/profile');
-print(response.data['username']); // Automatically decoded
-```
+### 🔌 Managed Plugin Architecture (`Fx.platform`)
+Fluxy v0.2.5 introduces the **Managed Runtime**. Platform modules (Camera, Auth, Notifications) are no longer loose dependencies—they are managed components that hook into the application's lifecycle, error pipeline, and security kernel.
 
-### 2. Architectural Controllers (FluxController)
-Fluxy provides a formalized logic layer with native lifecycle management. Controllers are automatically managed by the framework when associated with routes.
+*   **Auto-Registration**: Plugins are automatically discovered and wired up via `Fluxy.autoRegister()`.
+*   **Safety Intercepts**: Every plugin call is wrapped in a stability guard that prevents native crashes from reaching your UI.
+*   **Unified API**: Access everything from a single entry point: `Fx.camera`, `Fx.storage`, `Fx.biometric`.
 
-```dart
-class AuthController extends FluxController {
-  final user = flux<User?>(null);
+---
 
-  @override
-  void onInit() {
-    loadUser(); // Executed upon association
-  }
-}
-```
+## 📦 Core Platform Modules (The "Big 8")
+
+Every Fluxy project starts with these industrial-grade modules pre-optimized:
+
+*   🔔 **Notifications**: v20.0+ compatible, time-zone aware, with automatic Android 13+ permission handling and exact-alarm fallbacks.
+*   📸 **Camera**: High-speed interface with real-time reactive state, gallery integration, and instant capture-to-view.
+*   🔐 **Biometric**: v3.0+ FaceID/Fingerprint support with standardized platform prompts and secure error handling.
+*   💾 **Storage**: Unified abstraction for high-speed cache (`SharedPreferences`) and the encrypted `SecureVault`.
+*   🛡️ **Permissions**: Declarative, single-line permission handling across Android & iOS.
+*   🔑 **Auth**: Reactive identity engine with global session tracking and middleware support.
+*   📡 **Connectivity**: Real-time reactive monitoring of network status.
+*   📊 **Analytics**: Standardized event tracking with native delivery providers.
+
+---
+
+## 💎 Engineering Pillars
+
+### 1. Fluxy Stability Kernel™ (SafeUI)
+Fluxy proactively prevents 80% of common Flutter layout crashes (unbounded height/width, nested scrollables).
+*   **Auto-Constraint Enforcement**: Widgets automatically fallback to safe dimensions in unbounded contexts.
+*   **Flex Solver Intelligence**: Automatically repairs "Infinite Constraint" violations in `FxRow` and `FxCol`.
+*   **Structural Recursion**: Modifiers automatically "peer through" layout widgets (like `Expanded`) to apply styles correctly.
+
+### 2. Universal Style Engine™
+Fluxy mirrors all visual modifiers into the `FxStyle` object. This enables high-fidelity interactive state modeling—use the same modifiers in `onHover` or `onPressed` builders that you use on the widgets themselves.
 
 ### 3. Integrated Developer Tools (Fluxy Inspector)
-The framework includes a premium debugging interface available in non-release modes.
+A premium debugging interface (non-release only):
 *   **DI Container Inspection**: Review active dependencies and their lifecycle scopes.
-*   **Network Activity Monitoring**: Track real-time network requests and payloads.
-*   **Stability Dashboard**: Real-time visualization of auto-repaired layout violations and stability metrics.
-
-### 4. Fluxy Stability Kernel™ (SafeUI)
-Fluxy proactively prevents 80% of common Flutter layout crashes (unbounded height/width, nested scrollables) by introducing framework-level safeguards and an auto-repair engine.
-*   **Auto-Constraint Enforcement**: Widgets automatically fallback to safe dimensions in unbounded contexts.
-*   **Flex Solver Intelligence**: Automatically repairs "Infinite Constraint" violations in `FxRow` and `FxCol` when stretching inside scrollables.
-*   **Real-time Repairs**: All layout corrections are logged and visible in the Fluxy Inspector.
-
-### 5. Universal Style Engine™
-Fluxy mirrors all visual modifiers into the `FxStyle` object, enabling high-fidelity interactive state modeling. Use the same modifiers in `onHover` or `onPressed` builders that you use on the widgets themselves.
+*   **Network Activity Logs**: Full inspection of HTTP payloads and latency.
+*   **Stability Dashboard**: Real-time log of every auto-repaired layout violation.
 
 ---
 
-## Technical Quickstart
+## 🚀 Technical Quickstart
 
 ### Installation
-Add Fluxy to your project's dependencies:
-
 ```yaml
 dependencies:
-  fluxy: ^0.2.4
+  fluxy: ^0.2.5
 ```
 
-### 1. Framework Initialization
+### 1. Initialize the Platform
 ```dart
 void main() async {
-  await Fluxy.init(); // Initialize persistence and framework engines
-  
+  // Boots storage, persistence, and all registered modules
+  await Fluxy.init(); 
+
   runApp(
-    Fluxy.debug( // Enable professional devtools + Layout Guard
+    Fluxy.debug( // Enable Inspector + Layout Guards
       child: FluxyApp(
         initialRoute: homeRoutes.first,
         routes: [...homeRoutes],
@@ -107,42 +78,39 @@ void main() async {
 }
 ```
 
-### 2. Atomic Reactivity & Magical Persistence
+### 2. High-Speed Media Rendering
 ```dart
-// Automatic offline-first persistence with one flag
-final balance = flux(100.0, key: "user_balance", persist: true); 
+// Display an asset, network image, or a local photo from the camera
+Fx.img("file://${Fx.camera.lastImage.path}")
+  .cover()
+  .rounded(12)
+  .liftOnHover();
+```
+
+### 3. Reactive State with Persistence
+```dart
+// Auto-saves to disk and restores on app boot magically
+final balance = flux(100.0, key: "user_account", persist: true); 
 
 Fx(() => Fx.text("Balance: ${balance.value}")).center()
 ```
 
-### 3. Data Visualization (Fx.chart)
-Create high-performance, reactive charts with zero boilerplate.
-
-```dart
-Fx.chart(
-  data: mySignal, 
-  type: FxChartType.line
-).h(250).pressScale()
-```
-
 ---
 
-## Feature Overview
+## 🛠️ Feature Matrix
 
 | Feature | Description |
 | :--- | :--- |
-| **Stability Kernel™** | Full-stack crash protection: Layout, State, Async, Data, and Interaction guards. |
-| **Data Visualization** | High-performance, reactive Bar and Line charts with smooth entrance animations. |
-| **Style Engine™** | Modifier parity across widgets and styles for high-fidelity interactive design. |
-| **Magical Persistence** | Automatic state serialization and hydration via the `persist: true` flag. |
-| **Viewport Architecture** | Native support for robust, scrollable layouts via `Fx.viewport`, `Fx.scrollCenter`, and `Fx.sliver`. |
-| **Motion DSL** | Physics-based animation presets and orchestrated staggered reveals. |
-| **Semantic Proxies** | Global theme-aware color getters (`Fx.primary`, `Fx.success`) for rapid styling. |
-| **Native Primitives** | Premium Infinite List, Parallax, and Pull-to-Refresh with zero boilerplate. |
+| **Stability Kernel™** | Full-stack crash protection for Layout, State, and Async logic. |
+| **Managed Runtime** | Fluxy Plugin module registration and unified platform access. |
+| **Data Visualization** | High-performance reactive charts (`Fx.chart`) with entrance motion. |
+| **Universal Stylizer** | Modifier parity across widgets and interactive state styles. |
+| **Viewport Engine** | Robust scrollable layouts via `Fx.viewport` and `Fx.sliver`. |
+| **Motion DSL** | Physics-based animation presets and staggered entrance reveal. |
 
 ---
 
 ## Enterprise Reliability
-Fluxy is built for production environments, featuring global middleware, error boundaries, secure persistence, and comprehensive testing utilities. It provides the structural integrity required for large-scale application development.
+Fluxy is built for production. It provides the structural integrity, global error boundaries, and architectural authority required for large-scale, mission-critical applications.
 
-**Standardize your architecture with Fluxy.**
+**Standardize your Flutter engineering with Fluxy.**
