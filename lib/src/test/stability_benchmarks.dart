@@ -153,7 +153,7 @@ class _AsyncDisposeRace extends StatelessWidget {
           } else {
             // This would crash standard Flutter if we used a raw Future/context
              FluxyStabilityMetrics.recordAsyncFix();
-             debugPrint("🛡️ Safe! Async Guard prevented a crash on unmounted context.");
+             debugPrint("[KERNEL] [ASYNC] Safe! Intercepted update on unmounted context.");
           }
         }),
       ],

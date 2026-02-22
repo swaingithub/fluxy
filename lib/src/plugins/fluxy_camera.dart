@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../engine/haptics.dart';
 import '../engine/plugin.dart';
-import '../dsl/fx.dart';
+import '../feedback/overlays.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // FLUXY CAMERA PLUGIN  v3
@@ -63,9 +63,9 @@ class FluxyCameraPlugin extends FluxyPlugin with ChangeNotifier {
     _discoveryDone = Completer<void>();
     try {
       _cameras = await cam.availableCameras();
-      debugPrint('📸 [FluxyCamera] Found ${_cameras.length} camera(s).');
+      debugPrint('[IO] [CAM] Found ${_cameras.length} hardware module(s).');
     } catch (e) {
-      debugPrint('❌ [FluxyCamera] Discovery failed: $e');
+      debugPrint('[IO] [CAM] [FATAL] Hardware discovery failed | Error: $e');
     } finally {
       _discoveryDone!.complete();
     }
@@ -103,7 +103,7 @@ class FluxyCameraPlugin extends FluxyPlugin with ChangeNotifier {
     }
 
     if (_cameras.isEmpty) {
-      debugPrint('❌ [FluxyCamera] No cameras on device.');
+      debugPrint('[IO] [CAM] [ERROR] No optical hardware detected.');
       return;
     }
 
@@ -210,7 +210,7 @@ class FluxyCameraPlugin extends FluxyPlugin with ChangeNotifier {
       unawaited(_loadThumbnail(file));
       return file;
     } catch (e) {
-      debugPrint('❌ [FluxyCamera] Capture error: $e');
+      debugPrint('[IO] [CAM] [ERROR] Capture pipeline interruption | Error: $e');
       _isCapturing = false;
       notifyListeners();
       return null;
@@ -268,10 +268,10 @@ class FluxyCameraPlugin extends FluxyPlugin with ChangeNotifier {
       _exposureOffset = 0.0;
       try { await ctrl.setFlashMode(_flashMode); } catch (_) {}
       _isOpen = true;
-      debugPrint('📸 [FluxyCamera] ✅ ${desc.lensDirection.name} camera ready.');
+      debugPrint('[IO] [CAM] [READY] ${desc.lensDirection.name.toUpperCase()} optical stage active.');
     } catch (e) {
       _isOpen = false;
-      debugPrint('❌ [FluxyCamera] Init error: $e');
+      debugPrint('[IO] [CAM] [FATAL] Stage initialization failed | Error: $e');
     }
 
     notifyListeners();
@@ -284,7 +284,7 @@ class FluxyCameraPlugin extends FluxyPlugin with ChangeNotifier {
     _controller = null;
     notifyListeners();
     try { await ctrl?.dispose(); } catch (_) {}
-    debugPrint('📸 [FluxyCamera] Hardware released.');
+    debugPrint('[IO] [CAM] Optical hardware released.');
   }
 
   Future<void> _loadThumbnail(cam.XFile file) async {
@@ -397,7 +397,7 @@ class _FluxyCameraFullViewState extends State<_FluxyCameraFullView>
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
 
     return Scaffold(
       backgroundColor: Colors.black,
@@ -588,7 +588,7 @@ class _BottomControls extends StatelessWidget {
                   final file = await plugin.capture();
                   if (file != null) {
                     onCaptured?.call(file);
-                    Fx.toast.success('Saved!');
+                    FxOverlay.showToast('Saved!', type: FxToastType.success);
                   }
                 },
               ),
@@ -889,7 +889,7 @@ class _ScanOverlayState extends State<_ScanOverlay>
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     const boxSize = 260.0;
     final bL = (size.width - boxSize) / 2;
     final bT = (size.height - boxSize) / 2;

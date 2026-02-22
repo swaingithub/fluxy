@@ -29,7 +29,7 @@ class FxRow extends StatelessWidget {
     final s = FxStyleResolver.resolve(context, style: style);
     final resolvedItems = FluxyLayoutGuard.guardCrossAxis(context, Axis.horizontal, items);
     
-    final width = MediaQuery.of(context).size.width;
+    final width = MediaQuery.sizeOf(context).width;
     final isMobile = width < 600; // Standard fluxy mobile breakpoint
     final useColumn = responsive && isMobile;
 

@@ -15,7 +15,7 @@ class FluxyInteractionGuard {
       _lastTapTimes[id] = now;
       callback();
     } else {
-      debugPrint("🛡️ [Fluxy Interaction Guard]: Preventing double-tap on interaction '$id'");
+      debugPrint("[KERNEL] [EVENT] Debounced interaction: '$id'");
     }
   }
 

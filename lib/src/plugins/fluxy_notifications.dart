@@ -132,7 +132,7 @@ class FluxyNotificationsPlugin extends FluxyPlugin with ChangeNotifier {
 
   @override
   FutureOr<void> onRegister() async {
-    debugPrint('🔔 [FluxyNotifications] Initializing...');
+    debugPrint('[NOTIF] [INIT] Initializing notification engine...');
 
     const androidSettings =
         fln.AndroidInitializationSettings('@mipmap/ic_launcher');
@@ -150,10 +150,11 @@ class FluxyNotificationsPlugin extends FluxyPlugin with ChangeNotifier {
     // Initialize Timezones for scheduling
     tz.initializeTimeZones();
     try {
-      final String timeZoneName = await FlutterTimezone.getLocalTimezone();
+      final String timeZoneName = (await FlutterTimezone.getLocalTimezone())
+          .toString();
       tz.setLocalLocation(tz.getLocation(timeZoneName));
     } catch (e) {
-      debugPrint('🔔 [FluxyNotifications] Timezone init failed: $e');
+      debugPrint('[NOTIF] [ERROR] Timezone initialization failed | Error: $e');
     }
 
     // v20.0.0+ uses named 'settings' parameter
@@ -161,7 +162,7 @@ class FluxyNotificationsPlugin extends FluxyPlugin with ChangeNotifier {
       settings: initSettings,
       onDidReceiveNotificationResponse: (fln.NotificationResponse response) {
         _tapController.add(response.payload);
-        debugPrint('🔔 [FluxyNotifications] Tapped: ${response.payload}');
+        debugPrint('[NOTIF] [EVENT] Captured tap payload: ${response.payload}');
       },
     );
 
@@ -176,7 +177,7 @@ class FluxyNotificationsPlugin extends FluxyPlugin with ChangeNotifier {
     await _createChannel(FluxyChannels.silent);
 
     _isReady = true;
-    debugPrint('🔔 [FluxyNotifications] Ready with ${5} default channels.');
+    debugPrint('[NOTIF] [READY] Engine active with 5 default channels.');
   }
 
   @override
@@ -213,7 +214,9 @@ class FluxyNotificationsPlugin extends FluxyPlugin with ChangeNotifier {
   Future<void> addPushAdapter(FluxyPushAdapter adapter) async {
     _pushAdapters.add(adapter);
     await adapter.init(_onPushReceived);
-    debugPrint('🔔 [FluxyNotifications] Push adapter added: ${adapter.runtimeType}');
+    debugPrint(
+      '[NOTIF] [PLATFORM] Push adapter registered: ${adapter.runtimeType}',
+    );
   }
 
   /// Get push device token (from first adapter).
@@ -296,7 +299,7 @@ class FluxyNotificationsPlugin extends FluxyPlugin with ChangeNotifier {
     _recordNotification(FluxyNotification(
         id: id, title: title, body: body, payload: payload));
 
-    debugPrint('🔔 [FluxyNotifications] Shown [$id]: $title');
+    debugPrint('[NOTIF] [PUSH] Dispatched notification [$id]: $title');
     return id;
   }
 
@@ -347,7 +350,9 @@ class FluxyNotificationsPlugin extends FluxyPlugin with ChangeNotifier {
       );
     } on Exception catch (e) {
       if (e.toString().contains('exact_alarms_not_permitted')) {
-        debugPrint('🔔 [FluxyNotifications] Exact alarm failed, falling back to inexact...');
+        debugPrint(
+          '[NOTIF] [WARN] Exact alarm permission missing | Reverting to inexact schedule.',
+        );
         await _plugin.zonedSchedule(
           id: id,
           title: title,
@@ -367,7 +372,9 @@ class FluxyNotificationsPlugin extends FluxyPlugin with ChangeNotifier {
       }
     }
 
-    debugPrint('🔔 [FluxyNotifications] Scheduled [$id] in ${delay.inSeconds}s: $title');
+    debugPrint(
+      '[NOTIF] [SCHEDULE] Notification [$id] queued for ${delay.inSeconds}s delay | Target: $title',
+    );
     return id;
   }
 
@@ -428,7 +435,7 @@ class FluxyNotificationsPlugin extends FluxyPlugin with ChangeNotifier {
   Future<void> cancel(int id) async {
     // v20.0.0+ uses named 'id'
     await _plugin.cancel(id: id);
-    debugPrint('🔔 [FluxyNotifications] Cancelled [$id]');
+    debugPrint('[NOTIF] [CANCEL] Termination request for ID: $id');
   }
 
   /// Cancel all pending and shown notifications.
@@ -436,7 +443,7 @@ class FluxyNotificationsPlugin extends FluxyPlugin with ChangeNotifier {
     await _plugin.cancelAll();
     unreadCount.value = 0;
     notifyListeners();
-    debugPrint('🔔 [FluxyNotifications] All cancelled.');
+    debugPrint('[NOTIF] [CANCEL] All notification channels cleared.');
   }
 
   /// Mark all as read (reset badge count).

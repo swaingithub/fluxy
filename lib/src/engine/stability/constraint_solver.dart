@@ -55,8 +55,8 @@ class FluxyConstraintSolver {
 
   static void _logFix(String type, String details) {
     if (!FluxyLayoutGuard.strictMode) {
-      debugPrint("🛡️ Fluxy Constraint Solver [Auto-Fixed]: $type");
-      debugPrint("🔧 Details: $details");
+      debugPrint("[KERNEL] [SOLVER] Constraint anomaly auto-corrected: $type");
+      debugPrint("[KERNEL] [DETAILS] $details");
     }
   }
 }

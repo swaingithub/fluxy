@@ -41,7 +41,7 @@ class FluxyBiometricResult {
 
   @override
   String toString() =>
-      success ? 'BiometricResult(✅)' : 'BiometricResult(❌ $error)';
+      success ? 'BiometricResult(SUCCESS)' : 'BiometricResult(FAILURE: $error)';
 }
 
 /// Security policy for biometric auth
@@ -98,10 +98,10 @@ class FluxyBiometricPlugin extends FluxyPlugin with ChangeNotifier {
 
   @override
   FutureOr<void> onRegister() async {
-    debugPrint('🔐 [FluxyBiometric] Initializing...');
+    debugPrint('[SEC] [INIT] Initializing biometric subsystem...');
     await _detectCapabilities();
     debugPrint(
-        '🔐 [FluxyBiometric] Available: ${isAvailable.value}, Types: ${availableTypes.value.map((t) => t.name).join(", ")}');
+        '[SEC] [READY] Available: ${isAvailable.value} | Providers: ${availableTypes.value.map((t) => t.name).join(", ")}');
   }
 
   @override
@@ -134,7 +134,7 @@ class FluxyBiometricPlugin extends FluxyPlugin with ChangeNotifier {
     }
 
     try {
-      debugPrint('🔐 [FluxyBiometric] Requesting authentication...');
+      debugPrint('[SEC] [CHALLENGE] Requesting hardware authentication...');
 
       // Robust call using common named parameters across local_auth 2.x and 3.x
       // (some versions use AuthenticationOptions, others use top-level)
@@ -181,7 +181,7 @@ class FluxyBiometricPlugin extends FluxyPlugin with ChangeNotifier {
     _sessionTimer?.cancel();
     _lastAuthTime = null;
     notifyListeners();
-    debugPrint('🔐 [FluxyBiometric] Session locked.');
+    debugPrint('[SEC] [SESSION] Resource access locked.');
   }
 
   /// Unlock without prompting (use after successful background auth check).
@@ -259,7 +259,7 @@ class FluxyBiometricPlugin extends FluxyPlugin with ChangeNotifier {
     _lastAuthTime = DateTime.now();
     _restartSessionTimer();
     notifyListeners();
-    debugPrint('🔐 [FluxyBiometric] ✅ Authenticated successfully.');
+    debugPrint('[SEC] [AUTH] [SUCCESS] Identity verified.');
   }
 
   void _onFailure() {
@@ -268,11 +268,11 @@ class FluxyBiometricPlugin extends FluxyPlugin with ChangeNotifier {
 
     if (_policy.maxAttempts > 0 && attempts >= _policy.maxAttempts) {
       isLockedOut.value = true;
-      debugPrint('🔐 [FluxyBiometric] ❌ Locked out after $attempts attempts.');
+      debugPrint('[SEC] [AUTH] [FATAL] Client locked out after $attempts failures.');
       // Auto-reset lockout after 30 seconds
       Future.delayed(const Duration(seconds: 30), resetLockout);
     } else {
-      debugPrint('🔐 [FluxyBiometric] ⚠️ Failed attempt $attempts/${_policy.maxAttempts}.');
+      debugPrint('[SEC] [AUTH] [WARN] Attempt failed ($attempts/${_policy.maxAttempts}).');
     }
     notifyListeners();
   }
@@ -283,7 +283,7 @@ class FluxyBiometricPlugin extends FluxyPlugin with ChangeNotifier {
     _sessionTimer = Timer(_policy.sessionTimeout!, () {
       if (isAuthenticated.value) {
         lock();
-        debugPrint('🔐 [FluxyBiometric] Session expired — auto-locked.');
+        debugPrint('[SEC] [SESSION] Session expired | Automatic resource lock engaged.');
       }
     });
   }

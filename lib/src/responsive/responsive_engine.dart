@@ -35,12 +35,12 @@ class ResponsiveEngine {
 
   /// Convenience method to get breakpoint from context.
   static Breakpoint of(BuildContext context) {
-    return getBreakpoint(MediaQuery.of(context).size.width);
+    return getBreakpoint(MediaQuery.sizeOf(context).width);
   }
 
   /// Gets the recommended container width for the current breakpoint.
   static double containerWidth(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
+    final width = MediaQuery.sizeOf(context).width;
     if (width >= xl) return containerXl;
     if (width >= lg) return containerLg;
     if (width >= md) return containerMd;

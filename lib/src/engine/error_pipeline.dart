@@ -18,17 +18,19 @@ class FluxyError {
   static void report(Object error, [StackTrace? stack]) {
     final translated = _translateError(error);
     
-    debugPrint("-------------------------------------------");
-    debugPrint(translated != null ? translated : "🔴 Fluxy Error Captured:");
-    if (translated == null) debugPrint(error.toString());
-    if (stack != null && translated == null) debugPrint(stack.toString());
-    debugPrint("-------------------------------------------");
+    debugPrint("┌───────────────────────────────────────────┐");
+    debugPrint(translated != null ? "│ [KERNEL] [REPAIR] $translated" : "│ [KERNEL] [ERROR] Unhandled Exception      │");
+    if (translated == null) {
+      debugPrint("├───────────────────────────────────────────┤");
+      debugPrint("│ Error: $error");
+    }
+    debugPrint("└───────────────────────────────────────────┘");
 
     for (var handler in _handlers) {
       try {
         handler(translated ?? error, stack);
       } catch (e) {
-        debugPrint("❌ Error in FluxyErrorHandler: $e");
+        debugPrint("[KERNEL] [FATAL] Error in FluxyErrorHandler: $e");
       }
     }
   }
@@ -36,13 +38,13 @@ class FluxyError {
   static String? _translateError(Object error) {
     final msg = error.toString();
     if (msg.contains("RenderBox was not laid out") || msg.contains("has infinite height") || msg.contains("vertical viewport was given unbounded height")) {
-      return "🔴 Fluxy Layout Alert: You are using .hFull() or .wFull() inside an FxScroll or similar scrollable. This causes infinite constraints. Use .h(minHeight) or Fx.scrollCenter() instead.";
+      return "[LAYOUT] Alert: .hFull() / .wFull() used inside FxScroll. Recommendation: Use .h(minHeight) or Fx.scrollCenter().";
     }
     if (msg.contains("ParentDataWidget") && msg.contains("Positioned")) {
-      return "🔴 Fluxy Layout Alert: You are using .positioned() on a widget that is not a direct child of a Stack. Flutter requires Positioned to be a direct child of Stack. Fluxy tries to lift this automatically, but check your hierarchy.";
+      return "[LAYOUT] Alert: .positioned() used outside of Stack. Flutter hierarchy violation detected.";
     }
     if (msg.contains("ParentDataWidget") && (msg.contains("Expanded") || msg.contains("Flexible"))) {
-      return "🔴 Fluxy Layout Alert: You are using .expanded() or .flex() outside of a Row, Column, or Flex. These widgets only work in flex containers.";
+      return "[LAYOUT] Alert: .expanded() / .flex() used outside of Flex container (Row/Column).";
     }
     return null;
   }

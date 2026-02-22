@@ -16,11 +16,11 @@ class FluxyAuthPlugin extends FluxyPlugin {
 
   @override
   FutureOr<void> onRegister() {
-    debugPrint('🔐 [FluxyAuth] Initializing...');
+    debugPrint('[AUTH] [INIT] Initializing...');
   }
 
   Future<bool> login(String email, String password) async {
-    debugPrint('🔐 [FluxyAuth] Logging in $email...');
+    debugPrint('[AUTH] [LOGIN] Attempting login for $email...');
     await Future.delayed(const Duration(seconds: 1));
     isAuthenticated.value = true;
     user.value = {'email': email, 'name': 'Fluxy User'};
@@ -28,7 +28,7 @@ class FluxyAuthPlugin extends FluxyPlugin {
   }
 
   void logout() {
-    debugPrint('🔐 [FluxyAuth] Logging out...');
+    debugPrint('[AUTH] [LOGOUT] Terminating session...');
     isAuthenticated.value = false;
     user.value = null;
   }

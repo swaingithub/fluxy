@@ -1,3 +1,20 @@
+## 0.2.6 - Industrial Log Professionalization & Experimental Guardrails
+
+*   **Industrial Log System**:
+    *   Completely replaced legacy emojis (`🛡️`, `📦`, `📸`, etc.) with semantic bracketed tags (`[KERNEL]`, `[SYS]`, `[DATA]`, `[IO]`) across all core subsystems and plugins.
+    *   Standardized log levels: `[INIT]`, `[READY]`, `[AUDIT]`, `[REPAIR]`, `[FATAL]`, `[PANIC]`.
+    *   Implemented monochromatic ASCII framing for diagnostic summaries and framework-level alerts.
+*   **Experimental Guardrails**:
+    *   Formally marked **OTA (Over-the-Air)**, **SDUI**, and **Cloud CLI** as `[EXPERIMENTAL]` in code, logs, and documentation.
+    *   Added `[EXPERIMENTAL]` warnings to the `FluxyRemote` sync lifecycle and `FxRemoteView`.
+*   **Resilience & OTA Evolution**:
+    *   Improved the `FluxyRemote` sync sequence with granular status reports and better asset transfer failure handling.
+    *   Standardized the OTA kill-switch logs to the new bracketed format.
+*   **Platform Identity & Evergreen Documentation**:
+    *   Comprehensive overhaul of the primary `README.md` focusing on **Architectural Authority** and the **Managed Platform** pillars.
+    *   Transitioned the documentation site to an "Era-based" narrative, removing hardcoded version anchors for a more sustainable, evergreen approach.
+    *   Added a professional Comparative Analysis matrix to the core documentation.
+
 ## 0.2.5 - The Platform Era
 
 *   **Managed Runtime Architecture**:

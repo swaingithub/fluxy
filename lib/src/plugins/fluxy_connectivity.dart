@@ -60,7 +60,7 @@ class FluxyConnectivityPlugin extends FluxyPlugin with ChangeNotifier {
 
   @override
   FutureOr<void> onRegister() async {
-    debugPrint('📶 [FluxyConnectivity] Initializing...');
+    debugPrint('[NET] [INIT] Initializing connectivity engine...');
 
     // Get initial state
     final results = await _connectivity.checkConnectivity();
@@ -71,7 +71,7 @@ class FluxyConnectivityPlugin extends FluxyPlugin with ChangeNotifier {
         _connectivity.onConnectivityChanged.listen(_updateFrom);
 
     debugPrint(
-        '📶 [FluxyConnectivity] Ready — ${isOnline.value ? "Online" : "Offline"} via ${connectionType.value.name}');
+        '[NET] [READY] Status: ${isOnline.value ? "ONLINE (✔)" : "OFFLINE (✖)"} | Interface: ${connectionType.value.name.toUpperCase()}');
   }
 
   @override
@@ -130,7 +130,7 @@ class FluxyConnectivityPlugin extends FluxyPlugin with ChangeNotifier {
     _retryQueue.removeWhere((o) => o.id == operationId);
     _retryQueue.add(_QueuedOperation(id: operationId, task: task));
     debugPrint(
-        '📶 [FluxyConnectivity] Queued "$operationId" — ${_retryQueue.length} job(s) pending.');
+        '[NET] [QUEUE] Enqueued "$operationId" — ${_retryQueue.length} job(s) pending.');
   }
 
   /// How many operations are waiting for network.
@@ -172,7 +172,7 @@ class FluxyConnectivityPlugin extends FluxyPlugin with ChangeNotifier {
     isWifi.value = newType == FluxyConnectionType.wifi;
     isMobile.value = newType == FluxyConnectionType.mobile;
 
-    debugPrint('📶 [FluxyConnectivity] ${nowOnline ? "🟢 Online" : "🔴 Offline"} — ${newType.name}');
+    debugPrint('[NET] [EVENT] Status changed: ${nowOnline ? "ONLINE (✔)" : "OFFLINE (✖)"} via ${newType.name.toUpperCase()}');
 
     if (nowOnline && !_wasOnline) {
       // Just came back online
@@ -194,7 +194,7 @@ class FluxyConnectivityPlugin extends FluxyPlugin with ChangeNotifier {
   Future<void> _flushQueue() async {
     if (_retryQueue.isEmpty) return;
     debugPrint(
-        '📶 [FluxyConnectivity] Online — replaying ${_retryQueue.length} queued operation(s).');
+        '[NET] [AUTO-SYNC] System online — Replaying ${_retryQueue.length} queued operation(s)...');
 
     final toRun = List<_QueuedOperation>.from(_retryQueue);
     _retryQueue.clear();
@@ -202,16 +202,16 @@ class FluxyConnectivityPlugin extends FluxyPlugin with ChangeNotifier {
     for (final op in toRun) {
       try {
         await op.task();
-        debugPrint('📶 [FluxyConnectivity] ✅ "${op.id}" succeeded.');
+        debugPrint('[NET] [SUCCESS] Operation "${op.id}" completed.');
       } catch (e) {
         op.retryCount++;
         if (op.retryCount < _maxRetries) {
           _retryQueue.add(op);
           debugPrint(
-              '📶 [FluxyConnectivity] ⚠️ "${op.id}" failed (retry ${op.retryCount}/$_maxRetries): $e');
+              '[NET] [RETRY] Operation "${op.id}" failed (Attempt ${op.retryCount}/$_maxRetries) | Error: $e');
         } else {
           debugPrint(
-              '📶 [FluxyConnectivity] ❌ "${op.id}" dropped after $_maxRetries retries: $e');
+              '[NET] [FATAL] Operation "${op.id}" dropped after $_maxRetries attempts | Error: $e');
         }
       }
     }

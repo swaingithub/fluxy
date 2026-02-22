@@ -62,7 +62,7 @@ class _FxScrollState extends State<FxScroll> {
       style: widget.style,
       child: FxScrollInfo(
         direction: widget.direction,
-        viewportConstraints: BoxConstraints.loose(MediaQuery.of(context).size),
+        viewportConstraints: BoxConstraints.loose(MediaQuery.sizeOf(context)),
         child: content,
       ),
     );

@@ -29,7 +29,7 @@ class FluxyStateGuard {
     final fluxes = FluxRegistry.all;
     for (final flux in fluxes) {
       if (flux.subscribers.length > 100) {
-        debugPrint("🛡️ State Guard: Warning - Flux [${flux.label ?? flux.id}] has ${flux.subscribers.length} subscribers. High probability of zombie listeners/leaks.");
+        debugPrint("[KERNEL] [STATE] Warning - Flux [${flux.label ?? flux.id}] has ${flux.subscribers.length} subscribers. High probability of leak.");
       }
     }
   }
@@ -43,10 +43,12 @@ class FluxyStateGuard {
       throw FluxyStateViolationException(name, msg, suggestion);
     } else {
       FluxyStabilityMetrics.recordStateFix();
-      debugPrint("-------------------------------------------");
-      debugPrint("🛡️ Fluxy State Guard [REBUILD LOOP]: $msg");
-      debugPrint("🔧 Recommendation: $suggestion");
-      debugPrint("-------------------------------------------");
+      debugPrint("┌───────────────────────────────────────────┐");
+      debugPrint("│ [KERNEL] [AUDIT] State Anomaly Detected    │");
+      debugPrint("├───────────────────────────────────────────┤");
+      debugPrint("│ Loop: $msg");
+      debugPrint("│ Rec:  $suggestion");
+      debugPrint("└───────────────────────────────────────────┘");
     }
   }
 }
@@ -63,5 +65,5 @@ class FluxyStateViolationException implements Exception {
   FluxyStateViolationException(this.subscriberName, this.message, this.suggestion);
 
   @override
-  String toString() => "🚨 Fluxy State Violation: $message\n💡 Suggestion: $suggestion";
+  String toString() => "[STATE] Violation: $message | Recommendation: $suggestion";
 }

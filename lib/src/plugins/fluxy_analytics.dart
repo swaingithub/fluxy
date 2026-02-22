@@ -78,13 +78,13 @@ class FluxyAnalyticsPlugin extends FluxyPlugin with ChangeNotifier {
 
   @override
   FutureOr<void> onRegister() {
-    debugPrint('📊 [FluxyAnalytics] Initializing...');
+    debugPrint('[TRACE] [INIT] Initializing telemetry engine...');
     _startSession();
   }
 
   @override
   FutureOr<void> onAppReady() {
-    debugPrint('📊 [FluxyAnalytics] Tracking started. Session: $_sessionId');
+    debugPrint('[TRACE] [READY] Tracking active | Session ID: $_sessionId');
     _scheduleFlush();
   }
 
@@ -113,7 +113,7 @@ class FluxyAnalyticsPlugin extends FluxyPlugin with ChangeNotifier {
   /// Add properties that are automatically merged into every event.
   void setSuperProperties(Map<String, dynamic> props) {
     _superProperties.addAll(props);
-    debugPrint('📊 [FluxyAnalytics] Super properties set: ${props.keys}');
+    debugPrint('[TRACE] [CONFIG] Super properties committed: ${props.keys}');
   }
 
   /// Clear all super-properties.
@@ -126,7 +126,7 @@ class FluxyAnalyticsPlugin extends FluxyPlugin with ChangeNotifier {
     _userId = userId;
     if (traits != null) setSuperProperties({'user_id': userId, ...traits});
     logEvent('user_identified', properties: {'user_id': userId, ...?traits});
-    debugPrint('📊 [FluxyAnalytics] User identified: $userId');
+    debugPrint('[TRACE] [USER] Identity mapped: $userId');
     notifyListeners();
   }
 
@@ -135,7 +135,7 @@ class FluxyAnalyticsPlugin extends FluxyPlugin with ChangeNotifier {
     _userId = null;
     _superProperties.remove('user_id');
     _startSession(); // new session after logout
-    debugPrint('📊 [FluxyAnalytics] Identity reset. New session: $_sessionId');
+    debugPrint('[TRACE] [USER] Identity purged | New session sequence: $_sessionId');
   }
 
   // ── Core Event Logging ───────────────────────────────────────────────────────
@@ -162,7 +162,7 @@ class FluxyAnalyticsPlugin extends FluxyPlugin with ChangeNotifier {
     eventCount.value = _queue.length;
     notifyListeners();
 
-    debugPrint('📊 [FluxyAnalytics] Event: $name ${properties ?? ''}');
+    debugPrint('[TRACE] [EVENT] Recorded: $name | Payload: ${properties ?? "EMPTY"}');
 
     if (_queue.length >= _batchSize) {
       flush();
@@ -233,7 +233,7 @@ class FluxyAnalyticsPlugin extends FluxyPlugin with ChangeNotifier {
   Future<void> flush() async {
     if (_queue.isEmpty) return;
     if (_adapters.isEmpty) {
-      debugPrint('📊 [FluxyAnalytics] No adapters — flushing ${_queue.length} events (debug only).');
+      debugPrint('[TRACE] [FLUSH] [NO-ADAPTER] Dropping ${_queue.length} events from stack.');
       if (kDebugMode) {
         for (final e in _queue) {
           debugPrint('   → ${jsonEncode(e.toJson())}');
@@ -253,10 +253,10 @@ class FluxyAnalyticsPlugin extends FluxyPlugin with ChangeNotifier {
     for (final adapter in _adapters) {
       try {
         await adapter.sendBatch(batch);
-        debugPrint('📊 [FluxyAnalytics] Flushed ${batch.length} events via ${adapter.runtimeType}.');
+        debugPrint('[TRACE] [FLUSH] [SUCCESS] Dispatched ${batch.length} events via ${adapter.runtimeType}.');
       } catch (e) {
         // Re-queue on failure for retry
-        debugPrint('❌ [FluxyAnalytics] Flush failed (${adapter.runtimeType}): $e. Re-queuing...');
+        debugPrint('[TRACE] [FLUSH] [ERROR] Adapter failure (${adapter.runtimeType}) | Error: $e');
         _queue.insertAll(0, batch);
         eventCount.value = _queue.length;
         notifyListeners();

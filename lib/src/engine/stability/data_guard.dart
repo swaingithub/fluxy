@@ -26,12 +26,12 @@ class FluxyDataGuard {
       } catch (e) {
         attempts++;
         if (attempts >= max) {
-          debugPrint("🛡️ [Fluxy Data Guard]: Max retries reached for ${label ?? 'operation'}.");
+          debugPrint("[KERNEL] [DATA] [FATAL] Max retries exhausted for ${label ?? 'operation'}.");
           rethrow;
         }
         
         FluxyStabilityMetrics.recordAsyncFix(); // Record that we recovered via retry
-        debugPrint("🛡️ [Fluxy Data Guard]: Retry attempt $attempts/$max for ${label ?? 'operation'}...");
+        debugPrint("[KERNEL] [DATA] [RETRY] Attempt $attempts/$max for ${label ?? 'operation'}...");
         await Future.delayed(backoff * attempts); // Exponential-ish backoff
       }
     }
@@ -57,7 +57,7 @@ class FluxyDataGuard {
       final fresh = await remote;
       onData(fresh);
     } catch (e) {
-      debugPrint("🛡️ [Fluxy Data Guard]: SWR Revalidation failed: $e");
+      debugPrint("[KERNEL] [DATA] [ERROR] SWR cycle failed | Error: $e");
       onError?.call(e);
     }
   }

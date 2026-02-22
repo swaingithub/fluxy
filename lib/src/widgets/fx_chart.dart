@@ -234,7 +234,7 @@ class _ChartPainter extends CustomPainter {
       ..shader = LinearGradient(
         begin: Alignment.topCenter,
         end: Alignment.bottomCenter,
-        colors: [primaryColor.withOpacity(0.4), primaryColor.withOpacity(0.0)],
+        colors: [primaryColor.withValues(alpha: 0.4), primaryColor.withValues(alpha: 0.0)],
       ).createShader(Rect.fromLTWH(0, 0, chartWidth, chartHeight));
 
     for (int i = 0; i < data.length; i++) {

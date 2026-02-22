@@ -263,7 +263,7 @@ class FluxyDebug {
       );
     });
 
-    debugPrint('Fluxy DevTools Extensions Registered 🛠️');
+    debugPrint('[DEBUG] [INIT] Service extensions registered.');
   }
 
   /// Registers a flux in the dependency graph.
@@ -469,32 +469,24 @@ class FluxyDebug {
 
   /// Prints a summary of the current state.
   static void printSummary() {
-    if (!_isEnabled) {
-      debugPrint('Fluxy Debug is not enabled');
-      return;
-    }
-
-    debugPrint('=== Fluxy Debug Summary ===');
-    debugPrint('Fluxes: ${_metrics.totalSignals}');
-    debugPrint('Computed: ${_metrics.totalComputed}');
-    debugPrint('Effects: ${_metrics.totalEffects}');
-    debugPrint('Total Updates: ${_metrics.totalUpdates}');
-    debugPrint('Total Reads: ${_metrics.totalReads}');
-    debugPrint(
-      'Avg Compute Time: ${_metrics.averageComputeTime.inMicroseconds}μs',
-    );
-    debugPrint('Circular Errors: ${_metrics.circularDependencyErrors}');
-    debugPrint('Active Fluxes: ${_signalGraph.length}');
-    debugPrint('Timeline Events: ${_timeline.length}');
+    final s = _metrics;
+    debugPrint('┌───────────────────────────────────────────┐');
+    debugPrint('│ [DEBUG] REACTIVE ENGINE SUMMARY           │');
+    debugPrint('├───────────────────────────────────────────┤');
+    debugPrint('│ Signals:    ${s.totalSignals.toString().padRight(10)}            │');
+    debugPrint('│ Computed:   ${s.totalComputed.toString().padRight(10)}            │');
+    debugPrint('│ Effects:    ${s.totalEffects.toString().padRight(10)}            │');
+    debugPrint('│ Updates:    ${s.totalUpdates.toString().padRight(10)}            │');
+    debugPrint('│ Avg Comp:   ${s.averageComputeTime.inMicroseconds.toString().padRight(6)}μs            │');
+    debugPrint('└───────────────────────────────────────────┘');
 
     final leaks = detectMemoryLeaks();
     if (leaks.isNotEmpty) {
-      debugPrint('⚠️ Potential Memory Leaks:');
+      debugPrint('[DEBUG] [WARN] Potential Memory Leaks:');
       for (final leak in leaks) {
         debugPrint('  - $leak');
       }
     }
-    debugPrint('========================');
   }
 
   /// Exports all debug data as JSON.

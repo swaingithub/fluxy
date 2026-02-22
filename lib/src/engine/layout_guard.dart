@@ -25,7 +25,7 @@ class FluxyLayoutViolationException implements Exception {
 
   @override
   String toString() {
-    return "🚨 Fluxy Layout Violation: $violation\n💡 Suggestion: $suggestion";
+    return "[LAYOUT] Violation: $violation | Recommendation: $suggestion";
   }
 }
 
@@ -146,10 +146,12 @@ class FluxyLayoutGuard {
     }
     
     if (!debugMode) return;
-    debugPrint("-------------------------------------------");
-    debugPrint("🛡️ Fluxy Layout Guard: $violation detected.");
-    debugPrint("🔧 Recommendation: $suggestion");
-    debugPrint("-------------------------------------------");
+    debugPrint("┌───────────────────────────────────────────┐");
+    debugPrint("│ [KERNEL] [AUDIT] Layout anomaly detected   │");
+    debugPrint("├───────────────────────────────────────────┤");
+    debugPrint("│ Type: $violation");
+    debugPrint("│ Rec:  $suggestion");
+    debugPrint("└───────────────────────────────────────────┘");
   }
 
   static void clearLogs() => _violationLog.clear();
@@ -223,7 +225,7 @@ class FxSafeExpansion extends StatelessWidget {
     // we MUST block expansion to prevent a hard Flutter viewport crash.
     if (scrollInfo != null && scrollInfo.direction == effectiveDirection) {
       if (FluxyLayoutGuard.debugMode) {
-        debugPrint("🛡️ SafeUI: Blocked illegal expansion in ${effectiveDirection.name} scroll context.");
+        debugPrint("[KERNEL] [AUDIT] Intercepted illegal expansion in ${effectiveDirection.name} scroll axis.");
       }
       return child; 
     }

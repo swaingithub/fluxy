@@ -35,9 +35,9 @@ class FluxyViewportGuard extends StatelessWidget {
           }
 
           // Relaxed Mode: Auto-repair
-          final mediaQuery = MediaQuery.of(context);
-          final safeMaxHeight = fallbackMaxHeight ?? mediaQuery.size.height;
-          final safeMaxWidth = fallbackMaxWidth ?? mediaQuery.size.width;
+          final size = MediaQuery.sizeOf(context);
+          final safeMaxHeight = fallbackMaxHeight ?? size.height;
+          final safeMaxWidth = fallbackMaxWidth ?? size.width;
 
           FluxyStabilityMetrics.recordViewportFix();
 

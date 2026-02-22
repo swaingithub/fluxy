@@ -65,7 +65,7 @@ class _GridBoxState extends State<GridBox> {
       className: widget.className,
       responsive: widget.responsive,
     );
-    final double width = MediaQuery.of(context).size.width;
+    final double width = MediaQuery.sizeOf(context).width;
 
     Widget current = GridView.count(
       crossAxisCount: GridLayoutSolver.calculateColumnCount(

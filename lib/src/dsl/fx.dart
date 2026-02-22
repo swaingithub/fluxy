@@ -137,6 +137,9 @@ class Fx extends StatefulWidget {
   /// Direct access to Fluxy OTA module.
   static _FxOTAHelper get ota => const _FxOTAHelper();
 
+  /// Access to global networing engine.
+  static final http = FluxyHttp();
+
   // --- Theme Management ---
 
   /// Toggles between light and dark mode.
@@ -148,8 +151,6 @@ class Fx extends StatefulWidget {
   /// Sets the theme mode.
   static void setThemeMode(ThemeMode mode) => FxTheme.setMode(mode);
 
-  /// Access to global HTTP client.
-  static FluxyHttp get http => FluxyHttp();
 
   /// Registers a global error handler.
   static void onError(FluxyErrorHandler handler) => FluxyError.onError(handler);
@@ -1021,7 +1022,6 @@ class Fx extends StatefulWidget {
   }
 
   /// Shows a snackbar / toast.
-  /// Shows a snackbar / toast.
   /// Automatically becomes floating and width-constrained on larger screens.
   static void snack(
     BuildContext context,
@@ -1037,7 +1037,7 @@ class Fx extends StatefulWidget {
     // If Desktop/Tablet (>600px): strictly limit width to 400px (floating).
     // If Mobile: use full width (standard).
 
-    final screenWidth = MediaQuery.of(context).size.width;
+    final screenWidth = MediaQuery.sizeOf(context).width;
     final isDesktop = screenWidth > 600;
 
     // Auto-calculate width for desktop if not provided

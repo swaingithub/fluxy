@@ -36,6 +36,7 @@ export 'src/widgets/bottom_bar.dart';
 export 'src/widgets/avatar.dart';
 export 'src/widgets/button.dart';
 export 'src/widgets/fx_image.dart';
+export 'src/widgets/fx_shimmer.dart';
 export 'src/widgets/badge.dart';
 export 'src/widgets/table.dart';
 export 'src/widgets/fx_chart.dart';
@@ -182,7 +183,7 @@ class Fluxy {
   /// Automatically registers all plugins found in the workspace dependencies.
   /// This calls the auto-generated registry created by the Fluxy CLI.
   static void autoRegister() {
-    debugPrint("🚀 Fluxy: Auto-registering plugins...");
+    debugPrint("[INIT] [Platform] Registering Fluxy plugins...");
     registerFluxyPlugins();
   }
 
@@ -205,15 +206,16 @@ class Fluxy {
   /// Prints a summary of all stability saves in the current session.
   static void printStabilitySummary() {
     final s = FluxyStabilityMetrics.getSummary();
-    debugPrint("-------------------------------------------");
-    debugPrint("🛡️ FLUXY STABILITY KERNEL SESSION SUMMARY");
-    debugPrint("-------------------------------------------");
-    debugPrint("🎨 Layout Saves:    ${s['layout_fixes']}");
-    debugPrint("📏 Viewport Saves:  ${s['viewport_fixes']}");
-    debugPrint("🔄 State Saves:     ${s['state_fixes']}");
-    debugPrint("⏳ Async Saves:     ${s['async_fixes']}");
-    debugPrint("🚀 Total Saves:     ${s['total_saves']}");
-    debugPrint("-------------------------------------------");
+    debugPrint("┌───────────────────────────────────────────┐");
+    debugPrint("│ [KERNEL] STABILITY SESSION SUMMARY         │");
+    debugPrint("├───────────────────────────────────────────┤");
+    debugPrint("│ [LAYOUT]    Fixes:    ${s['layout_fixes'].toString().padRight(10)}      │");
+    debugPrint("│ [VIEWPORT]  Fixes:    ${s['viewport_fixes'].toString().padRight(10)}      │");
+    debugPrint("│ [STATE]     Fixes:    ${s['state_fixes'].toString().padRight(10)}      │");
+    debugPrint("│ [ASYNC]     Fixes:    ${s['async_fixes'].toString().padRight(10)}      │");
+    debugPrint("├───────────────────────────────────────────┤");
+    debugPrint("│ [TOTAL]     Actions:  ${s['total_saves'].toString().padRight(10)}      │");
+    debugPrint("└───────────────────────────────────────────┘");
   }
 
   /// Enables the Fluxy Debug Inspector overlay.

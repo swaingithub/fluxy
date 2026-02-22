@@ -35,19 +35,19 @@ class FluxyCloud {
     final workflowsDir = Directory('.github/workflows');
     if (!workflowsDir.existsSync()) {
       workflowsDir.createSync(recursive: true);
-      print('📂 Created .github/workflows directory');
+      print('[FILESYSTEM] [INIT] Created .github/workflows directory structure.');
     }
 
     if (target == 'android') {
       final file = File(p.join(workflowsDir.path, 'fluxy_android_build.yml'));
       file.writeAsStringSync(_androidTemplate);
-      print('✅ Generated fluxy_android_build.yml');
-      print('👉 Commit and push to trigger your first Android Cloud Build!');
+      print('[CLOUD] [CONFIG] Generated fluxy_android_build.yml successfully.');
+      print('[CLOUD] [ACTION] Commit and push to trigger remote Android pipeline.');
     } else if (target == 'ios') {
       final file = File(p.join(workflowsDir.path, 'fluxy_ios_build.yml'));
       file.writeAsStringSync(_iosTemplate);
-      print('✅ Generated fluxy_ios_build.yml');
-      print('👉 Commit and push to trigger your first iOS Cloud Build!');
+      print('[CLOUD] [CONFIG] Generated fluxy_ios_build.yml successfully.');
+      print('[CLOUD] [ACTION] Commit and push to trigger remote iOS pipeline.');
     } else {
       print('Unsupported build target: $target');
     }
@@ -61,8 +61,8 @@ class FluxyCloud {
 
     final file = File(p.join(workflowsDir.path, 'fluxy_deploy.yml'));
     file.writeAsStringSync(_deployTemplate);
-    print('✅ Generated fluxy_deploy.yml');
-    print('👉 Use "workflow_dispatch" in GitHub to trigger deployment.');
+    print('[CLOUD] [CONFIG] Generated fluxy_deploy.yml successfully.');
+    print('[CLOUD] [ACTION] Use "workflow_dispatch" in GitHub to initiate deployment.');
   }
 
   static const String _androidTemplate = '''

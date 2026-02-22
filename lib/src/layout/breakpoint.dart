@@ -12,7 +12,7 @@ class FxBreakpoint {
   static const double lg = 1200;
 
   static FxDeviceType deviceType(BuildContext context) {
-    final w = MediaQuery.of(context).size.width;
+    final w = MediaQuery.sizeOf(context).width;
     if (w < sm) return FxDeviceType.mobile;
     if (w < lg) return FxDeviceType.tablet;
     return FxDeviceType.desktop;
@@ -26,7 +26,7 @@ class FxBreakpoint {
     T? lg,
     T? xl,
   }) {
-    final w = MediaQuery.of(context).size.width;
+    final w = MediaQuery.sizeOf(context).width;
     if (w < FxBreakpoint.xs) return xs;
     if (w < FxBreakpoint.sm) return sm ?? xs;
     if (w < FxBreakpoint.md) return md ?? sm ?? xs;

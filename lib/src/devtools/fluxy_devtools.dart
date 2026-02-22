@@ -582,7 +582,7 @@ class _FluxyDevToolsState extends State<FluxyDevTools> {
           const SizedBox(height: 12),
           
           if (violations.isEmpty)
-            _buildEmpty("No layout violations detected. Your UI is healthy! 🚀")
+            _buildEmpty("No layout violations detected. System healthy.")
           else
             ...violations.map((log) {
               final parts = log.split('] -> ');

@@ -20,7 +20,7 @@ class FxResponsiveValue<T> {
 
   /// Get the value for current screen width
   T resolve(BuildContext context, T defaultValue) {
-    final width = MediaQuery.of(context).size.width;
+    final width = MediaQuery.sizeOf(context).width;
     
     if (width >= FxBreakpoint.lg) {
       return xl ?? lg ?? md ?? sm ?? xs ?? defaultValue;
@@ -102,7 +102,7 @@ class FxResponsive {
     T? lg,
     T? xl,
   }) {
-    final width = MediaQuery.of(context).size.width;
+    final width = MediaQuery.sizeOf(context).width;
     
     if (width >= FxBreakpoint.lg) {
       return xl ?? lg ?? md ?? sm ?? xs;

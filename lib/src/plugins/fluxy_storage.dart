@@ -37,7 +37,7 @@ class FluxyStoragePlugin extends FluxyPlugin with ChangeNotifier {
 
   @override
   FutureOr<void> onRegister() async {
-    debugPrint('📦 [FluxyStorage] Initializing...');
+    debugPrint('[DATA] [INIT] Initializing persistent storage...');
     try {
       _prefs = await SharedPreferences.getInstance();
       _secure = const FlutterSecureStorage(
@@ -48,9 +48,9 @@ class FluxyStoragePlugin extends FluxyPlugin with ChangeNotifier {
         iOptions: IOSOptions(accessibility: KeychainAccessibility.first_unlock),
       );
       _syncKeyCount();
-      debugPrint('📦 [FluxyStorage] Ready — ${_prefs!.getKeys().length} key(s) stored.');
+      debugPrint('[DATA] [READY] Hydrated — ${_prefs!.getKeys().length} key(s) discovered.');
     } catch (e) {
-      debugPrint('❌ [FluxyStorage] Init failed: $e');
+      debugPrint('[DATA] [FATAL] Persistence initialization failed | Error: $e');
     }
   }
 
@@ -79,7 +79,7 @@ class FluxyStoragePlugin extends FluxyPlugin with ChangeNotifier {
 
     _syncKeyCount();
     notifyListeners();
-    debugPrint('📦 [FluxyStorage] SET "$key"');
+    debugPrint('[DATA] [SET] Keystage committed: "$key"');
   }
 
   /// Read a value. Hits in-memory cache first, then SharedPreferences.
@@ -120,7 +120,7 @@ class FluxyStoragePlugin extends FluxyPlugin with ChangeNotifier {
     await _prefs!.remove(key);
     _syncKeyCount();
     notifyListeners();
-    debugPrint('📦 [FluxyStorage] REMOVE "$key"');
+    debugPrint('[DATA] [REMOVE] Entry purged: "$key"');
   }
 
   /// Returns true if key exists and is not expired.
@@ -145,7 +145,7 @@ class FluxyStoragePlugin extends FluxyPlugin with ChangeNotifier {
     await _prefs!.clear();
     _syncKeyCount();
     notifyListeners();
-    debugPrint('📦 [FluxyStorage] CLEARED all keys.');
+    debugPrint('[DATA] [CLEARED] Full dataset purge complete.');
   }
 
   // ── Type-safe convenience getters ────────────────────────────────────────────
@@ -177,7 +177,7 @@ class FluxyStoragePlugin extends FluxyPlugin with ChangeNotifier {
   Future<void> setSecure(String key, String value) async {
     _assertReady();
     await _secure!.write(key: key, value: value);
-    debugPrint('📦 [FluxyStorage] SECURE SET "$key"');
+    debugPrint('[SEC] [VAULT-SET] Encrypted commitment: "$key"');
   }
 
   /// Read an encrypted secret.
@@ -190,14 +190,14 @@ class FluxyStoragePlugin extends FluxyPlugin with ChangeNotifier {
   Future<void> removeSecure(String key) async {
     _assertReady();
     await _secure!.delete(key: key);
-    debugPrint('📦 [FluxyStorage] SECURE REMOVE "$key"');
+    debugPrint('[SEC] [VAULT-REMOVE] Encrypted entry purged: "$key"');
   }
 
   /// Wipe all secure storage.
   Future<void> clearSecure() async {
     _assertReady();
     await _secure!.deleteAll();
-    debugPrint('📦 [FluxyStorage] SECURE CLEARED.');
+    debugPrint('[SEC] [VAULT-CLEARED] Cryptographic container wiped.');
   }
 
   // ── Private ──────────────────────────────────────────────────────────────────

@@ -44,8 +44,8 @@ class FxLift {
     } catch (e) {
       // If a crash occurs in the wrapper (likely ParentData conflict), 
       // we log a semantic Fluxy warning instead of a hard crash.
-      debugPrint("🔴 Fluxy Lifting Alert: $e");
-      debugPrint("Suggestion: Ensure you are not wrapping an .expanded() inside a .box() direct child.");
+      debugPrint("[KERNEL] [LIFT] Alert: $e");
+      debugPrint("Recommendation: Avoid wrapping .expanded() / .flex() inside a container that is not a Flex.");
       return wrapper(widget); // Re-run and let Flutter report if it must, but we've warned.
     }
   }

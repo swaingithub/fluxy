@@ -42,7 +42,7 @@ class FluxyPluginEngine {
   /// Sets the enabled status of a plugin (Kill-switch).
   static void setPluginEnabled(String name, bool enabled) {
     _pluginStatus[name] = enabled;
-    debugPrint('🛡️ [FluxyPluginEngine] Plugin "$name" status set to: ${enabled ? 'ENABLED' : 'DISABLED'}');
+    debugPrint('[SYS] [KERNEL] Plugin "$name" policy set to: ${enabled ? 'ACTIVE' : 'INACTIVE'}');
   }
 
   /// Checks if a plugin is enabled.
@@ -63,13 +63,13 @@ class FluxyPluginEngine {
   static Future<void> onRegisterAll() async {
     for (final plugin in _plugins) {
       if (!isPluginEnabled(plugin.name)) {
-        debugPrint('🛡️ [FluxyPluginEngine] Skipping registration for disabled plugin: ${plugin.name}');
+        debugPrint('[SYS] [KERNEL] Skipping registration for disabled module: ${plugin.name}');
         continue;
       }
       try {
         await plugin.onRegister();
       } catch (e, stack) {
-        debugPrint('❌ [FluxyPluginEngine] Error registering plugin "${plugin.name}": $e');
+        debugPrint('[SYS] [FATAL] Error registering module "${plugin.name}" | Error: $e');
         debugPrint(stack.toString());
       }
     }
@@ -82,7 +82,7 @@ class FluxyPluginEngine {
       try {
         await plugin.onAppReady();
       } catch (e, stack) {
-        debugPrint('❌ [FluxyPluginEngine] Error signaling ready for plugin "${plugin.name}": $e');
+        debugPrint('[SYS] [ERROR] Ready signal failure for module "${plugin.name}" | Error: $e');
         debugPrint(stack.toString());
       }
     }

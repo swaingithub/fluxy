@@ -53,7 +53,7 @@ class FluxyPermissionsPlugin extends FluxyPlugin with ChangeNotifier {
 
   @override
   FutureOr<void> onRegister() async {
-    debugPrint('🛡️ [FluxyPermissions] Ready.');
+    debugPrint('[SYS] [PERM] Subsystem initialized.');
     // Pre-check status of commonly needed permissions without requesting them
     await checkAll([
       FluxyPermission.camera,
@@ -74,17 +74,17 @@ class FluxyPermissionsPlugin extends FluxyPlugin with ChangeNotifier {
 
   /// Request a permission. Returns the resulting status.
   Future<FluxyPermissionStatus> request(FluxyPermission p) async {
-    debugPrint('🛡️ [FluxyPermissions] Requesting ${p.name}...');
+    debugPrint('[SYS] [PERM] Requesting elevated access: ${p.name.toUpperCase()}...');
     final ph.PermissionStatus raw = await _toPhPermission(p).request();
     final status = _fromPh(raw);
     _updateSignal(p, status);
 
     if (status == FluxyPermissionStatus.granted) {
-      debugPrint('🛡️ [FluxyPermissions] ✅ ${p.name} granted.');
+      debugPrint('[SYS] [PERM] [GRANTED] ${p.name.toUpperCase()} access verified.');
     } else if (status == FluxyPermissionStatus.permanentlyDenied) {
-      debugPrint('🛡️ [FluxyPermissions] ❌ ${p.name} permanently denied.');
+      debugPrint('[SYS] [PERM] [FATAL] ${p.name.toUpperCase()} permanently denied by policy.');
     } else {
-      debugPrint('🛡️ [FluxyPermissions] ⚠️ ${p.name} denied.');
+      debugPrint('[SYS] [PERM] [WARN] ${p.name.toUpperCase()} request denied.');
     }
 
     return status;
@@ -139,7 +139,7 @@ class FluxyPermissionsPlugin extends FluxyPlugin with ChangeNotifier {
 
   /// Opens OS app settings so user can manually grant permanently-denied permissions.
   Future<bool> openSettings() async {
-    debugPrint('🛡️ [FluxyPermissions] Opening app settings...');
+    debugPrint('[SYS] [PERM] Redirecting to OS App Settings...');
     return ph.openAppSettings();
   }
 

@@ -72,8 +72,8 @@ class _RenderStabilityGuard extends RenderProxyBox {
     if (FluxyLayoutGuard.strictMode) {
        throw FluxyLayoutViolationException(violation, suggestion);
     } else {
-      debugPrint("🛡️ Fluxy Render Guard [Auto-Repair Activated]: $violation");
-      debugPrint("🔧 Recommendation: $suggestion");
+      debugPrint("[KERNEL] [REPAIR] Render boundary violation auto-corrected: $violation");
+      debugPrint("[KERNEL] [ACTION] Alignment adjusted to prevent frame drop.");
       FluxyStabilityMetrics.recordLayoutFix();
     }
   }
@@ -83,14 +83,14 @@ class _RenderStabilityGuard extends RenderProxyBox {
     try {
       super.paint(context, offset);
     } catch (e) {
-      debugPrint("🚨 Fluxy Render Guard: Caught a crash during painting!");
+      debugPrint("[KERNEL] [PANIC] Render tree corruption during paint sequence!");
       // Prevent the app from dying by painting a red placeholder if in Strict mode, 
       // or try to ignore if in Relaxed mode.
       if (FluxyLayoutGuard.strictMode) {
         rethrow;
       }
       
-      final paint = Paint()..color = const Color(0xFFFF0000).withOpacity(0.3);
+      final paint = Paint()..color = const Color(0xFFFF0000).withValues(alpha: 0.3);
       context.canvas.drawRect(offset & size, paint);
     }
   }

@@ -39,7 +39,7 @@ class FluxyRemote {
   static Future<void> update(String manifestUrl) async {
     try {
       await init();
-      debugPrint('[FluxyRemote] Checking for updates...');
+      debugPrint('[OTA] [INIT] Checking for remote manifest... [EXPERIMENTAL]');
 
       final client = HttpClient();
       final request = await client.getUrl(Uri.parse(manifestUrl));
@@ -58,12 +58,12 @@ class FluxyRemote {
 
       if (newVersion > currentVersion) {
         debugPrint(
-          '[FluxyRemote] New version detected: $newVersion (Current: $currentVersion). Downloading...',
+          '[OTA] [SYNC] New version identified: v$newVersion (Local: v$currentVersion). Synchronizing assets...',
         );
         await _downloadAssets(manifest['assets']);
         await prefs.setInt(_versionKey, newVersion);
         debugPrint(
-          '[FluxyRemote] Update complete. Version is now $newVersion.',
+          '[OTA] [READY] Update lifecycle successful. Current environment: v$newVersion.',
         );
       }
       
@@ -75,7 +75,7 @@ class FluxyRemote {
         }
       }
     } catch (e) {
-      debugPrint('[FluxyRemote] Update failed: $e');
+      debugPrint('[OTA] [FATAL] Update sequence interrupted | Error: $e');
     }
   }
 
@@ -105,7 +105,7 @@ class FluxyRemote {
           );
         }
       } catch (e) {
-        debugPrint('[FluxyRemote] Exception downloading $filename: $e');
+        debugPrint('[OTA] [ERROR] Asset transfer failure ($filename) | Error: $e');
       }
     }
   }
