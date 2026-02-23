@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+**Documentation Links:**
+- [Migration Guide](MIGRATION_GUIDE.md) - How to upgrade from v0.2.6 to v1.0.0
+- [GitHub Repository](https://github.com/swaingithub/fluxy) - Complete documentation and examples
+- [API Reference](https://pub.dev/documentation/fluxy/latest/) - Detailed API documentation
+
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
@@ -10,7 +15,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### BREAKING CHANGES
 
 - Modular Architecture: Split monolithic package into focused modules
-- Package Size: Core reduced from 15MB+ to 162KB
 - Dependencies: Several features moved to separate packages
 
 ### Added
@@ -45,7 +49,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Users upgrading from v0.2.6 must:
 1. Update dependencies to include required packages
 2. Update import statements  
-3. Follow Migration Guide
+3. Follow [Migration Guide](MIGRATION_GUIDE.md)
+
+For complete documentation, visit: [https://github.com/swaingithub/fluxy](https://github.com/swaingithub/fluxy)
 
 ### Benefits
 
