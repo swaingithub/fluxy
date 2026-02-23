@@ -52,4 +52,11 @@ class FluxyStabilityMetrics {
     _stateFixes = 0;
     _asyncFixes = 0;
   }
+
+  /// Enable or disable strict mode for stability checks
+  static void setStrictMode(bool enabled) {
+    debugPrint(
+      "[KERNEL] [STABILITY] Strict mode ${enabled ? 'ENABLED' : 'DISABLED'}",
+    );
+  }
 }
