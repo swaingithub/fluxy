@@ -16,6 +16,8 @@ import 'stability/stability_metrics.dart';
 
 import '../reactive/signal.dart';
 
+import '../networking/fluxy_http.dart';
+
 
 
 /// The entry point for the Fluxy framework.
@@ -83,6 +85,9 @@ class Fluxy {
       FluxyRouter.offAll<T>(routeName, arguments: arguments);
 
   static void back<T>([T? result]) => FluxyRouter.back<T>(result);
+
+  /// Access to global networking engine.
+  static final http = FluxyHttp();
 
 
 

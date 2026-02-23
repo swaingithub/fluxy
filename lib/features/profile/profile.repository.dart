@@ -10,7 +10,10 @@ class ProfileRepository extends FluxRepository<bool> {
 
   Future<void> login(String email, String password) async {
     // Zero-dependency FluxyHttp!
-    await Fluxy.http.post('/auth/login', body: {'email': email, 'password': password});
+    await Fx.http.post(
+      '/auth/login',
+      body: {'email': email, 'password': password},
+    );
   }
 
   @override
