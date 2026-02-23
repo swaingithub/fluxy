@@ -48,6 +48,7 @@ import '../engine/haptics.dart';
 import '../engine/fluxy_engine.dart';
 
 // Import plugin extensions for direct access to modular packages
+// ignore: unused_import
 import 'fx_extensions.dart';
 
 /// The hyper-minimal Fx API for Fluxy.

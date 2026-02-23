@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:args/args.dart';
 import 'package:path/path.dart' as p;
 import 'package:fluxy/src/cloud.dart';
+import 'package:flutter/foundation.dart';
 
 const String version = '0.2.6';
 
@@ -26,7 +27,7 @@ void main(List<String> arguments) async {
   try {
     argResults = parser.parse(arguments);
   } catch (e) {
-    print('Error: $e');
+    debugPrint('Error: $e');
     printUsage(parser);
     exit(1);
   }
@@ -77,31 +78,35 @@ void main(List<String> arguments) async {
       await _handleModule(command.rest);
       break;
     default:
-      print('Unknown command: ${command.name}');
+      debugPrint('Unknown command: ${command.name}');
       printUsage(parser);
   }
 }
 
 void printUsage(ArgParser parser) {
-  print('Fluxy CLI - The Ultimate Flutter Framework Tool\n');
-  print('Usage: fluxy <command> [arguments]\n');
-  print('Commands:');
-  print('  init <name>      Scaffold a complete Fluxy application (Expo-style).');
-  print('  generate <feat>  (g) Create a new feature domain (login, feed, default).');
-  print('  generate plugin <name> Create a new Fluxy plugin scaffold.');
-  print('  generate layout <name> Create a responsive layout template.');
-  print('  generate model <name>  Create a reactive data model.');
-  print('  run              Launch the application.');
-  print('  serve            Start a local OTA development server.');
-  print('  build            Compile the application.');
-  print('  cloud            Configure GitHub Actions CI/CD.');
-  print('  module add <pkg> Add and register a Fluxy platform module.');
-  print('  module list      List all available platform modules.');
+  debugPrint('Fluxy CLI - The Ultimate Flutter Framework Tool\n');
+  debugPrint('Usage: fluxy <command> [arguments]\n');
+  debugPrint('Commands:');
+  debugPrint(
+    '  init <name>      Scaffold a complete Fluxy application (Expo-style).',
+  );
+  debugPrint(
+    '  generate <feat>  (g) Create a new feature domain (login, feed, default).',
+  );
+  debugPrint('  generate plugin <name>  Create a new Fluxy plugin scaffold.');
+  debugPrint('  generate layout <name>  Create a responsive layout template.');
+  debugPrint('  generate model <name>  Create a reactive data model.');
+  debugPrint('  run              Launch the application.');
+  debugPrint('  serve            Start a local OTA development server.');
+  debugPrint('  build            Compile the application.');
+  debugPrint('  cloud            Configure GitHub Actions CI/CD.');
+  debugPrint('  module add <pkg> Add and register a Fluxy platform module.');
+  debugPrint('  module list      List all available platform modules.');
 }
 
 Future<void> _handleInit(List<String> args) async {
   if (args.isEmpty) {
-    print('Error: Name required. Usage: fluxy init <project_name>');
+    debugPrint('Error: Name required. Usage: fluxy init <project_name>');
     exit(1);
   }
 
