@@ -1,3 +1,51 @@
+# Changelog
+
+## 1.0.0 - Major Modular Architecture Release
+
+### 🚨 BREAKING CHANGES
+
+*   **Modular Package Architecture**:
+    *   Split monolithic package into focused modules
+    *   Core package reduced from 15MB+ to 172KB
+    *   Separate packages for specific features:
+        *   `fluxy_forms` - Forms and validation
+        *   `fluxy_camera` - Camera functionality
+        *   `fluxy_auth` - Authentication and biometrics
+        *   `fluxy_notifications` - Push notifications
+        *   `fluxy_storage` - Data persistence
+        *   `fluxy_test` - Testing utilities
+        *   And more...
+
+### 🔄 Migration Support
+
+*   **Compatibility Layer**: Added deprecated classes to ease migration
+*   **Migration Guide**: Comprehensive step-by-step migration documentation
+*   **Gradual Transition**: v0.2.6 code works with deprecation warnings
+
+### 📦 Package Structure Changes
+
+*   **Core Fluxy**: Essential UI framework, DSL, reactive system
+*   **Extension Packages**: Hardware plugins, forms, testing, etc.
+*   **Independent Versioning**: Each package can evolve separately
+
+### 🎯 Benefits
+
+*   **Faster Installation**: 172KB core vs 15MB+ monolithic
+*   **Selective Dependencies**: Only install what you need
+*   **Better Performance**: Smaller bundle sizes
+*   **Clearer Architecture**: Separated concerns
+
+### 📋 Migration Required
+
+Users upgrading from v0.2.6 must:
+1. Update dependencies to include new packages
+2. Update import statements
+3. Follow migration guide
+
+**See [MIGRATION_GUIDE.md](MIGRATION_GUIDE.md) for detailed instructions.**
+
+---
+
 ## 0.2.6 - Industrial Log Professionalization & Experimental Guardrails
 
 *   **Industrial Log System**:
