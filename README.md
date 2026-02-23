@@ -7,6 +7,18 @@ Fluxy is not just a library; it is a **Managed Application Platform (MAP)** desi
 
 ---
 
+## 🚨 **v1.0.0 - Major Update**
+
+**Fluxy v1.0.0 introduces a modular architecture!** 
+
+- 📦 **Smaller core package** (170KB vs 15MB+)
+- 🔧 **Separate packages** for specific features
+- 📋 **Migration required** from v0.2.6
+
+**👉 [Read Migration Guide](MIGRATION_GUIDE.md)**
+
+---
+
 ## [ARCH] Structural Hierarchy
 
 Fluxy is built on a layered architecture that ensures separation of concerns while maintaining a unified developer experience.

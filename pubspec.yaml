@@ -1,6 +1,6 @@
 name: fluxy
 description: "Core engine of the Fluxy framework including UI, state management, HTTP, and motion."
-version: 0.2.6
+version: 1.0.0
 homepage: https://github.com/swaingithub/fluxy
 repository: https://github.com/swaingithub/fluxy
 

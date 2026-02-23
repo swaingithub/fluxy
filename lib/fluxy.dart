@@ -73,3 +73,42 @@ export 'src/responsive/breakpoint_resolver.dart';
 export 'src/engine/style_resolver.dart';
 export 'src/engine/decoration_builder.dart';
 export 'src/engine/diff_engine.dart';
+
+// ============================================================================
+// MIGRATION COMPATIBILITY LAYER (v0.2.6 → v1.0.0)
+// ============================================================================
+// DEPRECATED: Will be removed in v2.0.0
+// These exports provide backward compatibility for existing users
+// ============================================================================
+
+// Hardware Plugins - Now in separate packages
+@Deprecated(
+  'Use fluxy_camera package instead. Add to pubspec.yaml: fluxy_camera: ^1.0.0',
+)
+class FxCamera {
+  @Deprecated('Use fluxy_camera package instead')
+  static Future<String?> capture() =>
+      throw UnimplementedError('Use fluxy_camera package instead');
+}
+
+@Deprecated(
+  'Use fluxy_auth package instead. Add to pubspec.yaml: fluxy_auth: ^1.0.0',
+)
+class FxAuth {
+  @Deprecated('Use fluxy_auth package instead')
+  static Future<bool> authenticate() =>
+      throw UnimplementedError('Use fluxy_auth package instead');
+}
+
+@Deprecated(
+  'Use fluxy_notifications package instead. Add to pubspec.yaml: fluxy_notifications: ^1.0.0',
+)
+class FxNotifications {
+  @Deprecated('Use fluxy_notifications package instead')
+  static Future<void> show(String title, String body) =>
+      throw UnimplementedError('Use fluxy_notifications package instead');
+}
+
+// ============================================================================
+// END MIGRATION COMPATIBILITY LAYER
+// ============================================================================
