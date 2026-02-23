@@ -45,6 +45,7 @@ import '../layout/fx_layout.dart';
 import '../engine/stability/stability.dart';
 import '../engine/stability/data_guard.dart';
 import '../engine/haptics.dart';
+import '../engine/fluxy_engine.dart';
 
 // Import modular packages for platform access
 // Note: Using dynamic types since plugins are not exported from packages
