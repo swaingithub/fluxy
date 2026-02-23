@@ -1,35 +1,45 @@
-import '../plugins/fluxy_permissions.dart';
-import '../plugins/fluxy_camera.dart';
-import '../plugins/fluxy_biometric.dart';
-import '../plugins/fluxy_storage.dart';
-import '../plugins/fluxy_analytics.dart';
-import '../plugins/fluxy_auth.dart';
-import '../plugins/fluxy_notifications.dart';
-import '../plugins/fluxy_connectivity.dart';
+import 'package:fluxy/fluxy.dart';
 
-/// Extension to add plugin shortcuts to Fx class
+/// Extension for direct access to Fluxy plugins
+/// Provides convenient shortcuts: Fx.permissions, Fx.camera, etc.
 extension FxPlugins on Fx {
-  /// Permissions plugin shortcut
-  static final permissions = FluxyPermissionsPlugin();
+  /// Direct access to permissions plugin
+  /// Usage: `Fx.permissions.request()` instead of `Fx.platform.permissions.request()`
+  static dynamic get permissions => Fluxy.find<dynamic>();
   
-  /// Camera plugin shortcut  
-  static final camera = FluxyCameraPlugin();
+  /// Direct access to camera plugin
+  /// Usage: `Fx.camera.capture()` instead of `Fx.platform.camera.capture()`
+  static dynamic get camera => Fluxy.find<dynamic>();
   
-  /// Biometric plugin shortcut
-  static final biometric = FluxyBiometricPlugin();
+  /// Direct access to biometric plugin
+  /// Usage: `Fx.biometric.authenticate()` instead of `Fx.platform.biometric.authenticate()`
+  static dynamic get biometric => Fluxy.find<dynamic>();
+
+  /// Direct access to storage plugin
+  /// Usage: `Fx.storage.set()` instead of `Fx.platform.storage.set()`
+  static dynamic get storage => Fluxy.find<dynamic>();
+
+  /// Direct access to analytics plugin
+  /// Usage: `Fx.analytics.track()` instead of `Fx.platform.analytics.track()`
+  static dynamic get analytics => Fluxy.find<dynamic>();
   
-  /// Storage plugin shortcut
-  static final storage = FluxyStoragePlugin();
+  /// Direct access to auth plugin
+  /// Usage: `Fx.auth.signIn()` instead of `Fx.platform.auth.signIn()`
+  static dynamic get auth => Fluxy.find<dynamic>();
   
-  /// Analytics plugin shortcut
-  static final analytics = FluxyAnalyticsPlugin();
+  /// Direct access to notifications plugin
+  /// Usage: `Fx.notifications.show()` instead of `Fx.platform.notifications.show()`
+  static dynamic get notifications => Fluxy.find<dynamic>();
   
-  /// Auth plugin shortcut
-  static final auth = FluxyAuthPlugin();
+  /// Direct access to connectivity plugin
+  /// Usage: `Fx.connectivity.check()` instead of `Fx.platform.connectivity.check()`
+  static dynamic get connectivity => Fluxy.find<dynamic>();
   
-  /// Notifications plugin shortcut
-  static final notifications = FluxyNotificationsPlugin();
+  /// Direct access to platform plugin
+  /// Usage: `Fx.platform.getVersion()` instead of `Fx.platform.platform.getVersion()`
+  static dynamic get platform => Fluxy.find<dynamic>();
   
-  /// Connectivity plugin shortcut
-  static final connectivity = FluxyConnectivityPlugin();
+  /// Direct access to ota plugin
+  /// Usage: `Fx.ota.update()` instead of `Fx.platform.ota.update()`
+  static dynamic get ota => Fluxy.find<dynamic>();
 }
