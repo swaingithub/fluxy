@@ -1,7 +1,9 @@
 name: fluxy_permissions
 description: Permission management plugin for the Fluxy framework.
-version: 0.2.6
-publish_to: none
+version: 1.0.0
+homepage: https://github.com/swaingithub/fluxy
+repository: https://github.com/swaingithub/fluxy
+issue_tracker: https://github.com/swaingithub/fluxy/issues
 environment:
   sdk: '>=3.10.0 <4.0.0'
   flutter: '>=3.10.0'
@@ -9,8 +11,7 @@ dependencies:
   flutter:
     sdk: flutter
   permission_handler: ^12.0.1
-  fluxy:
-    path: ../../
+  fluxy: ^1.0.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

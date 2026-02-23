@@ -1,7 +1,9 @@
 name: fluxy_ota
 description: OTA (Over-The-Air) update system and SDUI renderer for the Fluxy framework.
-version: 0.2.6
-publish_to: none
+version: 1.0.0
+homepage: https://github.com/swaingithub/fluxy
+repository: https://github.com/swaingithub/fluxy
+issue_tracker: https://github.com/swaingithub/fluxy/issues
 
 environment:
   sdk: '>=3.10.0 <4.0.0'
@@ -10,8 +12,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  fluxy:
-    path: ../../
+  fluxy: ^1.0.0
   path_provider: ^2.1.0
   shared_preferences: ^2.2.0
 
