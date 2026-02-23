@@ -107,6 +107,9 @@ class Fluxy {
 
   static T use<T>({String? tag}) => FluxyDI.find<T>(tag: tag);
 
+  /// Alias for dependency injection (same as use).
+  static T find<T>({String? tag}) => FluxyDI.find<T>(tag: tag);
+
 
 
   /// Registers a global middleware.
