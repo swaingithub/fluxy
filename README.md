@@ -11,13 +11,54 @@ Fluxy is not just a library; it is a **Managed Application Platform (MAP)** desi
 
 **Fluxy v1.0.0 introduces a modular architecture!** 
 
-- **Smaller core package** (170KB vs 15MB+)
+- **Smaller core package** (172KB vs 15MB+)
 - **Separate packages** for specific features
 - **Migration required** from v0.2.6
+- **Professional logging system** with semantic bracketed tags
+- **Experimental guardrails** for OTA, SDUI, and Cloud CLI
 
 **[Read Migration Guide](MIGRATION_GUIDE.md)**
 
+### Recent Updates (v0.2.5 - v0.2.6)
+- **v0.2.6**: Industrial Log Professionalization & Experimental Guardrails
+- **v0.2.5**: The Platform Era with Managed Runtime Architecture
+
 ---
+
+## [INSTALL] Installation
+
+### Core Package
+```yaml
+dependencies:
+  fluxy: ^1.0.0
+```
+
+### Modular Packages (Add as needed)
+```yaml
+dependencies:
+  fluxy_forms: ^1.0.0        # Forms and validation
+  fluxy_camera: ^1.0.0       # Camera functionality  
+  fluxy_auth: ^1.0.0         # Authentication and biometrics
+  fluxy_notifications: ^1.0.0 # Push notifications
+  fluxy_storage: ^1.0.0      # Data persistence
+  fluxy_test: ^1.0.0         # Testing utilities
+  fluxy_analytics: ^1.0.0    # Analytics and tracking
+  fluxy_biometric: ^1.0.0    # Biometric authentication
+  fluxy_connectivity: ^1.0.0 # Network connectivity
+  fluxy_permissions: ^1.0.0  # Device permissions
+  fluxy_platform: ^1.0.0     # Platform integration
+  fluxy_ota: ^1.0.0          # Over-the-air updates
+```
+
+### Quick Start
+```dart
+import 'package:fluxy/fluxy.dart';
+
+void main() async {
+  await Fluxy.init();
+  runApp(FluxyApp(routes: appRoutes));
+}
+```
 
 ## [ARCH] Structural Hierarchy
 
@@ -65,6 +106,12 @@ void main() async {
 }
 ```
 
+**v1.0.0 Updates:**
+- Modular architecture with separate packages
+- Professional logging system with `[KERNEL]`, `[SYS]`, `[DATA]`, `[IO]` tags
+- Experimental feature guardrails for OTA, SDUI, and Cloud CLI
+- Core package reduced to 172KB for faster installation
+
 ### 2. Reactive State with Persistent Vault
 ```dart
 // Native persistence with zero-config encryption
@@ -77,6 +124,16 @@ Fx(() => Fx.text("Welcome, ${session.value?.name ?? 'Guest'}")
 );
 ```
 
+**v0.2.6 Updates:**
+- Professional logging system replacing emoji-based logs
+- Standardized log levels: `[INIT]`, `[READY]`, `[AUDIT]`, `[REPAIR]`, `[FATAL]`, `[PANIC]`
+- ASCII framing for diagnostic summaries
+
+**v0.2.5 Updates:**
+- Managed Runtime Architecture with `FluxyPluginEngine`
+- Unified Platform API (`Fx.platform`) for centralized access
+- Automatic plugin registration via `Fluxy.autoRegister()`
+
 ### 3. Managed Hardware Interfacing
 ```dart
 Future<void> captureSecure() async {
@@ -88,6 +145,25 @@ Future<void> captureSecure() async {
 }
 ```
 
+**v1.0.0 Modular Packages:**
+- `fluxy_forms` - Forms and validation
+- `fluxy_camera` - Camera functionality  
+- `fluxy_auth` - Authentication and biometrics
+- `fluxy_notifications` - Push notifications
+- `fluxy_storage` - Data persistence
+- `fluxy_test` - Testing utilities
+- `fluxy_analytics` - Analytics and tracking
+- `fluxy_biometric` - Biometric authentication
+- `fluxy_connectivity` - Network connectivity
+- `fluxy_permissions` - Device permissions
+- `fluxy_platform` - Platform integration
+- `fluxy_ota` - Over-the-air updates
+
+**v0.2.5 Platform Modules:**
+- Full compatibility with latest platform versions
+- Automatic permission handling for Android 13+ and iOS
+- Robust "Exact Alarm" fallback logic for notifications
+
 ---
 
 ## [STRENGTH] Core Pillars
@@ -98,7 +174,23 @@ The framework proactively monitors the render tree. If a layout violation is det
 ### 2. Universal Modifier DSL (Speed)
 Development speed is accelerated through a chainable modifier system. Every `Fx` widget supports 100+ modifiers for layout, styling, and motion, which are strictly typed and mirrored into a `FxStyle` object for state-based logic.
 
-### 3. Unified Hardware Access (Consistency)
+### 3. Professional Logging System (v0.2.6)
+Fluxy v0.2.6 introduced an industrial-grade logging system that replaces emoji-based logs with semantic bracketed tags for better readability and professional debugging:
+
+```dart
+// Professional Log Tags
+[KERNEL] [SYS] [DATA] [IO]    // System components
+[INIT] [READY] [AUDIT] [REPAIR] [FATAL] [PANIC]  // Log levels
+[EXPERIMENTAL]               // Experimental features
+```
+
+**Key Features:**
+- **Semantic Tags**: `[KERNEL]` for core operations, `[SYS]` for system events
+- **Standardized Levels**: `[INIT]` for startup, `[READY]` for operational state
+- **ASCII Framing**: Clean diagnostic summaries without visual clutter
+- **Experimental Guardrails**: Clear warnings for OTA, SDUI, and Cloud CLI features
+
+### 4. Unified Hardware Access (Consistency)
 Accessing `Fx.camera`, `Fx.biometric`, or `Fx.notifications` follows a consistent pattern. All modules share the same permission handling, error reporting, and reactive status signals.
 
 ---
@@ -111,6 +203,13 @@ Fluxy is under active development with a focus on enterprise-grade features.
 *   **[PROG] Fluxy Cloud CLI**: Automated CI/CD scaffolding for Android/iOS with zero-config GitHub Actions. [EXPERIMENTAL]
 *   **[PROG] Time-Travel Debugging**: Advanced state inspection in the DevTools timeline.
 *   **[PROG] OTA (Over-the-Air) Style Updates**: Update app branding and themes without a Store release. [EXPERIMENTAL]
+
+### Recent Releases
+- **v1.0.0** (2024-02-23): Modular Architecture with separate packages
+- **v0.2.6** (2024-02-20): Industrial Log Professionalization & Experimental Guardrails
+- **v0.2.5** (2024-02-15): The Platform Era with Managed Runtime Architecture
+
+**[View Complete Changelog](CHANGELOG.md)**
 
 ---
 
