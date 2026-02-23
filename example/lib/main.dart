@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fluxy/fluxy.dart';
 import 'stability_demo.dart';
 
+
 void main() async {
   await Fluxy.init(); // Setup Hydration & Middleware
   runApp(

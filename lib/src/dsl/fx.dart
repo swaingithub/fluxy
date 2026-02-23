@@ -46,6 +46,13 @@ import '../engine/stability/stability.dart';
 import '../engine/stability/data_guard.dart';
 import '../engine/haptics.dart';
 
+// Import modular packages for platform access
+// Note: Using dynamic types since plugins are not exported from packages
+// This allows the documented syntax to work while maintaining flexibility
+
+// Import plugin extensions
+import 'fx_extensions.dart';
+
 /// The hyper-minimal Fx API for Fluxy.
 /// Designed for maximum builder velocity and zero boilerplate reactivity.
 class Fx extends StatefulWidget {
@@ -98,6 +105,10 @@ class Fx extends StatefulWidget {
 
   /// Access to global networing engine.
   static final http = FluxyHttp();
+
+  /// Access to global platform services.
+  /// Usage: `Fx.platform.auth`, `Fx.platform.camera`, `Fx.platform.permissions`, etc.
+  static const platform = _FxPlatformHelper();
 
   // --- Theme Management ---
 
@@ -1685,5 +1696,47 @@ class _FxCondHelper {
   }
 }
 
+/// Platform services helper for accessing modular packages.
+class _FxPlatformHelper {
+  const _FxPlatformHelper();
+  
+  /// Access to authentication services.
+  /// Usage: `Fx.platform.auth.signIn()`
+  dynamic get auth => Fluxy.find<dynamic>();
 
+  /// Access to camera functionality.
+  /// Usage: `Fx.platform.camera.capture()`
+  dynamic get camera => Fluxy.find<dynamic>(); 
+  
+  /// Access to notification services.
+  /// Usage: `Fx.platform.notifications.show()`
+  dynamic get notifications => Fluxy.find<dynamic>();
 
+  /// Access to storage services.
+  /// Usage: `Fx.platform.storage.set()`
+  dynamic get storage => Fluxy.find<dynamic>();
+
+  /// Access to permission management.
+  /// Usage: `Fx.platform.permissions.request()`
+  dynamic get permissions => Fluxy.find<dynamic>();
+
+  /// Access to analytics services.
+  /// Usage: `Fx.platform.analytics.track()`
+  dynamic get analytics => Fluxy.find<dynamic>();
+
+  /// Access to biometric authentication.
+  /// Usage: `Fx.platform.biometric.authenticate()`
+  dynamic get biometric => Fluxy.find<dynamic>();
+
+  /// Access to connectivity services.
+  /// Usage: `Fx.platform.connectivity.check()`
+  dynamic get connectivity => Fluxy.find<dynamic>();
+
+  /// Access to platform utilities.
+  /// Usage: `Fx.platform.platform.getVersion()`
+  dynamic get platform => Fluxy.find<dynamic>();
+
+  /// Access to OTA services.
+  /// Usage: `Fx.platform.ota.update()`
+  dynamic get ota => Fluxy.find<dynamic>();
+}
