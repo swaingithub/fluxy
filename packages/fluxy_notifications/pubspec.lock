@@ -203,9 +203,10 @@ packages:
   fluxy:
     dependency: "direct main"
     description:
-      path: "../.."
-      relative: true
-    source: path
+      name: fluxy
+      sha256: "2166a9a42513b2264936d0f2c673daef9ad0cfcac64275f37f9a44a2ed47ff62"
+      url: "https://pub.dev"
+    source: hosted
     version: "1.0.0"
   http:
     dependency: transitive

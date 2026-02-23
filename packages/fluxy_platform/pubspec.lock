@@ -246,73 +246,83 @@ packages:
   fluxy:
     dependency: "direct main"
     description:
-      path: "../.."
-      relative: true
-    source: path
-    version: "0.2.6"
+      name: fluxy
+      sha256: "2166a9a42513b2264936d0f2c673daef9ad0cfcac64275f37f9a44a2ed47ff62"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   fluxy_analytics:
     dependency: "direct main"
     description:
-      path: "../fluxy_analytics"
-      relative: true
-    source: path
-    version: "0.2.6"
+      name: fluxy_analytics
+      sha256: "6446db7ad967b3d2f317c37d95ac6137e4e93f66e92081423d5bb10945195c7b"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   fluxy_auth:
     dependency: "direct main"
     description:
-      path: "../fluxy_auth"
-      relative: true
-    source: path
-    version: "0.2.6"
+      name: fluxy_auth
+      sha256: "1eede4ac932e42f162a1e9369c00a68fc251c1131c2220922f9b1607e7c97530"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   fluxy_biometric:
     dependency: "direct main"
     description:
-      path: "../fluxy_biometric"
-      relative: true
-    source: path
-    version: "0.2.6"
+      name: fluxy_biometric
+      sha256: c5a85960efd33e3957b32f696123405229c342cc444e13e508ab5d0a76b911d2
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   fluxy_camera:
     dependency: "direct main"
     description:
-      path: "../fluxy_camera"
-      relative: true
-    source: path
-    version: "0.2.6"
+      name: fluxy_camera
+      sha256: "4f8317e9c3c6d4e4c97c80b28af0ce1576130488bfd70cebe536976060db09d8"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   fluxy_connectivity:
     dependency: "direct main"
     description:
-      path: "../fluxy_connectivity"
-      relative: true
-    source: path
-    version: "0.2.6"
+      name: fluxy_connectivity
+      sha256: af9aa79ce381aa113bd371a9171fdc9324c4a669d1da42266766db1eaff2d91a
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   fluxy_notifications:
     dependency: "direct main"
     description:
-      path: "../fluxy_notifications"
-      relative: true
-    source: path
-    version: "0.2.6"
+      name: fluxy_notifications
+      sha256: "29519e6b19536ba496f2ab3f79af25064d2ff53af83c61a93ed12e25e2e8d2c0"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   fluxy_ota:
     dependency: "direct main"
     description:
-      path: "../fluxy_ota"
-      relative: true
-    source: path
-    version: "0.2.6"
+      name: fluxy_ota
+      sha256: bde68688ece50b9887b758d035587f1ad8b4f27e65dcb014d5c93a21060ff33c
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   fluxy_permissions:
     dependency: "direct main"
     description:
-      path: "../fluxy_permissions"
-      relative: true
-    source: path
-    version: "0.2.6"
+      name: fluxy_permissions
+      sha256: "4646e6f4cf47b51a2e71bedb52cd2c464cfb3633da0250ce0a87cb32d672a0dd"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   fluxy_storage:
     dependency: "direct main"
     description:
-      path: "../fluxy_storage"
-      relative: true
-    source: path
-    version: "0.2.6"
+      name: fluxy_storage
+      sha256: "7d36c97852244a2d1a2bd6b3c871d4e196a9cf74679580c3d342840ebfe9986c"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   http:
     dependency: transitive
     description:
