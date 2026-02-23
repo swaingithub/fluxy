@@ -47,11 +47,7 @@ import '../engine/stability/data_guard.dart';
 import '../engine/haptics.dart';
 import '../engine/fluxy_engine.dart';
 
-// Import modular packages for platform access
-// Note: Using dynamic types since plugins are not exported from packages
-// This allows the documented syntax to work while maintaining flexibility
-
-// Import plugin extensions
+// Import plugin extensions for direct access to modular packages
 import 'fx_extensions.dart';
 
 /// The hyper-minimal Fx API for Fluxy.
