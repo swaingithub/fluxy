@@ -63,60 +63,353 @@ For complete documentation, visit: [https://github.com/swaingithub/fluxy](https:
 
 ---
 
-## [0.2.6] - 2024-02-20
+## 0.2.6 - Industrial Log Professionalization & Experimental Guardrails
 
-### 🔄 Added
+*   **Industrial Log System**:
+    *   Completely replaced legacy emojis (`🛡️`, `📦`, `📸`, etc.) with semantic bracketed tags (`[KERNEL]`, `[SYS]`, `[DATA]`, `[IO]`) across all core subsystems and plugins.
+    *   Standardized log levels: `[INIT]`, `[READY]`, `[AUDIT]`, `[REPAIR]`, `[FATAL]`, `[PANIC]`.
+    *   Implemented monochromatic ASCII framing for diagnostic summaries and framework-level alerts.
+*   **Experimental Guardrails**:
+    *   Formally marked **OTA (Over-the-Air)**, **SDUI**, and **Cloud CLI** as `[EXPERIMENTAL]` in code, logs, and documentation.
+    *   Added `[EXPERIMENTAL]` warnings to the `FluxyRemote` sync lifecycle and `FxRemoteView`.
+*   **Resilience & OTA Evolution**:
+    *   Improved the `FluxyRemote` sync sequence with granular status reports and better asset transfer failure handling.
+    *   Standardized the OTA kill-switch logs to the new bracketed format.
+*   **Platform Identity & Evergreen Documentation**:
+    *   Comprehensive overhaul of the primary `README.md` focusing on **Architectural Authority** and the **Managed Platform** pillars.
+    *   Transitioned the documentation site to an "Era-based" narrative, removing hardcoded version anchors for a more sustainable, evergreen approach.
+    *   Added a professional Comparative Analysis matrix to the core documentation.
 
-- **Professional Logging System**:
-  - Semantic bracketed tags (`[KERNEL]`, `[SYS]`, `[DATA]`, `[IO]`)
-  - Standardized log levels (`[INIT]`, `[READY]`, `[AUDIT]`, `[REPAIR]`, `[FATAL]`, `[PANIC]`)
-  - ASCII framing for diagnostic summaries
+## 0.2.5 - The Platform Era
 
-- **Experimental Features**:
-  - Marked OTA, SDUI, and Cloud CLI as `[EXPERIMENTAL]`
-  - Added experimental warnings to relevant APIs
+*   **Managed Runtime Architecture**:
+    *   Transitioned from a "Framework" to a "Managed Platform" for Flutter.
+    *   Introduced `FluxyPluginEngine` for industrial-grade feature management.
+    *   **Fluxy Plugin Auto-Registration**: `Fluxy.autoRegister()` now automatically loads and wires up all installed platform modules via a generated registry.
+    *   **Unified Platform API (`Fx.platform`)**: Centralized access to all core modules under a single, stable namespace.
+*   **Fluxy Platform Modules (Core 8)**:
+    *   **`fluxy_notifications` [MAJOR]**: Full compatibility with **v20.0+**. Added automatic permission handling for Android 13+ and iOS, improved timezone-aware scheduling, and robust "Exact Alarm" fallback logic.
+    *   **`fluxy_biometric` [MAJOR]**: Updated for **v3.0+**. Standardized platform prompts and integrated it into the Fluxy Error Pipeline.
+    *   **`fluxy_camera`**: Optimized real-time preview and integrated with the new `FxImage` engine.
+    *   **`fluxy_auth`**: Official authentication module with reactive session tracking.
+    *   **`fluxy_storage`**: Unified KV storage abstraction (Standard + Secure).
+    *   **`fluxy_analytics`**: High-level tracking module with standardized event API.
+    *   **`fluxy_permissions`**: Unified declarative permission handler.
+    *   **`fluxy_connectivity`**: Real-time reactive network status monitoring.
+*   **Media & Rendering Evolution**:
+    *   **Hybrid `FxImage` Engine**: New support for `file://` and `memory://` (via bytes). Capture a photo and view it instantly with zero extra code.
+    *   **`Fx.img()` Primitive**: The new high-speed standard for displaying assets, network, or camera results.
+    *   **`Fx.memoryImage()`**: Direct pixel-perfect rendering from byte data.
+*   **Platform Safety Kernel**:
+    *   **Background Receiver Injection**: The framework now automatically injects necessary Android BroadcastReceivers for notifications to persist across reboots.
+    *   **Remote Plugin Kill-switch**: Integrated with the OTA engine, plugins can now be remotely disabled via the manifest `disabled_plugins` array to instantly neutralize production crashes.
+*   **CLI Evolution (The Module Paradigm)**:
+    *   Pivoted from `fluxy plugin` to `fluxy module` to reflect the platform-first philosophy.
+    *   Added `fluxy module add <name>` which handles installation and automatic registry regeneration.
 
-### 🔧 Changed
+## 0.2.4 - The Stability-First Engineering Engine
 
-- **Log Format**: Replaced emoji-based logging with semantic tags
-- **Documentation**: Updated experimental feature warnings
+*   **Data Visualization Primitives**: 
+    *   Introduced `Fx.chart()`, a high-performance, reactive charting primitive.
+    *   Supports Bar and Line charts with automatic layout and entry animations.
+    *   Accepts `Flux<List<FxChartPoint>>` for zero-boilerplate reactive charting.
+*   **Universal Style Engine™**: 
+    *   Mirrored all widget modifiers (like `.glass()`, `.blur()`, `.italic()`) into the `FxStyle` object.
+    *   This enables high-fidelity interactive styles where `onHover` effects can access the full visual power of the framework.
+*   **Automatic State Persistence**:
+    *   New `flux()` factory parameters: `key` and `persist: true`.
+    *   Magically serializes state to local storage without extra boilerplate.
+*   **Semantic Theme Proxies**:
+    *   Introduced `Fx.primary`, `Fx.secondary`, `Fx.success`, etc., as global color getters that automatically resolve against the current theme context.
+*   **Intelligence Layout Guards (Flex Solvers)**:
+    *   `FxRow` and `FxCol` now proactively detect "Infinite Constraint" violations when placed inside scrollables and auto-repair cross-axis stretching to prevent crashes.
+*   **Fused Interaction API**:
+    *   Introduced `.pressScale()`, a premium interaction modifier that fuses haptic feedback with a subtle scale-down effect.
+*   **Feature Extension**:
+    *   Added `Fx.safeArea()` static primitive and `.safeArea()` fluent modifier with full property control.
 
----
+*   **Fluxy Stability Kernel™ (Full Release)**:
+    *   **Layout Guard**: Proactively intercepts and auto-repairs "Unbounded Height/Width" and "Dual Infinity" crashes.
+    *   **Sliver-Aware Fx Builder**: Fixed a critical crash where `Fx()` used inside a `CustomScrollView` would fail with a `RenderBox vs RenderSliver` violation. The builder now automatically detects slivers and bypasses box-based guards safely.
+    *   **Relaxed & Strict Modes**: Introduced `FluxyLayoutGuard.strictMode` for precision development debugging.
+    *   **State Guard**: Detects and breaks rebuild loops and audits reactive subscribers in real-time.
+    *   **Async Guard**: Protects against "Async Dispose Races" by automatically canceling callbacks.
+    *   **Data Guard**: Native support for **Self-Healing Data** via `.retry()` and `.swr()` caching.
+    *   **Interaction Guard**: Prevents "Double-Tap Ghosting" with built-in debouncing logic.
+    *   **Semantic Error Mapping**: Improved translation of complex Flutter errors into human-readable Fluxy Alerts.
+*   **Next-Gen Viewport Architecture**:
+    *   **`Fx.scrollCenter()`**: New layout primitive for centered content without infinity crashes.
+    *   **`Fx.viewport`**: Direct access to CustomScrollView with native stability guards.
+    *   **`Fx.sliver`**: Universal sliver adapter for using any Widget safely inside Sliver layouts.
+*   **Advanced Native Primitives**:
+    *   **`Fx.infiniteList`**: Standardized, high-performance infinite scrolling.
+    *   **`Fx.refresh`**: Premium Pull-To-Refresh wrapper integrated into the Fx DSL.
+    *   **`Fx.parallax`**: High-performance scroll-linked motion for background layers.
+    *   **`Fx.safeArea`**: Full-control Safe Area primitive and `.safeArea()` modifier.
+*   **Professional Interaction & Motion**:
+    *   **Global Haptic Engine**: Native feedback modifiers (`.hapticLight()`, etc.).
+    *   **Animation Presets**: Launched `.fadeIn()`, `.slideUp()`, and `.zoomIn()` for 10x faster motion design.
+    *   **`Fx.reveal`**: Orchestrated stagger entrance animations for list children.
+*   **Stability DevTools**:
+    *   **Metrics Dashboard**: Real-time visualization of "Stability Saves".
+    *   **Auto-Repair Log**: Detailed history of every automatic fix performed by the kernel.
+*   **Quality of Life**:
+    *   **Lift Engine Optimization**: Better handling of nested `Positioned` and `Expanded` modifiers.
+    *   **Recursive Shadow Detection**: Fixed edge-case stack overflows in style merging.
+    *   Added `ScrollController` support to `Fx.list`.
+    *   Exposed `Spring` configurations globally via `Fx.spring`.
+    *   Internal stability fixes and minor performance improvements.
 
-## [0.2.5] - 2024-02-15
+## 0.2.3 - DevTools Overhaul & 1.0 Stability Prep
 
-### 🔄 Added
+*   **Premium DevTools Overhaul**: 
+    *   **High-End Glassmorphism**: Completely redesigned the inspector with high-performance blur effects and a sleek Material 3 modern aesthetic.
+    *   **Real-time Update Flashing**: Signals now briefly flash blue in the list when their value changes, giving you instant visual feedback on state flow.
+    *   **JSON Prettifier**: Network request and response bodies are now automatically formatted with indentation for easier inspection.
+    *   **Advanced Timeline Controls**: Added search, pause/resume, and clear functionality to the state update timeline.
+    *   **Persistent Search**: Individual search bars for Fluxes, DI Container, and Network logs now persist their state across tab switches.
+    *   **ClipBoard API Integration**: Added "Copy to Clipboard" buttons for signal values, network bodies, and log entries with floating snackbar feedback.
+*   **Infrastructure & Bug Fixes**:
+    *   **Self-Contained ScaffoldMessenger**: Fixed "No ScaffoldMessenger found" exception by implementing an internal GlobalKey-managed system. The DevTools is now fully context-independent.
+    *   **Layout Safety**: Moved the DevTools Floating Action Button (FAB) up by 60dp to prevent overlap with standard `BottomNavigationBar` items.
+    *   **Enhanced Error Boundaries**: Improved crash-resistance in the DI and Network detail views for malformed data.
 
-- **Stability Kernel Enhancements**
-- **Plugin System Improvements**
-- **Performance Optimizations**
+## 0.2.2 - Stability Refinements
 
-### 🔧 Changed
+*   Internal stabilization and minor DevTools context fixes.
 
-- **API Refinements**
-- **Documentation Updates**
+## 0.2.1 - Hotfix & Optimization
 
----
+*   **Hotfix**: Resolved "No Overlay widget found" and "No MaterialLocalizations found" errors in `FluxyDevTools`. The inspector is now fully self-contained and safe to use anywhere in the widget tree.
+*   **Optimization**: Reduced published package size by ~40% (103 KB) by excluding platform-specific boilerplate in the example directory.
+*   **Branding**: Updated DevTools terminology to use 'Flux' instead of generic 'Signal'.
+*   **DevTools Power-Up**: Added **Search** and **Live Value Editing**. You can now filter fluxes by name/ID and update boolean/string/numeric values directly from the inspector!
 
-## [0.2.0] - 2024-02-01
+## 0.2.0 - Professional Inspector & Architectural Authority
 
-### ⚠️ BREAKING CHANGES
+*   **Premium DevTools & Fluxy Inspector**:
+    *   **Revamped UX**: Launched a high-end glassmorphic debug interface with real-time system mirrors.
+    *   **DI Registry Inspector**: Inspect every registered dependency, its lifecycle scope (`app`, `route`, `factory`), and initialization status.
+    *   **Network Activity Logs**: Full inspection of HTTP requests, including latency tracking and request/response body payloads.
+    *   **State Update Timeline**: Real-time log of every flux update across the system.
+*   **Scoped Dependency Injection (`FxScope`)**:
+    *   **Enforced Lifecycles**: Introduced structured scopes to manage memory automatically.
+    *   **Automatic Route Cleanup**: `FxScope.route` dependencies are now cleanly disposed when the parent route is popped.
+    *   **Circular Dependency Detection**: The DI engine now identifies and blocks infinite resolution loops.
+*   **Unified Error Pipeline**:
+    *   **Global Intelligence**: Integrated system to capture Flutter framework, Platform, and manual application errors.
+    *   **`Fx.onError`**: Expressive shorthand for piping all app errors to external sinks (like Sentry or Firebase).
+*   **Modular Plugin Architecture**:
+    *   **`FluxyPlugin`**: New interface for building framework extensions that hook into `onRegister`, `onAppReady`, and `onDispose`.
+*   **Framework-Grade Testing**:
+    *   **Support for `FluxyTest`**: Added testing utilities to ensure DI isolation and clean state resets between test suits.
+*   **Proactive CLI Polish**:
+    *   **New Blueprints**: Added generation support for `plugin`, `layout`, `model`, and `controller`.
+    *   **Architecture Templates**: `fluxy init` now scaffolds projects with the global error pipeline and debug inspector pre-configured.
 
-- **Major Architecture Overhaul**
-- **API Restructuring**
+## 0.1.11 - Routing & DI Stabilization
 
-### 🔄 Added
+*   **Automatic Route Controller Registration**: Fixed `FluxyDIException` where controllers defined in `FxRoute` weren't being registered in the DI container. The framework now automatically handles `FluxyDI.put` and `FluxyDI.delete` for these controllers.
+*   **Enhanced DI Engine**: Added `putByRuntimeType` and `deleteByRuntimeType` to `FluxyDI` for better internal framework orchestration.
 
-- **Reactive Signal System**
-- **DSL Framework**
-- **Component Library**
+## 0.1.10 - Stability & Blueprint Polish
 
----
+*   **Fixed Critical Engine Packaging**: Corrected `.pubignore` logic that was accidentally excluding the core OTA/SDUI engine files.
+*   **Blueprint Syntax Stabilization**:
+    *   Reverted `FxFontProxy` getters back to methods (`font.xl4()`) to ensure stable chaining and prevent runtime invocation errors.
+    *   Updated `login`, `feed`, and `default` blueprints to follow the 0.1.10 method-call standard.
+*   **Expanded Styling DSL**:
+    *   Added `xl4`, `xl5`, and `xl6` font sizes to the design system.
+    *   Introduced the `.italic()` text modifier.
+    *   Introduced `.letterSpacing()` as a semantic alias for better developer experience.
+*   **Reliability Improvements**: Fixed type-mismatch errors in the `feed` blueprint and improved the fallback logic for feature scaffolding.
 
-## [0.1.0] - 2024-01-15
+## 0.1.9 - The Application Platform
 
-### 🎉 Initial Release
+*   **Native Fluxy Networking (`FluxyHttp`)**:
+    *   **Zero-Dependency Client**: Launched a high-performance HTTP engine built directly on `dart:io`. No more `dio` or `http` required.
+    *   **Auto-Orchestration**: Seamless integration with `Fluxy.http` and `Fx.http` for global API access.
+    *   **Global Interceptors**: Native support for request/response interceptors (perfect for Auth and Logging).
+    *   **Automatic JSON**: Requests and responses are automatically serialized/deserialized.
+*   **CLI Intelligence & Scaffolding**:
+    *   **Fluxy Blueprints**: Introduced architectural scaffolding with `fluxy g <name> <type>`. Generate complete working solutions for `login` and `feed`.
+    *   **Local OTA Server**: Launched `fluxy serve` for instant local development and testing of Over-The-Air updates.
+    *   **Project Structure Authority**: Fluxy now enforces the `core/features` directory convention for scalable enterprise apps.
+*   **Architectural Authority**:
+    *   **FluxController**: Formalized logic layer with native lifecycle hooks (`onInit`, `onReady`, `onDispose`).
+    *   **FluxRepository**: Standardized offline-first data layer with synchronized Local/Remote orchestration.
+    *   **Routing Controller Factory**: `FxRoute` now handles automatic controller creation and disposal.
+*   **Performance & Thread Management**:
+    *   **fluxIsolate**: Added a branded, high-level wrapper for background isolate execution.
+    *   **fluxWorker**: Enhanced reactive workers for long-running isolate tasks with state tracking.
+*   **Styling & UI Engine Polish**:
+    *   **Atomic Border DSL**: Added `.borderTop`, `.borderBottom`, `.borderLeft`, and `.borderRight` to `FxStyle`.
+    *   **Type-Safe Parameters**: Standardized all spacing and sizing modifiers for strict double/EdgeInsets validation.
+    *   **Instance-Based Networking**: Refined `FluxyHttp` to allow instance-based access for better testing and multi-client support.
+*   **Documentation & Identity**:
+    *   **README Revamp**: Pivoted messaging from "Library" to "Application Framework."
+    *   **Project Structure Guidelines**: Defined the official `lib/features` and `lib/core` directory conventions.
+    *   **Framework Philosophy**: Published the "Structural Authority" roadmap for enterprise scalability.
 
-- **Core Framework**
-- **Basic Components**
-- **State Management**
+## 0.1.8
+
+*   **Ultra-Scale State Management (Branded Flux API)**:
+    *   **Consistent Naming**: Standardized core primitives to `Flux`, `FluxComputed`, `FluxEffect`, `AsyncFlux`, and `FluxHistory`. Legacy names (`Signal`, `Computed`, `Effect`, `AsyncSignal`, `HistoryFlux`) are now deprecated.
+    *   **Fluxy.init()**: Added a global initialization entry point that must be called at the start of `main()`. This handles framework setup and state hydration.
+    *   **Global State Hydration**: Introduced `FluxyPersistence.hydrate()` and integrated it into `Fluxy.init()`. Any flux with a `persistKey` is now automatically restored on app startup.
+    *   **Advanced Middleware Engine**: Launched `Fluxy.use()` and `FluxyMiddleware`. Intercept every state change globally for custom analytics, logging, or debugging.
+    *   **Isolate Workers (60 FPS Processing)**: Introduced `fluxWorker` and `fluxLocalWorker` for running CPU-intensive tasks in background Isolates without UI jank.
+    *   **Optimized State Access**: Added `.peek()` for non-reactive reads and `untracked()` for running logic without dependency registration.
+    *   **Reactive History Enhancements**: `FluxHistory` getters (`canUndo`, `canRedo`) are now fully reactive, enabling automatic UI updates for undo/redo buttons.
+    *   **FluxyLocalMixin Support**: Expanded the mixin to support `fluxLocalHistory`, `fluxLocalSelector`, `fluxLocalComputed`, and `fluxLocalWorker` for automatic lifecycle management.
+    *   **Functional Async Handling**: Added `.when()` and improved `.on()` in `AsyncFlux` for cleaner pattern matching on async states (loading, data, error).
+*   **Infrastructure & Polish**:
+    *   **Internal Refactoring**: Updated core engine to use the new branded naming internally.
+    *   **Performance Metrics**: `FluxComputed` now logs performance warnings if a re-evaluation takes longer than 1ms in debug mode.
+
+## 0.1.7
+
+* **Next-Gen Button System (Atomic Interaction API)**:
+    * **Centering Engine Fix**: Completely re-engineered the internal layout of `FxButton` to ensure stable content centering regardless of width or height modifiers.
+    * **Tailwind-style DSL**: Added expressive buttonizers directly to `String` and `Widget` (e.g., `"Save".primaryBtn()` and `myImage.btn()`).
+    * **Interaction-Only Primitive**: Introduced `Fx.btn()` (FxButtonVariant.none) for building interactive cards and custom navigation items using the framework's hover/pressed logic.
+    * **Custom Content Injection**: Switched buttons to a content-first architecture, allowing icons and complex layouts via the `.withChild()` modifier.
+* **Premium Image & Visual FX Engine**:
+    * **Native Filters**: Introduced high-performance native modifiers for images: `.blur(radius)`, `.grayscale()`, and `.circle()`.
+    * **Smart Shimmers**: Integrated `Fx.loader.shimmer()` as the default engine for network image loading states.
+    * **Chainable Transitions**: Added the `.transition(Duration)` modifier to all generic widgets, enabling automatic interpolation of all styling changes (backgrounds, padding, etc.).
+    * **Enhanced Motion**: Upgraded `FxMotion` with native support for looping, repeating, and reversing animations for "pulse" and "attention" effects.
+* **Architecture & Productivity Polish**:
+    * **Contrast Shortcuts**: Added `.whiteText()` and `.blackText()` for high-visibility typography.
+    * **Layout Intelligence**: Refined `.expanded()`, `.flex()`, and `.shrink()` to automatically handle structural recursion and `ParentData` validation.
+    * **Sequence DSL**: Unified the `.stagger(interval)` modifier for `Fx.row` and `Fx.col` to create fluid staggered entrance animations.
+    * **FxBadge Stability**: Fixed a critical CSS-like collision bug where outer styles were being merged into the badge dot rather than the parent container.
+
+## 0.1.6
+
+* **Bulletproof Architecture (Refactoring)**:
+    * **Attribute Accumulation DSL**: Transitioned from "Widget Wrapping" to "Attribute Accumulation". Modifiers now directly update `FxStyle` properties, resulting in a significantly flatter and higher-performance widget tree.
+    * **Base FxWidget Class**: Implemented a unified `FxWidget` base class for all Fluxy widgets, enforcing a consistent contract for style and responsive attribute management.
+    * **Structural Recursion Fix**: Resolved `ParentData` issues (like `Incorrect use of ParentDataWidget`) by implementing structural recursion. Modifiers now "peer through" `Expanded`, `Flexible`, and `Positioned` to apply styles to the correct target.
+    * **Namespace Protection**: Renamed internal `FxStyle` properties to private fields with public getters, preventing naming collisions between Flutter widget properties and DSL methods.
+    * **Shadow Recursion Fix**: Resolved a critical issue where repeatedly applying shadows could lead to stack overflow due to recursive wrapping.
+* **DSL Consistency & Trust**:
+    * **Unified Modifier API**: Synchronized `.padding()`, `.margin()`, `.rounded()`, and other core modifiers across ALL widgets.
+    * **Smart Proxy Refinement**: Updated `.font`, `.shadow`, `.bg`, and `.width` proxies to use the new attribute accumulation engine.
+    * **Official Syntax Lock**: Locked the core DSL contract. Future versions will prioritize non-breaking extensions.
+* **Dev Experience Polish**:
+    * **Updated Factory Methods**: `Fx.avatar`, `Fx.table`, `Fx.dropdown`, and `Fx.badge` now natively support `style`, `className`, and `responsive` objects.
+    * **Improved List Performance**: Fixed an inconsistency where `Fx.list` builders didn't correctly propagate styles to children.
+
+## 0.1.5
+
+* **Next-Gen Layout System**:
+    * **Explicit Layout DSL**: Introduced `Fx.row`, `Fx.col`, and `Fx.stack` with named parameters (`justify`, `items`, `gap`) for safer and more intuitive UI construction.
+    * **Intelligent Grids**: Launched `Fx.grid.auto()` for automatic column calculation and `Fx.grid.responsive()` for explicit breakpoint control.
+    * **Layout Presets**: Added semantic shortcuts like `Fx.grid.cards()`, `Fx.grid.gallery()`, and `Fx.grid.dashboard()`.
+    * **Adaptive Layout Switcher**: Introduced `Fx.layout()` for seamless switching between mobile, tablet, and desktop views.
+    * **Breakpoint Engine**: New internal `FxBreakpoint` system for precise platform-aware layouts.
+
+## 0.1.4
+
+* **Fluxy 2.0 DSL Architecture**:
+    * **Context-Free Overlays**: Introduced `Fx.toast`, `Fx.loader`, and `Fx.dialog` that work without direct `BuildContext` access.
+    * **Reactive Networking**: Launched `Fx.fetch()` with built-in retries, timeouts, debouncing, and automatic `AsyncSignal` binding.
+    * **Smart Form DSL**: Re-engineered `Fx.form()` for automatic keyboard management and bulk validation.
+    * **Fluent Styling Proxies**: Added `.font`, `.shadow`, and `.align` property proxies for rapid UI construction.
+    * **Performance Lists**: Upgraded `Fx.list()` with `itemBuilder` support for high-performance lazy rendering.
+    * **Enhanced Time DSL**: Added `.sec` duration extension (e.g., `2.sec`).
+    * **Context Extensions**: Added `context.theme`, `context.colors`, and `context.isDark` for instant token access.
+
+## 0.1.3
+
+* **Built-in Theme Management**: Added `FxTheme` and methods like `Fx.toggleTheme()` for zero-boilerplate dark mode support.
+* **Advanced Layouts**: Introduced `Fx.layout` builder and `Fx.grid` for cleaner responsive designs.
+* **Premium Data Tables**: Added `Fx.table` component with responsive scrolling, striped rows, and hover effects.
+* **Unified Form System**: Launched `Fx.form` and `Fx.input` with built-in validation support.
+* **Responsive Modifiers**: Added `asRow`, `asCol`, `justify`, `items`, and `gap` modifiers for fluent layout control.
+* **Framework Polish**: Responsive updates for `Fx.snack` and `Fx.modal`, plus structural fixes for layout modifiers.
+
+## 0.1.2
+
+* **Proxy-based Styling DSL**: Introduced a new, intuitive way to apply styles using chained properties (e.g., `.bg.white`, `.width.full`, `.weight.bold`).
+* **Consolidated Animation DSL**: Resolved a naming conflict by merging all `.animate()` modifiers into a single, high-performance extension in `FxMotion`.
+* **Enhanced Proxy Support**: Proxy classes for Background, Width, Height, and Font Weight are now callable as both getters and methods for maximum flexibility.
+* **Unified UI Resolution**: Improved the internal style resolution engine to better handle mixed legacy and proxy-based styling chains.
+* **Performance Optimizations**: Cleaned up various redundant imports and consolidated internal helper methods for faster build times.
+* **CLI Version Synchronization**: Updated the Fluxy CLI to match the framework's version 0.1.2.
+
+## 0.1.1
+
+* **Atomic Styling DSL**: Introduced a comprehensive suite of fluent modifiers for widgets, including expressive shorthands for layout and spacing:
+    * **Padding**: `.p()`, `.px()`, `.py()`, `.pt()`, `.pb()`, etc.
+    * **Margin**: `.m()`, `.mx()`, `.my()`, `.mt()`, `.mb()`, etc.
+    * **Dimensions**: `.w()`, `.h()`, `.size()`, `.square()`.
+    * **Interactions**: `.onHover()`, `.onPressed()`, `.pointer()`.
+* **Functional Modifiers**: Added `FluxyStyleFluentExtension` for expressive style transformations in state callbacks (hover, pressed).
+* **Advanced UI Components**: Introduced `FxAvatar` for smart profile image management and `FxBadge` for notification overlays.
+* **Web-Style Dropdown**: Re-engineered `FxDropdown` using an Overlay-based implementation to achieve modern "web-select" behavior with custom slide animations.
+* **Reactive Dropdown**: Added native `Signal` support to the dropdown API for zero-boilerplate state synchronization.
+* **Custom Bottom Bar**: Launched `FxBottomBar`, a unique pill-style navigation experience with smooth physics-based selection tracking.
+* **Performance Polish**: Optimized the responsive styling engine and resolved potential circular dependencies in widget definitions.
+
+## 0.1.0
+
+* **Dependency Modernization**: Upgraded all core dependencies to their latest stable versions, including a major upgrade to `flutter_secure_storage` (v10.0.0).
+* **Code Quality Audit**: Performed a comprehensive linting sweep of the `FluxyDebug` module, ensuring strict adherence to `curly_braces_in_flow_control_structures` and other best practices.
+* **Refined Tooling**: Optimized service extension registration in DevTools for better reliability.
+
+## 0.0.9
+
+* **Maintenance & Polish**: Conducted a full framework-wide analysis audit. Resolved all remaining lint warnings and strictly addressed Flutter 3.x deprecations.
+* **Code Optimization**: Removed redundant imports and unused variables in the SDUI and Signal engines.
+* **Analysis Integrity**: Achieved "No issues found" status for the main package and devtools.
+
+## 0.0.8
+
+* **Framework Stability**: Resolved a critical CLI execution failure on Windows systems by enabling `runInShell: true` for all process calls.
+* **Internal CLI Sync**: Synchronized internal CLI versioning with the main package to ensure `fluxy doctor` accuracy.
+
+## 0.0.7
+
+* **Professional Documentation**: Complete rewrite of `README.md` and `DOCUMENTATION.md` for an engineering-first audience.
+* **Lightweight Engine**: Significantly reduced the final app bundle footprint by removing the `http` package dependency.
+* **Native Networking**: Rewrote the OTA engine to use built-in `dart:io` `HttpClient` for optimized, zero-dependency networking.
+* **SDUI Optimization**: Implemented a "Fast Path" for string interpolation, bypassing Regex engines for static content.
+* **Linting Audit**: Resolved several hidden lint warnings across the core rendering and reactive logic.
+
+## 0.0.6
+
+* **Fluxy Cloud**: Introduced `fluxy cloud` to automatically scaffold GitHub Actions for free Android/iOS builds and deployment.
+* **Fluxy Play**: Launched the companion preview app (the ultimate development mirror) for instant manifest-based development.
+* **OTA Engine**: Implemented the Server-Driven UI (SDUI) renderer and OTA manifest management system.
+* **Signal Registry**: Added a global signal registry with `WeakReference` support to enable advanced devtools and prevent memory leaks.
+
+## 0.0.5
+
+* **Production Protection**: Added global error boundaries to `FluxyApp` to prevent crashes in production.
+* **CLI Power**: Introduced `fluxy` CLI for project initialization and module generation.
+* **Enhanced DevTools**: Added Signal Graph Inspector and Timeline Logs for visual debugging.
+* **Refined Inputs**: Rewrote input system for better memory management and two-way binding stability.
+
+## 0.0.4
+
+* **Motion Engine**: Implemented a fluent physics-based animation DSL (`.animate().spring()`).
+* **Staggered Animations**: Added sequential entrance effects support.
+* **Routing 2.0**: Added custom page transitions and nested navigation stacks.
+
+## 0.0.3
+
+* **High-Fidelity Reactive Engine**: Fine-grained reactivity graph with atomic micro-rebuilds.
+* **Batched Updates**: Prevents redundant widget builds via microtask scheduling.
+* **Design Showcase**: Replaced initial demo with a premium Fintech UI showcase.
+
+## 0.0.2
+
+* Refined the Signal API for better developer experience.
+* Improved the Style Resolver for consistent utility application.
+
+## 0.0.1
+
+* Initial release of Fluxy Framework.
+* Core reactive engine and fluent UI DSL implementation.
