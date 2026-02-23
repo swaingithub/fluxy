@@ -24,10 +24,12 @@ class Tailwind {
 
   static FxStyle _parseUtility(String util) {
     // Spacing: p-4, m-2, px-4, py-2, pt-1, etc.
-    if (util.startsWith('p-'))
+    if (util.startsWith('p-')) {
       return FxStyle(padding: EdgeInsets.all(_toSize(util.substring(2))));
-    if (util.startsWith('m-'))
+    }
+    if (util.startsWith('m-')) {
       return FxStyle(margin: EdgeInsets.all(_toSize(util.substring(2))));
+    }
     if (util.startsWith('px-')) {
       final val = _toSize(util.substring(3));
       return FxStyle(padding: EdgeInsets.symmetric(horizontal: val));
@@ -50,8 +52,9 @@ class Tailwind {
     }
 
     // Colors: bg-blue-500, text-red-400
-    if (util.startsWith('bg-'))
+    if (util.startsWith('bg-')) {
       return FxStyle(backgroundColor: _toColor(util.substring(3)));
+    }
     if (util.startsWith('text-')) {
       final val = util.substring(5);
       // Check if it's a color or a size
@@ -63,18 +66,20 @@ class Tailwind {
 
     // Borders & Radius: rounded-lg, border-2, border-blue-500
     if (util.startsWith('rounded')) {
-      if (util == 'rounded')
+      if (util == 'rounded') {
         return const FxStyle(
           borderRadius: BorderRadius.all(Radius.circular(4)),
         );
+      }
       final val = util.contains('-') ? util.split('-').last : '';
       return FxStyle(
         borderRadius: BorderRadius.all(Radius.circular(_toRadius(val))),
       );
     }
     if (util.startsWith('border')) {
-      if (util == 'border')
+      if (util == 'border') {
         return FxStyle(border: Border.all(color: Colors.grey, width: 1));
+      }
       final val = util.split('-').last;
       final double? width = double.tryParse(val);
       if (width != null) return FxStyle(border: Border.all(width: width));
@@ -84,12 +89,15 @@ class Tailwind {
     // Flex: flex-row, flex-col, gap-4, items-center, justify-center
     if (util == 'flex-row') return const FxStyle(direction: Axis.horizontal);
     if (util == 'flex-col') return const FxStyle(direction: Axis.vertical);
-    if (util.startsWith('gap-'))
+    if (util.startsWith('gap-')) {
       return FxStyle(gap: _toSize(util.substring(4)));
-    if (util.startsWith('items-'))
+    }
+    if (util.startsWith('items-')) {
       return FxStyle(alignItems: _toCrossAlign(util.substring(6)));
-    if (util.startsWith('justify-'))
+    }
+    if (util.startsWith('justify-')) {
       return FxStyle(justifyContent: _toMainAlign(util.substring(8)));
+    }
 
     return FxStyle.none;
   }

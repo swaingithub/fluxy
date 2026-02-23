@@ -24,7 +24,9 @@ class FxTable<T> extends FxWidget {
   final List<FxTableColumn<T>> columns;
   final bool striped;
   final VoidCallback? onRowTap;
+  @override
   final FxStyle style;
+  @override
   final FxResponsiveStyle? responsive;
 
   const FxTable({

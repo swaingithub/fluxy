@@ -158,7 +158,7 @@ class StabilityDemo extends StatelessWidget {
       children: [
         Fx.text(title).font.h1(),
         Fx.text(subtitle).font.sm().muted().mt(4),
-        Divider().mt(12),
+        const Divider().mt(12),
       ],
     );
   }

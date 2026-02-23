@@ -9,7 +9,9 @@ import 'fx_widget.dart';
 /// The foundational building block of Fluxy.
 /// Similar to a <div> in web development.
 class Box extends FxWidget {
+  @override
   final FxStyle style;
+  @override
   final FxResponsiveStyle? responsive;
   final dynamic child;
   final dynamic children;
@@ -67,7 +69,7 @@ class _BoxState extends State<Box> with ReactiveSubscriberMixin {
   bool _isPressed = false;
 
   @override
-  String? get debugName => widget.id ?? "Box";
+  String? get debugName => widget.id ?? 'Box';
 
   // Cache the built widget
   Widget? _cachedWidget;

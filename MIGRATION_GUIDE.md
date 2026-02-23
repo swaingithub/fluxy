@@ -10,8 +10,6 @@ Fluxy v1.0.0 introduces a modular architecture with separate packages for differ
 
 | Feature | v0.2.6 (Single Package) | v1.0.0 (Modular) |
 |---------|--------------------------|-------------------|
-| Forms & Validation | `package:fluxy/fx_validation.dart` | `package:fluxy_forms/fluxy_forms.dart` |
-| Component Library | `package:fluxy/fx_components.dart` | `package:fluxy_components/fluxy_components.dart` |
 | Testing Utilities | `package:fluxy/fx_test_utils.dart` | `package:fluxy_test/fluxy_test.dart` |
 | Camera Plugin | `Fx.camera` | `package:fluxy_camera/fluxy_camera.dart` |
 | Auth Plugin | `Fx.auth` | `package:fluxy_auth/fluxy_auth.dart` |
@@ -29,8 +27,6 @@ dependencies:
   fluxy: ^1.0.0
   
   # Add these if you were using them before
-  fluxy_forms: ^1.0.0
-  fluxy_components: ^1.0.0
   fluxy_test: ^1.0.0
   fluxy_camera: ^1.0.0
   fluxy_auth: ^1.0.0
@@ -39,24 +35,6 @@ dependencies:
 ```
 
 ### Step 2: Update Imports
-
-#### Forms and Validation
-```dart
-// BEFORE
-import 'package:fluxy/fx_validation.dart';
-
-// AFTER
-import 'package:fluxy_forms/fluxy_forms.dart';
-```
-
-#### Components
-```dart
-// BEFORE
-import 'package:fluxy/fx_components.dart';
-
-// AFTER
-import 'package:fluxy_components/fluxy_components.dart';
-```
 
 #### Testing
 ```dart

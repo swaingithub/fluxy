@@ -128,7 +128,7 @@ class DesignSystemDemo extends StatelessWidget {
               Fx.text("1. Advanced Borders & Gradients").font.sm().bold().mb(8),
               Fx.box()
                 .wFull().h(80)
-                .gradient(LinearGradient(colors: [Colors.blue, Colors.purple]))
+                .gradient(const LinearGradient(colors: [Colors.blue, Colors.purple]))
                 .rounded(12)
                 .border(color: Colors.white.withOpacity(0.5), width: 2)
                 .center()

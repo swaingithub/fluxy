@@ -7,7 +7,9 @@ import 'fx_widget.dart';
 
 class FlexBox extends FxWidget {
   final Axis direction;
+  @override
   final FxStyle style;
+  @override
   final FxResponsiveStyle? responsive;
   final List<Widget> children;
   final VoidCallback? onTap;
@@ -45,13 +47,13 @@ class FlexBox extends FxWidget {
   }) {
     return FlexBox(
       key: key,
-      id: id ?? this.id,
+      id: id ?? id,
       className: className ?? this.className,
       direction: direction ?? this.direction,
       style: style ?? this.style,
       responsive: responsive ?? this.responsive,
-      children: children ?? this.children,
       onTap: onTap ?? this.onTap,
+      children: children ?? this.children,
     );
   }
 

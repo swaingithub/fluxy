@@ -118,7 +118,7 @@ class FxStyleResolver {
 
   static Gradient? _resolveGradient(BuildContext context, Gradient? gradient) {
     if (gradient == null) return null;
-    final List<Color> Function(List<Color>) resolveList = (List<Color> colors) =>
+    List<Color> resolveList(List<Color> colors) =>
         colors.map((c) => c is FxThemeColor ? resolveColor(context, c) : c).toList();
 
     if (gradient is LinearGradient) {

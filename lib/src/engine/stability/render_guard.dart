@@ -3,7 +3,6 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import '../layout_guard.dart';
 import 'stability.dart';
-import 'stability_metrics.dart';
 
 /// A guard that validates the render tree integrity to prevent corrupt frames.
 class FluxyRenderGuard extends SingleChildRenderObjectWidget {
@@ -48,8 +47,8 @@ class _RenderStabilityGuard extends RenderProxyBox {
   void _validateConstraints(BoxConstraints constraints) {
     if (constraints.maxHeight == double.infinity && constraints.maxWidth == double.infinity) {
       _reportError(
-        "Dual Infinity: This widget is being asked to be infinite in both directions.",
-        "Ensure you are not nesting infinite containers inside each other without boundaries."
+        'Dual Infinity: This widget is being asked to be infinite in both directions.',
+        'Ensure you are not nesting infinite containers inside each other without boundaries.'
       );
     }
   }
@@ -61,8 +60,8 @@ class _RenderStabilityGuard extends RenderProxyBox {
           childSize.width.isInfinite || childSize.height.isInfinite) {
         
         _reportError(
-          "Invalid Geometry: Child produced NaN or Infinite size (${childSize.width}x${childSize.height})",
-          "This usually happens when a Flex widget (Row/Column) has a child with infinite size."
+          'Invalid Geometry: Child produced NaN or Infinite size (${childSize.width}x${childSize.height})',
+          'This usually happens when a Flex widget (Row/Column) has a child with infinite size.'
         );
       }
     }
@@ -72,8 +71,8 @@ class _RenderStabilityGuard extends RenderProxyBox {
     if (FluxyLayoutGuard.strictMode) {
        throw FluxyLayoutViolationException(violation, suggestion);
     } else {
-      debugPrint("[KERNEL] [REPAIR] Render boundary violation auto-corrected: $violation");
-      debugPrint("[KERNEL] [ACTION] Alignment adjusted to prevent frame drop.");
+      debugPrint('[KERNEL] [REPAIR] Render boundary violation auto-corrected: $violation');
+      debugPrint('[KERNEL] [ACTION] Alignment adjusted to prevent frame drop.');
       FluxyStabilityMetrics.recordLayoutFix();
     }
   }
@@ -83,7 +82,7 @@ class _RenderStabilityGuard extends RenderProxyBox {
     try {
       super.paint(context, offset);
     } catch (e) {
-      debugPrint("[KERNEL] [PANIC] Render tree corruption during paint sequence!");
+      debugPrint('[KERNEL] [PANIC] Render tree corruption during paint sequence!');
       // Prevent the app from dying by painting a red placeholder if in Strict mode, 
       // or try to ignore if in Relaxed mode.
       if (FluxyLayoutGuard.strictMode) {

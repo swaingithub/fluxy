@@ -126,7 +126,7 @@ class _FxChartState extends State<FxChart> with SingleTickerProviderStateMixin, 
       }
 
       if (_currentData.isEmpty) {
-        return SizedBox(height: widget.height, child: const Center(child: Text("No Data")));
+        return SizedBox(height: widget.height, child: const Center(child: Text('No Data')));
       }
 
       return Container(

@@ -142,7 +142,7 @@ class FluxyCameraPlugin extends FluxyPlugin with ChangeNotifier {
   }
 
   void cycleFlash() {
-    final modes = cam.FlashMode.values;
+    const modes = cam.FlashMode.values;
     setFlash(modes[(_flashMode.index + 1) % modes.length]);
   }
 
@@ -973,8 +973,8 @@ class _CornerPainter extends CustomPainter {
     const len = 22.0;
     const r = 14.0;
     // TL
-    canvas.drawLine(Offset(r, 0), Offset(r + len, 0), p);
-    canvas.drawLine(Offset(0, r), Offset(0, r + len), p);
+    canvas.drawLine(const Offset(r, 0), const Offset(r + len, 0), p);
+    canvas.drawLine(const Offset(0, r), const Offset(0, r + len), p);
     // TR
     canvas.drawLine(Offset(s.width - r - len, 0), Offset(s.width - r, 0), p);
     canvas.drawLine(Offset(s.width, r), Offset(s.width, r + len), p);

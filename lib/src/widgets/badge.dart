@@ -12,7 +12,9 @@ class FxBadge extends FxWidget {
   final Color? textColor;
   final double? size;
   final Offset offset;
+  @override
   final FxStyle style;
+  @override
   final FxResponsiveStyle? responsive;
 
   const FxBadge({
@@ -58,7 +60,6 @@ class FxBadge extends FxWidget {
       key: key,
       id: id,
       className: className ?? this.className,
-      child: child ?? this.child,
       content: content ?? this.content,
       label: label ?? this.label,
       color: color ?? this.color,
@@ -67,6 +68,7 @@ class FxBadge extends FxWidget {
       offset: offset ?? this.offset,
       style: style ?? this.style,
       responsive: responsive ?? this.responsive,
+      child: child ?? this.child,
     );
   }
 

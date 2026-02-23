@@ -25,7 +25,7 @@ class FluxyLayoutViolationException implements Exception {
 
   @override
   String toString() {
-    return "[LAYOUT] Violation: $violation | Recommendation: $suggestion";
+    return '[LAYOUT] Violation: $violation | Recommendation: $suggestion';
   }
 }
 
@@ -45,7 +45,7 @@ class FluxyLayoutGuard {
 
     if (isUnbounded) {
       final msg = "Scrollable detected in Unbounded ${isVertical ? 'Height' : 'Width'}";
-      _logViolation(msg, "Apply a height/width constraint or use shrinkWrap: true.");
+      _logViolation(msg, 'Apply a height/width constraint or use shrinkWrap: true.');
       return FxSafePolicy(
         useShrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
@@ -64,7 +64,7 @@ class FluxyLayoutGuard {
     if (isUnbounded) {
       _logViolation(
         "Expansion Alert: Attempted to flex in Unbounded ${isVertical ? 'Height' : 'Width'}", 
-        "Expansion (Expanded/Flexible) requires bounded constraints. In scrollables, children must have a fixed size or intrinsic size."
+        'Expansion (Expanded/Flexible) requires bounded constraints. In scrollables, children must have a fixed size or intrinsic size.'
       );
       return false;
     }
@@ -88,8 +88,8 @@ class FluxyLayoutGuard {
                          (flexDirection == Axis.vertical && scrollInfo.direction == Axis.horizontal);
 
     if (isIllegal) {
-      final msg = "Cross-Axis Stretch detected in Unbounded ${scrollInfo.direction.name}";
-      _logViolation(msg, "Switched to CrossAxisAlignment.center to prevent crash.");
+      final msg = 'Cross-Axis Stretch detected in Unbounded ${scrollInfo.direction.name}';
+      _logViolation(msg, 'Switched to CrossAxisAlignment.center to prevent crash.');
       return CrossAxisAlignment.center;
     }
 
@@ -110,8 +110,8 @@ class FluxyLayoutGuard {
       hasViolation = true;
       safeHeight = null; // Fallback to auto
       _logViolation(
-        "Box .hFull() inside Unbounded Height", 
-        "Remove .hFull() or wrap in a constrained parent."
+        'Box .hFull() inside Unbounded Height', 
+        'Remove .hFull() or wrap in a constrained parent.'
       );
     }
     
@@ -119,8 +119,8 @@ class FluxyLayoutGuard {
       hasViolation = true;
       safeWidth = null; // Fallback to auto
       _logViolation(
-        "Box .wFull() inside Unbounded Width", 
-        "Remove .wFull() or wrap in a constrained parent."
+        'Box .wFull() inside Unbounded Width', 
+        'Remove .wFull() or wrap in a constrained parent.'
       );
     }
 
@@ -136,7 +136,7 @@ class FluxyLayoutGuard {
   }
 
   static void _logViolation(String violation, String suggestion) {
-    final entry = "[$violation] -> $suggestion";
+    final entry = '[$violation] -> $suggestion';
     if (!_violationLog.contains(entry)) {
         _violationLog.add(entry);
     }
@@ -146,12 +146,12 @@ class FluxyLayoutGuard {
     }
     
     if (!debugMode) return;
-    debugPrint("┌───────────────────────────────────────────┐");
-    debugPrint("│ [KERNEL] [AUDIT] Layout anomaly detected   │");
-    debugPrint("├───────────────────────────────────────────┤");
-    debugPrint("│ Type: $violation");
-    debugPrint("│ Rec:  $suggestion");
-    debugPrint("└───────────────────────────────────────────┘");
+    debugPrint('┌───────────────────────────────────────────┐');
+    debugPrint('│ [KERNEL] [AUDIT] Layout anomaly detected   │');
+    debugPrint('├───────────────────────────────────────────┤');
+    debugPrint('│ Type: $violation');
+    debugPrint('│ Rec:  $suggestion');
+    debugPrint('└───────────────────────────────────────────┘');
   }
 
   static void clearLogs() => _violationLog.clear();
@@ -225,7 +225,7 @@ class FxSafeExpansion extends StatelessWidget {
     // we MUST block expansion to prevent a hard Flutter viewport crash.
     if (scrollInfo != null && scrollInfo.direction == effectiveDirection) {
       if (FluxyLayoutGuard.debugMode) {
-        debugPrint("[KERNEL] [AUDIT] Intercepted illegal expansion in ${effectiveDirection.name} scroll axis.");
+        debugPrint('[KERNEL] [AUDIT] Intercepted illegal expansion in ${effectiveDirection.name} scroll axis.');
       }
       return child; 
     }

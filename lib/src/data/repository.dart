@@ -23,7 +23,7 @@ abstract class FluxyRepository extends FluxController {
         target.value = data;
       },
       onError: (e) {
-        debugPrint("Fluxy [Repository] Stream Error: $e");
+        debugPrint('Fluxy [Repository] Stream Error: $e');
       },
     );
     _subscriptions.add(sub);
@@ -53,7 +53,7 @@ abstract class FluxyRepository extends FluxController {
   /// ```dart
   /// final settings = flux(default, persistKey: userScope(currentUserId, 'prefs'));
   /// ```
-  String userScope(String userId, String key) => "u_${userId}_$key";
+  String userScope(String userId, String key) => 'u_${userId}_$key';
 
   /// Connectivity status flux (optional helper).
   final isOnline = flux(true);
@@ -86,8 +86,8 @@ abstract class FluxRepository<T> extends FluxyRepository {
     // 2. Fetch remote with stable retry logic
     try {
       final remote = await FluxyDataGuard.retry(
-        () => fetchRemote(),
-        label: "Sync remote ($T)",
+        fetchRemote,
+        label: 'Sync remote ($T)',
       );
       
       await saveLocal(remote);

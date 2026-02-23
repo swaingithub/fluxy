@@ -12,7 +12,9 @@ import 'box.dart';
 class FxImage extends FxWidget {
   final String? src;
   final Uint8List? bytes;
+  @override
   final FxStyle style;
+  @override
   final FxResponsiveStyle? responsive;
   final VoidCallback? onTap;
 
@@ -76,7 +78,7 @@ class FxImage extends FxWidget {
 
 class _FxImageState extends State<FxImage> with ReactiveSubscriberMixin {
   @override
-  String? get debugName => widget.id ?? "FxImage";
+  String? get debugName => widget.id ?? 'FxImage';
   @override
   void notify() {
     if (mounted) setState(() {});

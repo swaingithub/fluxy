@@ -11,7 +11,6 @@ Fluxy is not just a library; it is a **Managed Application Platform (MAP)** desi
 
 **Fluxy v1.0.0 introduces a modular architecture!** 
 
-- **Smaller core package** (172KB vs 15MB+)
 - **Separate packages** for specific features
 - **Migration required** from v0.2.6
 - **Professional logging system** with semantic bracketed tags
@@ -36,7 +35,6 @@ dependencies:
 ### Modular Packages (Add as needed)
 ```yaml
 dependencies:
-  fluxy_forms: ^1.0.0        # Forms and validation
   fluxy_camera: ^1.0.0       # Camera functionality  
   fluxy_auth: ^1.0.0         # Authentication and biometrics
   fluxy_notifications: ^1.0.0 # Push notifications
@@ -146,7 +144,6 @@ Future<void> captureSecure() async {
 ```
 
 **v1.0.0 Modular Packages:**
-- `fluxy_forms` - Forms and validation
 - `fluxy_camera` - Camera functionality  
 - `fluxy_auth` - Authentication and biometrics
 - `fluxy_notifications` - Push notifications
@@ -222,7 +219,7 @@ We are seeking contribution from the community to make Fluxy the default standar
 *   **[FEEDBACK]**: Document edge cases where the Stability Kernel should intercept.
 *   **[SHARE]**: If Fluxy helped you clear a production deadline, share your success story.
 
-**[DOCS]** Visit the [Full Documentation Site](https://fluxy-docs.vercel.app) for in-depth implementation guides.
+**[DOCS]** Visit the [Full Documentation Site](https://fluxy-doc.vercel.app) for in-depth implementation guides.
 
 ---
 

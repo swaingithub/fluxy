@@ -13,7 +13,7 @@ class FluxyStateGuard {
   /// Records a rebuild event for a subscriber and checks for loop violations.
   static void recordRebuild(FluxySubscriber subscriber) {
     final now = DateTime.now();
-    final m = _metrics.putIfAbsent(subscriber, () => _SubscriberMetrics());
+    final m = _metrics.putIfAbsent(subscriber, _SubscriberMetrics.new);
 
     // Clean up old entries outside the window
     m.timestamps.removeWhere((t) => now.difference(t) > _window);
@@ -29,7 +29,7 @@ class FluxyStateGuard {
     final fluxes = FluxRegistry.all;
     for (final flux in fluxes) {
       if (flux.subscribers.length > 100) {
-        debugPrint("[KERNEL] [STATE] Warning - Flux [${flux.label ?? flux.id}] has ${flux.subscribers.length} subscribers. High probability of leak.");
+        debugPrint('[KERNEL] [STATE] Warning - Flux [${flux.label ?? flux.id}] has ${flux.subscribers.length} subscribers. High probability of leak.');
       }
     }
   }
@@ -37,18 +37,18 @@ class FluxyStateGuard {
   static void _reportLoop(FluxySubscriber subscriber, int count) {
     final name = subscriber.debugName ?? subscriber.runtimeType.toString();
     final msg = "Dirty Rebuild Loop: Subscriber '$name' rebuilt $count times in 1 second.";
-    final suggestion = "Check if this widget modifies a Signal that it also listens to without a guard or untracked block.";
+    const suggestion = 'Check if this widget modifies a Signal that it also listens to without a guard or untracked block.';
 
     if (FluxyLayoutGuard.strictMode) {
       throw FluxyStateViolationException(name, msg, suggestion);
     } else {
       FluxyStabilityMetrics.recordStateFix();
-      debugPrint("┌───────────────────────────────────────────┐");
-      debugPrint("│ [KERNEL] [AUDIT] State Anomaly Detected    │");
-      debugPrint("├───────────────────────────────────────────┤");
-      debugPrint("│ Loop: $msg");
-      debugPrint("│ Rec:  $suggestion");
-      debugPrint("└───────────────────────────────────────────┘");
+      debugPrint('┌───────────────────────────────────────────┐');
+      debugPrint('│ [KERNEL] [AUDIT] State Anomaly Detected    │');
+      debugPrint('├───────────────────────────────────────────┤');
+      debugPrint('│ Loop: $msg');
+      debugPrint('│ Rec:  $suggestion');
+      debugPrint('└───────────────────────────────────────────┘');
     }
   }
 }
@@ -65,5 +65,5 @@ class FluxyStateViolationException implements Exception {
   FluxyStateViolationException(this.subscriberName, this.message, this.suggestion);
 
   @override
-  String toString() => "[STATE] Violation: $message | Recommendation: $suggestion";
+  String toString() => '[STATE] Violation: $message | Recommendation: $suggestion';
 }

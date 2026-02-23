@@ -14,7 +14,9 @@ class FxAvatar extends FxWidget {
   final Widget? fallbackWidget;
   final FxAvatarSize size;
   final FxAvatarShape shape;
+  @override
   final FxStyle style;
+  @override
   final FxResponsiveStyle? responsive;
   final VoidCallback? onTap;
 

@@ -8,7 +8,7 @@ class FluxyHttp {
   static String? _baseUrl;
   static final List<FluxyInterceptor> _interceptors = [];
   static Duration _timeout = const Duration(seconds: 30);
-  static Map<String, String> _headers = {
+  static final Map<String, String> _headers = {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
   };

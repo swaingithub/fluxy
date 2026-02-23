@@ -1,4 +1,3 @@
-import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import '../styles/tokens.dart';
 import '../widgets/box.dart';
@@ -439,10 +438,11 @@ extension FluxyWidgetExtension on Widget {
 
 
   Widget rounded(double xs, {double? md, double? lg}) {
-    if (md == null && lg == null)
+    if (md == null && lg == null) {
       return _applyGenericStyle(
         FxStyle(borderRadius: BorderRadius.circular(xs)),
       );
+    }
     return _applyResponsive(
       FxResponsiveStyle(
         xs: FxStyle(borderRadius: BorderRadius.circular(xs)),
@@ -495,8 +495,9 @@ extension FluxyWidgetExtension on Widget {
   }
 
   Widget h(double xs, {double? md, double? lg}) {
-    if (md == null && lg == null)
+    if (md == null && lg == null) {
       return _applyGenericStyle(FxStyle(height: xs));
+    }
     return _applyResponsive(
       FxResponsiveStyle(
         xs: FxStyle(height: xs),
@@ -579,6 +580,10 @@ extension FluxyWidgetExtension on Widget {
   Widget rotate(double value) =>
       _applyGenericStyle(FxStyle(transformRotation: value));
 
+  Widget clipBehavior(Clip value) =>
+      _applyGenericStyle(FxStyle(clipBehavior: value));
+  Widget clip() => clipBehavior(Clip.antiAlias);
+
   // --- Flex/Layout Modifiers ---
   Widget flex([int value = 1]) => _applyGenericStyle(FxStyle(flex: value, flexFit: FlexFit.loose));
   Widget expanded([int value = 1]) => _applyGenericStyle(FxStyle(flex: value, flexFit: FlexFit.tight));
@@ -607,8 +612,9 @@ extension FluxyWidgetExtension on Widget {
   FxFontProxy get font => FxFontProxy(this);
 
   Widget fontSize(double xs, {double? md, double? lg}) {
-    if (md == null && lg == null)
+    if (md == null && lg == null) {
       return _applyGenericStyle(FxStyle(fontSize: xs));
+    }
     return _applyResponsive(
       FxResponsiveStyle(
         xs: FxStyle(fontSize: xs),
@@ -657,8 +663,9 @@ extension FluxyWidgetExtension on Widget {
 
   Widget disabled([bool value = true]) {
     final self = this;
-    if (self is FxButton)
+    if (self is FxButton) {
       return self.copyWith(onTap: value ? null : self.onTap);
+    }
     return this;
   }
 
@@ -814,17 +821,17 @@ extension FluxyWidgetExtension on Widget {
 
   /// Quick button variant wrappers
   FxButton primaryBtn({VoidCallback? onTap}) =>
-      Fx.primaryButton("", onTap: onTap).copyWith(child: this);
+      Fx.primaryButton('', onTap: onTap).copyWith(child: this);
   FxButton secondaryBtn({VoidCallback? onTap}) =>
-      Fx.secondaryButton("", onTap: onTap).copyWith(child: this);
+      Fx.secondaryButton('', onTap: onTap).copyWith(child: this);
   FxButton dangerBtn({VoidCallback? onTap}) =>
-      Fx.dangerButton("", onTap: onTap).copyWith(child: this);
+      Fx.dangerButton('', onTap: onTap).copyWith(child: this);
   FxButton successBtn({VoidCallback? onTap}) =>
-      Fx.successButton("", onTap: onTap).copyWith(child: this);
+      Fx.successButton('', onTap: onTap).copyWith(child: this);
   FxButton outlineBtn({VoidCallback? onTap}) =>
-      Fx.outlineButton("", onTap: onTap).copyWith(child: this);
+      Fx.outlineButton('', onTap: onTap).copyWith(child: this);
   FxButton ghostBtn({VoidCallback? onTap}) =>
-      Fx.ghostButton("", onTap: onTap).copyWith(child: this);
+      Fx.ghostButton('', onTap: onTap).copyWith(child: this);
   Widget pointer() =>
       _applyGenericStyle(const FxStyle(cursor: SystemMouseCursors.click));
 
@@ -841,19 +848,19 @@ extension FluxyWidgetExtension on Widget {
   // --- Haptic Modifiers ---
 
   /// Triggers a haptic feedback when the widget is tapped.
-  Widget haptic() => onTap(() => FxHaptic.medium());
+  Widget haptic() => onTap(FxHaptic.medium);
 
   /// Light haptic feedback.
-  Widget hapticLight() => onTap(() => FxHaptic.light());
+  Widget hapticLight() => onTap(FxHaptic.light);
 
   /// Medium haptic feedback.
-  Widget hapticMedium() => onTap(() => FxHaptic.medium());
+  Widget hapticMedium() => onTap(FxHaptic.medium);
 
   /// Heavy haptic feedback.
-  Widget hapticHeavy() => onTap(() => FxHaptic.heavy());
+  Widget hapticHeavy() => onTap(FxHaptic.heavy);
 
   /// Error haptic feedback.
-  Widget hapticError() => onTap(() => FxHaptic.error());
+  Widget hapticError() => onTap(FxHaptic.error);
 
   /// A fused interaction modifier that applies a slight scale effect
   /// and haptic feedback when pressed.

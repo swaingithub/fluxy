@@ -14,26 +14,26 @@ class FluxyStabilityMetrics {
 
   static void recordLayoutFix() {
     _layoutFixes++;
-    _logRepair("LAYOUT_OPTIMIZATION");
+    _logRepair('LAYOUT_OPTIMIZATION');
   }
 
   static void recordViewportFix() {
     _viewportFixes++;
-    _logRepair("VIEWPORT_STABILIZATION");
+    _logRepair('VIEWPORT_STABILIZATION');
   }
 
   static void recordStateFix() {
     _stateFixes++;
-    _logRepair("STATE_CONSISTENCY_CHECK");
+    _logRepair('STATE_CONSISTENCY_CHECK');
   }
 
   static void recordAsyncFix() {
     _asyncFixes++;
-    _logRepair("ASYNC_RACE_PROTECTION");
+    _logRepair('ASYNC_RACE_PROTECTION');
   }
 
   static void _logRepair(String type) {
-    debugPrint("[KERNEL] [STABILITY] Intercept applied: $type.");
+    debugPrint('[KERNEL] [STABILITY] Intercept applied: $type.');
   }
 
   static Map<String, int> getSummary() {

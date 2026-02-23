@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/rendering.dart';
 import 'dart:async';
 import 'dart:ui';
 import 'dart:convert';
@@ -34,9 +33,9 @@ class _FluxyDevToolsState extends State<FluxyDevTools> {
   Offset _fabOffset = const Offset(20, 80); // Increased bottom offset to avoid NavBars
   
   // Search & Filter State
-  String _fluxSearchQuery = "";
-  String _diSearchQuery = "";
-  String _networkSearchQuery = "";
+  String _fluxSearchQuery = '';
+  String _diSearchQuery = '';
+  String _networkSearchQuery = '';
   
   // Track last changed signal for flashing effect
   String? _lastChangedSignalId;
@@ -44,9 +43,9 @@ class _FluxyDevToolsState extends State<FluxyDevTools> {
   
   // DevTools internal state
   final GlobalKey<ScaffoldMessengerState> _messengerKey = GlobalKey<ScaffoldMessengerState>();
-  String _timelineSearchQuery = "";
+  String _timelineSearchQuery = '';
   bool _isTimelinePaused = false;
-  bool _isAutoRefreshEnabled = true;
+  final bool _isAutoRefreshEnabled = true;
 
   void _showSnackBar(String message, {bool isError = false}) {
     _messengerKey.currentState?.clearSnackBars();
@@ -63,7 +62,7 @@ class _FluxyDevToolsState extends State<FluxyDevTools> {
   }
 
   String _prettifyJson(dynamic body) {
-    if (body == null || body == "") return "Empty";
+    if (body == null || body == '') return 'Empty';
     try {
       if (body is String) {
         final decoded = jsonDecode(body);
@@ -142,7 +141,7 @@ class _FluxyDevToolsState extends State<FluxyDevTools> {
               });
 
               final timestamp = DateTime.now().toString().split(' ').last.split('.').first;
-              _logs.insert(0, "[$timestamp] [UPDATE] ${f.label ?? f.id.substring(0, 8)} -> $value");
+              _logs.insert(0, '[$timestamp] [UPDATE] ${f.label ?? f.id.substring(0, 8)} -> $value');
               if (_logs.length > 200) _logs.removeLast();
             });
           }
@@ -400,7 +399,7 @@ class _FluxyDevToolsState extends State<FluxyDevTools> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Text(
-                        "Fluxy Inspector",
+                        'Fluxy Inspector',
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           color: Colors.white, 
@@ -412,7 +411,7 @@ class _FluxyDevToolsState extends State<FluxyDevTools> {
                       Row(
                         children: [
                           const Text(
-                            "v0.2.3",
+                            'v0.2.3',
                             style: TextStyle(color: Colors.white54, fontSize: 10, fontWeight: FontWeight.w500),
                           ),
                           const SizedBox(width: 8),
@@ -433,12 +432,12 @@ class _FluxyDevToolsState extends State<FluxyDevTools> {
                             ),
                             const SizedBox(width: 3),
                             Text(
-                              "${_fps.toStringAsFixed(0)} FPS", 
+                              '${_fps.toStringAsFixed(0)} FPS', 
                               style: TextStyle(
                                 color: _fps > 50 ? Colors.greenAccent : (_fps > 30 ? Colors.orangeAccent : Colors.redAccent),
                                 fontSize: 9, 
                                 fontWeight: FontWeight.bold,
-                                fontFamily: "monospace"
+                                fontFamily: 'monospace'
                               )
                             ),
                           ],
@@ -448,7 +447,7 @@ class _FluxyDevToolsState extends State<FluxyDevTools> {
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
                         decoration: BoxDecoration(color: Colors.green.withValues(alpha: 0.2), borderRadius: BorderRadius.circular(4)),
-                        child: const Text("LIVE", style: TextStyle(color: Colors.greenAccent, fontSize: 8, fontWeight: FontWeight.bold)),
+                        child: const Text('LIVE', style: TextStyle(color: Colors.greenAccent, fontSize: 8, fontWeight: FontWeight.bold)),
                       )
                     ],
                   ),
@@ -461,19 +460,19 @@ class _FluxyDevToolsState extends State<FluxyDevTools> {
           Row(
             children: [
               IconButton(
-                onPressed: () => _showHelpDialog(),
+                onPressed: _showHelpDialog,
                 icon: const Icon(Icons.help_outline_rounded, color: Colors.white38, size: 20),
-                tooltip: "What is this?",
+                tooltip: 'What is this?',
               ),
               IconButton(
-                onPressed: () => setState(() => _logs.clear()),
+                onPressed: () => setState(_logs.clear),
                 icon: const Icon(Icons.delete_sweep_rounded, color: Colors.white38, size: 20),
-                tooltip: "Clear Logs",
+                tooltip: 'Clear Logs',
               ),
               IconButton(
                 onPressed: _toggleOpen,
                 icon: const Icon(Icons.close_rounded, color: Colors.white38, size: 20),
-                tooltip: "Close DevTools",
+                tooltip: 'Close DevTools',
               ),
             ],
           ),
@@ -483,7 +482,7 @@ class _FluxyDevToolsState extends State<FluxyDevTools> {
   }
 
   Widget _buildTabBar() {
-    final tabs = ["Fluxes", "DI Container", "Network", "Stability", "Timeline"];
+    final tabs = ['Fluxes', 'DI Container', 'Network', 'Stability', 'Timeline'];
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10),
       height: 50,
@@ -540,10 +539,10 @@ class _FluxyDevToolsState extends State<FluxyDevTools> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text("Stability Kernel Status", 
+          const Text('Stability Kernel Status', 
             style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
           const SizedBox(height: 8),
-          const Text("Live stats of automatic repairs and crash preventions.", 
+          const Text('Live stats of automatic repairs and crash preventions.', 
             style: TextStyle(color: Colors.white38, fontSize: 11)),
           
           const SizedBox(height: 20),
@@ -557,10 +556,10 @@ class _FluxyDevToolsState extends State<FluxyDevTools> {
             crossAxisSpacing: 10,
             childAspectRatio: 2.2,
             children: [
-              _buildMetricCard("Layout Saves", s['layout_fixes'] ?? 0, Colors.blueAccent),
-              _buildMetricCard("Viewport Saves", s['viewport_fixes'] ?? 0, Colors.orangeAccent),
-              _buildMetricCard("State Saves", s['state_fixes'] ?? 0, Colors.redAccent),
-              _buildMetricCard("Async Saves", s['async_fixes'] ?? 0, Colors.purpleAccent),
+              _buildMetricCard('Layout Saves', s['layout_fixes'] ?? 0, Colors.blueAccent),
+              _buildMetricCard('Viewport Saves', s['viewport_fixes'] ?? 0, Colors.orangeAccent),
+              _buildMetricCard('State Saves', s['state_fixes'] ?? 0, Colors.redAccent),
+              _buildMetricCard('Async Saves', s['async_fixes'] ?? 0, Colors.purpleAccent),
             ],
           ),
 
@@ -569,25 +568,25 @@ class _FluxyDevToolsState extends State<FluxyDevTools> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text("Recent Auto-Repairs", 
+              const Text('Recent Auto-Repairs', 
                 style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14)),
               _buildIconButton(
                 icon: Icons.delete_sweep_rounded,
-                onPressed: () => setState(() => FluxyLayoutGuard.clearLogs()),
+                onPressed: () => setState(FluxyLayoutGuard.clearLogs),
                 color: Colors.white24,
-                tooltip: "Clear Logs",
+                tooltip: 'Clear Logs',
               ),
             ],
           ),
           const SizedBox(height: 12),
           
           if (violations.isEmpty)
-            _buildEmpty("No layout violations detected. System healthy.")
+            _buildEmpty('No layout violations detected. System healthy.')
           else
             ...violations.map((log) {
               final parts = log.split('] -> ');
               final violation = parts[0].replaceAll('[', '');
-              final fix = parts.length > 1 ? parts[1] : "";
+              final fix = parts.length > 1 ? parts[1] : '';
 
               return Container(
                 margin: const EdgeInsets.only(bottom: 12),
@@ -625,7 +624,7 @@ class _FluxyDevToolsState extends State<FluxyDevTools> {
                   ],
                 ),
               );
-            }).toList(),
+            }),
         ],
       ),
     );
@@ -655,7 +654,7 @@ class _FluxyDevToolsState extends State<FluxyDevTools> {
     final signals = FluxRegistry.all.where((s) {
       if (_fluxSearchQuery.isEmpty) return true;
       final query = _fluxSearchQuery.toLowerCase();
-      final label = s.label?.toLowerCase() ?? "";
+      final label = s.label?.toLowerCase() ?? '';
       return label.contains(query) || s.id.contains(query);
     }).toList();
 
@@ -673,7 +672,7 @@ class _FluxyDevToolsState extends State<FluxyDevTools> {
             child: TextField(
               style: const TextStyle(color: Colors.white, fontSize: 13),
               decoration: const InputDecoration(
-                hintText: "Search Fluxes or Tags...",
+                hintText: 'Search Fluxes or Tags...',
                 hintStyle: TextStyle(color: Colors.white24),
                 border: InputBorder.none,
                 prefixIcon: Icon(Icons.search_rounded, color: Colors.blueAccent, size: 20),
@@ -685,7 +684,7 @@ class _FluxyDevToolsState extends State<FluxyDevTools> {
         ),
         Expanded(
           child: signals.isEmpty
-              ? _buildEmpty("No matching fluxes found")
+              ? _buildEmpty('No matching fluxes found')
               : ListView.builder(
                   padding: const EdgeInsets.all(16),
                   itemCount: signals.length,
@@ -740,14 +739,14 @@ class _FluxyDevToolsState extends State<FluxyDevTools> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      signal.label ?? "Flux #${signal.id.substring(signal.id.length - 6)}",
+                      signal.label ?? 'Flux #${signal.id.substring(signal.id.length - 6)}',
                       style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13),
                     ),
                     const SizedBox(height: 4),
                     Row(
                       children: [
                         Text(
-                          "ID: ${signal.id.substring(0, 8)}...",
+                          'ID: ${signal.id.substring(0, 8)}...',
                           style: const TextStyle(color: Colors.white38, fontSize: 10),
                         ),
                         const SizedBox(width: 8),
@@ -766,7 +765,7 @@ class _FluxyDevToolsState extends State<FluxyDevTools> {
                                 const Icon(Icons.people_alt_rounded, size: 8, color: Colors.blueAccent),
                                 const SizedBox(width: 4),
                                 Text(
-                                  "${signal.subscribers.length} Consumers",
+                                  '${signal.subscribers.length} Consumers',
                                   style: const TextStyle(color: Colors.blueAccent, fontSize: 9, fontWeight: FontWeight.bold),
                                 ),
                               ],
@@ -782,7 +781,7 @@ class _FluxyDevToolsState extends State<FluxyDevTools> {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                   decoration: BoxDecoration(color: Colors.purple.withValues(alpha: 0.2), borderRadius: BorderRadius.circular(4)),
-                  child: const Text("COMPUTED", style: TextStyle(color: Colors.purpleAccent, fontSize: 9, fontWeight: FontWeight.bold)),
+                  child: const Text('COMPUTED', style: TextStyle(color: Colors.purpleAccent, fontSize: 9, fontWeight: FontWeight.bold)),
                 )
               else if (isBool)
                 Transform.scale(
@@ -793,7 +792,7 @@ class _FluxyDevToolsState extends State<FluxyDevTools> {
                       (signal as dynamic).value = val;
                       setState(() {});
                     },
-                    activeColor: Colors.blue,
+                    activeThumbColor: Colors.blue,
                     activeTrackColor: Colors.blue.withValues(alpha: 0.3),
                     inactiveThumbColor: Colors.white24,
                     inactiveTrackColor: Colors.white10,
@@ -834,7 +833,7 @@ class _FluxyDevToolsState extends State<FluxyDevTools> {
                   constraints: const BoxConstraints(),
                   onPressed: () {
                     Clipboard.setData(ClipboardData(text: value));
-                    _showSnackBar("Value copied to clipboard");
+                    _showSnackBar('Value copied to clipboard');
                   },
                 ),
               ],
@@ -850,11 +849,11 @@ class _FluxyDevToolsState extends State<FluxyDevTools> {
       _activeDialog = AlertDialog(
         backgroundColor: const Color(0xFF0F172A),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: Row(
+        title: const Row(
           children: [
-            const Icon(Icons.analytics_rounded, color: Colors.blue),
-            const SizedBox(width: 12),
-            const Text("Rebuild Profiler", style: TextStyle(color: Colors.white)),
+            Icon(Icons.analytics_rounded, color: Colors.blue),
+            SizedBox(width: 12),
+            Text('Rebuild Profiler', style: TextStyle(color: Colors.white)),
           ],
         ),
         content: Column(
@@ -864,7 +863,7 @@ class _FluxyDevToolsState extends State<FluxyDevTools> {
             Text("Consumers of '${signal.label ?? signal.id}':", style: const TextStyle(color: Colors.white70, fontSize: 14)),
             const SizedBox(height: 16),
             if (signal.consumerNames.isEmpty)
-              const Text("No active listeners", style: TextStyle(color: Colors.white38, fontSize: 12))
+              const Text('No active listeners', style: TextStyle(color: Colors.white38, fontSize: 12))
             else
               ...signal.consumerNames.map((name) => Padding(
                 padding: const EdgeInsets.only(bottom: 8),
@@ -879,7 +878,7 @@ class _FluxyDevToolsState extends State<FluxyDevTools> {
           ],
         ),
         actions: [
-          TextButton(onPressed: () => setState(() => _activeDialog = null), child: const Text("Close")),
+          TextButton(onPressed: () => setState(() => _activeDialog = null), child: const Text('Close')),
         ],
       );
     });
@@ -893,12 +892,12 @@ class _FluxyDevToolsState extends State<FluxyDevTools> {
     setState(() {
       _activeDialog = AlertDialog(
         backgroundColor: const Color(0xFF1E293B),
-        title: const Text("Edit Flux Value", style: TextStyle(color: Colors.white)),
+        title: const Text('Edit Flux Value', style: TextStyle(color: Colors.white)),
         content: TextField(
           controller: controller,
           style: const TextStyle(color: Colors.white),
           decoration: const InputDecoration(
-            hintText: "Enter new value",
+            hintText: 'Enter new value',
             hintStyle: TextStyle(color: Colors.white38),
             enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.blue)),
           ),
@@ -906,7 +905,7 @@ class _FluxyDevToolsState extends State<FluxyDevTools> {
         actions: [
           TextButton(
             onPressed: () => setState(() => _activeDialog = null),
-            child: const Text("Cancel"),
+            child: const Text('Cancel'),
           ),
           TextButton(
             onPressed: () {
@@ -915,8 +914,9 @@ class _FluxyDevToolsState extends State<FluxyDevTools> {
                 dynamic newValue;
                 
                 // Smart Parsing
-                if (text.toLowerCase() == 'true') newValue = true;
-                else if (text.toLowerCase() == 'false') newValue = false;
+                if (text.toLowerCase() == 'true') {
+                  newValue = true;
+                } else if (text.toLowerCase() == 'false') newValue = false;
                 else if (int.tryParse(text) != null) newValue = int.parse(text);
                 else if (double.tryParse(text) != null) newValue = double.parse(text);
                 else if (text.startsWith('[') || text.startsWith('{')) {
@@ -932,7 +932,7 @@ class _FluxyDevToolsState extends State<FluxyDevTools> {
                 // Silently fail or could add a shaking animation
               }
             },
-            child: const Text("Update", style: TextStyle(color: Colors.blue)),
+            child: const Text('Update', style: TextStyle(color: Colors.blue)),
           ),
         ],
       );
@@ -948,7 +948,7 @@ class _FluxyDevToolsState extends State<FluxyDevTools> {
           children: [
             Icon(Icons.school, color: Colors.blue),
             SizedBox(width: 10),
-            Text("DevTools Guide", style: TextStyle(color: Colors.white, fontSize: 18)),
+            Text('DevTools Guide', style: TextStyle(color: Colors.white, fontSize: 18)),
           ],
         ),
         content: const Column(
@@ -957,27 +957,27 @@ class _FluxyDevToolsState extends State<FluxyDevTools> {
           children: [
             _GuideItem(
               icon: Icons.label,
-              title: "Labels Matter",
+              title: 'Labels Matter',
               desc: "Use flux(0, label: 'Count') to give your signals a readable name.",
             ),
             SizedBox(height: 16),
             _GuideItem(
               icon: Icons.edit,
-              title: "Live Editing",
-              desc: "Tap the pencil icon or toggle switches to update app state in real-time.",
+              title: 'Live Editing',
+              desc: 'Tap the pencil icon or toggle switches to update app state in real-time.',
             ),
             SizedBox(height: 16),
             _GuideItem(
               icon: Icons.bolt,
-              title: "Computed Flux",
-              desc: "Purple badges indicate read-only values derived from other fluxes.",
+              title: 'Computed Flux',
+              desc: 'Purple badges indicate read-only values derived from other fluxes.',
             ),
           ],
         ),
         actions: [
           TextButton(
             onPressed: () => setState(() => _activeDialog = null),
-            child: const Text("Got it!", style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold)),
+            child: const Text('Got it!', style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold)),
           ),
         ],
       );
@@ -994,7 +994,7 @@ class _FluxyDevToolsState extends State<FluxyDevTools> {
       return key.contains(query) || type.contains(query);
     }).toList();
 
-    if (registry.isEmpty) return _buildEmpty("DI Registry is empty");
+    if (registry.isEmpty) return _buildEmpty('DI Registry is empty');
 
     return Column(
       children: [
@@ -1010,7 +1010,7 @@ class _FluxyDevToolsState extends State<FluxyDevTools> {
             child: TextField(
               style: const TextStyle(color: Colors.white, fontSize: 13),
               decoration: const InputDecoration(
-                hintText: "Search DI Items by key or type...",
+                hintText: 'Search DI Items by key or type...',
                 hintStyle: TextStyle(color: Colors.white24),
                 border: InputBorder.none,
                 prefixIcon: Icon(Icons.hub_rounded, color: Colors.blueAccent, size: 20),
@@ -1022,7 +1022,7 @@ class _FluxyDevToolsState extends State<FluxyDevTools> {
         ),
         Expanded(
           child: entries.isEmpty
-              ? _buildEmpty("No DI items found")
+              ? _buildEmpty('No DI items found')
               : ListView.builder(
                   padding: const EdgeInsets.all(16),
                   itemCount: entries.length,
@@ -1036,7 +1036,7 @@ class _FluxyDevToolsState extends State<FluxyDevTools> {
                       title: key,
                       subtitle: "Scope: ${scope.toUpperCase()} | Tag: ${data['tag'] ?? 'None'}",
                       value: data['type'],
-                      badge: data['isInitialized'] ? "ACTIVE" : "LAZY",
+                      badge: data['isInitialized'] ? 'ACTIVE' : 'LAZY',
                       badgeColor: data['isInitialized'] ? Colors.green : Colors.orange,
                     );
                   },
@@ -1069,7 +1069,7 @@ class _FluxyDevToolsState extends State<FluxyDevTools> {
             child: TextField(
               style: const TextStyle(color: Colors.white, fontSize: 13),
               decoration: const InputDecoration(
-                hintText: "Search URL, Status, or Method...",
+                hintText: 'Search URL, Status, or Method...',
                 hintStyle: TextStyle(color: Colors.white24),
                 border: InputBorder.none,
                 prefixIcon: Icon(Icons.wifi_rounded, color: Colors.blueAccent, size: 20),
@@ -1081,7 +1081,7 @@ class _FluxyDevToolsState extends State<FluxyDevTools> {
         ),
         Expanded(
           child: history.isEmpty 
-              ? _buildEmpty("No network activity found")
+              ? _buildEmpty('No network activity found')
               : ListView.builder(
                   padding: const EdgeInsets.all(16),
                   itemCount: history.length,
@@ -1090,9 +1090,9 @@ class _FluxyDevToolsState extends State<FluxyDevTools> {
                     final isError = log.statusCode >= 400;
                     
                     return _buildItemWrapper(
-                      title: "${log.method} ${log.url}",
+                      title: '${log.method} ${log.url}',
                       subtitle: "${log.duration.inMilliseconds}ms | ${log.timestamp.toString().split(' ').last.split('.').first}",
-                      value: "Status: ${log.statusCode}",
+                      value: 'Status: ${log.statusCode}',
                       badge: log.statusCode.toString(),
                       badgeColor: isError ? Colors.red : Colors.green,
                       onTap: () => _showNetworkDetail(log),
@@ -1116,17 +1116,17 @@ class _FluxyDevToolsState extends State<FluxyDevTools> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Text("Request Details", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18)),
+                const Text('Request Details', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18)),
                 const SizedBox(height: 16),
-                _buildDetailRow("URL", log.url),
-                _buildDetailRow("Method", log.method),
-                _buildDetailRow("Status", log.statusCode.toString()),
-                _buildDetailRow("Duration", "${log.duration.inMilliseconds}ms"),
+                _buildDetailRow('URL', log.url),
+                _buildDetailRow('Method', log.method),
+                _buildDetailRow('Status', log.statusCode.toString()),
+                _buildDetailRow('Duration', '${log.duration.inMilliseconds}ms'),
                 const SizedBox(height: 16),
-                const Text("Request Body", style: TextStyle(color: Colors.white54, fontSize: 12)),
+                const Text('Request Body', style: TextStyle(color: Colors.white54, fontSize: 12)),
                 _buildCodeBlock(_prettifyJson(log.requestBody)),
                 const SizedBox(height: 16),
-                const Text("Response Body", style: TextStyle(color: Colors.white54, fontSize: 12)),
+                const Text('Response Body', style: TextStyle(color: Colors.white54, fontSize: 12)),
                 _buildCodeBlock(_prettifyJson(log.responseBody)),
               ],
             ),
@@ -1135,7 +1135,7 @@ class _FluxyDevToolsState extends State<FluxyDevTools> {
         actions: [
           TextButton(
             onPressed: () => setState(() => _activeDialog = null),
-            child: const Text("Close", style: TextStyle(color: Colors.blue)),
+            child: const Text('Close', style: TextStyle(color: Colors.blue)),
           ),
         ],
       );
@@ -1164,7 +1164,7 @@ class _FluxyDevToolsState extends State<FluxyDevTools> {
                   child: TextField(
                     style: const TextStyle(color: Colors.white, fontSize: 12),
                     decoration: const InputDecoration(
-                      hintText: "Search logs...",
+                      hintText: 'Search logs...',
                       hintStyle: TextStyle(color: Colors.white24, fontSize: 12),
                       border: InputBorder.none,
                       prefixIcon: Icon(Icons.search_rounded, color: Colors.blueAccent, size: 16),
@@ -1178,26 +1178,26 @@ class _FluxyDevToolsState extends State<FluxyDevTools> {
                 icon: _isTimelinePaused ? Icons.play_arrow_rounded : Icons.pause_rounded,
                 onPressed: () => setState(() => _isTimelinePaused = !_isTimelinePaused),
                 color: _isTimelinePaused ? Colors.greenAccent : Colors.orangeAccent,
-                tooltip: _isTimelinePaused ? "Resume" : "Pause",
+                tooltip: _isTimelinePaused ? 'Resume' : 'Pause',
               ),
               const SizedBox(width: 4),
               _buildIconButton(
                 icon: Icons.delete_outline_rounded,
-                onPressed: () => setState(() => _logs.clear()),
+                onPressed: () => setState(_logs.clear),
                 color: Colors.redAccent,
-                tooltip: "Clear",
+                tooltip: 'Clear',
               ),
             ],
           ),
         ),
         Expanded(
-          child: filteredLogs.isEmpty ? _buildEmpty("Timeline is quiet...") : ListView.builder(
+          child: filteredLogs.isEmpty ? _buildEmpty('Timeline is quiet...') : ListView.builder(
             padding: const EdgeInsets.all(16),
             itemCount: filteredLogs.length,
             itemBuilder: (context, index) {
               final log = filteredLogs[index];
-              final isUpdate = log.contains("[UPDATE]");
-              final isNetwork = log.contains("[NETWORK]");
+              final isUpdate = log.contains('[UPDATE]');
+              final isNetwork = log.contains('[NETWORK]');
               
               return Container(
                 margin: const EdgeInsets.only(bottom: 8),
@@ -1238,7 +1238,7 @@ class _FluxyDevToolsState extends State<FluxyDevTools> {
 
   Widget _buildIconButton({required IconData icon, required VoidCallback onPressed, required Color color, String? tooltip}) {
     return Tooltip(
-      message: tooltip ?? "",
+      message: tooltip ?? '',
       child: InkWell(
         onTap: onPressed,
         borderRadius: BorderRadius.circular(8),
@@ -1335,7 +1335,7 @@ class _FluxyDevToolsState extends State<FluxyDevTools> {
               icon: const Icon(Icons.copy_rounded, size: 14, color: Colors.white24),
               onPressed: () {
                 Clipboard.setData(ClipboardData(text: code));
-                _showSnackBar("Code block copied to clipboard");
+                _showSnackBar('Code block copied to clipboard');
               },
             ),
           ),

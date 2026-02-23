@@ -131,7 +131,7 @@ class FluxyRouter {
   /// Gets the navigator key for a specific scope, or the root key if not found.
   static GlobalKey<NavigatorState> getKey([String? scope]) {
     if (scope == null) return navigatorKey;
-    return _nestedKeys.putIfAbsent(scope, () => GlobalKey<NavigatorState>());
+    return _nestedKeys.putIfAbsent(scope, GlobalKey<NavigatorState>.new);
   }
 
   static void setRoutes(List<FxRoute> routes, {FxRoute? unknownRoute}) {
@@ -484,11 +484,11 @@ class _GuardReactiveView extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Text(
-                  "Access Denied",
+                  'Access Denied',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 16),
-                ElevatedButton(onPressed: onCheck, child: const Text("Retry")),
+                ElevatedButton(onPressed: onCheck, child: const Text('Retry')),
               ],
             ),
           ),

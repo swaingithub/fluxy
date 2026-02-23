@@ -13,12 +13,12 @@ class FluxyConstraintSolver {
     if (maxH == double.infinity) {
       maxH = viewportSize?.height ?? 800; // Fallback to safe 800 if unknown
       solved = true;
-      _logFix("Infinite Height", "Clamped infinite height to ${maxH.toInt()}px to prevent viewport crash.");
+      _logFix('Infinite Height', 'Clamped infinite height to ${maxH.toInt()}px to prevent viewport crash.');
     }
     if (maxW == double.infinity) {
       maxW = viewportSize?.width ?? 400; // Fallback to safe 400 if unknown
       solved = true;
-      _logFix("Infinite Width", "Clamped infinite width to ${maxW.toInt()}px to prevent viewport crash.");
+      _logFix('Infinite Width', 'Clamped infinite width to ${maxW.toInt()}px to prevent viewport crash.');
     }
 
     // Rule: Min must be <= Max
@@ -35,7 +35,7 @@ class FluxyConstraintSolver {
     }
 
     if (solved) {
-       _logFix("Constraint Normalization", "Layout constraints normalized to prevent immediate Flutter termination.");
+       _logFix('Constraint Normalization', 'Layout constraints normalized to prevent immediate Flutter termination.');
     }
 
     return BoxConstraints(
@@ -49,14 +49,14 @@ class FluxyConstraintSolver {
   /// Fixes an "Expanded inside Scrollable" conflict by returning a fixed height/width 
   /// based on the viewport instead of crashing.
   static double solveFlexConflict(Size viewportSize, Axis direction) {
-    _logFix("Flex Conflict Solver", "Expanded used inside Scrollable. Converting focus to 50% of viewport to prevent crash.");
+    _logFix('Flex Conflict Solver', 'Expanded used inside Scrollable. Converting focus to 50% of viewport to prevent crash.');
     return direction == Axis.vertical ? viewportSize.height * 0.5 : viewportSize.width * 0.5;
   }
 
   static void _logFix(String type, String details) {
     if (!FluxyLayoutGuard.strictMode) {
-      debugPrint("[KERNEL] [SOLVER] Constraint anomaly auto-corrected: $type");
-      debugPrint("[KERNEL] [DETAILS] $details");
+      debugPrint('[KERNEL] [SOLVER] Constraint anomaly auto-corrected: $type');
+      debugPrint('[KERNEL] [DETAILS] $details');
     }
   }
 }

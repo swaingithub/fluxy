@@ -242,6 +242,7 @@ class AsyncFlux<T> extends Flux<T?> {
   }
 
   /// Disposes the flux and cancels all pending operations.
+  @override
   void dispose() {
     _isDisposed = true;
     _cancelInternal();

@@ -15,8 +15,7 @@ import '../di/fluxy_di.dart';
 import 'stability/stability_metrics.dart';
 
 import '../reactive/signal.dart';
-
-import '../networking/fluxy_http.dart';
+import '../devtools/fluxy_devtools.dart';
 
 
 
@@ -59,13 +58,20 @@ class Fluxy {
 
 
   /// Automatically registers all plugins from the generated registry.
-
   static void autoRegister() {
-
-    debugPrint("[INIT] [Platform] Registering Fluxy plugins...");
-
+    debugPrint('[INIT] [Platform] Scanning for modular plugins...');
+    
+    final countBefore = FluxyPluginEngine.plugins.length;
     registerFluxyPlugins();
-
+    final countAfter = FluxyPluginEngine.plugins.length;
+    
+    final newlyRegistered = countAfter - countBefore;
+    if (newlyRegistered > 0) {
+      debugPrint('[INIT] [Platform] Successfully auto-registered $newlyRegistered modular plugins.');
+    } else {
+      debugPrint('[INIT] [Platform] No modular plugins found in the registry.');
+      debugPrint("[HINT] Use 'fluxy module add <name>' and restart to enable more features.");
+    }
   }
 
 
@@ -92,13 +98,8 @@ class Fluxy {
 
 
   /// Helper to wrap the app with DevTools or other debug features.
-
   static Widget debug({required Widget child}) {
-
-    // In a real implementation, this would inject the Fluxy Inspector
-
-    return child;
-
+    return FluxyDevTools(child: child);
   }
 
 
@@ -124,11 +125,11 @@ class Fluxy {
 
     final summary = FluxyStabilityMetrics.getSummary();
 
-    debugPrint("┌───────────────────────────────────────────┐");
+    debugPrint('┌───────────────────────────────────────────┐');
 
-    debugPrint("│ [KERNEL] [STABILITY] System Health Summary │");
+    debugPrint('│ [KERNEL] [STABILITY] System Health Summary │');
 
-    debugPrint("├───────────────────────────────────────────┤");
+    debugPrint('├───────────────────────────────────────────┤');
 
     debugPrint("│ Layout Fixes:     ${summary['layout_fixes']}                     │");
 
@@ -140,7 +141,7 @@ class Fluxy {
 
     debugPrint("│ Total Saves:      ${summary['total_saves']}                     │");
 
-    debugPrint("└───────────────────────────────────────────┘");
+    debugPrint('└───────────────────────────────────────────┘');
 
   }
 

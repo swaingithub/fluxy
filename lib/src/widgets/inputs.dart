@@ -14,7 +14,9 @@ class FxTextField extends FxWidget {
   final String? placeholder;
   final String? label;
   final IconData? icon;
+  @override
   final FxStyle style;
+  @override
   final FxResponsiveStyle? responsive;
   final InputDecoration? decoration;
   final TextStyle? textStyle;

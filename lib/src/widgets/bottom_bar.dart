@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../styles/style.dart';
-import '../widgets/box.dart';
+import '../dsl/fx.dart';
 
 class FxBottomBar extends StatelessWidget {
   final int currentIndex;
@@ -27,9 +27,8 @@ class FxBottomBar extends StatelessWidget {
     final effectiveActive = activeColor ?? Theme.of(context).primaryColor;
     final effectiveBase = baseColor ?? Colors.grey.shade400;
 
-    return Box(
-      style:
-          containerStyle ??
+    return Fx.box(
+      style: containerStyle ??
           FxStyle(
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
             backgroundColor: Colors.white,
@@ -43,19 +42,20 @@ class FxBottomBar extends StatelessWidget {
             ],
           ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: items.asMap().entries.map((entry) {
           final index = entry.key;
           final item = entry.value;
           final isActive = index == currentIndex;
 
           return GestureDetector(
-            onTap: () => onTap(index),
+            onTap: () {
+              if (animate && !isActive) Fx.haptic.light();
+              onTap(index);
+            },
             behavior: HitTestBehavior.opaque,
             child: AnimatedContainer(
-              duration: animate
-                  ? const Duration(milliseconds: 300)
-                  : Duration.zero,
+              duration: animate ? const Duration(milliseconds: 300) : Duration.zero,
               curve: Curves.fastOutSlowIn,
               padding: isActive
                   ? const EdgeInsets.symmetric(horizontal: 16, vertical: 8)
@@ -67,6 +67,7 @@ class FxBottomBar extends StatelessWidget {
                 borderRadius: BorderRadius.circular(100),
               ),
               child: Row(
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   if (isActive && item.activeIconWidget != null)
                     item.activeIconWidget!
@@ -87,17 +88,29 @@ class FxBottomBar extends StatelessWidget {
                   else
                     const SizedBox(width: 24, height: 24),
 
-                  if (isActive) ...[
-                    const SizedBox(width: 8),
-                    Text(
-                      item.label,
-                      style: TextStyle(
-                        color: effectiveActive,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 13,
-                      ),
+                  // Smooth label expansion
+                  AnimatedSize(
+                    duration: animate ? const Duration(milliseconds: 300) : Duration.zero,
+                    curve: Curves.easeInOut,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        if (isActive) ...[
+                          const SizedBox(width: 8),
+                          Text(
+                            item.label,
+                            style: TextStyle(
+                              color: effectiveActive,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 13,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.clip,
+                          ),
+                        ],
+                      ],
                     ),
-                  ],
+                  ),
                 ],
               ),
             ),

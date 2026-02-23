@@ -134,7 +134,7 @@ class FluxyDIException implements Exception {
   final String message;
   FluxyDIException(this.message);
   @override
-  String toString() => "FluxyDIException: $message";
+  String toString() => 'FluxyDIException: $message';
 }
 
 class _DependencyHolder<T> {
@@ -153,7 +153,7 @@ class _DependencyHolder<T> {
 
     if (scope == FxScope.factory) {
       if (factory == null) {
-        throw FluxyDIException("Factory scope requires a factory function.");
+        throw FluxyDIException('Factory scope requires a factory function.');
       }
       _isResolving = true;
       try {
@@ -183,7 +183,7 @@ class _DependencyHolder<T> {
 
     if (instance == null) {
       throw FluxyDIException(
-        "Failed to resolve dependency of type $T. Factory returned null.",
+        'Failed to resolve dependency of type $T. Factory returned null.',
       );
     }
     return instance!;

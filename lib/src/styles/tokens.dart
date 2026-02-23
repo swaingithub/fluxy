@@ -59,16 +59,16 @@ class _ShadowTokens {
   const _ShadowTokens();
   List<BoxShadow> get none => [];
   List<BoxShadow> get sm => [
-    BoxShadow(color: Color(0x0D000000), offset: Offset(0, 1), blurRadius: 2),
+    const BoxShadow(color: Color(0x0D000000), offset: Offset(0, 1), blurRadius: 2),
   ];
   List<BoxShadow> get md => [
-    BoxShadow(
+    const BoxShadow(
       color: Color(0x1A000000),
       offset: Offset(0, 4),
       blurRadius: 6,
       spreadRadius: -1,
     ),
-    BoxShadow(
+    const BoxShadow(
       color: Color(0x1A000000),
       offset: Offset(0, 2),
       blurRadius: 4,
@@ -76,13 +76,13 @@ class _ShadowTokens {
     ),
   ];
   List<BoxShadow> get lg => [
-    BoxShadow(
+    const BoxShadow(
       color: Color(0x1A000000),
       offset: Offset(0, 10),
       blurRadius: 15,
       spreadRadius: -3,
     ),
-    BoxShadow(
+    const BoxShadow(
       color: Color(0x1A000000),
       offset: Offset(0, 4),
       blurRadius: 6,
@@ -90,13 +90,13 @@ class _ShadowTokens {
     ),
   ];
   List<BoxShadow> get xl => [
-    BoxShadow(
+    const BoxShadow(
       color: Color(0x1A000000),
       offset: Offset(0, 20),
       blurRadius: 25,
       spreadRadius: -5,
     ),
-    BoxShadow(
+    const BoxShadow(
       color: Color(0x1A000000),
       offset: Offset(0, 10),
       blurRadius: 10,

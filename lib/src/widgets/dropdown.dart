@@ -14,9 +14,11 @@ class FxDropdown<T> extends FxWidget {
   final String Function(T)? itemLabel;
   final Widget Function(T)? itemBuilder;
   final String? placeholder;
+  @override
   final FxStyle style;
   final FxStyle dropdownStyle;
   final Color? iconColor;
+  @override
   final FxResponsiveStyle? responsive;
 
   const FxDropdown({
@@ -36,7 +38,7 @@ class FxDropdown<T> extends FxWidget {
     this.responsive,
   }) : assert(
          value != null || signal != null,
-         "Either value or signal must be provided",
+         'Either value or signal must be provided',
        );
 
   @override
@@ -264,9 +266,9 @@ class _FxDropdownState<T> extends State<FxDropdown<T>>
             children: [
               Text(
                 _currentValue != null
-                    ? (widget.itemLabel?.call(_currentValue!) ??
+                    ? (widget.itemLabel?.call(_currentValue as T) ??
                           _currentValue!.text)
-                    : (widget.placeholder ?? "Select..."),
+                    : (widget.placeholder ?? 'Select...'),
                 style: TextStyle(
                   fontSize: 14,
                   color: _currentValue != null

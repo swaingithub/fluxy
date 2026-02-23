@@ -5,7 +5,7 @@ import 'profile.controller.dart';
 final profileRoutes = [
   FxRoute(
     path: '/profile',
-    controller: () => ProfileController(),
+    controller: ProfileController.new,
     builder: (params, args) => const ProfileView(),
   ),
 ];

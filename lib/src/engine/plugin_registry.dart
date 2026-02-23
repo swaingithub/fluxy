@@ -1,6 +1,11 @@
-/// THIS FILE IS A STUB FOR THE MODULAR SYSTEM.
-/// Registration is now handled by the user's project or the meta-package.
+/// THIS FILE IS AUTOMATICALLY MANAGED BY THE FLUXY CLI.
+/// 
+/// To register new modules, run: `fluxy module add <name>`
+/// Manual registration is not recommended but can be done in main.dart via `Fluxy.register()`.
+library;
+
 
 void registerFluxyPlugins() {
-  // Logic moved to user project via fluxy-cli
+  // The 'fluxy module' command will inject registration calls here.
+  // Example: Fluxy.register(FluxyAuthPlugin());
 }

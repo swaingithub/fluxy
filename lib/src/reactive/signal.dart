@@ -247,7 +247,7 @@ class FluxComputed<T> extends Flux<T> with ReactiveSubscriberMixin {
        super._internal();
 
   @override
-  String? get debugName => label ?? "FluxComputed";
+  String? get debugName => label ?? 'FluxComputed';
 
   @override
   T get value {
@@ -344,6 +344,7 @@ class FluxComputed<T> extends Flux<T> with ReactiveSubscriberMixin {
   /// Returns the last error, if any.
   Object? get error => _lastError;
 
+  @override
   void dispose() {
     clearDependencies();
     _subscribers.clear();
@@ -357,7 +358,7 @@ class FluxEffect with ReactiveSubscriberMixin {
   bool _isDisposed = false;
 
   @override
-  String? get debugName => "FluxEffect";
+  String? get debugName => 'FluxEffect';
 
   FluxEffect(this._effect) {
     _run();

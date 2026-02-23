@@ -6,7 +6,9 @@ import '../engine/decoration_builder.dart';
 import '../widgets/fx_widget.dart';
 
 class StackBox extends FxWidget {
+  @override
   final FxStyle style;
+  @override
   final FxResponsiveStyle? responsive;
   final List<Widget> children;
   final VoidCallback? onTap;
@@ -46,8 +48,8 @@ class StackBox extends FxWidget {
       className: className ?? this.className,
       style: style ?? this.style,
       responsive: responsive ?? this.responsive,
-      children: children ?? this.children,
       onTap: onTap ?? this.onTap,
+      children: children ?? this.children,
     );
   }
 

@@ -26,6 +26,7 @@ linter:
 analyzer:
   exclude:
     - "build/**"
+    - "bin/**"
     - "**/*.g.dart"
     - "**/*.freezed.dart"
   errors:

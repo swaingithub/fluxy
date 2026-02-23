@@ -18,33 +18,33 @@ class FluxyError {
   static void report(Object error, [StackTrace? stack]) {
     final translated = _translateError(error);
     
-    debugPrint("┌───────────────────────────────────────────┐");
-    debugPrint(translated != null ? "│ [KERNEL] [REPAIR] $translated" : "│ [KERNEL] [ERROR] Unhandled Exception      │");
+    debugPrint('┌───────────────────────────────────────────┐');
+    debugPrint(translated != null ? '│ [KERNEL] [REPAIR] $translated' : '│ [KERNEL] [ERROR] Unhandled Exception      │');
     if (translated == null) {
-      debugPrint("├───────────────────────────────────────────┤");
-      debugPrint("│ Error: $error");
+      debugPrint('├───────────────────────────────────────────┤');
+      debugPrint('│ Error: $error');
     }
-    debugPrint("└───────────────────────────────────────────┘");
+    debugPrint('└───────────────────────────────────────────┘');
 
     for (var handler in _handlers) {
       try {
         handler(translated ?? error, stack);
       } catch (e) {
-        debugPrint("[KERNEL] [FATAL] Error in FluxyErrorHandler: $e");
+        debugPrint('[KERNEL] [FATAL] Error in FluxyErrorHandler: $e');
       }
     }
   }
 
   static String? _translateError(Object error) {
     final msg = error.toString();
-    if (msg.contains("RenderBox was not laid out") || msg.contains("has infinite height") || msg.contains("vertical viewport was given unbounded height")) {
-      return "[LAYOUT] Alert: .hFull() / .wFull() used inside FxScroll. Recommendation: Use .h(minHeight) or Fx.scrollCenter().";
+    if (msg.contains('RenderBox was not laid out') || msg.contains('has infinite height') || msg.contains('vertical viewport was given unbounded height')) {
+      return '[LAYOUT] Alert: .hFull() / .wFull() used inside FxScroll. Recommendation: Use .h(minHeight) or Fx.scrollCenter().';
     }
-    if (msg.contains("ParentDataWidget") && msg.contains("Positioned")) {
-      return "[LAYOUT] Alert: .positioned() used outside of Stack. Flutter hierarchy violation detected.";
+    if (msg.contains('ParentDataWidget') && msg.contains('Positioned')) {
+      return '[LAYOUT] Alert: .positioned() used outside of Stack. Flutter hierarchy violation detected.';
     }
-    if (msg.contains("ParentDataWidget") && (msg.contains("Expanded") || msg.contains("Flexible"))) {
-      return "[LAYOUT] Alert: .expanded() / .flex() used outside of Flex container (Row/Column).";
+    if (msg.contains('ParentDataWidget') && (msg.contains('Expanded') || msg.contains('Flexible'))) {
+      return '[LAYOUT] Alert: .expanded() / .flex() used outside of Flex container (Row/Column).';
     }
     return null;
   }

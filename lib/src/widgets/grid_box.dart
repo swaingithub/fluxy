@@ -7,7 +7,9 @@ import '../engine/grid_layout_solver.dart';
 import 'fx_widget.dart';
 
 class GridBox extends FxWidget {
+  @override
   final FxStyle style;
+  @override
   final FxResponsiveStyle? responsive;
   final List<Widget> children;
   final VoidCallback? onTap;
@@ -43,12 +45,12 @@ class GridBox extends FxWidget {
   }) {
     return GridBox(
       key: key,
-      id: id ?? this.id,
+      id: id ?? id,
       className: className ?? this.className,
       style: style ?? this.style,
       responsive: responsive ?? this.responsive,
-      children: children ?? this.children,
       onTap: onTap ?? this.onTap,
+      children: children ?? this.children,
     );
   }
 

@@ -11,7 +11,9 @@ class FxGrid extends FxWidget {
   final int? columns;
   final double gap;
   final double? minItemWidth;
+  @override
   final FxStyle style;
+  @override
   final FxResponsiveStyle? responsive;
   final double childAspectRatio;
   final bool shrinkWrap;
@@ -53,11 +55,11 @@ class FxGrid extends FxWidget {
     double childAspectRatio = 1.0,
   }) {
     return FxGrid(
-      children: children,
       minItemWidth: minItemWidth,
       gap: gap,
       style: style,
       childAspectRatio: childAspectRatio,
+      children: children,
     );
   }
 
@@ -76,7 +78,6 @@ class FxGrid extends FxWidget {
     ScrollPhysics? physics,
   }) {
     return FxGrid(
-      children: children,
       xsCols: xs,
       smCols: sm,
       mdCols: md,
@@ -87,7 +88,8 @@ class FxGrid extends FxWidget {
       childAspectRatio: childAspectRatio,
       shrinkWrap: shrinkWrap,
       physics: physics ?? const NeverScrollableScrollPhysics(),
-      columns: null, // Use breakpoint values
+      columns: null,
+      children: children, // Use breakpoint values
     );
   }
 
@@ -98,10 +100,10 @@ class FxGrid extends FxWidget {
     double childAspectRatio = 0.8,
   }) {
     return FxGrid(
-      children: children,
       gap: gap,
       childAspectRatio: childAspectRatio,
-      minItemWidth: 160, // Smart default for cards
+      minItemWidth: 160,
+      children: children, // Smart default for cards
     );
   }
 
@@ -112,10 +114,10 @@ class FxGrid extends FxWidget {
     int columns = 3,
   }) {
     return FxGrid(
-      children: children,
       gap: gap,
       columns: columns,
-      childAspectRatio: 1.0, // Square by default
+      childAspectRatio: 1.0,
+      children: children, // Square by default
     );
   }
 
@@ -146,7 +148,6 @@ class FxGrid extends FxWidget {
       key: key,
       id: id,
       className: className,
-      children: children ?? this.children,
       columns: columns ?? this.columns,
       gap: gap ?? this.gap,
       minItemWidth: minItemWidth ?? this.minItemWidth,
@@ -160,6 +161,7 @@ class FxGrid extends FxWidget {
       mdCols: mdCols,
       lgCols: lgCols,
       xlCols: xlCols,
+      children: children ?? this.children,
     );
   }
 

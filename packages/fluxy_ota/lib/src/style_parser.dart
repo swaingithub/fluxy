@@ -69,18 +69,20 @@ class FluxyStyleParser {
   static EdgeInsets? _parseEdgeInsets(dynamic value) {
     if (value is num) return EdgeInsets.all(value.toDouble());
     if (value is List) {
-      if (value.length == 2)
+      if (value.length == 2) {
         return EdgeInsets.symmetric(
           vertical: value[0].toDouble(),
           horizontal: value[1].toDouble(),
         );
-      if (value.length == 4)
+      }
+      if (value.length == 4) {
         return EdgeInsets.fromLTRB(
           value[0].toDouble(),
           value[1].toDouble(),
           value[2].toDouble(),
           value[3].toDouble(),
         );
+      }
     }
     return null;
   }

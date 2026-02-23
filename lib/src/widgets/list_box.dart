@@ -7,7 +7,9 @@ import '../engine/layout_guard.dart';
 import '../widgets/fx_widget.dart';
 
 class ListBox extends FxWidget {
+  @override
   final FxStyle style;
+  @override
   final FxResponsiveStyle? responsive;
   final List<Widget>? children; // Optional now
   final int? itemCount; // For builder support
@@ -68,7 +70,6 @@ class ListBox extends FxWidget {
       className: className ?? this.className,
       style: style ?? this.style,
       responsive: responsive ?? this.responsive,
-      children: children ?? this.children,
       itemCount: itemCount ?? this.itemCount,
       itemBuilder: itemBuilder ?? this.itemBuilder,
       scrollDirection: scrollDirection ?? this.scrollDirection,
@@ -77,6 +78,7 @@ class ListBox extends FxWidget {
       gap: gap ?? this.gap,
       onTap: onTap ?? this.onTap,
       controller: controller ?? this.controller,
+      children: children ?? this.children,
     );
   }
 

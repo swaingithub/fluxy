@@ -43,7 +43,6 @@ import '../widgets/fx_chart.dart';
 export '../widgets/fx_chart.dart';
 import '../layout/fx_layout.dart';
 import '../engine/stability/stability.dart';
-import '../engine/stability/data_guard.dart';
 import '../engine/haptics.dart';
 import '../engine/fluxy_engine.dart';
 
@@ -51,80 +50,80 @@ import '../engine/fluxy_engine.dart';
 // ignore: unused_import
 import 'fx_extensions.dart';
 
-/// The hyper-minimal Fx API for Fluxy.
-/// Designed for maximum builder velocity and zero boilerplate reactivity.
-class Fx extends StatefulWidget {
-  final Widget Function() builder;
-  final String? label;
+  /// The hyper-minimal Fx API for Fluxy.
+  /// Designed for maximum builder velocity and zero boilerplate reactivity.
+  class Fx extends StatefulWidget {
+    final Widget Function() builder;
+    final String? label;
+  
+    const Fx(this.builder, {super.key, this.label});
+  
+    @override
+    State<Fx> createState() => _FxState();
+  
+    // --- Design Tokens ---
+    // Expose global design scale: Fx.space.sm
+    static const space = FxTokens.space;
+    static const radius = FxTokens.radius;
+    static const font = FxTokens.font;
+    static const shadow = FxTokens.shadow;
+  
+    /// Global Haptic Feedback Engine.
+    static const _FxHapticProxy haptic = _FxHapticProxy();
 
-  const Fx(this.builder, {super.key, this.label});
-
-  @override
-  State<Fx> createState() => _FxState();
-
-  // --- Design Tokens ---
-  // Expose global design scale: Fx.space.sm
-  static const space = FxTokens.space;
-  static const radius = FxTokens.radius;
-  static const font = FxTokens.font;
-  static const shadow = FxTokens.shadow;
-
-  /// Global Haptic Feedback Engine.
-  static const haptic = FxHaptic;
-
-  // --- Semantic Theme Proxies ---
-  // These automatically resolve to the current theme's colors.
-  static Color get primary => FxTokens.colors.primary;
-  static Color get secondary => FxTokens.colors.secondary;
-  static Color get success => FxTokens.colors.success;
-  static Color get error => FxTokens.colors.error;
-  static Color get warning => FxTokens.colors.warning;
-  static Color get info => FxTokens.colors.info;
-  static Color get background => FxTokens.colors.background;
-  static Color get surface => FxTokens.colors.surface;
-  static Color get textColor => FxTokens.colors.text;
-  static Color get muted => FxTokens.colors.muted;
-
-  // --- Global Feedback & Overlays ---
-
-  /// Access to global toast system.
-  /// Usage: `Fx.toast("Hello")` or `Fx.toast.success("Great job")`
-  static const _FxToastHelper toast = _FxToastHelper();
-
-  /// Access to global loader system.
-  /// Usage: `Fx.loader.show()`
-  static const _FxLoaderHelper loader = _FxLoaderHelper();
-
-  /// Access to global dialog system.
-  /// Usage: `Fx.dialog.alert(...)`
-  static const _FxDialogHelper dialog = _FxDialogHelper();
-
-  // --- Core Services ---
-
-  /// Access to global networing engine.
-  static final http = FluxyHttp();
-
-  /// Access to global platform services.
-  /// Usage: `Fx.platform.auth`, `Fx.platform.camera`, `Fx.platform.permissions`, etc.
-  static const platform = _FxPlatformHelper();
-
-  // --- Theme Management ---
-
-  /// Toggles between light and dark mode.
-  static void toggleTheme() => FxTheme.toggle();
-
-  /// Checks if the current theme is dark.
-  static bool get isDarkMode => FxTheme.isDarkMode;
-
-  /// Sets the theme mode.
-  static void setThemeMode(ThemeMode mode) => FxTheme.setMode(mode);
-
-
-  /// Registers a global error handler.
-  static void onError(FluxyErrorHandler handler) => FluxyError.onError(handler);
-
-  // --- Responsive Layouts ---
-
+    // --- Semantic Theme Proxies ---
+    // These automatically resolve to the current theme's colors.
+    static Color get primary => FxTokens.colors.primary;
+    static Color get secondary => FxTokens.colors.secondary;
+    static Color get success => FxTokens.colors.success;
+    static Color get error => FxTokens.colors.error;
+    static Color get warning => FxTokens.colors.warning;
+    static Color get info => FxTokens.colors.info;
+    static Color get background => FxTokens.colors.background;
+    static Color get surface => FxTokens.colors.surface;
+    static Color get textColor => FxTokens.colors.text;
+    static Color get muted => FxTokens.colors.muted;
+  
+    // --- Global Feedback & Overlays ---
+  
+    /// Access to global toast system.
+    /// Usage: `Fx.toast("Hello")` or `Fx.toast.success("Great job")`
+    static const _FxToastHelper toast = _FxToastHelper();
+  
+    /// Access to global loader system.
+    /// Usage: `Fx.loader.show()`
+    static const _FxLoaderHelper loader = _FxLoaderHelper();
+  
+    /// Access to global dialog system.
+    /// Usage: `Fx.dialog.alert(...)`
+    static const _FxDialogHelper dialog = _FxDialogHelper();
+  
+    // --- Core Services ---
+  
+    /// Access to global networing engine.
+    static final http = FluxyHttp();
+  
+    /// Access to global platform services.
+    /// Usage: `Fx.platform.auth`, `Fx.platform.camera`, `Fx.platform.permissions`, etc.
+    static const platform = _FxPlatformHelper();
+  
+    // --- Theme Management ---
+  
+    /// Toggles between light and dark mode.
+    static void toggleTheme() => FxTheme.toggle();
+  
+    /// Checks if the current theme is dark.
+    static bool get isDarkMode => FxTheme.isDarkMode;
+  
+    /// Sets the theme mode.
+    static void setThemeMode(ThemeMode mode) => FxTheme.setMode(mode);
+  
+  
+    /// Registers a global error handler.
+    static void onError(FluxyErrorHandler handler) => FluxyError.onError(handler);
+  
+    // --- Responsive Layouts ---
+  
   /// Advanced Layout Switcher. Automatically chooses layout based on screen size.
   static Widget layout({
     required Widget mobile,
@@ -256,12 +255,12 @@ class Fx extends StatefulWidget {
     double? fade = 0,
   }) {
     return FxReveal(
-      children: children,
       interval: interval,
       duration: duration,
       curve: curve,
       slide: slide,
       fade: fade,
+      children: children,
     );
   }
 
@@ -280,13 +279,13 @@ class Fx extends StatefulWidget {
     // Priority: alignItems (new) -> items (deprecated) -> default center
     final resolvedItems = items ?? alignItems;
     return FxRow(
-      children: children,
       justify: justify,
       items: resolvedItems,
       gap: gap,
       style: style,
       size: size,
       responsive: responsive,
+      children: children,
     );
   }
 
@@ -328,12 +327,12 @@ class Fx extends StatefulWidget {
     // Priority: alignItems (new) -> items (deprecated) -> default center
     final resolvedItems = items ?? alignItems;
     return FxCol(
-      children: children,
       justify: justify,
       items: resolvedItems,
       gap: gap,
       style: style,
       size: size,
+      children: children,
     );
   }
 
@@ -354,7 +353,6 @@ class Fx extends StatefulWidget {
     ScrollController? controller,
   }) {
     return ListBox(
-      children: children,
       itemCount: itemCount,
       itemBuilder: itemBuilder,
       scrollDirection: scrollDirection,
@@ -366,6 +364,7 @@ class Fx extends StatefulWidget {
       className: className,
       responsive: responsive,
       controller: controller,
+      children: children,
     );
   }
 
@@ -773,10 +772,10 @@ class Fx extends StatefulWidget {
     FxStyle style = FxStyle.none,
   }) {
     return FxStack(
-      children: children,
       alignment: alignment,
       fit: fit,
       style: style,
+      children: children,
     );
   }
 
@@ -878,11 +877,11 @@ class Fx extends StatefulWidget {
   /// and cursor: pointer without any prescribed design.
   static FxButton btn({Widget? child, String? label, VoidCallback? onTap}) {
     return FxButton(
-      child: child,
       label: label,
       onTap: onTap,
       variant: FxButtonVariant.none,
       size: FxButtonSize.none,
+      child: child,
     );
   }
 
@@ -1189,20 +1188,24 @@ class Fx extends StatefulWidget {
   /// Form container for grouping inputs.
   /// Automatically handles validation and keyboard dismissal.
   static Widget form({
-    required Widget child,
+    Widget? child,
+    List<Widget>? children,
     FluxForm? form,
     VoidCallback? onSubmit,
     bool autoValidate = true,
     bool closeKeyboardOnTap = true,
   }) {
     return FxForm(
-      child: child,
       form: form,
       onSubmit: onSubmit,
       autoValidate: autoValidate,
       closeKeyboardOnTap: closeKeyboardOnTap,
+      child: child,
+      children: children,
     );
   }
+
+  /// Reactive API fetcher.
 
   /// Reactive API fetcher.
   /// Returns an async signal with built-in state management.
@@ -1232,7 +1235,7 @@ class Fx extends StatefulWidget {
 
   static Widget password({
     required Flux<String> signal,
-    String? placeholder = "Password",
+    String? placeholder = 'Password',
   }) {
     return input(signal: signal, placeholder: placeholder, obscureText: true);
   }
@@ -1285,13 +1288,13 @@ class Fx extends StatefulWidget {
     FxResponsiveStyle? responsive,
   }) {
     return FxBadge(
-      child: child,
       label: label,
       color: color,
       offset: offset,
       style: style,
       className: className,
       responsive: responsive,
+      child: child,
     );
   }
 
@@ -1381,11 +1384,11 @@ class _FxGridHelper {
     FxStyle style = FxStyle.none,
     double childAspectRatio = 1.0,
   }) => FxGrid(
-    children: children,
     columns: columns,
     gap: gap,
     style: style,
     childAspectRatio: childAspectRatio,
+    children: children,
   );
 
   /// Auto-responsive grid that fills as many columns as possible.
@@ -1397,11 +1400,11 @@ class _FxGridHelper {
     FxStyle style = FxStyle.none,
     double childAspectRatio = 1.0,
   }) => FxGrid.auto(
-    children: children,
     minItemWidth: minItemWidth,
     gap: gap,
     style: style,
     childAspectRatio: childAspectRatio,
+    children: children,
   );
 
   /// Breakpoint-based grid.
@@ -1419,7 +1422,6 @@ class _FxGridHelper {
     bool shrinkWrap = true,
     ScrollPhysics? physics,
   }) => FxGrid.responsive(
-    children: children,
     xs: xs,
     sm: sm,
     md: md,
@@ -1430,6 +1432,7 @@ class _FxGridHelper {
     childAspectRatio: childAspectRatio,
     shrinkWrap: shrinkWrap,
     physics: physics,
+    children: children,
   );
 
   FxGrid cards({
@@ -1437,9 +1440,9 @@ class _FxGridHelper {
     double gap = 16,
     double childAspectRatio = 0.8,
   }) => FxGrid.cards(
-    children: children,
     gap: gap,
     childAspectRatio: childAspectRatio,
+    children: children,
   );
 
   FxGrid gallery({
@@ -1447,18 +1450,18 @@ class _FxGridHelper {
     double gap = 4,
     int columns = 3,
   }) => FxGrid.gallery(
-    children: children,
     gap: gap,
     columns: columns,
+    children: children,
   );
 
   FxGrid feed({
     required List<Widget> children,
     double gap = 16,
   }) => FxGrid(
-    children: children,
     columns: 1,
     gap: gap,
+    children: children,
   );
 
   /// Specialized grid for dashboards.
@@ -1467,13 +1470,13 @@ class _FxGridHelper {
     double gap = 20,
     double childAspectRatio = 1.0,
   }) => FxGrid.responsive(
-    children: children,
     xs: 1,
     sm: 2,
     md: 3,
     lg: 4,
     gap: gap,
     childAspectRatio: childAspectRatio,
+    children: children,
   );
 }
 
@@ -1481,7 +1484,7 @@ class _FxState extends State<Fx> with ReactiveSubscriberMixin {
   bool _isThrottledWarning = false;
 
   @override
-  String? get debugName => widget.label ?? "FxBuilder";
+  String? get debugName => widget.label ?? 'FxBuilder';
 
   @override
   void notify() {
@@ -1495,7 +1498,7 @@ class _FxState extends State<Fx> with ReactiveSubscriberMixin {
         if (rebuildCount > 10 && !_isThrottledWarning) {
           _isThrottledWarning = true;
           // Flash warning in console too
-          debugPrint("Fluxy [Profiler] Warning: '${debugName}' is rebuilding too frequently (>10/s)!");
+          debugPrint("Fluxy [Profiler] Warning: '$debugName' is rebuilding too frequently (>10/s)!");
         }
       } else {
         rebuildCount = 0;
@@ -1551,7 +1554,7 @@ class _FxState extends State<Fx> with ReactiveSubscriberMixin {
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                 decoration: BoxDecoration(color: Colors.red, borderRadius: BorderRadius.circular(4)),
-                child: const Text("SLOW", style: TextStyle(color: Colors.white, fontSize: 8, fontWeight: FontWeight.bold)),
+                child: const Text('SLOW', style: TextStyle(color: Colors.white, fontSize: 8, fontWeight: FontWeight.bold)),
               ),
             ),
           ],
@@ -1567,6 +1570,15 @@ class _FxState extends State<Fx> with ReactiveSubscriberMixin {
 }
 
 // --- Helper Classes ---
+
+class _FxHapticProxy {
+  const _FxHapticProxy();
+  void light() => FxHaptic.light();
+  void medium() => FxHaptic.medium();
+  void heavy() => FxHaptic.heavy();
+  void success() => FxHaptic.success();
+  void error() => FxHaptic.error();
+}
 
 class _FxToastHelper {
   const _FxToastHelper();
@@ -1620,7 +1632,7 @@ class _FxDialogHelper {
   Future<void> alert({
     required String title,
     required String content,
-    String buttonText = "OK",
+    String buttonText = 'OK',
     VoidCallback? onPressed,
   }) {
     return show(
@@ -1643,8 +1655,8 @@ class _FxDialogHelper {
   Future<bool> confirm({
     required String title,
     required String content,
-    String confirmText = "Confirm",
-    String cancelText = "Cancel",
+    String confirmText = 'Confirm',
+    String cancelText = 'Cancel',
     bool autoBack = true,
   }) async {
     final result = await show<bool>(

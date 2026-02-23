@@ -35,7 +35,7 @@ class FluxyDataGuard {
         await Future.delayed(backoff * attempts); // Exponential-ish backoff
       }
     }
-    throw Exception("Retry failed");
+    throw Exception('Retry failed');
   }
 
   /// Implements a "Stale-While-Revalidate" pattern.
@@ -57,7 +57,7 @@ class FluxyDataGuard {
       final fresh = await remote;
       onData(fresh);
     } catch (e) {
-      debugPrint("[KERNEL] [DATA] [ERROR] SWR cycle failed | Error: $e");
+      debugPrint('[KERNEL] [DATA] [ERROR] SWR cycle failed | Error: $e');
       onError?.call(e);
     }
   }

@@ -8,7 +8,9 @@ import 'fx_widget.dart';
 
 class TextBox extends FxWidget {
   final dynamic data;
+  @override
   final FxStyle style;
+  @override
   final FxResponsiveStyle? responsive;
 
   const TextBox({

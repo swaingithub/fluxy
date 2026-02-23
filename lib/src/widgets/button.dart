@@ -26,7 +26,9 @@ class FxButton extends FxWidget {
   final FxButtonVariant variant;
   final FxButtonSize size;
   final bool isRounded;
+  @override
   final FxStyle style;
+  @override
   final FxResponsiveStyle? responsive;
   final Widget? icon;
   final Widget? trailingIcon;
@@ -126,7 +128,6 @@ class FxButton extends FxWidget {
       id: id,
       className: className ?? this.className,
       label: label ?? this.label,
-      child: child ?? this.child,
       onTap: onTap ?? this.onTap,
       variant: variant ?? this.variant,
       size: size ?? this.size,
@@ -136,6 +137,7 @@ class FxButton extends FxWidget {
       icon: icon ?? this.icon,
       trailingIcon: trailingIcon ?? this.trailingIcon,
       isLoading: isLoading ?? this.isLoading,
+      child: child ?? this.child,
     );
   }
 
@@ -260,7 +262,7 @@ class _FxButtonState extends State<FxButton> {
                   ? FxTokens.colors.slate50
                   : brandColor.withValues(alpha: 0.9),
             )
-          : FxStyle(opacity: 0.9),
+          : const FxStyle(opacity: 0.9),
       pressed: const FxStyle(opacity: 0.7, shadows: []),
     ).merge(widget.style);
 
@@ -269,8 +271,7 @@ class _FxButtonState extends State<FxButton> {
     
     Widget? content = widget.child;
     
-    if (content == null) {
-      content = Fx.row(
+    content ??= Fx.row(
         size: isFullWidth ? MainAxisSize.max : MainAxisSize.min,
         justify: MainAxisAlignment.center, // ALWAYS CENTER content in button
         gap: 8,
@@ -302,7 +303,6 @@ class _FxButtonState extends State<FxButton> {
           if (!widget.isLoading && widget.trailingIcon != null) widget.trailingIcon!,
         ],
       );
-    }
 
     // 5. Build with Box (handles hover/pressed/responsive automatically)
     return Box(

@@ -4,7 +4,7 @@ import 'package:path/path.dart' as p;
 import 'package:fluxy/src/cloud.dart';
 import 'package:flutter/foundation.dart';
 
-const String version = '0.2.6';
+const String version = '1.0.0';
 
 void main(List<String> arguments) async {
   final parser = ArgParser()
@@ -595,6 +595,11 @@ Future<void> _handleRun(List<String> args) async {
 
 Future<void> _handleDoctor() async {
   print('🩺 Fluxy Framework Doctor v$version');
+  
+  print('\n📦 Checking Fluxy Modular Plugins...');
+  await _regeneratePluginRegistry();
+  
+  print('\n🎯 Flutter Environment:');
   await Process.start('flutter', ['doctor'], mode: ProcessStartMode.inheritStdio, runInShell: true);
 }
 
@@ -683,7 +688,7 @@ class ${camel}Layout extends StatelessWidget {
 Future<void> _createModel(String name) async {
   final modelDir = Directory(p.join('lib', 'core', 'models'))..createSync(recursive: true);
   final camel = name[0].toUpperCase() + name.substring(1);
-  final fileName = '${name}.dart';
+  final fileName = '$name.dart';
 
   File(p.join(modelDir.path, fileName)).writeAsStringSync('''
 import 'package:fluxy/fluxy.dart';
@@ -718,7 +723,7 @@ class $camel {
 Future<void> _createController(String name) async {
   final controllerDir = Directory(p.join('lib', 'core', 'controllers'))..createSync(recursive: true);
   final camel = name[0].toUpperCase() + name.substring(1);
-  final fileName = '${name}.controller.dart';
+  final fileName = '$name.controller.dart';
 
   File(p.join(controllerDir.path, fileName)).writeAsStringSync('''
 import 'package:fluxy/fluxy.dart';
@@ -753,6 +758,13 @@ Future<void> _handleModule(List<String> args) async {
       }
       await _addModule(rest.first);
       break;
+    case 'remove':
+      if (rest.isEmpty) {
+        print('Error: Module name required.');
+        return;
+      }
+      await _removeModule(rest.first);
+      break;
     case 'list':
       _listModules();
       break;
@@ -768,7 +780,40 @@ const _availablePlugins = {
   'auth': 'FluxyAuthPlugin',
   'notifications': 'FluxyNotificationsPlugin',
   'ota': 'FluxyOTAPlugin',
+  'camera': 'FluxyCameraPlugin',
+  'biometric': 'FluxyBiometricPlugin',
+  'connectivity': 'FluxyConnectivityPlugin',
+  'platform': 'FluxyPlatformPlugin',
+  'test': 'FluxyTestPlugin',
 };
+
+Future<void> _removeModule(String name) async {
+  final moduleName = name.toLowerCase();
+  
+  print('🗑️ Removing Fluxy Platform Module: $moduleName...');
+  
+  // 1. Run flutter pub remove
+  final packageName = 'fluxy_$moduleName';
+  print('🚀 Uninstalling $packageName via flutter pub remove...');
+  
+  final process = await Process.start(
+    'flutter', 
+    ['pub', 'remove', packageName], 
+    mode: ProcessStartMode.inheritStdio, 
+    runInShell: true
+  );
+  
+  final exitCode = await process.exitCode;
+  if (exitCode != 0) {
+    print('❌ Failed to remove $packageName.');
+    return;
+  }
+  
+  // 2. Regenerate registry
+  await _regeneratePluginRegistry();
+  
+  print('\n✨ Module $moduleName removed and registry cleaned successfully!');
+}
 
 Future<void> _addModule(String name) async {
   final moduleName = name.toLowerCase();
@@ -779,9 +824,27 @@ Future<void> _addModule(String name) async {
 
   print('📦 Adding Fluxy Platform Module: $moduleName...');
   
-  await _regeneratePluginRegistry(moduleName);
+  // 1. Run flutter pub add
+  final packageName = 'fluxy_$moduleName';
+  print('🚀 Installing $packageName via flutter pub add...');
   
-  print('✅ Module $moduleName added and registered.');
+  final process = await Process.start(
+    'flutter', 
+    ['pub', 'add', packageName], 
+    mode: ProcessStartMode.inheritStdio, 
+    runInShell: true
+  );
+  
+  final exitCode = await process.exitCode;
+  if (exitCode != 0) {
+    print('❌ Failed to install $packageName. Please check your internet connection and pubspec.yaml.');
+    return;
+  }
+  
+  // 2. Regenerate registry
+  await _regeneratePluginRegistry();
+  
+  print('\n✨ Module $moduleName added and registered successfully!');
   print('💡 Pro-tip: Ensure "Fluxy.autoRegister();" is called in your main.dart');
 }
 
@@ -792,34 +855,66 @@ void _listModules() {
   }
 }
 
-Future<void> _regeneratePluginRegistry(String newPlugin) async {
+Future<void> _regeneratePluginRegistry([String? newPlugin]) async {
   final registryFile = File(p.join('lib', 'src', 'engine', 'plugin_registry.dart'));
+  final pubspecFile = File('pubspec.yaml');
   
-  // For demo, we just append to the existing registry logic
-  // Real implementation would scan installed packages
-  String content = '''
-import '../../fluxy.dart';
+  Set<String> pluginsToRegister = {};
+  if (newPlugin != null) pluginsToRegister.add(newPlugin);
+  
+  if (pubspecFile.existsSync()) {
+    final content = pubspecFile.readAsStringSync();
+    // Simple regex to find fluxy_ dependencies (supports both ^0.1.0 and path: ...)
+    final regExp = RegExp(r'fluxy_([a-z_]+):');
+    final matches = regExp.allMatches(content);
+    for (final match in matches) {
+      final name = match.group(1);
+      if (name != null && _availablePlugins.containsKey(name)) {
+        pluginsToRegister.add(name);
+      }
+    }
+  }
 
+  String imports = "import '../../fluxy.dart';\n";
+  String body = 'void registerFluxyPlugins() {\n';
+
+  if (pluginsToRegister.isEmpty) {
+    body += '  // No modular plugins detected in pubspec.yaml\n';
+  } else {
+    for (var p in pluginsToRegister) {
+      final className = _availablePlugins[p];
+      if (className != null) {
+        body += '  try {\n';
+        body += '    Fluxy.register($className());\n';
+        body += '    debugPrint("[INIT] [Platform] Auto-registered: $className");\n';
+        body += '  } catch (e) {\n';
+        body += '    debugPrint("[INIT] [Platform] Failed to auto-register $className: \$e");\n';
+        body += '  }\n';
+      }
+    }
+  }
+  
+  body += '}\n';
+  
+  final fullContent = '''
 /// THIS FILE IS AUTO-GENERATED BY THE FLUXY CLI.
 /// DO NOT EDIT MANUALLY.
 
-void registerFluxyPlugins() {
+import 'package:flutter/foundation.dart';
+$imports
+
+$body
 ''';
 
-  // Simulate finding which ones are "installed"
-  // For this demo, we'll just register the one we just added + others if they existed
-  final pluginsToRegister = ['storage', 'analytics', 'permissions', 'auth']; // Hardcoded for this demo
-  
-  for (var p in pluginsToRegister) {
-    final className = _availablePlugins[p];
-    content += '  Fluxy.register($className());\n';
-  }
-  
-  content += '}\n';
-  
   if (!registryFile.parent.existsSync()) {
     registryFile.parent.createSync(recursive: true);
   }
-  registryFile.writeAsStringSync(content);
-  print('🔄 Regenerated plugin_registry.dart');
+  
+  // Only write if changed to avoid unnecessary rebuilds
+  if (!registryFile.existsSync() || registryFile.readAsStringSync() != fullContent) {
+    registryFile.writeAsStringSync(fullContent);
+    print('🔄 Synchronized plugin_registry.dart with ${pluginsToRegister.length} modular dependencies.');
+  } else {
+    print('✅ Plugin registry is already in sync.');
+  }
 }

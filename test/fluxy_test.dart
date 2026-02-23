@@ -3,7 +3,7 @@ import 'package:fluxy/fluxy.dart';
 
 void main() {
     test('Heavy computation runs in isolate without blocking', () async {
-    print("🚀 Starting heavy computation...");
+    print('🚀 Starting heavy computation...');
     
     final result = await fluxIsolate(() {
       int sum = 0;
@@ -13,7 +13,7 @@ void main() {
       return sum;
     });
 
-    print("✅ Computation result: $result");
+    print('✅ Computation result: $result');
     expect(result > 0, true);
   });
 }
