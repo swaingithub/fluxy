@@ -97,7 +97,7 @@ class ResponsiveDemo extends StatelessWidget {
           Fx.text("Responsive Grid").bold().fontSize(32).center(),
           
           // Responsive Grid: 1 col on mobile, 2 on tablet, 3 on desktop
-          FxGrid.responsive(
+          Fx.grid.responsive(
             gap: 24,
             xs: 1,
             md: 2,

@@ -11,6 +11,8 @@ dependencies:
     sdk: flutter
   fluxy:
     path: ../
+  fluxy_ota:
+    path: ../packages/fluxy_ota
 
 dev_dependencies:
   flutter_test:

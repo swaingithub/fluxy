@@ -34,7 +34,7 @@ class _StateManagementDemoState extends State<StateManagementDemo> with FluxyLoc
     super.initState();
     // 7. Global Middleware Example
     // This will log every single update in the entire app!
-    Fluxy.use(LoggerMiddleware());
+    Fluxy.addMiddleware(LoggerMiddleware());
   }
 
   // Local fluxes that will be disposed when this widget is disposed.

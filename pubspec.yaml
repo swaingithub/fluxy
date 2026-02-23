@@ -1,10 +1,8 @@
 name: fluxy
-description: "A complete Flutter platform unifying reactive state, declarative UI, styling, animation, routing, and tooling. Build production-grade apps faster and at scale."
+description: "Core engine of the Fluxy framework including UI, state management, HTTP, and motion."
 version: 0.2.6
 homepage: https://github.com/swaingithub/fluxy
 repository: https://github.com/swaingithub/fluxy
-documentation: https://fluxy-doc.vercel.app/
-issue_tracker: https://github.com/swaingithub/fluxy/issues
 
 environment:
   sdk: '>=3.10.0 <4.0.0'
@@ -18,21 +16,18 @@ dependencies:
   args: ^2.7.0
   path: ^1.9.1
   path_provider: ^2.1.5
-  camera: ^0.11.4
-  permission_handler: ^12.0.1
-  flutter_local_notifications: ^20.1.0
-  connectivity_plus: ^7.0.0
-  local_auth: ^3.0.0
   timezone: ^0.10.1
   flutter_timezone: ^5.0.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^6.0.0
+  flutter_lints: ^3.0.0
+  fluxy_test:
+    path: packages/fluxy_test
 
 flutter:
   uses-material-design: true
 
 executables:
-  fluxy:
+  fluxy: fluxy

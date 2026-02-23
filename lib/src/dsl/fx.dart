@@ -45,16 +45,6 @@ import '../layout/fx_layout.dart';
 import '../engine/stability/stability.dart';
 import '../engine/stability/data_guard.dart';
 import '../engine/haptics.dart';
-import '../engine/plugin.dart';
-import '../plugins/fluxy_storage.dart';
-import '../plugins/fluxy_analytics.dart';
-import '../plugins/fluxy_permissions.dart';
-import '../plugins/fluxy_auth.dart';
-import '../plugins/fluxy_camera.dart';
-import '../plugins/fluxy_notifications.dart';
-import '../plugins/fluxy_connectivity.dart';
-import '../plugins/fluxy_biometric.dart';
-import '../ota/fluxy_remote.dart';
 
 /// The hyper-minimal Fx API for Fluxy.
 /// Designed for maximum builder velocity and zero boilerplate reactivity.
@@ -104,38 +94,7 @@ class Fx extends StatefulWidget {
   /// Usage: `Fx.dialog.alert(...)`
   static const _FxDialogHelper dialog = _FxDialogHelper();
 
-  // --- Platform & Modules ---
-
-  /// Access to the Fluxy Platform Layer.
-  /// Usage: `Fx.platform.storage.set("key", "value")`
-  static const _FxPlatformHelper platform = _FxPlatformHelper();
-
-  /// Direct access to Fluxy Storage module.
-  static FluxyStoragePlugin get storage => platform.storage;
-
-  /// Direct access to Fluxy Auth module.
-  static FluxyAuthPlugin get auth => platform.auth;
-
-  /// Direct access to Fluxy Analytics module.
-  static FluxyAnalyticsPlugin get analytics => platform.analytics;
-
-  /// Direct access to Fluxy Permissions module.
-  static FluxyPermissionsPlugin get permissions => platform.permissions;
-
-  /// Direct access to Fluxy Camera module.
-  static FluxyCameraPlugin get camera => platform.camera;
-
-  /// Direct access to Fluxy Notifications module.
-  static FluxyNotificationsPlugin get notifications => platform.notifications;
-
-  /// Direct access to Fluxy Connectivity module.
-  static FluxyConnectivityPlugin get connectivity => platform.connectivity;
-
-  /// Direct access to Fluxy Biometric module.
-  static FluxyBiometricPlugin get biometric => platform.biometric;
-
-  /// Direct access to Fluxy OTA module.
-  static _FxOTAHelper get ota => const _FxOTAHelper();
+  // --- Core Services ---
 
   /// Access to global networing engine.
   static final http = FluxyHttp();
@@ -1448,6 +1407,8 @@ class _FxGridHelper {
     double gap = 0,
     FxStyle style = FxStyle.none,
     double childAspectRatio = 1.0,
+    bool shrinkWrap = true,
+    ScrollPhysics? physics,
   }) => FxGrid.responsive(
     children: children,
     xs: xs,
@@ -1458,6 +1419,8 @@ class _FxGridHelper {
     gap: gap,
     style: style,
     childAspectRatio: childAspectRatio,
+    shrinkWrap: shrinkWrap,
+    physics: physics,
   );
 
   FxGrid cards({
@@ -1722,49 +1685,5 @@ class _FxCondHelper {
   }
 }
 
-class _FxPlatformHelper {
-  const _FxPlatformHelper();
 
-  /// Access to Fluxy Storage module.
-  FluxyStoragePlugin get storage => 
-      FluxyPluginEngine.find<FluxyStoragePlugin>() ?? FluxyStoragePlugin();
-
-  /// Access to Fluxy Auth module.
-  FluxyAuthPlugin get auth => 
-      FluxyPluginEngine.find<FluxyAuthPlugin>() ?? FluxyAuthPlugin();
-
-  /// Access to Fluxy Analytics module.
-  FluxyAnalyticsPlugin get analytics => 
-      FluxyPluginEngine.find<FluxyAnalyticsPlugin>() ?? FluxyAnalyticsPlugin();
-
-  /// Access to Fluxy Permissions module.
-  FluxyPermissionsPlugin get permissions => 
-      FluxyPluginEngine.find<FluxyPermissionsPlugin>() ?? FluxyPermissionsPlugin();
-
-  /// Access to Fluxy Camera module.
-  FluxyCameraPlugin get camera => 
-      FluxyPluginEngine.find<FluxyCameraPlugin>() ?? FluxyCameraPlugin();
-
-  /// Access to Fluxy Notifications module.
-  FluxyNotificationsPlugin get notifications => 
-      FluxyPluginEngine.find<FluxyNotificationsPlugin>() ?? FluxyNotificationsPlugin();
-
-  /// Access to Fluxy Connectivity module.
-  FluxyConnectivityPlugin get connectivity => 
-      FluxyPluginEngine.find<FluxyConnectivityPlugin>() ?? FluxyConnectivityPlugin();
-
-  /// Access to Fluxy Biometric module.
-  FluxyBiometricPlugin get biometric => 
-      FluxyPluginEngine.find<FluxyBiometricPlugin>() ?? FluxyBiometricPlugin();
-}
-
-class _FxOTAHelper {
-  const _FxOTAHelper();
-
-  /// Checks for updates and applies them.
-  Future<void> update(String manifestUrl) => FluxyRemote.update(manifestUrl);
-
-  /// Retrieves a JSON asset from the OTA cache.
-  Future<Map<String, dynamic>?> getJson(String filename) => FluxyRemote.getJson(filename);
-}
 

@@ -1,10 +1,12 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 import 'package:flutter/material.dart';
 import 'package:fluxy/fluxy.dart';
+import 'package:fluxy_ota/fluxy_ota.dart';
 import 'marketplace_data.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Fluxy.init();
   runApp(const FluxyPlayApp());
 }
 
@@ -17,10 +19,7 @@ class FluxyPlayApp extends StatelessWidget {
       title: 'Fluxy Play',
       theme: ThemeData.light(useMaterial3: true),
       darkTheme: ThemeData.dark(useMaterial3: true),
-      initialRoute: FxRoute(
-        path: '/',
-        builder: (_, __) => const PlayHomeScreen(),
-      ),
+      initialRoute: '/',
       routes: [
         FxRoute(path: '/', builder: (_, __) => const PlayHomeScreen()),
         FxRoute(
@@ -356,7 +355,7 @@ class _PreviewScreenState extends State<PreviewScreen> {
   }
 
   Future<void> _load() async {
-    await Fluxy.update(widget.url);
+    await FluxyRemote.update(widget.url);
     setState(() {}); // Rebuild to refresh views if needed
   }
 

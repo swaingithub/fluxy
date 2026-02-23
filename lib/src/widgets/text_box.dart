@@ -53,7 +53,7 @@ class TextBox extends FxWidget {
 
 class _TextBoxState extends State<TextBox> with ReactiveSubscriberMixin {
   @override
-  String? get debugName => widget.id ?? "TextBox";
+  String? get debugName => widget.id ?? 'TextBox';
   @override
   void notify() {
     if (mounted) {

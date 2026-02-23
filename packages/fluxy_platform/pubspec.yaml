@@ -1,0 +1,35 @@
+name: fluxy_platform
+description: "A meta-package for the Fluxy framework that includes the core engine and all official plugins."
+version: 0.2.6
+publish_to: none
+
+environment:
+  sdk: '>=3.10.0 <4.0.0'
+  flutter: ">=3.10.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  fluxy:
+    path: ../../
+  fluxy_camera:
+    path: ../fluxy_camera
+  fluxy_notifications:
+    path: ../fluxy_notifications
+  fluxy_connectivity:
+    path: ../fluxy_connectivity
+  fluxy_permissions:
+    path: ../fluxy_permissions
+  fluxy_storage:
+    path: ../fluxy_storage
+  fluxy_auth:
+    path: ../fluxy_auth
+  fluxy_analytics:
+    path: ../fluxy_analytics
+  fluxy_biometric:
+    path: ../fluxy_biometric
+  fluxy_ota:
+    path: ../fluxy_ota
+
+flutter:
+  uses-material-design: true

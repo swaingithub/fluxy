@@ -337,7 +337,7 @@ class _SidebarItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Box(
+    return Fx.box(
       onTap: () {},
       style: FxStyle(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
@@ -434,7 +434,7 @@ class _StatCardsGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FxGrid.responsive(
+    return Fx.grid.responsive(
       gap: 16,
       xs: 1, // 1 column on mobile
       sm: 2, // 2 columns on tablet
