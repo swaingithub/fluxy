@@ -545,7 +545,7 @@ import '$name.repository.dart';
 
 class ${camel}Controller extends FluxController {
   final repo = ${camel}Repository();
-  final count = flux(0, persistKey: 'counter_$name');
+  final count = flux(0, key: 'counter_$name');
   final status = flux("Booting...");
 
   @override
