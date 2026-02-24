@@ -11,16 +11,13 @@ const String _b = '\x1B[1m';
 const String _g = '\x1B[32m';
 const String _bl = '\x1B[34m';
 const String _c = '\x1B[36m';
-const String _y = '\x1B[33m';
 const String _r = '\x1B[31m';
-const String _m = '\x1B[35m';
 
 // Standard Log Styles
 void _info(String msg) => print('$_c$_b[INFO]$_rs $msg');
 void _step(String tag, String msg) => print('$_bl$_b[$tag]$_rs $msg');
 void _success(String msg) => print('$_g$_b[DONE]$_rs $msg');
 void _error(String msg) => print('$_r$_b[FAIL]$_rs $msg');
-void _warn(String msg) => print('$_y$_b[WARN]$_rs $msg');
 
 void _printBanner() {
   print('''

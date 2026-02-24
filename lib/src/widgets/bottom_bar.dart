@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../styles/style.dart';
 import '../dsl/fx.dart';
 
 class FxBottomBar extends StatelessWidget {

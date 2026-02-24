@@ -144,9 +144,9 @@ class Flux<T> {
   final Set<FluxySubscriber> _subscribers = {};
   final String id;
   final String? label;
-  String? persistKey;
+  String? key;
 
-  Flux(T initialValue, {this.label, this.persistKey})
+  Flux(T initialValue, {this.label, this.key})
     : _value = initialValue,
       id =
           'flux_${DateTime.now().microsecondsSinceEpoch}_${initialValue.hashCode}' {
@@ -421,6 +421,7 @@ Flux<T> flux<T>(
   T Function(dynamic json)? fromJson,
   @Deprecated('Use key instead') String? persistKey,
 }) {
+  // ignore: deprecated_member_use_from_same_package
   final effectiveKey = key ?? persistKey;
   if (persist || effectiveKey != null) {
     return PersistentFlux<T>(

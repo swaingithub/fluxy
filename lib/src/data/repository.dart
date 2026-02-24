@@ -52,7 +52,7 @@ abstract class FluxyRepository extends FluxController {
   /// 
   /// Usage: 
   /// ```dart
-  /// final settings = flux(default, persistKey: userScope(currentUserId, 'prefs'));
+  /// final settings = flux(default, key: userScope(currentUserId, 'prefs'));
   /// ```
   String userScope(String userId, String key) => 'u_${userId}_$key';
 

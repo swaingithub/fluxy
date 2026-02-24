@@ -1128,7 +1128,7 @@ import 'fx_extensions.dart';
   /// Custom Dropdown.
   static Widget dropdown<T>({
     T? value,
-    Signal<T>? signal,
+    Flux<T>? signal,
     required List<T> items,
     ValueChanged<T?>? onChanged,
     String Function(T)? itemLabel,
@@ -1216,7 +1216,7 @@ import 'fx_extensions.dart';
 
   /// Reactive API fetcher.
   /// Returns an async signal with built-in state management.
-  static AsyncSignal<T> fetch<T>(
+  static AsyncFlux<T> fetch<T>(
     Future<T> Function() task, {
     T? initialValue,
     int retries = 0,
@@ -1369,7 +1369,7 @@ import 'fx_extensions.dart';
   }) => col(
     children: children,
     justify: justify,
-    items: items,
+    alignItems: items,
     gap: gap,
     style: style,
     size: size,

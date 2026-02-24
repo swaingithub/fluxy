@@ -145,10 +145,9 @@ class HydrationMiddleware extends FluxyMiddleware {
   void onUpdate(Flux flux, dynamic oldValue, dynamic newValue) {
     if (flux is PersistentFlux) return; // Already handled by the class itself
     
-    // We check if the flux has a persistKey metadata 
-    // (This requires adding a persistKey field to the base Flux class)
-    if (flux.persistKey != null) {
-      FluxyPersistence.save(flux.persistKey!, newValue);
+    // We check if the flux has a key metadata 
+    if (flux.key != null) {
+      FluxyPersistence.save(flux.key!, newValue);
     }
   }
 }

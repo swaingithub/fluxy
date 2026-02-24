@@ -731,11 +731,11 @@ extension FluxyWidgetExtension on Widget {
   Widget justifyEvenly() => justify(MainAxisAlignment.spaceEvenly);
 
   /// Items Shorthands (Cross Axis)
-  Widget itemsStart() => items(CrossAxisAlignment.start);
-  Widget itemsCenter() => items(CrossAxisAlignment.center);
-  Widget itemsEnd() => items(CrossAxisAlignment.end);
-  Widget itemsStretch() => items(CrossAxisAlignment.stretch);
-  Widget itemsBaseline() => items(CrossAxisAlignment.baseline);
+  Widget itemsStart() => alignItems(CrossAxisAlignment.start);
+  Widget itemsCenter() => alignItems(CrossAxisAlignment.center);
+  Widget itemsEnd() => alignItems(CrossAxisAlignment.end);
+  Widget itemsStretch() => alignItems(CrossAxisAlignment.stretch);
+  Widget itemsBaseline() => alignItems(CrossAxisAlignment.baseline);
 
   /// Direction Switching (Responsive Row/Col)
   Widget direction(Axis value) => _applyGenericStyle(FxStyle(direction: value));

@@ -5,7 +5,7 @@ import '../reactive/signal.dart';
 class FxTheme {
   static final Flux<ThemeMode> _mode = flux(
     ThemeMode.system,
-    persistKey: 'fx_theme_mode',
+    key: 'fx_theme_mode',
   );
 
   /// Returns the current theme mode.

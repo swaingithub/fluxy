@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/widgets.dart';
+import 'package:vector_math/vector_math_64.dart' show Vector3;
 import '../styles/style.dart';
 import '../engine/style_resolver.dart';
 import '../engine/decoration_builder.dart';
@@ -154,7 +155,11 @@ class _BoxState extends State<Box> with ReactiveSubscriberMixin {
       current = Transform(
         alignment: Alignment.center,
         transform: Matrix4.identity()
-          ..scale(s.transformScale ?? 1.0, s.transformScale ?? 1.0, 1.0)
+          ..scaleByVector3(Vector3(
+            s.transformScale ?? 1.0, 
+            s.transformScale ?? 1.0, 
+            1.0,
+          ))
           ..rotateZ(s.transformRotation ?? 0.0),
         child: current,
       );

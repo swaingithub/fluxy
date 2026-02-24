@@ -7,7 +7,7 @@ class FluxHistory<T> extends Flux<T> {
   final ListQueue<T> _past = ListQueue<T>();
   final ListQueue<T> _future = ListQueue<T>();
 
-  FluxHistory(super.initialValue, {this.maxHistory = 100, super.label, super.persistKey});
+  FluxHistory(super.initialValue, {this.maxHistory = 100, super.label, super.key});
 
   @override
   set value(T newValue) {
@@ -81,8 +81,8 @@ class FluxHistory<T> extends Flux<T> {
 
 /// Creates a new flux with undo/redo capabilities.
 /// Branded as fluxHistory for Fluxy's unique identity.
-FluxHistory<T> fluxHistory<T>(T initialValue, {int maxHistory = 100, String? label, String? persistKey}) {
-  return FluxHistory<T>(initialValue, maxHistory: maxHistory, label: label, persistKey: persistKey);
+FluxHistory<T> fluxHistory<T>(T initialValue, {int maxHistory = 100, String? label, String? key}) {
+  return FluxHistory<T>(initialValue, maxHistory: maxHistory, label: label, key: key);
 }
 
 /// Legacy alias for backward compatibility.
