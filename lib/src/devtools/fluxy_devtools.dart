@@ -6,7 +6,6 @@ import 'dart:convert';
 import '../reactive/signal.dart';
 import '../di/fluxy_di.dart';
 import '../networking/fluxy_http.dart';
-import '../engine/layout_guard.dart';
 import '../engine/stability/stability_metrics.dart';
 
 /// The Fluxy Debug Inspector & DevTools (Premium Version).
@@ -46,6 +45,9 @@ class _FluxyDevToolsState extends State<FluxyDevTools> {
   String _timelineSearchQuery = '';
   bool _isTimelinePaused = false;
   final bool _isAutoRefreshEnabled = true;
+
+  // Snapshots State
+  final List<Map<String, dynamic>> _snapshots = [];
 
   void _showSnackBar(String message, {bool isError = false}) {
     _messengerKey.currentState?.clearSnackBars();
@@ -482,7 +484,7 @@ class _FluxyDevToolsState extends State<FluxyDevTools> {
   }
 
   Widget _buildTabBar() {
-    final tabs = ['Fluxes', 'DI Container', 'Network', 'Stability', 'Timeline'];
+    final tabs = ['Fluxes', 'DI', 'Network', 'Stability', 'Timeline', 'Snapshots'];
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10),
       height: 50,
@@ -526,24 +528,40 @@ class _FluxyDevToolsState extends State<FluxyDevTools> {
       case 2: return _buildNetworkList();
       case 3: return _buildStabilityTab();
       case 4: return _buildTimeline();
+      case 5: return _buildSnapshotList();
       default: return const SizedBox.shrink();
     }
   }
 
   Widget _buildStabilityTab() {
     final s = FluxyStabilityMetrics.getSummary();
-    final violations = FluxyLayoutGuard.violations;
+    final events = FluxyStabilityMetrics.recentEvents;
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Stability Kernel Status', 
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
-          const SizedBox(height: 8),
-          const Text('Live stats of automatic repairs and crash preventions.', 
-            style: TextStyle(color: Colors.white38, fontSize: 11)),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Safety Kernel Status', 
+                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
+                  Text('Industrial-grade auto-repairs active.', 
+                    style: TextStyle(color: Colors.white38, fontSize: 11)),
+                ],
+              ),
+              _buildIconButton(
+                icon: Icons.refresh_rounded,
+                onPressed: () => setState(FluxyStabilityMetrics.reset),
+                color: Colors.white24,
+                tooltip: 'Reset Stats',
+              ),
+            ],
+          ),
           
           const SizedBox(height: 20),
           
@@ -565,34 +583,23 @@ class _FluxyDevToolsState extends State<FluxyDevTools> {
 
           const SizedBox(height: 24),
           
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text('Recent Auto-Repairs', 
-                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14)),
-              _buildIconButton(
-                icon: Icons.delete_sweep_rounded,
-                onPressed: () => setState(FluxyLayoutGuard.clearLogs),
-                color: Colors.white24,
-                tooltip: 'Clear Logs',
-              ),
-            ],
-          ),
+          const Text('Live Stability Timeline', 
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14)),
           const SizedBox(height: 12),
           
-          if (violations.isEmpty)
-            _buildEmpty('No layout violations detected. System healthy.')
+          if (events.isEmpty)
+            _buildEmpty('System operating at peak performance. No anomalies.')
           else
-            ...violations.map((log) {
-              final parts = log.split('] -> ');
-              final violation = parts[0].replaceAll('[', '');
-              final fix = parts.length > 1 ? parts[1] : '';
+            ...events.map((event) {
+              final color = event.type.contains('LAYOUT') ? Colors.blueAccent :
+                           event.type.contains('VIEWPORT') ? Colors.orangeAccent :
+                           event.type.contains('STATE') ? Colors.redAccent : Colors.purpleAccent;
 
               return Container(
                 margin: const EdgeInsets.only(bottom: 12),
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.03),
+                  color: Colors.white.withValues(alpha: 0.02),
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
                 ),
@@ -601,25 +608,22 @@ class _FluxyDevToolsState extends State<FluxyDevTools> {
                   children: [
                     Row(
                       children: [
-                        const Icon(Icons.shield_rounded, color: Colors.greenAccent, size: 14),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: Text(
-                            violation,
-                            style: const TextStyle(color: Colors.blueAccent, fontWeight: FontWeight.bold, fontSize: 12),
-                          ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                          decoration: BoxDecoration(color: color.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(4)),
+                          child: Text(event.type, style: TextStyle(color: color, fontSize: 9, fontWeight: FontWeight.bold)),
+                        ),
+                        const Spacer(),
+                        Text(
+                          '${event.timestamp.hour}:${event.timestamp.minute.toString().padLeft(2, "0")}:${event.timestamp.second.toString().padLeft(2, "0")}',
+                          style: const TextStyle(color: Colors.white24, fontSize: 9),
                         ),
                       ],
                     ),
                     const SizedBox(height: 8),
-                    Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(color: Colors.black26, borderRadius: BorderRadius.circular(6)),
-                      child: Text(
-                        fix,
-                        style: const TextStyle(color: Colors.white70, fontSize: 10, fontFamily: 'monospace'),
-                      ),
+                    Text(
+                      event.description,
+                      style: const TextStyle(color: Colors.white70, fontSize: 11),
                     ),
                   ],
                 ),
@@ -1346,6 +1350,86 @@ class _FluxyDevToolsState extends State<FluxyDevTools> {
 
   Widget _buildEmpty(String message) {
     return Center(child: Text(message, style: const TextStyle(color: Colors.white24)));
+  }
+
+  Widget _buildSnapshotList() {
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(16),
+          child: Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text('State Snapshots', 
+                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
+                    Text('${_snapshots.length} points in time captured', 
+                      style: const TextStyle(color: Colors.white38, fontSize: 11)),
+                  ],
+                ),
+              ),
+              ElevatedButton.icon(
+                onPressed: () {
+                  final snapshot = FluxRegistry.captureSnapshot();
+                  snapshot['_timestamp'] = DateTime.now().toIso8601String();
+                  snapshot['_id'] = 'snapshot_${DateTime.now().millisecondsSinceEpoch}';
+                  setState(() => _snapshots.insert(0, snapshot));
+                  _showSnackBar('State Snapshot Captured');
+                },
+                icon: const Icon(Icons.camera_rounded, size: 16),
+                label: const Text('Capture'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                ),
+              ),
+            ],
+          ),
+        ),
+        Expanded(
+          child: _snapshots.isEmpty
+              ? _buildEmpty('No snapshots captured yet.')
+              : ListView.builder(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  itemCount: _snapshots.length,
+                  itemBuilder: (context, index) {
+                    final snapshot = _snapshots[index];
+                    final timestamp = DateTime.parse(snapshot['_timestamp']);
+                    final signals = snapshot.length - 2; // Subtract _timestamp and _id
+
+                    return Container(
+                      margin: const EdgeInsets.only(bottom: 12),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.02),
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
+                      ),
+                      child: ListTile(
+                        onTap: () {
+                          FluxRegistry.restoreSnapshot(snapshot);
+                          _showSnackBar('State Restored to ${timestamp.hour}:${timestamp.minute}');
+                        },
+                        leading: Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(color: Colors.blue.withValues(alpha: 0.1), shape: BoxShape.circle),
+                          child: const Icon(Icons.history_rounded, color: Colors.blue, size: 20),
+                        ),
+                        title: Text(
+                          'Snapshot ${timestamp.hour}:${timestamp.minute.toString().padLeft(2, "0")}:${timestamp.second.toString().padLeft(2, "0")}',
+                          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14),
+                        ),
+                        subtitle: Text('$signals signals captured', style: const TextStyle(color: Colors.white38, fontSize: 11)),
+                        trailing: const Icon(Icons.restart_alt_rounded, color: Colors.blueAccent),
+                      ),
+                    );
+                  },
+                ),
+        ),
+      ],
+    );
   }
 }
 

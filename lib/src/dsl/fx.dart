@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/foundation.dart';
+import '../engine/plugin.dart';
 export '../networking/fluxy_http.dart';
 import '../networking/fluxy_http.dart';
 import '../responsive/responsive_engine.dart';
@@ -44,7 +45,7 @@ export '../widgets/fx_chart.dart';
 import '../layout/fx_layout.dart';
 import '../engine/stability/stability.dart';
 import '../engine/haptics.dart';
-import '../engine/fluxy_engine.dart';
+import '../engine/layout_guard.dart'; // Corrected import
 
 // Import plugin extensions for direct access to modular packages
 // ignore: unused_import
@@ -53,6 +54,12 @@ import 'fx_extensions.dart';
   /// The hyper-minimal Fx API for Fluxy.
   /// Designed for maximum builder velocity and zero boilerplate reactivity.
   class Fx extends StatefulWidget {
+  /// Whether the framework is in Strict mode (throws on layout violations).
+  static bool get strictMode => FluxyLayoutGuard.strictMode;
+
+  /// Whether the framework is in Debug mode (logs violations).
+  static bool get debugMode => FluxyLayoutGuard.debugMode;
+
     final Widget Function() builder;
     final String? label;
   
@@ -1711,42 +1718,64 @@ class _FxPlatformHelper {
   const _FxPlatformHelper();
   
   /// Access to authentication services.
-  /// Usage: `Fx.platform.auth.signIn()`
-  dynamic get auth => Fluxy.find<dynamic>();
+  dynamic get auth => _getSafe('auth', 'fluxy_auth');
 
   /// Access to camera functionality.
-  /// Usage: `Fx.platform.camera.capture()`
-  dynamic get camera => Fluxy.find<dynamic>(); 
+  dynamic get camera => _getSafe('camera', 'fluxy_camera'); 
   
   /// Access to notification services.
-  /// Usage: `Fx.platform.notifications.show()`
-  dynamic get notifications => Fluxy.find<dynamic>();
+  dynamic get notifications => _getSafe('notifications', 'fluxy_notifications');
 
   /// Access to storage services.
-  /// Usage: `Fx.platform.storage.set()`
-  dynamic get storage => Fluxy.find<dynamic>();
+  dynamic get storage => _getSafe('storage', 'fluxy_storage');
 
   /// Access to permission management.
-  /// Usage: `Fx.platform.permissions.request()`
-  dynamic get permissions => Fluxy.find<dynamic>();
+  dynamic get permissions => _getSafe('permissions', 'fluxy_permissions');
 
   /// Access to analytics services.
-  /// Usage: `Fx.platform.analytics.track()`
-  dynamic get analytics => Fluxy.find<dynamic>();
+  dynamic get analytics => _getSafe('analytics', 'fluxy_analytics');
 
   /// Access to biometric authentication.
-  /// Usage: `Fx.platform.biometric.authenticate()`
-  dynamic get biometric => Fluxy.find<dynamic>();
+  dynamic get biometric => _getSafe('biometric', 'fluxy_biometric');
 
   /// Access to connectivity services.
-  /// Usage: `Fx.platform.connectivity.check()`
-  dynamic get connectivity => Fluxy.find<dynamic>();
+  dynamic get connectivity => _getSafe('connectivity', 'fluxy_connectivity');
 
   /// Access to platform utilities.
-  /// Usage: `Fx.platform.platform.getVersion()`
-  dynamic get platform => Fluxy.find<dynamic>();
+  dynamic get platform => _getSafe('platform', 'fluxy_platform');
 
   /// Access to OTA services.
-  /// Usage: `Fx.platform.ota.update()`
-  dynamic get ota => Fluxy.find<dynamic>();
+  dynamic get ota => _getSafe('ota', 'fluxy_ota');
+
+  /// Safely retrieves a plugin by name with helpful diagnostics if missing.
+  dynamic _getSafe(String shortName, String pluginName) {
+    final plugin = FluxyPluginEngine.findByName(pluginName);
+    if (plugin == null && kDebugMode) {
+      debugPrint(
+        '┌──────────────────────────────────────────────────────────┐',
+      );
+      debugPrint(
+        '│ [Sys] [Platform] MODULE MISSING: $shortName              │',
+      );
+      debugPrint(
+        '├──────────────────────────────────────────────────────────┤',
+      );
+      debugPrint(
+        '│ You are trying to use Fx.platform.$shortName, but the      │',
+      );
+      debugPrint(
+        '│ module is not registered in fluxy_registry.dart.         │',
+      );
+      debugPrint(
+        '│                                                          │',
+      );
+      debugPrint(
+        '│ FIX: Run "fluxy doctor" to re-sync your registry.        │',
+      );
+      debugPrint(
+        '└──────────────────────────────────────────────────────────┘',
+      );
+    }
+    return plugin;
+  }
 }

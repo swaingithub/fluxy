@@ -562,6 +562,33 @@ class FluxRegistry {
     return _fluxes.map((ref) => ref.target).whereType<Flux>().toList();
   }
 
+  /// Captures the current value of all registered fluxes.
+  static Map<String, dynamic> captureSnapshot() {
+    final snapshot = <String, dynamic>{};
+    for (final flux in all) {
+      if (flux.label != null) {
+        snapshot[flux.id] = flux.peek();
+      }
+    }
+    return snapshot;
+  }
+
+  /// Restores state from a snapshot.
+  static void restoreSnapshot(Map<String, dynamic> snapshot) {
+    FluxyReactiveContext.batch(() {
+      for (final entry in snapshot.entries) {
+        final flux = find(entry.key);
+        if (flux != null) {
+          try {
+            flux.value = entry.value;
+          } catch (e) {
+            debugPrint('[KERNEL] [SIGNAL] Failed to restore flux ${flux.id}: $e');
+          }
+        }
+      }
+    });
+  }
+
   static Flux? find(String id) {
     _prune();
     try {

@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import '../reactive/signal.dart';
 import '../reactive/async_signal.dart';
 import '../engine/controller.dart';
+import '../engine/fluxy_engine.dart';
 import '../engine/stability/data_guard.dart';
 
 /// A production-ready base class for Data Repositories in Fluxy.
@@ -70,6 +71,31 @@ abstract class FluxRepository<T> extends FluxyRepository {
 
   /// Saves data to the local cache.
   Future<void> saveLocal(T data);
+
+  /// Automatically configures this repository for local persistence.
+  /// If [key] is not provided, one is generated based on the class name.
+  /// This requires the 'fluxy_storage' module to be installed.
+  Future<void> persist({String? key, T Function(dynamic json)? fromJson}) async {
+    final effectiveKey = key ?? 'repo_${runtimeType.toString()}';
+    
+    // Attempt to register a persistent sync
+    try {
+      final storage = Fluxy.findPlugin('fluxy_storage'); 
+      if (storage == null) throw Exception('Storage not installed');
+      
+      // Load initial data
+      final cached = storage.get(effectiveKey);
+      if (cached != null) {
+        if (fromJson != null) {
+          await saveLocal(fromJson(cached));
+        } else {
+          await saveLocal(cached as T);
+        }
+      }
+    } catch (e) {
+      debugPrint('[KERNEL] [DATA] Zero-Config Persistence: Storage module not found. Persistence disabled.');
+    }
+  }
 
   /// Orchestrates a standard offline-first fetch: Local first, then Remote.
   /// Uses FluxyDataGuard to handle transient network failures.

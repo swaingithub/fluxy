@@ -117,12 +117,30 @@ class FluxyRenderer {
       return;
     }
 
-    // Default Action Parser
+    // Industrial Action Parser
     if (action.startsWith('navigate:')) {
       final route = action.substring(9);
       FluxyRouter.to(route);
     } else if (action.startsWith('print:')) {
       debugPrint('[FluxyRemote]: ${action.substring(6)}');
+    } else if (action.startsWith('toast:')) {
+      final msg = action.substring(6);
+      Fx.toast.info(msg);
+    } else if (action.startsWith('update:')) {
+      // Syntax: update:signalId:value
+      final parts = action.substring(7).split(':');
+      if (parts.length >= 2) {
+        final id = parts[0];
+        final val = parts[1];
+        final flux = FluxRegistry.find(id);
+        if (flux != null) {
+          // Dynamic Type Casting
+          if (val == 'true') flux.value = true;
+          else if (val == 'false') flux.value = false;
+          else if (num.tryParse(val) != null) flux.value = num.parse(val);
+          else flux.value = val;
+        }
+      }
     } else if (action == 'back') {
       FluxyRouter.back();
     }

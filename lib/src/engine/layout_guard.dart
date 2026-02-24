@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import '../styles/style.dart';
+import 'stability/stability_metrics.dart';
 
 /// Standard policy returned by the guard to instruct widgets how to behave safely.
 class FxSafePolicy {
@@ -140,6 +141,9 @@ class FluxyLayoutGuard {
     if (!_violationLog.contains(entry)) {
         _violationLog.add(entry);
     }
+    
+    // Record in global stability metrics for DevTools timeline
+    FluxyStabilityMetrics.recordLayoutFix('$violation: $suggestion');
     
     if (strictMode) {
       throw FluxyLayoutViolationException(violation, suggestion);

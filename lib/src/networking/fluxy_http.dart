@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:async';
+import '../engine/error_pipeline.dart';
 
 /// The core networking engine for Fluxy.
 /// A zero-dependency, high-performance HTTP client.
@@ -110,11 +111,18 @@ class FluxyHttp {
       }
 
       return fxResponse;
-    } on TimeoutException {
-      throw FxHttpException(message: 'Request Timeout', isTimeout: true);
-    } catch (e) {
-      if (e is FxHttpException) rethrow;
-      throw FxHttpException(message: e.toString());
+    } on TimeoutException catch (e, stack) {
+      final error = FxHttpException(message: 'Request Timeout', isTimeout: true);
+      FluxyError.report(error, stack);
+      throw error;
+    } catch (e, stack) {
+      if (e is FxHttpException) {
+        FluxyError.report(e, stack);
+        rethrow;
+      }
+      final error = FxHttpException(message: e.toString());
+      FluxyError.report(error, stack);
+      throw error;
     } finally {
       client.close();
     }

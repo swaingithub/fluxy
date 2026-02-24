@@ -10,6 +10,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.1] - 2026-02-24
+
+### Added
+- **Invisible Registry**: Modular plugins now support implicit self-registration. Use `final auth = FluxyAuthPlugin();` without manually editing `fluxy_registry.dart`.
+- **DevTools "Snapshots"**: Capture and restore app state snapshots for instant time-travel debugging.
+- **Improved Repository Persistence**: Enhanced `FluxRepository.persist` with explicit module discovery and safety checks.
+- **Platform Diagnostic Kernel**: Meaningful console diagnostics when attempting to use uninitialized modular packages.
+
+### Fixed
+- **CLI Syncing**: `fluxy run` and `fluxy build` now automatically sync the plugin registry before execution.
+- **Module Discovery**: Corrected a bug where multiple platform modules would conflict during runtime discovery.
+- **Matrix4 Modernization**: Fixed deprecated `Matrix4.scale` calls in the `Box` widget.
+
 ## [1.0.0] - 2024-02-23
 
 ### BREAKING CHANGES

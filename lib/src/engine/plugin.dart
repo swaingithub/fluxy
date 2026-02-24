@@ -4,6 +4,12 @@ import 'package:flutter/foundation.dart';
 /// The interface for creating Fluxy plugins.
 /// Plugins can extend the framework's capabilities (Analytics, Auth, DevTools, etc.)
 abstract class FluxyPlugin {
+  /// Base constructor that enables self-registration.
+  /// When a plugin is instantiated, it automatically notifies the engine.
+  FluxyPlugin() {
+    FluxyPluginEngine.register(this);
+  }
+
   /// The unique name of the plugin.
   String get name;
 
@@ -36,6 +42,22 @@ class FluxyPluginEngine {
       _plugins.add(plugin);
       // Plugins are enabled by default unless remotely disabled
       _pluginStatus.putIfAbsent(plugin.name, () => true);
+
+      // If the app is already running, initialize this new plugin immediately
+      if (_hasInitialized) {
+        _initializePlugin(plugin);
+      }
+    }
+  }
+
+  static bool _hasInitialized = false;
+
+  static Future<void> _initializePlugin(FluxyPlugin plugin) async {
+    try {
+      await plugin.onRegister();
+      await plugin.onAppReady();
+    } catch (e) {
+      debugPrint('[SYS] [ERROR] Manual registration failed for ${plugin.name}: $e');
     }
   }
 
@@ -51,10 +73,17 @@ class FluxyPluginEngine {
   /// Lists all registered plugins.
   static List<FluxyPlugin> get plugins => List.unmodifiable(_plugins);
 
-  /// Finds a registered plugin by type.
   static T? find<T extends FluxyPlugin>() {
     for (final plugin in _plugins) {
       if (plugin is T) return plugin;
+    }
+    return null;
+  }
+
+  /// Finds a registered plugin by its unique name.
+  static FluxyPlugin? findByName(String name) {
+    for (final plugin in _plugins) {
+      if (plugin.name == name) return plugin;
     }
     return null;
   }
@@ -86,6 +115,7 @@ class FluxyPluginEngine {
         debugPrint(stack.toString());
       }
     }
+    _hasInitialized = true;
   }
 
   /// Disposes all registered plugins.

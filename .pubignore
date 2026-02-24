@@ -52,5 +52,8 @@ example/lib/marketplace_data.dart
 example/lib/responsive_demo.dart
 example/lib/state_management_demo.dart
 
-# Test App (Excluded from published package)
+# Internal Folders (Excluded from published package)
 test_app/
+packages/
+analysis_report.txt
+lib_analysis.txt

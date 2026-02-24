@@ -2,9 +2,39 @@ import 'dart:io';
 import 'package:args/args.dart';
 import 'package:path/path.dart' as p;
 import 'package:fluxy/src/cloud.dart';
-import 'package:flutter/foundation.dart';
 
-const String version = '1.0.0';
+
+const String version = '1.0.1';
+
+const String _rs = '\x1B[0m';
+const String _b = '\x1B[1m';
+const String _g = '\x1B[32m';
+const String _bl = '\x1B[34m';
+const String _c = '\x1B[36m';
+const String _y = '\x1B[33m';
+const String _r = '\x1B[31m';
+const String _m = '\x1B[35m';
+
+// Standard Log Styles
+void _info(String msg) => print('$_c$_b[INFO]$_rs $msg');
+void _step(String tag, String msg) => print('$_bl$_b[$tag]$_rs $msg');
+void _success(String msg) => print('$_g$_b[DONE]$_rs $msg');
+void _error(String msg) => print('$_r$_b[FAIL]$_rs $msg');
+void _warn(String msg) => print('$_y$_b[WARN]$_rs $msg');
+
+void _printBanner() {
+  print('''
+$_bl$_b
+   _______   __   __  __  __  __   __ 
+  |  _____| |  | |  | \\ \\/ / |  | |  |
+  |  |___   |  | |  |  \\  /  |  |_|  |
+  |   ___|  |  | |  |  /  \\  \\___   / 
+  |  |      |  |_|  | / /\\ \\     |  |  
+  |__|      \\_______|/_/  \\_\\    |__|  
+                                      
+$_rs$_b    FLUXY ARCHITECTURAL AUTHORITY v$version$_rs
+''');
+}
 
 void main(List<String> arguments) async {
   final parser = ArgParser()
@@ -17,22 +47,23 @@ void main(List<String> arguments) async {
     ..addCommand('deploy')
     ..addCommand('cloud')
     ..addCommand('serve')
-    ..addCommand('module');
+    ..addCommand('module')
+    ..addCommand('m');
 
   parser.addFlag('help', abbr: 'h', negatable: false);
   parser.addFlag('version', abbr: 'v', negatable: false);
-  parser.addOption('port', abbr: 'p', defaultsTo: '8080');
 
   ArgResults argResults;
   try {
     argResults = parser.parse(arguments);
   } catch (e) {
-    debugPrint('Error: $e');
+    _error('Invalid command arguments: $e');
     printUsage(parser);
     exit(1);
   }
 
   if (argResults['help']) {
+    _printBanner();
     printUsage(parser);
     return;
   }
@@ -44,118 +75,152 @@ void main(List<String> arguments) async {
 
   final command = argResults.command;
   if (command == null) {
+    _printBanner();
     printUsage(parser);
     return;
   }
 
-  switch (command.name) {
-    case 'init':
-      await _handleInit(command.rest);
-      break;
-    case 'generate':
-    case 'g':
-      await _handleGenerate(command.rest);
-      break;
-    case 'run':
-      await _handleRun(command.rest);
-      break;
-    case 'doctor':
-      await _handleDoctor();
-      break;
-    case 'build':
-      await _handleBuild(command.rest);
-      break;
-    case 'deploy':
-      await _handleDeploy();
-      break;
-    case 'cloud':
-      await FluxyCloud.handle(command.rest);
-      break;
-    case 'serve':
-      await _handleServe(command);
-      break;
-    case 'module':
-      await _handleModule(command.rest);
-      break;
-    default:
-      debugPrint('Unknown command: ${command.name}');
-      printUsage(parser);
+  // Industrial Command Router
+  try {
+    switch (command.name) {
+      case 'init':
+        await _handleInit(command.rest);
+        break;
+      case 'generate':
+      case 'g':
+        await _handleGenerate(command.rest);
+        break;
+      case 'run':
+        await _handleRun(command.rest);
+        break;
+      case 'doctor':
+        await _handleDoctor();
+        break;
+      case 'build':
+        await _handleBuild(command.rest);
+        break;
+      case 'deploy':
+        await _handleDeploy();
+        break;
+      case 'cloud':
+        await FluxyCloud.handle(command.rest);
+        break;
+      case 'serve':
+        await _handleServe(command);
+        break;
+      case 'module':
+      case 'm':
+        await _handleModule(command.rest);
+        break;
+      default:
+        _error('Unknown command: ${command.name}');
+        printUsage(parser);
+    }
+  } catch (e, stack) {
+    _error('Architectural breakdown: $e');
+    if (argResults['help'] == true) print(stack);
+    exit(1);
   }
 }
 
 void printUsage(ArgParser parser) {
-  debugPrint('Fluxy CLI - The Ultimate Flutter Framework Tool\n');
-  debugPrint('Usage: fluxy <command> [arguments]\n');
-  debugPrint('Commands:');
-  debugPrint(
+  print('Fluxy CLI - The Ultimate Flutter Framework Tool\n');
+  print('Usage: fluxy <command> [arguments]\n');
+  print('Commands:');
+  print(
     '  init <name>      Scaffold a complete Fluxy application (Expo-style).',
   );
-  debugPrint(
+  print(
     '  generate <feat>  (g) Create a new feature domain (login, feed, default).',
   );
-  debugPrint('  generate plugin <name>  Create a new Fluxy plugin scaffold.');
-  debugPrint('  generate layout <name>  Create a responsive layout template.');
-  debugPrint('  generate model <name>  Create a reactive data model.');
-  debugPrint('  run              Launch the application.');
-  debugPrint('  serve            Start a local OTA development server.');
-  debugPrint('  build            Compile the application.');
-  debugPrint('  cloud            Configure GitHub Actions CI/CD.');
-  debugPrint('  module add <pkg> Add and register a Fluxy platform module.');
-  debugPrint('  module list      List all available platform modules.');
+  print('  generate plugin <name>  Create a new Fluxy plugin scaffold.');
+  print('  generate layout <name>  Create a responsive layout template.');
+  print('  generate model <name>  Create a reactive data model.');
+  print('  run              Launch the application.');
+  print('  serve            Start a local OTA development server.');
+  print('  build            Compile the application.');
+  print('  cloud            Configure GitHub Actions CI/CD.');
+  print('  module add <pkg> Add and register a Fluxy platform module.');
+  print('  module list      List all available platform modules.');
 }
 
 Future<void> _handleInit(List<String> args) async {
   if (args.isEmpty) {
-    debugPrint('Error: Name required. Usage: fluxy init <project_name>');
+    _error('Project name required. Usage: fluxy init <project_name>');
     exit(1);
   }
 
+  _printBanner();
   final projectName = args.first;
-  print('🚀 Scaffolding Fluxy Application: $projectName...');
+  _step(
+    'INIT',
+    'Scaffolding Industrial Fluxy Application: $_b$projectName$_rs...',
+  );
 
-  final result = await Process.run('flutter', ['create', projectName], runInShell: true);
-  if (result.exitCode != 0) {
-    print('Error creating Flutter project: ${result.stderr}');
+  final process = await Process.start(
+    'flutter',
+    ['create', projectName],
+    runInShell: true,
+    mode: ProcessStartMode.inheritStdio,
+  );
+  final exitCode = await process.exitCode;
+
+  if (exitCode != 0) {
+    _error('Flutter project creation failed.');
     exit(1);
   }
 
   final projectDir = Directory(projectName);
   final libDir = Directory(p.join(projectDir.path, 'lib'));
+  final testDir = Directory(p.join(projectDir.path, 'test'));
 
-  print('🏛️ Organizing Architecture (core/features)...');
+  _step('ARCH', 'Aligning Structural Consistency (core/features/registry)...');
   if (libDir.existsSync()) libDir.deleteSync(recursive: true);
   libDir.createSync();
-  
+
+  if (testDir.existsSync()) testDir.deleteSync(recursive: true);
+  testDir.createSync();
+
+  // Create Industrial Directory Structure
   final coreDir = Directory(p.join(libDir.path, 'core'))..createSync();
   Directory(p.join(libDir.path, 'features')).createSync();
-
-  // Create Core Sub-dirs
   Directory(p.join(coreDir.path, 'theme')).createSync();
-  Directory(p.join(coreDir.path, 'routing')).createSync();
+  Directory(p.join(coreDir.path, 'registry')).createSync();
 
-  print('📦 Injecting Fluxy dependencies...');
+  _step('CORE', 'Injecting Fluxy Framework into pubspec...');
   await Process.run('flutter', ['pub', 'add', 'fluxy'], workingDirectory: projectDir.path, runInShell: true);
 
   // Write Templates
   File(p.join(libDir.path, 'main.dart')).writeAsStringSync(_fluxyMainTemplate);
   File(p.join(coreDir.path, 'theme', 'app_theme.dart')).writeAsStringSync(_coreThemeTemplate);
+  File(
+    p.join(testDir.path, 'fluxy_boot_test.dart'),
+  ).writeAsStringSync(_fluxyTestTemplate);
   
-  print('🏠 Building starter home feature...');
+  _step('SYNC', 'Bootstrapping local plugin registry...');
+  // Force a registry regeneration in the new project
+  final current = Directory.current.path;
+  Directory.current = projectName;
+  await _regeneratePluginRegistry();
+  Directory.current = current;
+
+  _step('FEAT', 'Building industrial-standard home feature...');
   await _createFeature(projectDir.path, 'home');
 
-  print('\n🎉 Success! Fluxy project "$projectName" created successfully.');
-  print('cd $projectName\nfluxy run');
+  _success('Fluxy project "$_b$projectName$_rs" is ready for production.');
+  print('$_c$_b[NEXT]$_rs cd $projectName && fluxy run');
 }
 
 Future<void> _handleGenerate(List<String> args) async {
   if (args.isEmpty) {
-    print('Error: Feature name required.');
+    _error('Resource type required (feature|plugin|layout|model|controller).');
     return;
   }
   final name = args.first.toLowerCase();
+  
   if (name == 'plugin') {
     if (args.length < 2) {
-      print('Error: Plugin name required. Usage: fluxy generate plugin <name>');
+      _error('Plugin name required. Usage: fluxy g plugin <name>');
       return;
     }
     await _createPlugin(args[1].toLowerCase());
@@ -164,7 +229,7 @@ Future<void> _handleGenerate(List<String> args) async {
   
   if (name == 'layout') {
     if (args.length < 2) {
-      print('Error: Layout name required. Usage: fluxy generate layout <name>');
+      _error('Layout name required. Usage: fluxy g layout <name>');
       return;
     }
     await _createLayout(args[1].toLowerCase());
@@ -173,23 +238,28 @@ Future<void> _handleGenerate(List<String> args) async {
 
   if (name == 'model') {
     if (args.length < 2) {
-      print('Error: Model name required. Usage: fluxy generate model <name>');
+      _error('Model name required. Usage: fluxy g model <name>');
       return;
     }
     await _createModel(args[1].toLowerCase());
     return;
   }
-  final type = args.length > 1 ? args[1].toLowerCase() : 'default';
 
   if (name == 'controller') {
     if (args.length < 2) {
-      print('Error: Controller name required. Usage: fluxy generate controller <name>');
+      _error('Controller name required. Usage: fluxy g controller <name>');
       return;
     }
     await _createController(args[1].toLowerCase());
     return;
   }
 
+  // Default to feature generation
+  final type = args.length > 1 ? args[1].toLowerCase() : 'default';
+
+  _info(
+    'Generating industrial ${type == "default" ? "" : "$type "}feature: $name...',
+  );
   await _createFeature('.', name, type: type);
 }
 
@@ -209,19 +279,19 @@ class ${camel}Plugin extends FluxyPlugin {
   @override
   Future<void> onRegister() async {
     // Register dependencies, initialize loggers, etc.
-    print("🔌 ${camel}Plugin Registered");
+    print("[PLUGIN] ${camel}Plugin Registered");
   }
 
   @override
   void onAppReady() {
     // Called after Fluxy.init() finishes
-    print("🚀 ${camel}Plugin Ready");
+    print("[INIT] ${camel}Plugin Ready");
   }
 }
 ''');
 
-  print('✅ Generated plugin: ${camel}Plugin at lib/plugins/$fileName');
-  print('To use: Fluxy.register(${camel}Plugin()); in main.dart');
+  _success('Generated plugin: ${camel}Plugin at lib/plugins/$fileName');
+  _info('To use: Fluxy.register(${camel}Plugin()); in main.dart');
 }
 
 Future<void> _createFeature(String path, String name, {String type = 'default'}) async {
@@ -236,7 +306,7 @@ Future<void> _createFeature(String path, String name, {String type = 'default'})
     _createDefaultBlueprint(featDir, name, camel);
   }
 
-  print('✅ Generated $type feature: $name');
+  _success('Generated $type feature: $name at lib/features/$name');
 }
 
 void _createLoginBlueprint(Directory dir, String name, String camel) {
@@ -287,8 +357,15 @@ class ${camel}Controller extends FluxController {
       await repo.login(email.value, password.value);
       Fx.toast.success("Welcome back!");
       Fluxy.offAll('/home');
-    } catch (e) {
-      Fx.toast.error("Login failed: \$e");
+    } catch (e, stack) {
+      if (e is FxHttpException) {
+        // Report to global pipeline for safety
+        FluxyError.report(e, stack);
+        rethrow;
+      }
+      final error = FxHttpException(message: e.toString());
+      FluxyError.report(error, stack);
+      throw error;
     } finally {
       isLoading.value = false;
     }
@@ -547,8 +624,11 @@ final ${name}Routes = [
 Future<void> _handleServe(ArgResults command) async {
   final port = int.tryParse(command['port'] ?? '8080') ?? 8080;
   final server = await HttpServer.bind(InternetAddress.anyIPv4, port);
-  print('📡 Fluxy OTA Server running at http://localhost:$port');
-  print('Watching ./ota directory for updates...');
+  _step(
+    'OTA',
+    'Fluxy Industrial Live Server running at http://localhost:$port',
+  );
+  _info('Watching ./ota directory for structural updates...');
 
   final otaDir = Directory('ota');
   if (!otaDir.existsSync()) {
@@ -590,16 +670,21 @@ Future<void> _handleServe(ArgResults command) async {
 }
 
 Future<void> _handleRun(List<String> args) async {
+  _info('Syncing architectural integrity...');
+  await _regeneratePluginRegistry();
+
+  _step('RUN', 'Launching Industrial Fluxy Engine...');
   await Process.start('flutter', ['run', ...args], mode: ProcessStartMode.inheritStdio, runInShell: true);
 }
 
 Future<void> _handleDoctor() async {
-  print('🩺 Fluxy Framework Doctor v$version');
+  _printBanner();
+  _step('DOCTOR', 'Inspecting Fluxy Architectural Health...');
   
-  print('\n📦 Checking Fluxy Modular Plugins...');
+  _info('Checking Modular Integration...');
   await _regeneratePluginRegistry();
   
-  print('\n🎯 Flutter Environment:');
+  print('\n$_bl$_b[ENV]$_rs Flutter Environment Status:');
   await Process.start('flutter', ['doctor'], mode: ProcessStartMode.inheritStdio, runInShell: true);
 }
 
@@ -608,33 +693,38 @@ Future<void> _handleBuild(List<String> args) async {
   await Process.start('flutter', ['build', ...args], mode: ProcessStartMode.inheritStdio, runInShell: true);
 }
 
-Future<void> _handleDeploy() async => print('🚀 Deployment coming soon!');
+Future<void> _handleDeploy() async =>
+    _info('Cloud deployment orchestration coming in v1.1.0');
 
 const String _fluxyMainTemplate = """
 import 'package:flutter/material.dart';
 import 'package:fluxy/fluxy.dart';
 import 'core/theme/app_theme.dart';
+import 'core/registry/fluxy_registry.dart';
 import 'features/home/home.routes.dart';
 
 void main() async {
-  // 1. Initialize Framework & Persistence
-  await Fluxy.init();
+  // 1. Initialize Framework & Stability Policy
+  // strictMode: true throws errors on layout violations (perfect for Dev)
+  // strictMode: false (Relaxed) auto-fixes violations (perfect for Prod)
+  await Fluxy.init(strictMode: false);
 
-  // 2. Setup Global Error Pipeline (Optional but Recommended)
+  // 2. Boot Modular Plugins (Auto-generated registry)
+  registerFluxyPlugins();
+  Fluxy.autoRegister();
+
+  // 3. Setup Global Error Pipeline
   Fluxy.onError((error, stack) {
     debugPrint("Fluxy Global Error: \$error");
   });
-  
+
   runApp(
-    // 3. Wrap with debug() for Premium DevTools
     Fluxy.debug(
       child: FluxyApp(
         title: 'Fluxy App',
         theme: AppTheme.light,
-        initialRoute: homeRoutes.first,
-        routes: [
-          ...homeRoutes,
-        ],
+        initialRoute: homeRoutes.first.path,
+        routes: homeRoutes,
       ),
     ),
   );
@@ -667,22 +757,32 @@ class ${camel}Layout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Fx.layout(
-        mobile: _buildMobile(),
-        tablet: _buildTablet(),
-        desktop: _buildDesktop(),
-      ),
+    return Fx.dashboard(
+      sidebar: _buildSidebar(),
+      navbar: _buildNavbar(),
+      body: child,
     );
   }
 
-  Widget _buildMobile() => child;
-  Widget _buildTablet() => Row(children: [const SizedBox(width: 250, child: Drawer()), Expanded(child: child)]);
-  Widget _buildDesktop() => Row(children: [const SizedBox(width: 300, child: Drawer()), Expanded(child: child)]);
+  Widget _buildNavbar() => Fx.navbar(
+    logo: Fx.text('${camel.toUpperCase()}').font.lg().bold(),
+    actions: [
+      Fx.icon(Icons.notifications_none_outlined, onTap: () {}),
+      Fx.icon(Icons.account_circle_outlined, onTap: () {}),
+    ],
+  );
+
+  Widget _buildSidebar() => Fx.sidebar(
+    items: [
+      Fx.text('Dashboard').font.sm().p(12),
+      Fx.text('Analytics').font.sm().p(12),
+      Fx.text('Settings').font.sm().p(12),
+    ],
+  );
 }
 ''');
 
-  print('✅ Generated layout: ${camel}Layout at lib/core/layouts/$fileName');
+  _success('Generated layout: ${camel}Layout at lib/core/layouts/$fileName');
 }
 
 Future<void> _createModel(String name) async {
@@ -717,7 +817,7 @@ class $camel {
 }
 ''');
 
-  print('✅ Generated model: $camel at lib/core/models/$fileName');
+  _success('Generated model: $camel at lib/core/models/$fileName');
 }
 
 Future<void> _createController(String name) async {
@@ -739,11 +839,13 @@ class ${camel}Controller extends FluxController {
 }
 ''');
 
-  print('✅ Generated controller: ${camel}Controller at lib/core/controllers/$fileName');
+  _success(
+    'Generated controller: ${camel}Controller at lib/core/controllers/$fileName',
+  );
 }
 Future<void> _handleModule(List<String> args) async {
   if (args.isEmpty) {
-    print('Usage: fluxy module <add|remove|list> [name]');
+    _info('Usage: fluxy module <add|remove|list> [name]');
     return;
   }
 
@@ -753,14 +855,14 @@ Future<void> _handleModule(List<String> args) async {
   switch (command) {
     case 'add':
       if (rest.isEmpty) {
-        print('Error: Module name required.');
+        _error('Module name required.');
         return;
       }
       await _addModule(rest.first);
       break;
     case 'remove':
       if (rest.isEmpty) {
-        print('Error: Module name required.');
+        _error('Module name required.');
         return;
       }
       await _removeModule(rest.first);
@@ -769,7 +871,7 @@ Future<void> _handleModule(List<String> args) async {
       _listModules();
       break;
     default:
-      print('Unknown module command: $command');
+      _error('Unknown module command: $command');
   }
 }
 
@@ -790,11 +892,11 @@ const _availablePlugins = {
 Future<void> _removeModule(String name) async {
   final moduleName = name.toLowerCase();
   
-  print('🗑️ Removing Fluxy Platform Module: $moduleName...');
+  _step('CORE', 'Terminating Fluxy Platform Module: $moduleName...');
   
   // 1. Run flutter pub remove
   final packageName = 'fluxy_$moduleName';
-  print('🚀 Uninstalling $packageName via flutter pub remove...');
+  _info('Uninstalling $packageName via flutter pub remove...');
   
   final process = await Process.start(
     'flutter', 
@@ -805,28 +907,30 @@ Future<void> _removeModule(String name) async {
   
   final exitCode = await process.exitCode;
   if (exitCode != 0) {
-    print('❌ Failed to remove $packageName.');
+    _error('Failed to remove $packageName.');
     return;
   }
   
   // 2. Regenerate registry
   await _regeneratePluginRegistry();
   
-  print('\n✨ Module $moduleName removed and registry cleaned successfully!');
+  _success('Module $moduleName removed and registry cleaned successfully.');
 }
 
 Future<void> _addModule(String name) async {
   final moduleName = name.toLowerCase();
   if (!_availablePlugins.containsKey(moduleName)) {
-    print('❌ Unknown module: $moduleName. Use "fluxy module list" to see available modules.');
+    _error(
+      'Unknown module: $moduleName. Use "fluxy module list" to see available modules.',
+    );
     return;
   }
 
-  print('📦 Adding Fluxy Platform Module: $moduleName...');
+  _step('CORE', 'Enabling Fluxy Platform Module: $moduleName...');
   
   // 1. Run flutter pub add
   final packageName = 'fluxy_$moduleName';
-  print('🚀 Installing $packageName via flutter pub add...');
+  _info('Installing $packageName via flutter pub add...');
   
   final process = await Process.start(
     'flutter', 
@@ -837,26 +941,33 @@ Future<void> _addModule(String name) async {
   
   final exitCode = await process.exitCode;
   if (exitCode != 0) {
-    print('❌ Failed to install $packageName. Please check your internet connection and pubspec.yaml.');
+    _error(
+      'Failed to install $packageName. Please check your internet connection and pubspec.yaml.',
+    );
     return;
   }
   
   // 2. Regenerate registry
   await _regeneratePluginRegistry();
   
-  print('\n✨ Module $moduleName added and registered successfully!');
-  print('💡 Pro-tip: Ensure "Fluxy.autoRegister();" is called in your main.dart');
+  _success('Module $moduleName added and registered successfully.');
+  _info(
+    'Verify "Fluxy.autoRegister()" or "registerFluxyPlugins()" is called in your main.dart',
+  );
 }
 
 void _listModules() {
-  print('Available Fluxy Platform Modules:');
-  for (var p in _availablePlugins.keys) {
-    print('  - $p');
+  _step('LIST', 'Available Fluxy Platform Modules:');
+  for (var entry in _availablePlugins.entries) {
+    print(' $_b- ${entry.key.padRight(15)}$_rs ${_c}(${entry.value})$_rs');
   }
+  _info('Use "fluxy module add <name>" to install a module.');
 }
 
 Future<void> _regeneratePluginRegistry([String? newPlugin]) async {
-  final registryFile = File(p.join('lib', 'src', 'engine', 'plugin_registry.dart'));
+  final registryFile = File(
+    p.join('lib', 'core', 'registry', 'fluxy_registry.dart'),
+  );
   final pubspecFile = File('pubspec.yaml');
   
   Set<String> pluginsToRegister = {};
@@ -864,18 +975,19 @@ Future<void> _regeneratePluginRegistry([String? newPlugin]) async {
   
   if (pubspecFile.existsSync()) {
     final content = pubspecFile.readAsStringSync();
-    // Simple regex to find fluxy_ dependencies (supports both ^0.1.0 and path: ...)
-    final regExp = RegExp(r'fluxy_([a-z_]+):');
+    // Improved regex to catch fluxy_ deps in any valid YAML format (version, path, git)
+    final regExp = RegExp(r'^\s*(fluxy_[a-z_]+)\s*:', multiLine: true);
     final matches = regExp.allMatches(content);
     for (final match in matches) {
-      final name = match.group(1);
-      if (name != null && _availablePlugins.containsKey(name)) {
-        pluginsToRegister.add(name);
+      final packageName = match.group(1);
+      final pluginKey = packageName?.replaceFirst('fluxy_', '');
+      if (pluginKey != null && _availablePlugins.containsKey(pluginKey)) {
+        pluginsToRegister.add(pluginKey);
       }
     }
   }
 
-  String imports = "import '../../fluxy.dart';\n";
+  String imports = "import 'package:fluxy/fluxy.dart';\n";
   String body = 'void registerFluxyPlugins() {\n';
 
   if (pluginsToRegister.isEmpty) {
@@ -884,6 +996,9 @@ Future<void> _regeneratePluginRegistry([String? newPlugin]) async {
     for (var p in pluginsToRegister) {
       final className = _availablePlugins[p];
       if (className != null) {
+        // Add dynamic import for the plugin package
+        imports += "import 'package:fluxy_$p/fluxy_$p.dart';\n";
+        
         body += '  try {\n';
         body += '    Fluxy.register($className());\n';
         body += '    debugPrint("[INIT] [Platform] Auto-registered: $className");\n';
@@ -913,8 +1028,34 @@ $body
   // Only write if changed to avoid unnecessary rebuilds
   if (!registryFile.existsSync() || registryFile.readAsStringSync() != fullContent) {
     registryFile.writeAsStringSync(fullContent);
-    print('🔄 Synchronized plugin_registry.dart with ${pluginsToRegister.length} modular dependencies.');
+    print(
+      '[SYNC] Generated lib/core/registry/fluxy_registry.dart (${pluginsToRegister.length} plugins).',
+    );
   } else {
-    print('✅ Plugin registry is already in sync.');
+    print('[SYNC] Registry is already in sync.');
   }
 }
+
+const String _fluxyTestTemplate = """
+import 'package:flutter_test/flutter_test.dart';
+import 'package:fluxy/fluxy.dart';
+import 'package:flutter/material.dart';
+
+void main() {
+  testWidgets('Fluxy App Boot Test', (WidgetTester tester) async {
+    // 1. Initialize Minimal Framework
+    await Fluxy.init();
+
+    // 2. Build App
+    await tester.pumpWidget(
+      const FluxyApp(
+        title: 'Test App',
+        routes: [],
+      ),
+    );
+
+    // 3. Verify Boot
+    expect(find.byType(FluxyApp), findsOneWidget);
+  });
+}
+""";

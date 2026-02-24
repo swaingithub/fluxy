@@ -1,5 +1,18 @@
 import 'package:flutter/foundation.dart';
 
+/// Represents a single auto-repair event in the Fluxy Safety Kernel.
+class StabilityEvent {
+  final String type;
+  final String description;
+  final DateTime timestamp;
+
+  StabilityEvent({
+    required this.type,
+    required this.description,
+    required this.timestamp,
+  });
+}
+
 /// Tracks stability events and auto-repairs throughout the app lifecycle.
 class FluxyStabilityMetrics {
   static int _layoutFixes = 0;
@@ -7,33 +20,45 @@ class FluxyStabilityMetrics {
   static int _stateFixes = 0;
   static int _asyncFixes = 0;
 
+  static final List<StabilityEvent> _recentEvents = [];
+
   static int get layoutFixes => _layoutFixes;
   static int get viewportFixes => _viewportFixes;
   static int get stateFixes => _stateFixes;
   static int get asyncFixes => _asyncFixes;
+  static List<StabilityEvent> get recentEvents => List.unmodifiable(_recentEvents);
 
-  static void recordLayoutFix() {
+  static void recordLayoutFix([String? detail]) {
     _layoutFixes++;
-    _logRepair('LAYOUT_OPTIMIZATION');
+    _logRepair('LAYOUT_OPTIMIZATION', detail);
   }
 
-  static void recordViewportFix() {
+  static void recordViewportFix([String? detail]) {
     _viewportFixes++;
-    _logRepair('VIEWPORT_STABILIZATION');
+    _logRepair('VIEWPORT_STABILIZATION', detail);
   }
 
-  static void recordStateFix() {
+  static void recordStateFix([String? detail]) {
     _stateFixes++;
-    _logRepair('STATE_CONSISTENCY_CHECK');
+    _logRepair('STATE_CONSISTENCY_CHECK', detail);
   }
 
-  static void recordAsyncFix() {
+  static void recordAsyncFix([String? detail]) {
     _asyncFixes++;
-    _logRepair('ASYNC_RACE_PROTECTION');
+    _logRepair('ASYNC_RACE_PROTECTION', detail);
   }
 
-  static void _logRepair(String type) {
-    debugPrint('[KERNEL] [STABILITY] Intercept applied: $type.');
+  static void _logRepair(String type, [String? detail]) {
+    final event = StabilityEvent(
+      type: type,
+      description: detail ?? 'The Safety Kernel auto-corrected a potential crash.',
+      timestamp: DateTime.now(),
+    );
+    
+    _recentEvents.insert(0, event);
+    if (_recentEvents.length > 50) _recentEvents.removeLast();
+
+    debugPrint('[KERNEL] [STABILITY] Intercept applied: $type. ${detail ?? ""}');
   }
 
   static Map<String, int> getSummary() {
@@ -51,6 +76,7 @@ class FluxyStabilityMetrics {
     _viewportFixes = 0;
     _stateFixes = 0;
     _asyncFixes = 0;
+    _recentEvents.clear();
   }
 
   /// Enable or disable strict mode for stability checks
