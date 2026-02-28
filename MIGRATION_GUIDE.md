@@ -2,11 +2,11 @@
 
 This guide helps you migrate your Fluxy applications from v0.2.6 to v1.0.0.
 
-## [CRITICAL] Breaking Changes
+## Breaking Changes
 
 Fluxy v1.0.0 introduces a modular architecture with separate packages for different features.
 
-### [ARCH] Package Structure Changes
+### Package Structure Changes
 
 | Feature | v0.2.6 (Single Package) | v1.0.0 (Modular) |
 |---------|--------------------------|-------------------|
@@ -23,7 +23,7 @@ Fluxy v1.0.0 introduces a modular architecture with separate packages for differ
 | Logger | `debugPrint` | `package:fluxy_logger/fluxy_logger.dart` |
 | Device | `DeviceInfo` | `package:fluxy_device/fluxy_device.dart` |
 
-## [GUIDE] Migration Steps
+## Migration Steps
 
 ### Step 1: Update Dependencies
 
@@ -106,7 +106,7 @@ await FluxyStorage.set('key', 'value');
 final value = await FluxyStorage.get('key');
 ```
 
-## [COMPAT] Compatibility Layer
+## Compatibility Layer
 
 Fluxy v1.0.0 includes a temporary compatibility layer that will show deprecation warnings but won't break your existing code immediately.
 
@@ -117,7 +117,7 @@ final image = await FxCamera.capture(); // Deprecated: Use fluxy_camera package
 
 The compatibility layer will be removed in v2.0.0.
 
-## [INFO] Benefits of v1.0.0
+## Benefits of v1.0.0
 
 1. **Smaller Core Package**: ~170KB vs 15MB+ (faster installation)
 2. **Modular Dependencies**: Only install what you need
@@ -125,13 +125,13 @@ The compatibility layer will be removed in v2.0.0.
 4. **Independent Versioning**: Each package can evolve separately
 5. **Clearer Architecture**: Separated concerns
 
-## [SUPPORT] Need Help?
+## Need Help?
 
 - **GitHub Issues**: https://github.com/swaingithub/fluxy/issues
 - **Documentation**: https://github.com/swaingithub/fluxy
 - **Migration Support**: Create an issue with the tag "migration-help"
 
-## [TIME] Timeline
+## Timeline
 
 - **v1.0.0**: Breaking changes with compatibility layer
 - **v1.5.0**: Enhanced features in separate packages
