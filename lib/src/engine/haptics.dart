@@ -1,33 +1,12 @@
-import 'package:flutter/services.dart';
+import '../dsl/fx.dart';
 
-/// A premium wrapper for system haptic feedback.
+/// Legacy shim for FxHaptic that delegates to the modular fluxy_haptics plugin.
+/// This ensures backward compatibility for plugins that expect FxHaptic to be in core.
 class FxHaptic {
-  static bool enabled = true;
-
-  static void light() {
-    if (!enabled) return;
-    HapticFeedback.selectionClick();
-  }
-
-  static void medium() {
-    if (!enabled) return;
-    HapticFeedback.mediumImpact();
-  }
-
-  static void heavy() {
-    if (!enabled) return;
-    HapticFeedback.heavyImpact();
-  }
-
-  static void success() {
-    if (!enabled) return;
-    // Vibrations aren't natively supported directly in HapticFeedback for success 
-    // without third party, but we can simulate or use heavy then light.
-    HapticFeedback.mediumImpact();
-  }
-
-  static void error() {
-    if (!enabled) return;
-    HapticFeedback.vibrate();
-  }
+  static void light() => Fx.haptic?.light();
+  static void medium() => Fx.haptic?.medium();
+  static void heavy() => Fx.haptic?.heavy();
+  static void selection() => Fx.haptic?.selection();
+  static void error() => Fx.haptic?.error();
+  static void success() => Fx.haptic?.success();
 }

@@ -1,6 +1,6 @@
 name: fluxy_camera
 description: Camera plugin for the Fluxy framework.
-version: 1.0.0
+version: 1.1.0
 homepage: https://github.com/swaingithub/fluxy
 repository: https://github.com/swaingithub/fluxy
 issue_tracker: https://github.com/swaingithub/fluxy/issues
@@ -13,7 +13,8 @@ dependencies:
   flutter:
     sdk: flutter
   camera: ^0.11.4
-  fluxy: ^1.0.0
+  fluxy:
+    path: ../../
 
 dev_dependencies:
   flutter_test:
@@ -22,3 +23,6 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+
+

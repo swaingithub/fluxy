@@ -1,6 +1,6 @@
 name: fluxy_platform
 description: "A meta-package for the Fluxy framework that includes the core engine and all official plugins."
-version: 1.0.0
+version: 1.1.0
 homepage: https://github.com/swaingithub/fluxy
 repository: https://github.com/swaingithub/fluxy
 issue_tracker: https://github.com/swaingithub/fluxy/issues
@@ -12,16 +12,42 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  fluxy: ^1.0.0
-  fluxy_camera: ^1.0.0
-  fluxy_notifications: ^1.0.0
-  fluxy_connectivity: ^1.0.0
-  fluxy_permissions: ^1.0.0
-  fluxy_storage: ^1.0.0
-  fluxy_auth: ^1.0.0
-  fluxy_analytics: ^1.0.0
-  fluxy_biometric: ^1.0.0
-  fluxy_ota: ^1.0.0
+  fluxy:
+    path: ../../
+  fluxy_camera:
+    path: ../fluxy_camera
+  fluxy_notifications:
+    path: ../fluxy_notifications
+  fluxy_connectivity:
+    path: ../fluxy_connectivity
+  fluxy_permissions:
+    path: ../fluxy_permissions
+  fluxy_storage:
+    path: ../fluxy_storage
+  fluxy_auth:
+    path: ../fluxy_auth
+  fluxy_analytics:
+    path: ../fluxy_analytics
+  fluxy_biometric:
+    path: ../fluxy_biometric
+  fluxy_ota:
+    path: ../fluxy_ota
+  fluxy_haptics:
+    path: ../fluxy_haptics
+  fluxy_logger:
+    path: ../fluxy_logger
+  fluxy_device:
+    path: ../fluxy_device
+  fluxy_sync:
+    path: ../fluxy_sync
+  fluxy_websocket:
+    path: ../fluxy_websocket
+  fluxy_geo:
+    path: ../fluxy_geo
+  fluxy_presence:
+    path: ../fluxy_presence
+  fluxy_stream_bridge:
+    path: ../fluxy_stream_bridge
 
 flutter:
   uses-material-design: true

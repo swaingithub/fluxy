@@ -1,318 +1,128 @@
 # fluxy_camera
 
-Camera plugin for the Fluxy framework, providing comprehensive camera functionality including photo capture, video recording, and gallery integration.
+[PLATFORM] Official Camera module for the Fluxy framework, providing managed device hardware access and pre-built capture interfaces.
 
-## Installation
+## [INSTALL] Installation
 
-Add this to your package's `pubspec.yaml` file:
+### Via CLI (Recommended)
+Add the module using the Fluxy CLI to automatically handle dependency injection and registry updates.
+```bash
+fluxy module add camera
+```
 
+### Manual pubspec.yaml
 ```yaml
 dependencies:
   fluxy_camera: ^1.0.0
 ```
 
-## Usage
+---
 
-First, ensure you have Fluxy initialized and the camera plugin registered:
+## [BOOT] Managed Initialization
+
+To use `fluxy_camera` correctly, your `main.dart` must follow the mandatory three-step boot sequence to hook the architectural registry.
 
 ```dart
 import 'package:fluxy/fluxy.dart';
+import 'core/registry/fluxy_registry.dart'; 
 
 void main() async {
+  // 1. Initialize Kernel
   await Fluxy.init();
-  Fluxy.autoRegister(); // Registers all available plugins including camera
   
+  // 2. Hook the Registry
+  Fluxy.registerRegistry(() => registerFluxyPlugins()); 
+  
+  // 3. Auto-boot all modules
+  Fluxy.autoRegister(); 
   runApp(MyApp());
 }
 ```
 
-### Basic Camera Operations
+---
+
+## [USAGE] Implementation Paradigms
+
+Access all camera features through the stable `Fx.platform.camera` gateway.
+
+### High-Level Capture (The Industrial Way)
+Use the `fullView` method to open a managed capture interface that handles hardware lifecycle and permissions automatically.
 
 ```dart
-import 'package:fluxy/fluxy.dart';
-
-class CameraService {
-  // Initialize camera
-  Future<void> initializeCamera() async {
-    try {
-      await Fx.camera.initialize();
-      Fx.toast.success('Camera initialized successfully');
-    } catch (e) {
-      Fx.toast.error('Camera initialization failed: $e');
-    }
-  }
+void takePhoto(BuildContext context) async {
+  final file = await Fx.platform.camera.fullView(context: context);
   
-  // Capture photo
-  Future<String?> capturePhoto() async {
-    try {
-      final imagePath = await Fx.camera.capturePhoto();
-      if (imagePath != null) {
-        Fx.toast.success('Photo captured successfully');
-        return imagePath;
-      }
-      return null;
-    } catch (e) {
-      Fx.toast.error('Photo capture failed: $e');
-      return null;
-    }
-  }
-  
-  // Start video recording
-  Future<void> startVideoRecording() async {
-    try {
-      await Fx.camera.startVideoRecording();
-      Fx.toast.success('Video recording started');
-    } catch (e) {
-      Fx.toast.error('Video recording failed to start: $e');
-    }
-  }
-  
-  // Stop video recording
-  Future<String?> stopVideoRecording() async {
-    try {
-      final videoPath = await Fx.camera.stopVideoRecording();
-      if (videoPath != null) {
-        Fx.toast.success('Video recording stopped');
-        return videoPath;
-      }
-      return null;
-    } catch (e) {
-      Fx.toast.error('Video recording failed to stop: $e');
-      return null;
-    }
-  }
-  
-  // Dispose camera
-  void disposeCamera() {
-    Fx.camera.dispose();
+  if (file != null) {
+    print("[SYS] Image captured: ${file.path}");
   }
 }
 ```
 
-### Gallery Integration
+### Deep-Level Control
+For custom layouts, use the `FxCamera` widget or the underlying controller.
 
 ```dart
-class GalleryService {
-  // Pick image from gallery
-  Future<String?> pickImageFromGallery() async {
-    try {
-      final imagePath = await Fx.camera.pickImageFromGallery();
-      if (imagePath != null) {
-        Fx.toast.success('Image selected from gallery');
-        return imagePath;
-      }
-      return null;
-    } catch (e) {
-      Fx.toast.error('Gallery image selection failed: $e');
-      return null;
-    }
-  }
-  
-  // Pick video from gallery
-  Future<String?> pickVideoFromGallery() async {
-    try {
-      final videoPath = await Fx.camera.pickVideoFromGallery();
-      if (videoPath != null) {
-        Fx.toast.success('Video selected from gallery');
-        return videoPath;
-      }
-      return null;
-    } catch (e) {
-      Fx.toast.error('Gallery video selection failed: $e');
-      return null;
-    }
-  }
-}
+FxCamera(
+  onCapture: (file) => handleFile(file),
+).h(300).rounded(20);
 ```
 
-### Camera Configuration
+---
 
-```dart
-class CameraConfiguration {
-  // Set camera resolution
-  Future<void> setResolution(ResolutionPreset resolution) async {
-    try {
-      await Fx.camera.setResolution(resolution);
-      Fx.toast.success('Camera resolution updated');
-    } catch (e) {
-      Fx.toast.error('Failed to set resolution: $e');
-    }
-  }
-  
-  // Switch between front and back camera
-  Future<void> switchCamera() async {
-    try {
-      await Fx.camera.switchCamera();
-      Fx.toast.success('Camera switched');
-    } catch (e) {
-      Fx.toast.error('Failed to switch camera: $e');
-    }
-  }
-  
-  // Toggle flash
-  Future<void> toggleFlash() async {
-    try {
-      await Fx.camera.toggleFlash();
-      Fx.toast.success('Flash toggled');
-    } catch (e) {
-      Fx.toast.error('Failed to toggle flash: $e');
-    }
-  }
-  
-  // Set focus mode
-  Future<void> setFocusMode(FocusMode mode) async {
-    try {
-      await Fx.camera.setFocusMode(mode);
-      Fx.toast.success('Focus mode set');
-    } catch (e) {
-      Fx.toast.error('Failed to set focus mode: $e');
-    }
-  }
-}
-```
-
-### Camera Preview Widget
-
-```dart
-import 'package:fluxy/fluxy.dart';
-
-class CameraPreviewScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Camera')),
-      body: Fx.col([
-        // Camera preview widget
-        Fx.camera.preview(
-          width: double.infinity,
-          height: 300,
-        ),
-        
-        // Camera controls
-        Fx.row([
-          Fx.button('Capture Photo')
-            .onTap(() async {
-              final path = await Fx.camera.capturePhoto();
-              if (path != null) {
-                // Handle captured photo
-              }
-            }),
-            
-          Fx.button('Gallery')
-            .onTap(() async {
-              final path = await Fx.camera.pickImageFromGallery();
-              if (path != null) {
-                // Handle selected image
-              }
-            }),
-            
-          Fx.button('Switch Camera')
-            .onTap(() async {
-              await Fx.camera.switchCamera();
-            }),
-        ]).gap(2).center(),
-      ]).gap(2).p(2),
-    );
-  }
-}
-```
-
-## Features
-
-- **Photo Capture**: High-quality photo capture with configurable resolution
-- **Video Recording**: Video recording with duration and quality controls
-- **Gallery Integration**: Pick images and videos from device gallery
-- **Camera Controls**: Switch cameras, toggle flash, set focus modes
-- **Preview Widget**: Built-in camera preview widget for easy integration
-- **Error Handling**: Comprehensive error handling with user-friendly messages
-- **Permission Management**: Automatic camera permission handling
-- **Cross-Platform**: Works on both iOS and Android devices
-
-## API Reference
+## [API] Reference
 
 ### Methods
+- `fullView(context)`: Opens a full-screen managed camera modal.
+- `capture()`: Triggers a direct capture from the primary camera.
+- `disposeCache()`: Clears temporary image assets stored in cache.
 
-- `initialize()` - Initialize camera with default settings
-- `capturePhoto()` - Capture a photo and return file path
-- `startVideoRecording()` - Start recording video
-- `stopVideoRecording()` - Stop recording and return video file path
-- `pickImageFromGallery()` - Pick image from device gallery
-- `pickVideoFromGallery()` - Pick video from device gallery
-- `switchCamera()` - Switch between front and back camera
-- `toggleFlash()` - Toggle camera flash on/off
-- `setResolution(ResolutionPreset)` - Set camera resolution
-- `setFocusMode(FocusMode)` - Set camera focus mode
-- `dispose()` - Dispose camera resources
+### Properties (How to Add and Use)
+Fluxy Camera properties are accessed via the platform helper.
 
-### Properties
+| Property | Type | Instruction |
+| :--- | :--- | :--- |
+| **Available Cameras** | `List<CameraDescription>` | **Use**: `Fx.platform.camera.cameras`. Check if hardware is present. |
+| **Active Controller** | `CameraController?` | **Use**: Access underlying plugin controller for advanced hardware settings. |
 
-- `isInitialized` - Check if camera is initialized
-- `isRecording` - Check if currently recording video
-- `currentCamera` - Get current camera (front/back)
-- `flashMode` - Get current flash mode
+---
 
-### Widgets
+## [PROPERTIES] Property Instruction: Add and Use It
 
-- `Fx.camera.preview()` - Camera preview widget
-
-## Error Handling
-
-The camera plugin provides comprehensive error handling:
-
+To **add** logic that checks for camera availability:
 ```dart
-try {
-  await Fx.camera.capturePhoto();
-} on CameraException catch (e) {
-  // Handle specific camera errors
-  switch (e.code) {
-    case 'CameraAccessDenied':
-      Fx.toast.error('Camera access denied. Please check permissions.');
-      break;
-    case 'CameraAccessRestricted':
-      Fx.toast.error('Camera access is restricted.');
-      break;
-    case 'NoCameraAvailable':
-      Fx.toast.error('No camera available on this device.');
-      break;
-    default:
-      Fx.toast.error('Camera error: ${e.description}');
-  }
-} catch (e) {
-  Fx.toast.error('Unexpected camera error: $e');
+if (Fx.platform.camera.cameras.isEmpty) {
+  Fx.toast.error("No camera hardware detected.");
 }
 ```
 
-## Permissions
-
-The camera plugin automatically handles camera permissions:
-
+To **use** the managed capture property in a button:
 ```dart
-// Check camera permission status
-final hasPermission = await Fx.camera.hasPermission;
-
-// Request camera permission
-final permissionGranted = await Fx.camera.requestPermission();
-
-if (permissionGranted) {
-  // Camera permission granted, proceed with camera operations
-} else {
-  // Camera permission denied, show message to user
-  Fx.toast.error('Camera permission is required to use camera features');
-}
+Fx.button("Scan Label")
+  .onTap(() => Fx.platform.camera.fullView(context: context));
 ```
 
-## Platform Support
+---
 
-- **iOS**: Full camera functionality with native integration
-- **Android**: Complete camera support including front/back cameras
-- **Web**: Limited support (camera preview and basic capture)
+## [RULES] Industrial Standard vs. Outdated Style
 
-## Security Considerations
+| Feature | [WRONG] The Outdated Way | [RIGHT] The Fluxy Standard |
+| :--- | :--- | :--- |
+| **Plugin Access** | `Fx.camera` or `CameraController.initialize()` | `Fx.platform.camera` |
+| **Capture UI** | Building custom overlay stacks | `Fx.platform.camera.fullView()` |
+| **Lifecycle** | Manual `.dispose()` calls | Managed automatically by Fluxy |
+| **Permissions** | Manual `permission_handler` logic | Automatic check inside `fullView` |
 
-- All camera operations require explicit user permission
-- Captured media is stored in secure device locations
-- Camera resources are properly disposed when not in use
-- No unauthorized background camera access
+---
+
+## [PITFALLS] Common Pitfalls & Fixes
+
+### 1. "Black screen on startup"
+*   **The Cause**: Running on an emulator without a simulated camera backend.
+*   **The Fix**: Ensure your emulator has "Camera" enabled in its AVD settings.
+
+### 2. "Camera doesn't initialize"
+*   **The Cause**: Not calling `Fluxy.autoRegister()` in `main()`.
+*   **The Fix**: Ensure all 3 boot steps are present in your `main.dart`.
 
 ## License
 

@@ -79,8 +79,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-java@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
           java-version: '17'
@@ -88,10 +88,13 @@ jobs:
         with:
           channel: 'stable'
       
+      - name: Force Clean Dependencies
+        run: rm -f pubspec.lock
+        
       - run: flutter pub get
       - run: flutter build apk --release
       
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: release-apk
           path: build/app/outputs/flutter-apk/app-release.apk
@@ -109,11 +112,14 @@ jobs:
     runs-on: macos-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
       
+      - name: Force Clean Dependencies
+        run: rm -f pubspec.lock
+
       - run: flutter pub get
       - run: flutter build ios --release --no-codesign
       
@@ -124,7 +130,7 @@ jobs:
           cp -r Runner.app Payload
           zip -r FluxyApp.ipa Payload
           
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: release-ipa
           path: build/ios/iphoneos/FluxyApp.ipa
@@ -145,7 +151,7 @@ jobs:
   fastlane-deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:

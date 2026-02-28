@@ -45,7 +45,8 @@ void main(List<String> arguments) async {
     ..addCommand('cloud')
     ..addCommand('serve')
     ..addCommand('module')
-    ..addCommand('m');
+    ..addCommand('m')
+    ..addCommand('melos');
 
   parser.addFlag('help', abbr: 'h', negatable: false);
   parser.addFlag('version', abbr: 'v', negatable: false);
@@ -109,6 +110,9 @@ void main(List<String> arguments) async {
       case 'm':
         await _handleModule(command.rest);
         break;
+      case 'melos':
+        await _handleMelos(command.rest);
+        break;
       default:
         _error('Unknown command: ${command.name}');
         printUsage(parser);
@@ -139,6 +143,7 @@ void printUsage(ArgParser parser) {
   print('  cloud            Configure GitHub Actions CI/CD.');
   print('  module add <pkg> Add and register a Fluxy platform module.');
   print('  module list      List all available platform modules.');
+  print('  melos <args>     Run melos commands within the workspace.');
 }
 
 Future<void> _handleInit(List<String> args) async {
@@ -840,6 +845,36 @@ class ${camel}Controller extends FluxController {
     'Generated controller: ${camel}Controller at lib/core/controllers/$fileName',
   );
 }
+
+Future<void> _handleMelos(List<String> args) async {
+  _step('MELOS', 'Executing Workspace Command: melos ${args.join(' ')}');
+  
+  String workDir = Directory.current.path;
+  if (Platform.isWindows && workDir.contains(' ')) {
+    try {
+      final result = await Process.run('cmd', ['/c', 'for %I in (.) do @echo %~sI']);
+      if (result.exitCode == 0) {
+         workDir = result.stdout.toString().trim();
+         _info('Using safe path: $workDir');
+      }
+    } catch (_) {}
+  }
+
+  final process = await Process.start(
+    'melos',
+    args,
+    mode: ProcessStartMode.inheritStdio,
+    runInShell: true,
+    workingDirectory: workDir,
+  );
+  
+  final exitCode = await process.exitCode;
+  if (exitCode != 0) {
+    _error('Melos command failed with exit code $exitCode');
+    exit(exitCode);
+  }
+}
+
 Future<void> _handleModule(List<String> args) async {
   if (args.isEmpty) {
     _info('Usage: fluxy module <add|remove|list> [name]');
@@ -883,7 +918,15 @@ const _availablePlugins = {
   'biometric': 'FluxyBiometricPlugin',
   'connectivity': 'FluxyConnectivityPlugin',
   'platform': 'FluxyPlatformPlugin',
+  'haptics': 'FluxyHapticsPlugin',
+  'logger': 'FluxyLoggerPlugin',
+  'device': 'FluxyDevicePlugin',
   'test': 'FluxyTestPlugin',
+  'websocket': 'FluxyWebSocketPlugin',
+  'sync': 'FluxySyncPlugin',
+  'presence': 'FluxyPresencePlugin',
+  'bridge': 'FluxyStreamBridgePlugin',
+  'geo': 'FluxyGeoPlugin',
 };
 
 Future<void> _removeModule(String name) async {

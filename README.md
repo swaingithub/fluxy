@@ -7,12 +7,13 @@ Fluxy is not just a library; it is a **Managed Application Platform (MAP)** desi
 
 ---
 
-## **v1.0.0 - Major Update**
+## **v1.0.1 - Industrial Stability Update**
 
-**Fluxy v1.0.0 introduces a modular architecture!** 
+**Fluxy v1.0.1 expands the modular ecosystem!** 
 
-- **Separate packages** for specific features
-- **Migration required** from v0.2.6
+- **New industrial modules**: `fluxy_haptics`, `fluxy_logger`, and `fluxy_device`
+- **Standardized Property API**: Explicit instructions for adding/using reactive signals
+- **Three-Step Boot Sequence**: Mandatory hook for architectural integrity
 - **Professional logging system** with semantic bracketed tags
 - **Experimental guardrails** for OTA, SDUI, and Cloud CLI
 
@@ -44,8 +45,11 @@ dependencies:
   fluxy_biometric: ^1.0.0    # Biometric authentication
   fluxy_connectivity: ^1.0.0 # Network connectivity
   fluxy_permissions: ^1.0.0  # Device permissions
-  fluxy_platform: ^1.0.0     # Platform integration
+  fluxy_platform: ^1.0.0     # Unified meta-package
   fluxy_ota: ^1.0.0          # Over-the-air updates
+  fluxy_haptics: ^1.0.1      # Sensory feedback
+  fluxy_logger: ^1.0.1       # Industrial auditing
+  fluxy_device: ^1.0.1       # Environment awareness
 ```
 
 ### Quick Start
@@ -132,16 +136,37 @@ Fx(() => Fx.text("Welcome, ${session.value?.name ?? 'Guest'}")
 - Unified Platform API (`Fx.platform`) for centralized access
 - Automatic plugin registration via `Fluxy.autoRegister()`
 
-### 3. Managed Hardware Interfacing
+### 3. Managed Hardware Interfacing (The Industrial Way)
 ```dart
 Future<void> captureSecure() async {
-  final isSecure = await Fx.biometric.authenticate();
+  // Access hardware via the Unified Platform API
+  final isSecure = await Fx.platform.biometric.authenticate();
+  
   if (isSecure) {
-    final image = await Fx.camera.capture();
-    await Fx.storage.setSecure('last_scan', image.path);
+    // Standard capture UI managed by the framework
+    final image = await Fx.platform.camera.fullView();
+    
+    // Encrypted persistent storage
+    await Fx.platform.storage.set('last_scan', image.path, secure: true);
   }
 }
 ```
+
+## [RULES] The Industrial Standard vs. The "Wrong Way"
+
+To maintain architectural integrity, always follow the **Unified Platform API** guide:
+
+| Feature | [WRONG] The Outdated Way | [RIGHT] The Fluxy Standard |
+| :--- | :--- | :--- |
+| **Plugin Access** | `FluxyPluginEngine.find<Plugin>()` | `Fx.platform.<module_name>` |
+| **Registration** | Manual `Fluxy.register()` in main.dart | CLI `fluxy module add` + `Fluxy.autoRegister()` |
+| **Logic/UI** | Checking permissions inside UI builders | Using reactive `Fx()` status signals |
+| **Networking** | Manual token headers in every call | Automatic Auth Interceptors via `Fx.http` |
+
+### **Common Pitfalls & Fixes**
+*   **"Plugin is null"**: Ensure you've run `fluxy module add <name>` and called `Fluxy.autoRegister()`.
+*   **"UI doesn't update"**: Always wrap your platform-dependent UI in an `Fx(() => ...)` builder.
+*   **"Permission Denied"**: Use the platform helper `Fx.platform.permissions` instead of raw Flutter plugins.
 
 **v1.0.0 Modular Packages:**
 - `fluxy_camera` - Camera functionality  
@@ -155,6 +180,9 @@ Future<void> captureSecure() async {
 - `fluxy_permissions` - Device permissions
 - `fluxy_platform` - Platform integration
 - `fluxy_ota` - Over-the-air updates
+- `fluxy_haptics` - Sensory feedback
+- `fluxy_logger` - Industrial auditing
+- `fluxy_device` - Environment awareness
 
 **v0.2.5 Platform Modules:**
 - Full compatibility with latest platform versions

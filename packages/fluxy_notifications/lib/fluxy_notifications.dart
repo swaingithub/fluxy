@@ -149,11 +149,34 @@ class FluxyNotificationsPlugin extends FluxyPlugin with ChangeNotifier {
     // Initialize Timezones for scheduling
     tz.initializeTimeZones();
     try {
-      final String timeZoneName = (await FlutterTimezone.getLocalTimezone())
-          .toString();
-      tz.setLocalLocation(tz.getLocation(timeZoneName));
+      final dynamic tzRes = await FlutterTimezone.getLocalTimezone();
+      String timeZoneName;
+      
+      if (tzRes is String) {
+        timeZoneName = tzRes;
+      } else {
+        // Modern FlutterTimezone returns a TimezoneInfo object
+        try {
+          timeZoneName = (tzRes as dynamic).name ?? tzRes.toString();
+        } catch (_) {
+          timeZoneName = tzRes.toString();
+        }
+      }
+      
+      // Cleanup: sometimes it returns "TimezoneInfo(ID, ...)" via toString, we need just the ID
+      if (timeZoneName.contains('(') && timeZoneName.contains(')')) {
+          timeZoneName = timeZoneName.split('(').last.split(',').first.trim();
+      }
+      try {
+        tz.setLocalLocation(tz.getLocation(timeZoneName));
+      } catch (_) {
+        // Fallback: Use UTC if the specific timezone identifier is unknown
+        tz.setLocalLocation(tz.UTC);
+        debugPrint('[NOTIF] [WARN] Timezone "$timeZoneName" unrecognized. Falling back to UTC.');
+      }
     } catch (e) {
       debugPrint('[NOTIF] [ERROR] Timezone initialization failed | Error: $e');
+      tz.setLocalLocation(tz.UTC); // Final safety fallback
     }
 
     // v20.0.0+ uses named 'settings' parameter

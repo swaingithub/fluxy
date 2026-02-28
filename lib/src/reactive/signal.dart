@@ -5,6 +5,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'dart:async';
 import '../di/fluxy_di.dart';
+import '../engine/metrics/observability.dart';
+import 'collections.dart';
 
 part 'persistence.dart';
 part 'history.dart';
@@ -187,6 +189,7 @@ class Flux<T> {
     }
 
     _value = newValue;
+    FluxyObservability.recordSignalUpdate(label ?? key ?? id);
     FluxyReactiveContext.onFluxUpdate?.call(this, newValue);
     notifySubscribers();
   }
@@ -581,7 +584,21 @@ class FluxRegistry {
         final flux = find(entry.key);
         if (flux != null) {
           try {
-            flux.value = entry.value;
+            final val = entry.value;
+            
+            // Industrial Recovery: Handle Type-Specific restorations
+            if (flux is FluxList && val is List) {
+              flux.clear();
+              flux.addAll(List.from(val));
+            } else if (flux is FluxMap && val is Map) {
+              flux.clear();
+              flux.addAll(Map.from(val));
+            } else if (flux is FluxHistory) {
+              flux.clearHistory();
+              flux.value = val;
+            } else {
+              flux.value = val;
+            }
           } catch (e) {
             debugPrint('[KERNEL] [SIGNAL] Failed to restore flux ${flux.id}: $e');
           }

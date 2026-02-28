@@ -10,6 +10,47 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2026-02-28
+
+### Added
+- **Fluxy Stability Kernel™ (Full Engine)**:
+    - **Layout Guard**: Proactively intercepts and auto-repairs "Unbounded Height/Width" and "Dual Infinity" crashes.
+    - **Sliver-Aware Fx Builder**: Detects and bypasses box-based guards for CustomScrollView compatibility.
+    - **Relaxed & Strict Modes**: Configurable sensitivity for development debugging.
+    - **State Guard**: Detects and breaks rebuild loops, audits reactive subscribers in real-time.
+    - **Async Guard**: Protects against "Async Dispose Races" by automatically canceling callbacks after widget disposal.
+    - **Data Guard**: Native support for **Self-Healing Data** via `.retry()` and `.swr()` caching.
+    - **Interaction Guard**: Prevents "Double-Tap Ghosting" with built-in debouncing logic.
+    - **Feature Toggles**: Dynamic activation/deactivation of features without redeployment.
+- **New Industrial Modules**:
+    - **Sensory Feedback Engine**: `Fx.haptic` shortcut for high-performance tactile confirmation via `fluxy_haptics`.
+    - **Audit Pipeline**: Professional monochromatic logging with the `fluxy_logger` module.
+    - **Environment Awareness**: Automated hardware and app metadata discovery via `fluxy_device`.
+- **Managed Resource Manager**:
+    - `FluxyResourceManager`: Automatic lifecycle management for hardware-heavy features like GPS, Bluetooth, and WebSockets.
+    - **Graceful Sleep**: Automatically enters low-power "deep sleep" mode when features are unused.
+- **Industrial Hardening Suite**:
+    - **Level-2 Security Vault**: Secondary scrambling and hardware-backed storage for mission-critical secrets.
+    - **Recovery Boundaries**: Functional error boundaries that allow parts of the app to fail gracefully without crashing the entire session.
+- **X-Ray Observability & Metrics**:
+    - **Signal Churn Inspector**: Real-time visualization of reactive state activity.
+    - **Rebuild Audit Engine**: Tracks widget rebuild counts to identify performance bottlenecks.
+    - **Stability Saver Logs**: Real-time counter of every crash prevented by the Stability Kernel.
+- **New Real-Time & Advanced Modules**:
+    - `fluxy_websocket`: Managed bi-directional communication with auto-reconnect and signal binding.
+    - `fluxy_sync`: Persistent, offline-first synchronization engine with optimistic UI support.
+    - `fluxy_presence`: Integrated collaboration and user presence tracking.
+    - `fluxy_geo`: Comprehensive geofencing and real-time location awareness.
+    - `fluxy_stream_bridge`: DSL for bridging native Dart Streams directly into reactive Signals.
+
+### Changed
+- **Kernel Logging**: Refactored internal framework logs to use the standardized monochromatic `Fluxy.log()` entry point.
+- **Documentation Overhaul**: Comprehensive doc upgrade with "Master Implementation" sections for professional-grade architectures.
+- **Platform Bundle**: Updated `fluxy_platform` to include all 19 industrial-grade modules.
+- **Professional Analytics**: Enhanced tracking capabilities within `CheckoutController` patterns.
+
+---
+
 ## [1.0.1] - 2026-02-24
 
 ### Added

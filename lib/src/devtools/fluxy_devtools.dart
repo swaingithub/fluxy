@@ -203,19 +203,20 @@ class _FluxyDevToolsState extends State<FluxyDevTools> {
                   valueListenable: _rebuildNotifier,
                   child: widget.child, 
                   builder: (context, _, child) {
-                    return Stack(
-                      children: [
-                        child ?? const SizedBox.shrink(),
-                        
-
-
-                        if (_isOpen) ...[
-                          _buildBlurBackground(),
-                          _buildPanel(),
+                    return Scaffold(
+                      backgroundColor: Colors.transparent,
+                      resizeToAvoidBottomInset: false,
+                      body: Stack(
+                        children: [
+                          child ?? const SizedBox.shrink(),
+                          if (_isOpen) ...[
+                            _buildBlurBackground(),
+                            _buildPanel(),
+                          ],
+                          if (_activeDialog != null) _buildDialogOverlay(),
+                          _buildFab(),
                         ],
-                        if (_activeDialog != null) _buildDialogOverlay(),
-                        _buildFab(),
-                      ],
+                      ),
                     );
                   },
                 ),

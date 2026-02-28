@@ -1,6 +1,6 @@
 name: fluxy
 description: "Core engine of the Fluxy framework including UI, state management, HTTP, and motion."
-version: 1.0.1
+version: 1.1.0
 homepage: https://github.com/swaingithub/fluxy
 repository: https://github.com/swaingithub/fluxy
 
@@ -11,7 +11,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  shared_preferences: ^2.5.4
+  shared_preferences: ^2.2.3
   flutter_secure_storage: ^10.0.0
   args: ^2.7.0
   path: ^1.9.1
@@ -20,14 +20,42 @@ dependencies:
   flutter_timezone: ^5.0.1
   http: ^1.6.0
   vector_math: ^2.1.0
+  crypto: ^3.0.7
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^3.0.0
+  flutter_lints: ^3.0.1
+  melos: ^7.4.0
 
 flutter:
   uses-material-design: true
 
 executables:
   fluxy: fluxy
+
+melos:
+  name: fluxy
+  packages:
+    - .
+    - packages/*
+    - example
+  scripts:
+    analyze:
+      exec: flutter analyze .
+      description: Run `flutter analyze` in all packages.
+    test:
+      exec: flutter test
+      description: Run `flutter test` in all packages.
+      select-package:
+        dir-exists:
+          - test
+    get:
+      exec: flutter pub get
+      description: Run `flutter pub get` in all packages.
+    clean:
+      exec: flutter clean
+      description: Run `flutter clean` in all packages.
+
+
+

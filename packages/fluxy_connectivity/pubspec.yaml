@@ -1,6 +1,6 @@
 name: fluxy_connectivity
 description: Network connectivity plugin for the Fluxy framework.
-version: 1.0.0
+version: 1.1.0
 homepage: https://github.com/swaingithub/fluxy
 repository: https://github.com/swaingithub/fluxy
 issue_tracker: https://github.com/swaingithub/fluxy/issues
@@ -11,10 +11,14 @@ dependencies:
   flutter:
     sdk: flutter
   connectivity_plus: ^7.0.0
-  fluxy: ^1.0.0
+  fluxy:
+    path: ../../
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^3.0.0
 flutter:
   uses-material-design: true
+
+
+

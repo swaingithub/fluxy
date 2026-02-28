@@ -1,6 +1,6 @@
 name: fluxy_test
 description: Testing utilities and mocks for the Fluxy framework.
-version: 1.0.0
+version: 1.1.0
 homepage: https://github.com/swaingithub/fluxy
 repository: https://github.com/swaingithub/fluxy
 issue_tracker: https://github.com/swaingithub/fluxy/issues
@@ -14,10 +14,14 @@ dependencies:
     sdk: flutter
   flutter_test:
     sdk: flutter
-  fluxy: ^1.0.0
+  fluxy:
+    path: ../../
 
 dev_dependencies:
   flutter_lints: ^3.0.0
 
 flutter:
   uses-material-design: true
+
+
+

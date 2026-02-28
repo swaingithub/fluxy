@@ -44,7 +44,8 @@ import '../widgets/fx_chart.dart';
 export '../widgets/fx_chart.dart';
 import '../layout/fx_layout.dart';
 import '../engine/stability/stability.dart';
-import '../engine/haptics.dart';
+import '../engine/metrics/observability.dart';
+import '../engine/stability/feature_toggle.dart';
 import '../engine/layout_guard.dart'; // Corrected import
 
 // Import plugin extensions for direct access to modular packages
@@ -74,9 +75,6 @@ import 'fx_extensions.dart';
     static const radius = FxTokens.radius;
     static const font = FxTokens.font;
     static const shadow = FxTokens.shadow;
-  
-    /// Global Haptic Feedback Engine.
-    static const _FxHapticProxy haptic = _FxHapticProxy();
 
     // --- Semantic Theme Proxies ---
     // These automatically resolve to the current theme's colors.
@@ -114,6 +112,9 @@ import 'fx_extensions.dart';
     /// Usage: `Fx.platform.auth`, `Fx.platform.camera`, `Fx.platform.permissions`, etc.
     static const platform = _FxPlatformHelper();
   
+    /// High-performance sensory haptic feedback.
+    static dynamic get haptic => platform.haptic;
+  
     // --- Theme Management ---
   
     /// Toggles between light and dark mode.
@@ -137,6 +138,12 @@ import 'fx_extensions.dart';
     Widget? tablet,
     Widget? desktop,
   }) => FxLayout(mobile: mobile, tablet: tablet, desktop: desktop);
+  
+  /// A reactive feature-toggle wrapper.
+  /// If [key] is disabled via FluxyFeatureToggle, this returns [fallback] (default: empty).
+  static Widget feature(String key, {required Widget child, Widget fallback = const SizedBox.shrink()}) {
+    return Fx(() => FluxyFeatureToggle.isEnabled(key) ? child : fallback);
+  }
 
   /// A common dashboard layout with sidebar and main content.
   /// Automatically handles Drawer on mobile and Row on desktop.
@@ -1526,6 +1533,7 @@ class _FxState extends State<Fx> with ReactiveSubscriberMixin {
   @override
   Widget build(BuildContext context) {
     FluxyStateGuard.recordRebuild(this);
+    FluxyObservability.recordRebuild(debugName ?? 'Anonymous');
     FluxyReactiveContext.push(this);
     final prevContext = FluxyReactiveContext.currentContext;
     FluxyReactiveContext.currentContext = context;
@@ -1577,15 +1585,6 @@ class _FxState extends State<Fx> with ReactiveSubscriberMixin {
 }
 
 // --- Helper Classes ---
-
-class _FxHapticProxy {
-  const _FxHapticProxy();
-  void light() => FxHaptic.light();
-  void medium() => FxHaptic.medium();
-  void heavy() => FxHaptic.heavy();
-  void success() => FxHaptic.success();
-  void error() => FxHaptic.error();
-}
 
 class _FxToastHelper {
   const _FxToastHelper();
@@ -1746,6 +1745,15 @@ class _FxPlatformHelper {
 
   /// Access to OTA services.
   dynamic get ota => _getSafe('ota', 'fluxy_ota');
+
+  /// Access to sensory haptic feedback.
+  dynamic get haptic => _getSafe('haptic', 'fluxy_haptics');
+
+  /// Access to industrial logging and auditing.
+  dynamic get logger => _getSafe('logger', 'fluxy_logger');
+
+  /// Access to device environment awareness.
+  dynamic get device => _getSafe('device', 'fluxy_device');
 
   /// Safely retrieves a plugin by name with helpful diagnostics if missing.
   dynamic _getSafe(String shortName, String pluginName) {

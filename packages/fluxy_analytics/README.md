@@ -1,332 +1,113 @@
 # fluxy_analytics
 
-Analytics plugin for the Fluxy framework, providing comprehensive analytics tracking and user behavior monitoring capabilities.
+[PLATFORM] Official Analytics and User Tracking module for the Fluxy framework, providing unified event dispatching and identity management.
 
-## Installation
+## [INSTALL] Installation
 
-Add this to your package's `pubspec.yaml` file:
+### Via CLI (Recommended)
+Add the module using the Fluxy CLI to automatically handle dependency injection and registry updates.
+```bash
+fluxy module add analytics
+```
 
+### Manual pubspec.yaml
 ```yaml
 dependencies:
   fluxy_analytics: ^1.0.0
 ```
 
-## Usage
+---
 
-First, ensure you have Fluxy initialized and the analytics plugin registered:
+## [BOOT] Managed Initialization
+
+To use `fluxy_analytics` correctly, your `main.dart` must follow the mandatory three-step boot sequence to hook the architectural registry.
 
 ```dart
 import 'package:fluxy/fluxy.dart';
+import 'core/registry/fluxy_registry.dart'; 
 
 void main() async {
+  // 1. Initialize Kernel
   await Fluxy.init();
-  Fluxy.autoRegister(); // Registers all available plugins including analytics
   
+  // 2. Hook the Registry
+  Fluxy.registerRegistry(() => registerFluxyPlugins()); 
+  
+  // 3. Auto-boot all modules
+  Fluxy.autoRegister(); 
   runApp(MyApp());
 }
 ```
 
-### Basic Analytics Tracking
+---
+
+## [USAGE] Implementation Paradigms
+
+Access all analytics features through the stable `Fx.platform.analytics` gateway.
+
+### Event Tracking
 
 ```dart
-import 'package:fluxy/fluxy.dart';
-
-class AnalyticsService {
-  // Initialize analytics
-  Future<void> initializeAnalytics() async {
-    try {
-      await Fx.analytics.initialize();
-      Fx.toast.success('Analytics initialized');
-    } catch (e) {
-      Fx.toast.error('Analytics initialization failed: $e');
-    }
-  }
-  
-  // Track custom event
-  Future<void> trackEvent(String eventName, {Map<String, dynamic>? parameters}) async {
-    try {
-      await Fx.analytics.track(eventName, parameters: parameters);
-      Fx.toast.success('Event tracked: $eventName');
-    } catch (e) {
-      Fx.toast.error('Failed to track event: $e');
-    }
-  }
-  
-  // Track screen view
-  Future<void> trackScreenView(String screenName) async {
-    try {
-      await Fx.analytics.trackScreen(screenName);
-      Fx.toast.success('Screen view tracked: $screenName');
-    } catch (e) {
-      Fx.toast.error('Failed to track screen view: $e');
-    }
-  }
-  
-  // Set user property
-  Future<void> setUserProperty(String name, String value) async {
-    try {
-      await Fx.analytics.setUserProperty(name, value);
-      Fx.toast.success('User property set: $name');
-    } catch (e) {
-      Fx.toast.error('Failed to set user property: $e');
-    }
-  }
-}
+// Log a semantic event
+Fx.platform.analytics.logEvent('button_click', parameters: {
+  'screen_id': 'login_view',
+  'btn_label': 'sign_in',
+});
 ```
 
-### Advanced Analytics Features
+### User Identification
+Fluxy Analytics automatically bridges with `fluxy_auth` for identity state.
 
 ```dart
-class AdvancedAnalyticsService {
-  // Track user engagement
-  Future<void> trackUserEngagement(String action, {Map<String, dynamic>? context}) async {
-    try {
-      await Fx.analytics.track('user_engagement', parameters: {
-        'action': action,
-        'timestamp': DateTime.now().toIso8601String(),
-        ...?context,
-      });
-    } catch (e) {
-      Fx.toast.error('Failed to track user engagement: $e');
-    }
-  }
-  
-  // Track app performance
-  Future<void> trackPerformance(String metric, double value) async {
-    try {
-      await Fx.analytics.track('app_performance', parameters: {
-        'metric': metric,
-        'value': value,
-        'device': Platform.operatingSystem,
-      });
-    } catch (e) {
-      Fx.toast.error('Failed to track performance: $e');
-    }
-  }
-  
-  // Track error events
-  Future<void> trackError(String error, {String? stackTrace}) async {
-    try {
-      await Fx.analytics.track('app_error', parameters: {
-        'error': error,
-        'stack_trace': stackTrace,
-        'timestamp': DateTime.now().toIso8601String(),
-      });
-    } catch (e) {
-      Fx.toast.error('Failed to track error: $e');
-    }
-  }
-  
-  // Track conversion events
-  Future<void> trackConversion(String conversionType, double value) async {
-    try {
-      await Fx.analytics.track('conversion', parameters: {
-        'type': conversionType,
-        'value': value,
-        'currency': 'USD',
-      });
-    } catch (e) {
-      Fx.toast.error('Failed to track conversion: $e');
-    }
-  }
-}
+// Identify a specific user
+Fx.platform.analytics.identify('user_007', traits: {
+  'plan': 'premium',
+  'region': 'EU',
+});
 ```
 
-### User Management
+---
 
-```dart
-class UserAnalyticsService {
-  // Set user ID
-  Future<void> setUserId(String userId) async {
-    try {
-      await Fx.analytics.setUserId(userId);
-      Fx.toast.success('User ID set: $userId');
-    } catch (e) {
-      Fx.toast.error('Failed to set user ID: $e');
-    }
-  }
-  
-  // Set user properties
-  Future<void> setUserProperties(Map<String, String> properties) async {
-    try {
-      for (final entry in properties.entries) {
-        await Fx.analytics.setUserProperty(entry.key, entry.value);
-      }
-      Fx.toast.success('User properties set');
-    } catch (e) {
-      Fx.toast.error('Failed to set user properties: $e');
-    }
-  }
-  
-  // Clear user data
-  Future<void> clearUserData() async {
-    try {
-      await Fx.analytics.clearUser();
-      Fx.toast.success('User data cleared');
-    } catch (e) {
-      Fx.toast.error('Failed to clear user data: $e');
-    }
-  }
-}
-```
-
-### E-commerce Analytics
-
-```dart
-class EcommerceAnalyticsService {
-  // Track product view
-  Future<void> trackProductView(String productId, String productName, double price) async {
-    try {
-      await Fx.analytics.track('product_view', parameters: {
-        'product_id': productId,
-        'product_name': productName,
-        'price': price,
-      });
-    } catch (e) {
-      Fx.toast.error('Failed to track product view: $e');
-    }
-  }
-  
-  // Track add to cart
-  Future<void> trackAddToCart(String productId, int quantity, double price) async {
-    try {
-      await Fx.analytics.track('add_to_cart', parameters: {
-        'product_id': productId,
-        'quantity': quantity,
-        'price': price,
-      });
-    } catch (e) {
-      Fx.toast.error('Failed to track add to cart: $e');
-    }
-  }
-  
-  // Track purchase
-  Future<void> trackPurchase(String orderId, double totalValue, List<Map<String, dynamic>> items) async {
-    try {
-      await Fx.analytics.track('purchase', parameters: {
-        'order_id': orderId,
-        'total_value': totalValue,
-        'items': items,
-        'currency': 'USD',
-      });
-    } catch (e) {
-      Fx.toast.error('Failed to track purchase: $e');
-    }
-  }
-}
-```
-
-### Analytics Configuration
-
-```dart
-class AnalyticsConfigurationService {
-  // Enable/disable analytics
-  Future<void> setAnalyticsEnabled(bool enabled) async {
-    try {
-      await Fx.analytics.setEnabled(enabled);
-      Fx.toast.success('Analytics ${enabled ? 'enabled' : 'disabled'}');
-    } catch (e) {
-      Fx.toast.error('Failed to set analytics state: $e');
-    }
-  }
-  
-  // Set analytics collection interval
-  Future<void> setCollectionInterval(Duration interval) async {
-    try {
-      await Fx.analytics.setCollectionInterval(interval);
-      Fx.toast.success('Collection interval set');
-    } catch (e) {
-      Fx.toast.error('Failed to set collection interval: $e');
-    }
-  }
-  
-  // Get analytics session ID
-  Future<String?> getSessionId() async {
-    try {
-      return await Fx.analytics.getSessionId();
-    } catch (e) {
-      Fx.toast.error('Failed to get session ID: $e');
-      return null;
-    }
-  }
-}
-```
-
-## Features
-
-- **Event Tracking**: Track custom events with parameters
-- **Screen Tracking**: Monitor screen views and navigation
-- **User Properties**: Set and manage user-specific properties
-- **Performance Monitoring**: Track app performance metrics
-- **Error Tracking**: Monitor and analyze app errors
-- **E-commerce Tracking**: Specialized e-commerce event tracking
-- **User Management**: Set user IDs and clear user data
-- **Configuration**: Configure analytics settings and intervals
-
-## API Reference
+## [API] Reference
 
 ### Methods
+- `logEvent(name, {parameters})`: Dispatches a custom event to all registered backends.
+- `logScreen(name)`: Tracks screen views for navigation analytics.
+- `identify(userId, {traits})`: Links a user to their behavior across sessions.
+- `reset()`: Wipes the current identity and resets tracking tokens.
 
-- `initialize()` - Initialize analytics service
-- `track(String eventName, {Map<String, dynamic>? parameters})` - Track custom event
-- `trackScreen(String screenName)` - Track screen view
-- `setUserId(String userId)` - Set user ID
-- `setUserProperty(String name, String value)` - Set user property
-- `clearUser()` - Clear user data
-- `setEnabled(bool enabled)` - Enable/disable analytics
-- `setCollectionInterval(Duration interval)` - Set collection interval
-- `getSessionId()` - Get current session ID
+### Properties (How to Add and Use)
+Fluxy Analytics properties are reactive signals used for monitoring tracking health.
 
-### Event Types
+| Property | Type | Instruction |
+| :--- | :--- | :--- |
+| `eventCount` | `Signal<int>` | **Use**: `Fx.platform.analytics.eventCount.value`. Useful for debug dashboards. |
 
-- **Custom Events**: User-defined events with parameters
-- **Screen Views**: Automatic screen tracking
-- **User Engagement**: User interaction tracking
-- **Performance**: App performance metrics
-- **Errors**: Error and exception tracking
-- **Conversions**: Business conversion tracking
+---
 
-## Error Handling
+## [PROPERTIES] Property Instruction: Add and Use It
 
-The analytics plugin provides comprehensive error handling:
-
+To **add** a custom listener for debug logging:
 ```dart
-try {
-  await Fx.analytics.track('custom_event', parameters: {'key': 'value'});
-} on AnalyticsException catch (e) {
-  // Handle specific analytics errors
-  switch (e.type) {
-    case AnalyticsErrorType.initializationFailed:
-      Fx.toast.error('Analytics initialization failed');
-      break;
-    case AnalyticsErrorType.trackingDisabled:
-      Fx.toast.error('Analytics tracking is disabled');
-      break;
-    case AnalyticsErrorType.invalidParameters:
-      Fx.toast.error('Invalid event parameters');
-      break;
-    default:
-      Fx.toast.error('Analytics error: $e');
-  }
-} catch (e) {
-  Fx.toast.error('Unexpected analytics error: $e');
-}
+Fx.platform.analytics.eventCount.listen((count) {
+  debugPrint("[SYS] [ANALYTICS] Dispatched event #$count");
+});
 ```
 
-## Privacy Considerations
+To **use** the event count in a developer overlay:
+```dart
+Fx(() => Fx.text("Tracking Live: ${Fx.platform.analytics.eventCount.value} events"));
+```
 
-- All user data is handled according to privacy policies
-- Analytics can be disabled by users
-- No sensitive personal information is collected without consent
-- Data retention policies are configurable
-- GDPR and CCPA compliance features
+---
 
-## Platform Support
+## [RULES] Industrial Standard vs. Outdated Style
 
-- **iOS**: Native iOS analytics integration
-- **Android**: Native Android analytics support
-- **Web**: Web analytics tracking capabilities
-- **Cross-Platform**: Unified API across all platforms
+| Feature | [WRONG] The Outdated Way | [RIGHT] The Fluxy Standard |
+| :--- | :--- | :--- |
+| **Plugin Access** | `Fx.analytics` or `FirebaseAnalytics.instance` | `Fx.platform.analytics` |
+| **Tracking** | Manual calls in every widget | Centralized in `FluxController` |
+| **Identity** | Manual token management | Built-in identity bridging |
 
 ## License
 

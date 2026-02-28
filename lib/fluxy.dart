@@ -23,6 +23,10 @@ export 'src/feedback/overlays.dart';
 export 'src/engine/stability/stability.dart';
 
 export 'src/engine/error_pipeline.dart';
+export 'src/engine/resource_manager.dart';
+export 'src/engine/security/vault.dart';
+export 'src/engine/metrics/observability.dart';
+export 'src/engine/stability/feature_toggle.dart';
 
 
 

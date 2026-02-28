@@ -1,6 +1,6 @@
 name: fluxy_storage
 description: Unified storage plugin for the Fluxy framework.
-version: 1.0.0
+version: 1.1.0
 homepage: https://github.com/swaingithub/fluxy
 repository: https://github.com/swaingithub/fluxy
 issue_tracker: https://github.com/swaingithub/fluxy/issues
@@ -10,12 +10,19 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  shared_preferences: ^2.5.4
+  shared_preferences: ^2.2.3
   flutter_secure_storage: ^10.0.0
-  fluxy: ^1.0.0
+  fluxy:
+    path: ../../
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^3.0.0
 flutter:
   uses-material-design: true
+
+
+
+
+
+

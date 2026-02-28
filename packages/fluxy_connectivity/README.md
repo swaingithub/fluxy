@@ -1,378 +1,126 @@
 # fluxy_connectivity
 
-Network connectivity plugin for the Fluxy framework, providing comprehensive network connectivity monitoring and management capabilities.
+[PLATFORM] Official Network Connectivity module for the Fluxy framework, providing reactive status monitoring and offline-first task queuing.
 
-## Installation
+## [INSTALL] Installation
 
-Add this to your package's `pubspec.yaml` file:
+### Via CLI (Recommended)
+Add the module using the Fluxy CLI to automatically handle dependency injection and registry updates.
+```bash
+fluxy module add connectivity
+```
 
+### Manual pubspec.yaml
 ```yaml
 dependencies:
   fluxy_connectivity: ^1.0.0
 ```
 
-## Usage
+---
 
-First, ensure you have Fluxy initialized and the connectivity plugin registered:
+## [BOOT] Managed Initialization
+
+To use `fluxy_connectivity` correctly, your `main.dart` must follow the mandatory three-step boot sequence to hook the architectural registry.
 
 ```dart
 import 'package:fluxy/fluxy.dart';
+import 'core/registry/fluxy_registry.dart'; 
 
 void main() async {
+  // 1. Initialize Kernel
   await Fluxy.init();
-  Fluxy.autoRegister(); // Registers all available plugins including connectivity
   
+  // 2. Hook the Registry
+  Fluxy.registerRegistry(() => registerFluxyPlugins()); 
+  
+  // 3. Auto-boot all modules
+  Fluxy.autoRegister(); 
   runApp(MyApp());
 }
 ```
 
-### Basic Connectivity Monitoring
+---
+
+## [USAGE] Implementation Paradigms
+
+Access all connectivity features through the stable `Fx.platform.connectivity` gateway.
+
+### Basic Monitoring
 
 ```dart
-import 'package:fluxy/fluxy.dart';
+// Reactive UI Status
+Fx(() {
+  final isOnline = Fx.platform.connectivity.isOnline.value;
+  return Icon(isOnline ? Icons.wifi : Icons.wifi_off);
+});
+```
 
-class ConnectivityService {
-  // Initialize connectivity monitoring
-  Future<void> initializeConnectivity() async {
-    try {
-      await Fx.connectivity.initialize();
-      Fx.toast.success('Connectivity monitoring initialized');
-    } catch (e) {
-      Fx.toast.error('Connectivity initialization failed: $e');
-    }
-  }
-  
-  // Check current connectivity status
-  Future<bool> isConnected() async {
-    try {
-      final connected = await Fx.connectivity.isConnected;
-      if (connected) {
-        Fx.toast.success('Device is connected');
-      } else {
-        Fx.toast.warning('Device is offline');
-      }
-      return connected;
-    } catch (e) {
-      Fx.toast.error('Failed to check connectivity: $e');
-      return false;
-    }
-  }
-  
-  // Get current connectivity type
-  Future<ConnectivityType> getConnectivityType() async {
-    try {
-      final type = await Fx.connectivity.currentType;
-      Fx.toast.success('Connectivity type: $type');
-      return type;
-    } catch (e) {
-      Fx.toast.error('Failed to get connectivity type: $e');
-      return ConnectivityType.none;
-    }
-  }
+### Offline-First Queuing
+The `whenOnline` utility allows you to register tasks that will automatically fire as soon as a stable connection is detected.
+
+```dart
+void syncData() async {
+  // This task is queued if device is offline
+  await Fx.platform.connectivity.whenOnline('data_sync', () async {
+    await api.post('/sync');
+    Fx.toast.success("Synchronized!");
+  });
 }
 ```
 
-### Advanced Connectivity Features
+---
 
-```dart
-class AdvancedConnectivityService {
-  // Listen to connectivity changes
-  void startConnectivityMonitoring() {
-    Fx.connectivity.connectivityChanges.listen((ConnectivityResult result) {
-      switch (result.type) {
-        case ConnectivityType.wifi:
-          Fx.toast.success('Connected to WiFi');
-          break;
-        case ConnectivityType.mobile:
-          Fx.toast.info('Connected to mobile network');
-          break;
-        case ConnectivityType.ethernet:
-          Fx.toast.success('Connected to Ethernet');
-          break;
-        case ConnectivityType.bluetooth:
-          Fx.toast.info('Connected via Bluetooth');
-          break;
-        case ConnectivityType.none:
-          Fx.toast.warning('No internet connection');
-          break;
-      }
-    });
-  }
-  
-  // Check if WiFi is connected
-  Future<bool> isWifiConnected() async {
-    try {
-      final type = await Fx.connectivity.currentType;
-      return type == ConnectivityType.wifi;
-    } catch (e) {
-      Fx.toast.error('Failed to check WiFi connection: $e');
-      return false;
-    }
-  }
-  
-  // Check if mobile data is connected
-  Future<bool> isMobileConnected() async {
-    try {
-      final type = await Fx.connectivity.currentType;
-      return type == ConnectivityType.mobile;
-    } catch (e) {
-      Fx.toast.error('Failed to check mobile connection: $e');
-      return false;
-    }
-  }
-  
-  // Get connection strength (if available)
-  Future<int?> getConnectionStrength() async {
-    try {
-      return await Fx.connectivity.getConnectionStrength();
-    } catch (e) {
-      Fx.toast.error('Failed to get connection strength: $e');
-      return null;
-    }
-  }
-}
-```
-
-### Network Status Management
-
-```dart
-class NetworkStatusService {
-  // Monitor network status with reactive state
-  final networkStatus = flux(false);
-  
-  NetworkStatusService() {
-    _initializeMonitoring();
-  }
-  
-  void _initializeMonitoring() {
-    // Start monitoring connectivity changes
-    Fx.connectivity.connectivityChanges.listen((result) {
-      final isConnected = result.type != ConnectivityType.none;
-      networkStatus.value = isConnected;
-      
-      if (isConnected) {
-        Fx.toast.success('Network connection restored');
-      } else {
-        Fx.toast.warning('Network connection lost');
-      }
-    });
-  }
-  
-  // Check if online with retry mechanism
-  Future<bool> checkOnlineWithRetry({int maxRetries = 3}) async {
-    for (int i = 0; i < maxRetries; i++) {
-      final isConnected = await Fx.connectivity.isConnected;
-      if (isConnected) {
-        return true;
-      }
-      
-      if (i < maxRetries - 1) {
-        await Future.delayed(Duration(seconds: 2));
-      }
-    }
-    return false;
-  }
-  
-  // Wait for connection restoration
-  Future<bool> waitForConnection({Duration timeout = const Duration(seconds: 30)}) async {
-    final completer = Completer<bool>();
-    Timer? timeoutTimer;
-    
-    // Set up timeout
-    timeoutTimer = Timer(timeout, () {
-      if (!completer.isCompleted) {
-        completer.complete(false);
-      }
-    });
-    
-    // Listen for connection restoration
-    StreamSubscription? subscription;
-    subscription = Fx.connectivity.connectivityChanges.listen((result) {
-      if (result.type != ConnectivityType.none) {
-        timeoutTimer?.cancel();
-        subscription?.cancel();
-        if (!completer.isCompleted) {
-          completer.complete(true);
-        }
-      }
-    });
-    
-    // Check current connection
-    final isConnected = await Fx.connectivity.isConnected;
-    if (isConnected) {
-      timeoutTimer?.cancel();
-      subscription?.cancel();
-      return true;
-    }
-    
-    return completer.future;
-  }
-}
-```
-
-### Network-Aware Operations
-
-```dart
-class NetworkAwareService {
-  // Execute operation only when online
-  Future<T?> executeWhenOnline<T>(Future<T> Function() operation) async {
-    try {
-      final isConnected = await Fx.connectivity.isConnected;
-      if (!isConnected) {
-        Fx.toast.warning('No internet connection');
-        return null;
-      }
-      
-      return await operation();
-    } catch (e) {
-      Fx.toast.error('Operation failed: $e');
-      return null;
-    }
-  }
-  
-  // Execute with automatic retry
-  Future<T?> executeWithRetry<T>(
-    Future<T> Function() operation, {
-    int maxRetries = 3,
-    Duration retryDelay = const Duration(seconds: 2),
-  }) async {
-    for (int i = 0; i < maxRetries; i++) {
-      try {
-        final isConnected = await Fx.connectivity.isConnected;
-        if (!isConnected) {
-          await Fx.connectivity.waitForConnection();
-        }
-        
-        return await operation();
-      } catch (e) {
-        if (i == maxRetries - 1) {
-          Fx.toast.error('Operation failed after $maxRetries retries: $e');
-          rethrow;
-        }
-        
-        Fx.toast.warning('Operation failed, retrying... (${i + 1}/$maxRetries)');
-        await Future.delayed(retryDelay);
-      }
-    }
-    
-    throw Exception('Operation failed after all retries');
-  }
-  
-  // Sync data when online
-  Future<void> syncWhenOnline() async {
-    try {
-      final isConnected = await Fx.connectivity.isConnected;
-      if (!isConnected) {
-        Fx.toast.info('Will sync when connection is available');
-        return;
-      }
-      
-      // Perform sync operation
-      await _performSync();
-      Fx.toast.success('Data synchronized successfully');
-    } catch (e) {
-      Fx.toast.error('Sync failed: $e');
-    }
-  }
-  
-  Future<void> _performSync() async {
-    // Implement your sync logic here
-    await Future.delayed(Duration(seconds: 2)); // Simulate sync
-  }
-}
-```
-
-## Features
-
-- **Connectivity Monitoring**: Real-time network status monitoring
-- **Connection Types**: Support for WiFi, mobile, Ethernet, and Bluetooth
-- **Reactive State**: Reactive connectivity state management
-- **Retry Mechanisms**: Automatic retry for network operations
-- **Connection Restoration**: Wait for connection restoration
-- **Network-Aware Operations**: Execute operations based on network status
-- **Error Handling**: Comprehensive error handling with user-friendly messages
-- **Cross-Platform**: Works on both iOS and Android devices
-
-## API Reference
+## [API] Reference
 
 ### Methods
+- `whenOnline(key, action)`: Queues an action until the device is online. Uses a unique ID to prevent duplicates.
+- `refresh()`: Forces a manual re-check of the network state.
 
-- `initialize()` - Initialize connectivity monitoring
-- `isConnected` - Check if device is connected to internet
-- `currentType` - Get current connectivity type
-- `getConnectionStrength()` - Get connection strength (if available)
-- `waitForConnection({Duration timeout})` - Wait for connection restoration
+### Properties (How to Add and Use)
+Fluxy Connectivity properties are reactive signals. You "use" them by accessing `.value` and "add" reactive logic by wrapping them in `Fx()`.
 
-### Properties
+| Property | Type | Instruction |
+| :--- | :--- | :--- |
+| `isOnline` | `Signal<bool>` | **Use**: `Fx.platform.connectivity.isOnline.value`. Rebuilds reactive widgets automatically. |
+| `connectionType` | `Signal<ConnType>` | **Use**: `Fx.platform.connectivity.connectionType.value` (wifi, mobile, etc). |
 
-- `connectivityChanges` - Stream of connectivity changes
-- `isConnected` - Current connection status
+---
 
-### Connectivity Types
+## [PROPERTIES] Property Instruction: Add and Use It
 
-- `ConnectivityType.wifi` - WiFi connection
-- `ConnectivityType.mobile` - Mobile data connection
-- `ConnectivityType.ethernet` - Ethernet connection
-- `ConnectivityType.bluetooth` - Bluetooth connection
-- `ConnectivityType.none` - No connection
-
-## Error Handling
-
-The connectivity plugin provides comprehensive error handling:
-
+To **add** a custom listener to a property:
 ```dart
-try {
-  await Fx.connectivity.initialize();
-} on ConnectivityException catch (e) {
-  // Handle specific connectivity errors
-  switch (e.type) {
-    case ConnectivityErrorType.initializationFailed:
-      Fx.toast.error('Connectivity monitoring initialization failed');
-      break;
-    case ConnectivityErrorType.permissionDenied:
-      Fx.toast.error('Network access permission denied');
-      break;
-    case ConnectivityErrorType.serviceUnavailable:
-      Fx.toast.error('Network connectivity service unavailable');
-      break;
-    default:
-      Fx.toast.error('Connectivity error: $e');
-  }
-} catch (e) {
-  Fx.toast.error('Unexpected connectivity error: $e');
-}
+Fx.platform.connectivity.isOnline.listen((online) {
+  print("[SYS] Connectivity changed to: $online");
+});
 ```
 
-## Platform Configuration
-
-### Android
-
-Add the following to your `AndroidManifest.xml`:
-
-```xml
-<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-<uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+To **use** a property in your UI:
+```dart
+Fx(() => Fx.text("Status: ${Fx.platform.connectivity.isOnline.value ? 'Online' : 'Offline'}"));
 ```
 
-### iOS
+---
 
-Add the following to your `Info.plist`:
+## [RULES] Industrial Standard vs. Outdated Style
 
-```xml
-<key>NSAppTransportSecurity</key>
-<dict>
-    <key>NSAllowsArbitraryLoads</key>
-    <true/>
-</dict>
-```
+| Feature | [WRONG] The Outdated Way | [RIGHT] The Fluxy Standard |
+| :--- | :--- | :--- |
+| **Plugin Access** | `Fx.connectivity` or `Connectivity().check()` | `Fx.platform.connectivity` |
+| **Logic** | `if (await checkConnection())` | `Fx.platform.connectivity.whenOnline()` |
+| **UI** | Manual stream builders | Integrated `Fx()` signal rebuilds |
 
-## Performance Considerations
+---
 
-- Connectivity monitoring uses minimal system resources
-- Stream-based updates are efficient and real-time
-- Automatic cleanup of unused resources
-- Battery-friendly monitoring approach
+## [PITFALLS] Common Pitfalls & Fixes
+
+### 1. "Signal doesn't update on simulator"
+*   **The Cause**: Mobile simulators sometimes fail to broadcast network state changes to the OS layer correctly.
+*   **The Fix**: Toggle the data connection manually in the simulator settings or restart the emulator.
+
+### 2. "whenOnline fires multiple times"
+*   **The Cause**: Using the same key for different tasks or not providing a key.
+*   **The Fix**: Ensure every task has a unique, descriptive key (e.g., `'upload_profile_v1'`).
 
 ## License
 

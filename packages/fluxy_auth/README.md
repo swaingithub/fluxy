@@ -1,42 +1,61 @@
 # fluxy_auth
 
-Authentication plugin for the Fluxy framework, providing secure user authentication and session management.
+[PLATFORM] Official Authentication module for the Fluxy framework, providing secure user identity and session management via the Unified Platform API.
 
-## Installation
+## [INSTALL] Installation
 
-Add this to your package's `pubspec.yaml` file:
+### Via CLI (Recommended)
+Add the module using the Fluxy CLI to automatically handle dependency injection and registry updates.
+```bash
+fluxy module add auth
+```
 
+### Manual pubspec.yaml
 ```yaml
 dependencies:
   fluxy_auth: ^1.0.0
 ```
 
-## Usage
+---
 
-First, ensure you have Fluxy initialized and the auth plugin registered:
+## [BOOT] Managed Initialization
+
+To use `fluxy_auth` correctly, your `main.dart` must follow the mandatory three-step boot sequence to hook the architectural registry.
 
 ```dart
 import 'package:fluxy/fluxy.dart';
+import 'core/registry/fluxy_registry.dart'; 
 
 void main() async {
+  // 1. Initialize Kernel
   await Fluxy.init();
-  Fluxy.autoRegister(); // Registers all available plugins including auth
+  
+  // 2. Hook the Registry
+  Fluxy.registerRegistry(() => registerFluxyPlugins()); 
+  
+  // 3. Auto-boot all modules
+  Fluxy.autoRegister(); 
   
   runApp(MyApp());
 }
 ```
 
+---
+
+## [USAGE] Implementation Paradigms
+
+Access all authentication features through the stable `Fx.platform.auth` gateway.
+
 ### Basic Authentication
 
 ```dart
-import 'package:fluxy/fluxy.dart';
-
 class AuthService {
   // Sign in with email and password
-  Future<bool> signIn(String email, String password) async {
+  Future<bool> login(String email, String password) async {
     try {
-      await Fx.auth.signIn(email, password);
-      return true;
+      // The Industrial Standard: Access via Fx.platform
+      final success = await Fx.platform.auth.login(email, password);
+      return success;
     } catch (e) {
       Fx.toast.error('Sign in failed: $e');
       return false;
@@ -44,169 +63,86 @@ class AuthService {
   }
   
   // Sign out current user
-  Future<void> signOut() async {
-    await Fx.auth.signOut();
+  Future<void> logout() {
+    Fx.platform.auth.logout();
     Fx.toast.success('Signed out successfully');
   }
-  
-  // Check if user is authenticated
-  bool get isAuthenticated => Fx.auth.currentUser != null;
-  
-  // Get current user
-  User? get currentUser => Fx.auth.currentUser;
 }
 ```
 
-### Social Authentication
+### Reactive Auth UI
+Everything in `fluxy_auth` is signal-based. Use the `Fx()` builder to handle view transitions automatically.
 
 ```dart
-class SocialAuthService {
-  // Sign in with Google
-  Future<bool> signInWithGoogle() async {
-    try {
-      await Fx.auth.signInWithGoogle();
-      return true;
-    } catch (e) {
-      Fx.toast.error('Google sign in failed: $e');
-      return false;
-    }
+Fx(() {
+  if (Fx.platform.auth.isAuthenticated.value) {
+    return DashboardView();
   }
-  
-  // Sign in with Apple
-  Future<bool> signInWithApple() async {
-    try {
-      await Fx.auth.signInWithApple();
-      return true;
-    } catch (e) {
-      Fx.toast.error('Apple sign in failed: $e');
-      return false;
-    }
-  }
-}
+  return LoginView();
+});
 ```
 
-### Session Management
+---
 
-```dart
-class SessionManager {
-  // Get authentication state stream
-  Stream<bool> get authState => Fx.auth.authStateChanges;
-  
-  // Listen to auth state changes
-  void listenToAuthChanges() {
-    Fx.auth.authStateChanges.listen((isAuthenticated) {
-      if (isAuthenticated) {
-        // User signed in
-        Fx.toast.success('Welcome back!');
-      } else {
-        // User signed out
-        Fx.toast.info('You have been signed out');
-      }
-    });
-  }
-  
-  // Refresh user token
-  Future<void> refreshToken() async {
-    try {
-      await Fx.auth.refreshToken();
-    } catch (e) {
-      Fx.toast.error('Token refresh failed: $e');
-    }
-  }
-}
-```
-
-### Password Management
-
-```dart
-class PasswordService {
-  // Reset password
-  Future<bool> resetPassword(String email) async {
-    try {
-      await Fx.auth.resetPassword(email);
-      Fx.toast.success('Password reset email sent');
-      return true;
-    } catch (e) {
-      Fx.toast.error('Password reset failed: $e');
-      return false;
-    }
-  }
-  
-  // Change password
-  Future<bool> changePassword(String oldPassword, String newPassword) async {
-    try {
-      await Fx.auth.changePassword(oldPassword, newPassword);
-      Fx.toast.success('Password changed successfully');
-      return true;
-    } catch (e) {
-      Fx.toast.error('Password change failed: $e');
-      return false;
-    }
-  }
-}
-```
-
-## Features
-
-- **Email/Password Authentication**: Secure sign in with email and password
-- **Social Authentication**: Support for Google, Apple, and other social providers
-- **Session Management**: Automatic token refresh and session persistence
-- **Password Management**: Reset and change password functionality
-- **State Management**: Reactive authentication state with stream updates
-- **Error Handling**: Comprehensive error handling with user-friendly messages
-- **Security**: Built-in security best practices and token management
-
-## API Reference
+## [API] Reference
 
 ### Methods
+- `login(email, password)`: Authenticates the user and sets the identity signals.
+- `logout()`: Clears the current session and resets identity signals.
 
-- `signIn(String email, String password)` - Sign in with email and password
-- `signInWithGoogle()` - Sign in with Google account
-- `signInWithApple()` - Sign in with Apple account
-- `signOut()` - Sign out current user
-- `resetPassword(String email)` - Send password reset email
-- `changePassword(String oldPassword, String newPassword)` - Change user password
-- `refreshToken()` - Refresh authentication token
+### Properties (Reactive Signals)
+Fluxy Auth uses high-performance signals for state. You can "use" them by accessing `.value` or "add" custom listeners via `.listen()`.
 
-### Properties
+| Property | Type | Instruction |
+| :--- | :--- | :--- |
+| `isAuthenticated` | `Signal<bool>` | **Use**: `Fx.platform.auth.isAuthenticated.value`. **Listen**: `isAuthenticated.listen((v) => ...)` |
+| `user` | `Signal<Map?>` | **Use**: `Fx.platform.auth.user.value?['name']`. **Listen**: `user.listen((u) => ...)` |
 
-- `currentUser` - Get currently authenticated user
-- `authStateChanges` - Stream of authentication state changes
+---
 
-## Error Handling
+## [RULES] Industrial Standard vs. Outdated Style
 
-The auth plugin provides comprehensive error handling:
+| Feature | [WRONG] The Outdated Way | [RIGHT] The Fluxy Standard |
+| :--- | :--- | :--- |
+| **Plugin Access** | `Fx.auth` or `FluxyPluginEngine.find()` | `Fx.platform.auth` |
+| **State Check** | `if (auth.currentUser != null)` | `Fx(() => auth.isAuthenticated.value)` |
+| **Registration** | Manual `Fluxy.register()` in main.dart | `fluxy module add` + `Fluxy.autoRegister()` |
+| **Networking** | Manual header injection | Automatic Auth Interceptors via `Fx.http` |
+
+---
+
+## [ERROR] Professional Error Handling
 
 ```dart
 try {
-  await Fx.auth.signIn(email, password);
+  await Fx.platform.auth.login(email, password);
 } on AuthException catch (e) {
-  // Handle specific auth errors
-  switch (e.type) {
-    case AuthErrorType.invalidEmail:
-      Fx.toast.error('Invalid email address');
-      break;
-    case AuthErrorType.wrongPassword:
-      Fx.toast.error('Incorrect password');
-      break;
-    case AuthErrorType.userNotFound:
-      Fx.toast.error('User not found');
-      break;
-    default:
-      Fx.toast.error('Authentication failed');
-  }
+  // All auth errors are categorized for the industrial pipeline
+  Fx.toast.error(e.message);
 } catch (e) {
-  Fx.toast.error('Unexpected error: $e');
+  debugPrint('[SYS] [AUTH] Unexpected error: $e');
 }
 ```
 
-## Security Considerations
+---
 
-- All authentication tokens are securely stored using Flutter Secure Storage
-- Tokens are automatically refreshed when needed
-- Sessions are properly invalidated on sign out
-- Passwords are never stored locally
-- Network communications use HTTPS encryption
+## [PITFALLS] Common Pitfalls & Fixes
+
+### 1. "Auth module is null"
+*   **The Cause**: Calling `Fx.platform.auth` before `Fluxy.autoRegister()` or neglecting the `registerRegistry` step.
+*   **The Fix**: Ensure your `main()` follow the exact 1-2-3 boot sequence.
+
+### 2. "UI doesn't update on logout"
+*   **The Cause**: Accessing the `isAuthenticated` signal outside of an `Fx()` builder.
+*   **The Fix**: Wrap your top-level layout in an `Fx(() => ...)` widget.
+
+---
+
+## [SECURITY] Security Considerations
+
+- **Tokens**: Securely stored in the hardware enclave using `fluxy_storage`.
+- **Encryption**: AES-256 encrypted persistence for sensitive identity data.
+- **Interceptors**: `Fx.http` automatically monitors the auth state to manage headers.
 
 ## License
 

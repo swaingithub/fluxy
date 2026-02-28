@@ -94,6 +94,12 @@ class Fluxy {
   /// Shorthand for dependency injection.
   static T use<T>({String? tag}) => find<T>(tag: tag);
 
+  /// Standardized Fluxy logger for internal and plugin use.
+  static void log(String tag, String type, String message) {
+    final timestamp = DateTime.now().toIso8601String().split('T').last.substring(0, 8);
+    debugPrint('[$timestamp] [$type] [$tag] $message');
+  }
+
   /// Alias for dependency injection (same as use).
   static T find<T>({String? tag}) {
     try {

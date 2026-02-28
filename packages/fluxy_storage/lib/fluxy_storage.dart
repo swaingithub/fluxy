@@ -30,6 +30,11 @@ class FluxyStoragePlugin extends FluxyPlugin with ChangeNotifier {
   // Reactive signal: total number of standard keys stored. Useful for UI.
   final keyCount = flux<int>(0, label: 'storage_key_count');
 
+  final Completer<void> _readyCompleter = Completer<void>();
+  
+  /// A Future that completes when the storage engine is fully hydrated.
+  Future<void> get ready => _readyCompleter.future;
+
   bool get isReady => _prefs != null;
 
   // ── Lifecycle ────────────────────────────────────────────────────────────────
@@ -47,9 +52,11 @@ class FluxyStoragePlugin extends FluxyPlugin with ChangeNotifier {
         iOptions: IOSOptions(accessibility: KeychainAccessibility.first_unlock),
       );
       _syncKeyCount();
+      if (!_readyCompleter.isCompleted) _readyCompleter.complete();
       debugPrint('[DATA] [READY] Hydrated — ${_prefs!.getKeys().length} key(s) discovered.');
     } catch (e) {
       debugPrint('[DATA] [FATAL] Persistence initialization failed | Error: $e');
+      if (!_readyCompleter.isCompleted) _readyCompleter.completeError(e);
     }
   }
 

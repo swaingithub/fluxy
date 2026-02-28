@@ -114,7 +114,14 @@ class FluxyPersistence {
   }) async {
     if (!_isInitialized) await init();
     try {
-      final String encoded = jsonEncode(value);
+      dynamic toEncode = value;
+      
+      // Industrial Enum Handling: Native support for persisting enums via .name
+      if (value is Enum) {
+        toEncode = value.name;
+      }
+      
+      final String encoded = jsonEncode(toEncode);
       await _adapter.write(key, encoded, secure: secure);
     } catch (e) {
       debugPrint("Fluxy [Persistence] Error saving key '$key': $e");

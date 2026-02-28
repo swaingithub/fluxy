@@ -846,6 +846,7 @@ extension FluxyWidgetExtension on Widget {
       FxLift.lift(this, (child) => GestureDetector(onLongPress: action, child: child));
 
   // --- Haptic Modifiers ---
+  // These use the FxHaptic shim which delegates to the modular plugin.
 
   /// Triggers a haptic feedback when the widget is tapped.
   Widget haptic() => onTap(FxHaptic.medium);
