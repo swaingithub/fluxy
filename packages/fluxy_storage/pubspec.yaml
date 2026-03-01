@@ -12,14 +12,14 @@ dependencies:
     sdk: flutter
   shared_preferences: ^2.2.3
   flutter_secure_storage: ^10.0.0
-  fluxy:
-    path: ../../
+  fluxy: ^1.1.0
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^3.0.0
 flutter:
   uses-material-design: true
+
 
 
 

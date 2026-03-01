@@ -12,10 +12,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  fluxy:
-    path: ../../
-  fluxy_websocket:
-    path: ../fluxy_websocket
+  fluxy: ^1.1.0
+  fluxy_websocket: ^1.1.0
 
 dev_dependencies:
   flutter_test:
@@ -24,6 +22,7 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
 
 
 

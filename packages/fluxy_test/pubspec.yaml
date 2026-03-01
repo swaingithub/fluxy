@@ -14,14 +14,14 @@ dependencies:
     sdk: flutter
   flutter_test:
     sdk: flutter
-  fluxy:
-    path: ../../
+  fluxy: ^1.1.0
 
 dev_dependencies:
   flutter_lints: ^3.0.0
 
 flutter:
   uses-material-design: true
+
 
 
 

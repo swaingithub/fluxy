@@ -12,42 +12,25 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  fluxy:
-    path: ../../
-  fluxy_camera:
-    path: ../fluxy_camera
-  fluxy_notifications:
-    path: ../fluxy_notifications
-  fluxy_connectivity:
-    path: ../fluxy_connectivity
-  fluxy_permissions:
-    path: ../fluxy_permissions
-  fluxy_storage:
-    path: ../fluxy_storage
-  fluxy_auth:
-    path: ../fluxy_auth
-  fluxy_analytics:
-    path: ../fluxy_analytics
-  fluxy_biometric:
-    path: ../fluxy_biometric
-  fluxy_ota:
-    path: ../fluxy_ota
-  fluxy_haptics:
-    path: ../fluxy_haptics
-  fluxy_logger:
-    path: ../fluxy_logger
-  fluxy_device:
-    path: ../fluxy_device
-  fluxy_sync:
-    path: ../fluxy_sync
-  fluxy_websocket:
-    path: ../fluxy_websocket
-  fluxy_geo:
-    path: ../fluxy_geo
-  fluxy_presence:
-    path: ../fluxy_presence
-  fluxy_stream_bridge:
-    path: ../fluxy_stream_bridge
+  fluxy: ^1.1.0
+  fluxy_camera: ^1.1.0
+  fluxy_notifications: ^1.1.0
+  fluxy_connectivity: ^1.1.0
+  fluxy_permissions: ^1.1.0
+  fluxy_storage: ^1.1.0
+  fluxy_auth: ^1.1.0
+  fluxy_analytics: ^1.1.0
+  fluxy_biometric: ^1.1.0
+  fluxy_ota: ^1.1.0
+  fluxy_haptics: ^1.1.0
+  fluxy_logger: ^1.1.0
+  fluxy_device: ^1.1.0
+  fluxy_sync: ^1.1.0
+  fluxy_websocket: ^1.1.0
+  fluxy_geo: ^1.1.0
+  fluxy_presence: ^1.1.0
+  fluxy_stream_bridge: ^1.1.0
 
 flutter:
   uses-material-design: true
+

@@ -12,8 +12,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  fluxy:
-    path: ../../
+  fluxy: ^1.1.0
   geolocator: ^13.0.1
 
 dev_dependencies:
@@ -23,6 +22,7 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
 
 
 

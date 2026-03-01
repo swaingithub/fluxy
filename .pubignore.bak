@@ -34,8 +34,6 @@ example/*.iml
 example/pubspec.lock
 
 # Local Dev Files
-/ota/
-lib/features/
 *.log
 *.iml
 .DS_Store

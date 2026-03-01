@@ -12,12 +12,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  fluxy:
-    path: ../../
-  fluxy_storage:
-    path: ../fluxy_storage
-  fluxy_connectivity:
-    path: ../fluxy_connectivity
+  fluxy: ^1.1.0
+  fluxy_storage: ^1.1.0
+  fluxy_connectivity: ^1.1.0
 
 dev_dependencies:
   flutter_test:
@@ -26,6 +23,7 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
 
 
 

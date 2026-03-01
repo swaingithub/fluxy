@@ -34,28 +34,9 @@ flutter:
 executables:
   fluxy: fluxy
 
-melos:
-  name: fluxy
-  packages:
-    - .
-    - packages/*
-    - example
-  scripts:
-    analyze:
-      exec: flutter analyze .
-      description: Run `flutter analyze` in all packages.
-    test:
-      exec: flutter test
-      description: Run `flutter test` in all packages.
-      select-package:
-        dir-exists:
-          - test
-    get:
-      exec: flutter pub get
-      description: Run `flutter pub get` in all packages.
-    clean:
-      exec: flutter clean
-      description: Run `flutter clean` in all packages.
+
+# Melos configuration moved to melos.yaml
+
 
 
 
