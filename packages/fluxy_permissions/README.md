@@ -13,7 +13,7 @@ fluxy module add permissions
 ### Manual pubspec.yaml
 ```yaml
 dependencies:
-  fluxy_permissions: ^1.0.0
+  fluxy_permissions: ^1.1.0
 ```
 
 ---

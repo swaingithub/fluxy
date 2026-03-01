@@ -12,7 +12,7 @@ fluxy module add device
 ### Manual pubspec.yaml
 ```yaml
 dependencies:
-  fluxy_device: ^1.0.0
+  fluxy_device: ^1.1.0
 ```
 
 ---

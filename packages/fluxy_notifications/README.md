@@ -13,7 +13,7 @@ fluxy module add notifications
 ### Manual pubspec.yaml
 ```yaml
 dependencies:
-  fluxy_notifications: ^1.0.0
+  fluxy_notifications: ^1.1.0
 ```
 
 ---

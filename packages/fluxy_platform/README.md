@@ -13,7 +13,7 @@ fluxy module add platform
 ### Manual pubspec.yaml
 ```yaml
 dependencies:
-  fluxy_platform: ^1.0.0
+  fluxy_platform: ^1.1.0
 ```
 
 ---

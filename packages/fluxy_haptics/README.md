@@ -12,7 +12,7 @@ fluxy module add haptics
 ### Manual pubspec.yaml
 ```yaml
 dependencies:
-  fluxy_haptics: ^1.0.0
+  fluxy_haptics: ^1.1.0
 ```
 
 ---

@@ -13,7 +13,7 @@ fluxy module add camera
 ### Manual pubspec.yaml
 ```yaml
 dependencies:
-  fluxy_camera: ^1.0.0
+  fluxy_camera: ^1.1.0
 ```
 
 ---

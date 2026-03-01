@@ -12,7 +12,7 @@ fluxy module add ota
 ### Manual pubspec.yaml
 ```yaml
 dependencies:
-  fluxy_ota: ^1.0.0
+  fluxy_ota: ^1.1.0
 ```
 
 ---

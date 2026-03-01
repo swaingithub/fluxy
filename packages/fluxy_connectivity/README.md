@@ -13,7 +13,7 @@ fluxy module add connectivity
 ### Manual pubspec.yaml
 ```yaml
 dependencies:
-  fluxy_connectivity: ^1.0.0
+  fluxy_connectivity: ^1.1.0
 ```
 
 ---

@@ -12,7 +12,7 @@ fluxy module add test
 ### Manual pubspec.yaml
 ```yaml
 dev_dependencies:
-  fluxy_test: ^1.0.0
+  fluxy_test: ^1.1.0
 ```
 
 ---

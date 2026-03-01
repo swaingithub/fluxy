@@ -12,7 +12,7 @@ fluxy module add logger
 ### Manual pubspec.yaml
 ```yaml
 dependencies:
-  fluxy_logger: ^1.0.0
+  fluxy_logger: ^1.1.0
 ```
 
 ---

@@ -13,7 +13,7 @@ fluxy module add storage
 ### Manual pubspec.yaml
 ```yaml
 dependencies:
-  fluxy_storage: ^1.0.0
+  fluxy_storage: ^1.1.0
 ```
 
 ---

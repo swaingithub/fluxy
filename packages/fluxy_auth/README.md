@@ -13,7 +13,7 @@ fluxy module add auth
 ### Manual pubspec.yaml
 ```yaml
 dependencies:
-  fluxy_auth: ^1.0.0
+  fluxy_auth: ^1.1.0
 ```
 
 ---

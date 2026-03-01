@@ -4,7 +4,7 @@ import 'package:path/path.dart' as p;
 import 'package:fluxy/src/cloud.dart';
 
 
-const String version = '1.0.1';
+const String version = '1.1.0';
 
 const String _rs = '\x1B[0m';
 const String _b = '\x1B[1m';

@@ -172,4 +172,17 @@ Found an issue or want to improve the example? Please:
 
 ---
 
+## **v1.1.0 - The Full Engine Update**
+
+**This example project has been updated for Fluxy v1.1.0!** 
+
+- Added **Stability Kernel™** (Layout, State, and Async protection)
+- Added **Managed Resource Manager** (`FluxyResourceManager`)
+- Added **Real-Time Ecosystem** (`fluxy_websocket`, `fluxy_sync`, etc.)
+- Added **X-Ray Observability** (Signal and Rebuild audits)
+
+**[Read Migration Guide](../MIGRATION_GUIDE.md)**
+
+---
+
 **Built with ❤️ using the Fluxy Framework**

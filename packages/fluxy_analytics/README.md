@@ -13,7 +13,7 @@ fluxy module add analytics
 ### Manual pubspec.yaml
 ```yaml
 dependencies:
-  fluxy_analytics: ^1.0.0
+  fluxy_analytics: ^1.1.0
 ```
 
 ---

@@ -13,7 +13,7 @@ fluxy module add biometric
 ### Manual pubspec.yaml
 ```yaml
 dependencies:
-  fluxy_biometric: ^1.0.0
+  fluxy_biometric: ^1.1.0
 ```
 
 ---

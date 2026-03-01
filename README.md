@@ -7,21 +7,21 @@ Fluxy is not just a library; it is a **Managed Application Platform (MAP)** desi
 
 ---
 
-## **v1.0.1 - Industrial Stability Update**
+## **v1.1.0 - The Full Engine Update**
 
-**Fluxy v1.0.1 expands the modular ecosystem!** 
+**Fluxy v1.1.0 launches the complete Stability Kernel™ and 19+ industrial modules!** 
 
-- **New industrial modules**: `fluxy_haptics`, `fluxy_logger`, and `fluxy_device`
-- **Standardized Property API**: Explicit instructions for adding/using reactive signals
-- **Three-Step Boot Sequence**: Mandatory hook for architectural integrity
-- **Professional logging system** with semantic bracketed tags
-- **Experimental guardrails** for OTA, SDUI, and Cloud CLI
+- **Full Engine Update**: Stability Kernel™ for layout, async, and state protection
+- **Managed Resource Manager**: Automatic lifecycle management for hardware-heavy features
+- **Industrial Hardening Suite**: Level-2 Security Vault and Recovery Boundaries
+- **Real-Time Expansion**: `fluxy_websocket`, `fluxy_sync`, and `fluxy_presence`
+- **X-Ray Observability**: Real-time signal churn and rebuild audit metrics
 
 **[Read Migration Guide](MIGRATION_GUIDE.md)**
 
-### Recent Updates (v0.2.5 - v0.2.6)
-- **v0.2.6**: Industrial Log Professionalization & Experimental Guardrails
-- **v0.2.5**: The Platform Era with Managed Runtime Architecture
+### Recent Updates (v1.0.1 - v1.1.0)
+- **v1.1.0**: Fluxy Stability Kernel™ & Real-Time Ecosystem
+- **v1.0.1**: Industrial Stability Update with `fluxy_haptics`, `fluxy_logger`, and `fluxy_device`
 
 ---
 
@@ -30,26 +30,31 @@ Fluxy is not just a library; it is a **Managed Application Platform (MAP)** desi
 ### Core Package
 ```yaml
 dependencies:
-  fluxy: ^1.0.0
+  fluxy: ^1.1.0
 ```
 
 ### Modular Packages (Add as needed)
 ```yaml
 dependencies:
-  fluxy_camera: ^1.0.0       # Camera functionality  
-  fluxy_auth: ^1.0.0         # Authentication and biometrics
-  fluxy_notifications: ^1.0.0 # Push notifications
-  fluxy_storage: ^1.0.0      # Data persistence
-  fluxy_test: ^1.0.0         # Testing utilities
-  fluxy_analytics: ^1.0.0    # Analytics and tracking
-  fluxy_biometric: ^1.0.0    # Biometric authentication
-  fluxy_connectivity: ^1.0.0 # Network connectivity
-  fluxy_permissions: ^1.0.0  # Device permissions
-  fluxy_platform: ^1.0.0     # Unified meta-package
-  fluxy_ota: ^1.0.0          # Over-the-air updates
-  fluxy_haptics: ^1.0.1      # Sensory feedback
-  fluxy_logger: ^1.0.1       # Industrial auditing
-  fluxy_device: ^1.0.1       # Environment awareness
+  fluxy_camera: ^1.1.0       # Camera functionality  
+  fluxy_auth: ^1.1.0         # Authentication and biometrics
+  fluxy_notifications: ^1.1.0 # Push notifications
+  fluxy_storage: ^1.1.0      # Data persistence
+  fluxy_test: ^1.1.0         # Testing utilities
+  fluxy_analytics: ^1.1.0    # Analytics and tracking
+  fluxy_biometric: ^1.1.0    # Biometric authentication
+  fluxy_connectivity: ^1.1.0 # Network connectivity
+  fluxy_permissions: ^1.1.0  # Device permissions
+  fluxy_platform: ^1.1.0     # Unified meta-package
+  fluxy_ota: ^1.1.0          # Over-the-air updates
+  fluxy_haptics: ^1.1.0      # Sensory feedback
+  fluxy_logger: ^1.1.0       # Industrial auditing
+  fluxy_device: ^1.1.0       # Environment awareness
+  fluxy_websocket: ^1.1.0    # Managed WebSockets
+  fluxy_sync: ^1.1.0         # Persistent hydration
+  fluxy_presence: ^1.1.0     # Collaborative state
+  fluxy_geo: ^1.1.0          # Geofencing engine
+  fluxy_stream_bridge: ^1.1.0 # Native Stream DSL
 ```
 
 ### Quick Start
@@ -108,11 +113,11 @@ void main() async {
 }
 ```
 
-**v1.0.0 Updates:**
-- Modular architecture with separate packages
-- Professional logging system with `[KERNEL]`, `[SYS]`, `[DATA]`, `[IO]` tags
-- Experimental feature guardrails for OTA, SDUI, and Cloud CLI
-- Core package reduced to 172KB for faster installation
+**v1.1.0 Modernization:**
+- **Full Engine Update**: Stability Kernel™ active by default
+- **Managed Lifecycle**: Automatic resource cleanup via `FluxyResourceManager`
+- **Real-Time Ecosystem**: Native WebSockets and Sync engines
+- **Audit Suite**: Monochromatic logging and real-time observability
 
 ### 2. Reactive State with Persistent Vault
 ```dart
@@ -126,15 +131,15 @@ Fx(() => Fx.text("Welcome, ${session.value?.name ?? 'Guest'}")
 );
 ```
 
-**v0.2.6 Updates:**
-- Professional logging system replacing emoji-based logs
-- Standardized log levels: `[INIT]`, `[READY]`, `[AUDIT]`, `[REPAIR]`, `[FATAL]`, `[PANIC]`
-- ASCII framing for diagnostic summaries
+**v1.1.0 Highlights:**
+- **Stability Kernel™**: Auto-repair for layout and state violations
+- **Managed Runtime**: Unified hardware access via `Fx.platform`
+- **Security Vault**: Hardware-backed credential management
 
-**v0.2.5 Updates:**
-- Managed Runtime Architecture with `FluxyPluginEngine`
-- Unified Platform API (`Fx.platform`) for centralized access
-- Automatic plugin registration via `Fluxy.autoRegister()`
+**Real-Time Capability:**
+- **WebSockets**: Managed `fluxy_websocket` integration
+- **Sync**: Persistent `fluxy_sync` engine
+- **Presence**: Native collaborative state
 
 ### 3. Managed Hardware Interfacing (The Industrial Way)
 ```dart
@@ -230,9 +235,9 @@ Fluxy is under active development with a focus on enterprise-grade features.
 *   **[PROG] OTA (Over-the-Air) Style Updates**: Update app branding and themes without a Store release. [EXPERIMENTAL]
 
 ### Recent Releases
-- **v1.0.0** (2024-02-23): Modular Architecture with separate packages
-- **v0.2.6** (2024-02-20): Industrial Log Professionalization & Experimental Guardrails
-- **v0.2.5** (2024-02-15): The Platform Era with Managed Runtime Architecture
+- **v1.1.0** (2026-02-28): Stability Kernel & Real-Time Expansion
+- **v1.0.1** (2026-02-24): Industrial Stability Update
+- **v1.0.0** (2026-02-23): Modular Architecture with 11+ packages
 
 **[View Complete Changelog](CHANGELOG.md)**
 
