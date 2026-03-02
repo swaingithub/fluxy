@@ -1,6 +1,6 @@
 name: fluxy_presence
 description: Real-time presence and collaboration plugin for the Fluxy framework.
-version: 1.1.0
+version: 1.2.0
 homepage: https://github.com/swaingithub/fluxy
 repository: https://github.com/swaingithub/fluxy
 issue_tracker: https://github.com/swaingithub/fluxy/issues
@@ -12,7 +12,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  fluxy: ^1.1.0
+  fluxy: ^1.2.0
   fluxy_websocket: ^1.1.0
 
 dev_dependencies:

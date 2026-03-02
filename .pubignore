@@ -54,5 +54,7 @@ example/lib/state_management_demo.dart
 
 # Internal Folders (Excluded from published package)
 test_app/
+packages/
 analysis_report.txt
 lib_analysis.txt
+analyze_results.txt

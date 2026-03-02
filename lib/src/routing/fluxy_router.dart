@@ -124,6 +124,7 @@ class FluxyRouter {
       GlobalKey<NavigatorState>();
   static final Map<String, GlobalKey<NavigatorState>> _nestedKeys = {};
   static final List<FxRoute> _routes = [];
+  static List<FxRoute> Function()? _routeProvider;
   static final List<FluxyRouteMiddleware> _middlewares = [];
   static final List<NavigatorObserver> _observers = [];
   static FxRoute? _unknownRoute;
@@ -134,11 +135,23 @@ class FluxyRouter {
     return _nestedKeys.putIfAbsent(scope, GlobalKey<NavigatorState>.new);
   }
 
+  /// Sets the static routes for the application.
   static void setRoutes(List<FxRoute> routes, {FxRoute? unknownRoute}) {
     _routes.clear();
     _routes.addAll(routes);
     _unknownRoute = unknownRoute;
   }
+
+  /// NEW: Industrial Hot-Reload Support.
+  /// Sets a dynamic provider for routes that is re-evaluated on every navigation request.
+  /// This ensures that new routes added during development are picked up instantly.
+  static void setRoutesProvider(List<FxRoute> Function() provider, {FxRoute? unknownRoute}) {
+    _routeProvider = provider;
+    _unknownRoute = unknownRoute;
+  }
+
+  /// Returns the current active route list.
+  static List<FxRoute> get activeRoutes => _routeProvider?.call() ?? _routes;
 
   static void use(FluxyRouteMiddleware middleware) {
     _middlewares.add(middleware);
@@ -156,7 +169,7 @@ class FluxyRouter {
   static List<NavigatorObserver> get observers => List.from(_observers);
 
   static Route<dynamic>? onGenerateRoute(RouteSettings settings) {
-    return generateScopedRoute(settings, _routes, _unknownRoute);
+    return generateScopedRoute(settings, activeRoutes, _unknownRoute);
   }
 
   /// reusable route generator for root and scopes

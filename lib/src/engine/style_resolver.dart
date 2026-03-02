@@ -214,4 +214,36 @@ class FxStyleResolver {
     }
     return finalStyle;
   }
+
+  /// NEW: Infers alignment from flex properties (justify/items) for single-child boxes.
+  static AlignmentGeometry? inferAlignment(FxStyle style) {
+    if (style.alignment != null) return style.alignment;
+    if (style.justifyContent == null && style.alignItems == null) return null;
+
+    final isVertical = style.direction != Axis.horizontal;
+    double x = 0; 
+    double y = 0;
+
+    // Map MainAxis (justify)
+    final justify = style.justifyContent ?? MainAxisAlignment.start;
+    if (justify == MainAxisAlignment.start) {
+      if (isVertical) y = -1; else x = -1;
+    } else if (justify == MainAxisAlignment.center) {
+      if (isVertical) y = 0; else x = 0;
+    } else if (justify == MainAxisAlignment.end) {
+      if (isVertical) y = 1; else x = 1;
+    }
+
+    // Map CrossAxis (items)
+    final items = style.alignItems ?? CrossAxisAlignment.center;
+    if (items == CrossAxisAlignment.start) {
+      if (isVertical) x = -1; else y = -1;
+    } else if (items == CrossAxisAlignment.center) {
+      if (isVertical) x = 0; else y = 0;
+    } else if (items == CrossAxisAlignment.end) {
+      if (isVertical) x = 1; else y = 1;
+    }
+
+    return Alignment(x, y);
+  }
 }

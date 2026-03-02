@@ -15,17 +15,21 @@ class FxCol extends StatelessWidget {
   const FxCol({
     super.key,
     required this.children,
-    this.justify = MainAxisAlignment.start,
-    this.items = CrossAxisAlignment.center,
+    MainAxisAlignment justify = MainAxisAlignment.start,
+    CrossAxisAlignment items = CrossAxisAlignment.center,
+    MainAxisAlignment? mainAxisAlignment,
+    CrossAxisAlignment? crossAxisAlignment,
     this.gap = 0,
     this.style = FxStyle.none,
     this.size = MainAxisSize.min,
-  });
+  })  : justify = mainAxisAlignment ?? justify,
+        items = crossAxisAlignment ?? items;
 
   @override
   Widget build(BuildContext context) {
     final s = FxStyleResolver.resolve(context, style: style);
     final resolvedItems = FluxyLayoutGuard.guardCrossAxis(context, Axis.vertical, items);
+    final resolvedSize = FluxyLayoutGuard.guardMainAxisSize(context, Axis.vertical, justify, size);
     
     Widget content;
     if (gap > 0) {
@@ -41,7 +45,7 @@ class FxCol extends StatelessWidget {
         child: Column(
           mainAxisAlignment: justify,
           crossAxisAlignment: resolvedItems,
-          mainAxisSize: size,
+          mainAxisSize: resolvedSize,
           children: spacedChildren,
         ),
       );
@@ -51,7 +55,7 @@ class FxCol extends StatelessWidget {
         child: Column(
           mainAxisAlignment: justify,
           crossAxisAlignment: resolvedItems,
-          mainAxisSize: size,
+          mainAxisSize: resolvedSize,
           children: children,
         ),
       );

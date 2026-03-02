@@ -285,15 +285,19 @@ import 'fx_extensions.dart';
     @Deprecated('Use alignItems instead. This will be removed in future versions.')
     CrossAxisAlignment? items,
     CrossAxisAlignment alignItems = CrossAxisAlignment.center,
+    MainAxisAlignment? mainAxisAlignment,
+    CrossAxisAlignment? crossAxisAlignment,
     double gap = 0,
     FxStyle style = FxStyle.none,
     MainAxisSize size = MainAxisSize.min,
     bool responsive = false,
   }) {
-    // Priority: alignItems (new) -> items (deprecated) -> default center
-    final resolvedItems = items ?? alignItems;
+    // Priority: alignment aliases (new) -> alignItems (web style) -> items (deprecated) -> default center
+    final resolvedJustify = mainAxisAlignment ?? justify;
+    final resolvedItems = crossAxisAlignment ?? items ?? alignItems;
+
     return FxRow(
-      justify: justify,
+      justify: resolvedJustify,
       items: resolvedItems,
       gap: gap,
       style: style,
@@ -334,14 +338,18 @@ import 'fx_extensions.dart';
     @Deprecated('Use alignItems instead. This will be removed in future versions.')
     CrossAxisAlignment? items,
     CrossAxisAlignment alignItems = CrossAxisAlignment.center,
+    MainAxisAlignment? mainAxisAlignment,
+    CrossAxisAlignment? crossAxisAlignment,
     double gap = 0,
     FxStyle style = FxStyle.none,
     MainAxisSize size = MainAxisSize.min,
   }) {
-    // Priority: alignItems (new) -> items (deprecated) -> default center
-    final resolvedItems = items ?? alignItems;
+    // Priority: alignment aliases (new) -> alignItems (web style) -> items (deprecated) -> default center
+    final resolvedJustify = mainAxisAlignment ?? justify;
+    final resolvedItems = crossAxisAlignment ?? items ?? alignItems;
+
     return FxCol(
-      justify: justify,
+      justify: resolvedJustify,
       items: resolvedItems,
       gap: gap,
       style: style,
@@ -545,6 +553,7 @@ import 'fx_extensions.dart';
   static Widget navbar({
     required Widget logo,
     required List<Widget> actions,
+    Widget? leading,
     double? height = 64,
     FxStyle style = FxStyle.none,
   }) {
@@ -558,7 +567,13 @@ import 'fx_extensions.dart';
         direction: Axis.horizontal,
       ).merge(style),
       children: [
-        logo,
+        Fx.row(
+          gap: 16,
+          children: [
+            if (leading != null) leading,
+            logo,
+          ],
+        ),
         Fx.row(children: actions, gap: 20),
       ],
     );
@@ -607,9 +622,17 @@ import 'fx_extensions.dart';
     );
   }
 
-  /// Center layout.
-  static Widget center({required Widget child}) {
-    return Center(child: child);
+  /// Centers its child in both axes. The "Holy Grail" of layouts.
+  static Widget center({required Widget child, FxStyle style = FxStyle.none}) {
+    return Box(
+      style: FxStyle(
+        justifyContent: MainAxisAlignment.center,
+        alignItems: CrossAxisAlignment.center,
+        width: double.infinity,
+        height: double.infinity,
+      ).merge(style),
+      child: Center(child: child),
+    );
   }
 
   /// Expanded layout.
@@ -1180,12 +1203,18 @@ import 'fx_extensions.dart';
     FxStyle style = FxStyle.none,
     TextStyle? textStyle,
     InputDecoration? decoration,
+    IconData? suffixIcon,
+    VoidCallback? onSuffixTap,
+    bool passwordToggle = false,
   }) {
     return FxTextField(
       signal: signal,
       placeholder: placeholder,
       label: label,
       icon: icon,
+      suffixIcon: suffixIcon,
+      onSuffixTap: onSuffixTap,
+      passwordToggle: passwordToggle,
       obscureText: obscureText,
       keyboardType: keyboardType,
       maxLines: maxLines,
@@ -1250,8 +1279,19 @@ import 'fx_extensions.dart';
   static Widget password({
     required Flux<String> signal,
     String? placeholder = 'Password',
+    String? label,
+    IconData? icon = Icons.lock_outline,
+    FxStyle style = FxStyle.none,
   }) {
-    return input(signal: signal, placeholder: placeholder, obscureText: true);
+    return input(
+      signal: signal,
+      placeholder: placeholder,
+      label: label,
+      icon: icon,
+      style: style,
+      obscureText: true,
+      passwordToggle: true,
+    );
   }
 
   static Widget checkbox({required Flux<bool> signal, String? label}) {

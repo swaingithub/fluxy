@@ -273,7 +273,8 @@ class _FxButtonState extends State<FxButton> {
     
     content ??= Fx.row(
         size: isFullWidth ? MainAxisSize.max : MainAxisSize.min,
-        justify: MainAxisAlignment.center, // ALWAYS CENTER content in button
+        justify: MainAxisAlignment.center, // Horizontal centering
+        alignItems: CrossAxisAlignment.center, // Vertical centering
         gap: 8,
         children: [
           if (widget.isLoading)

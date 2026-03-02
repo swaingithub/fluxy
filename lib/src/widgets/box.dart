@@ -4,6 +4,7 @@ import 'package:vector_math/vector_math_64.dart' show Vector3;
 import '../styles/style.dart';
 import '../engine/style_resolver.dart';
 import '../engine/decoration_builder.dart';
+import '../engine/layout_guard.dart';
 import '../reactive/signal.dart';
 import 'fx_widget.dart';
 
@@ -180,7 +181,7 @@ class _BoxState extends State<Box> with ReactiveSubscriberMixin {
         ),
         padding: s.padding,
         margin: s.margin,
-        alignment: s.alignment,
+        alignment: s.alignment ?? FxStyleResolver.inferAlignment(s),
         clipBehavior: s.clipBehavior ?? Clip.none,
         decoration: FxDecorationBuilder.build(s),
         child: current,
@@ -197,7 +198,7 @@ class _BoxState extends State<Box> with ReactiveSubscriberMixin {
         ),
         padding: s.padding,
         margin: s.margin,
-        alignment: s.alignment,
+        alignment: s.alignment ?? FxStyleResolver.inferAlignment(s),
         clipBehavior: s.clipBehavior ?? Clip.none,
         decoration: FxDecorationBuilder.build(s),
         child: current,
@@ -235,6 +236,15 @@ class _BoxState extends State<Box> with ReactiveSubscriberMixin {
         right: s.right,
         bottom: s.bottom,
         left: s.left,
+        child: current,
+      );
+    }
+
+    // Apply Flex/Expansion (Web-style flex property)
+    if (s.flex != null) {
+      current = FxSafeExpansion(
+        flex: s.flex!,
+        fit: s.flexFit ?? FlexFit.tight,
         child: current,
       );
     }

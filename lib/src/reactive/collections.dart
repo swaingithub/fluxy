@@ -1,16 +1,33 @@
 import 'dart:collection';
 import 'signal.dart';
 
-/// A reactive list that automatically triggers updates when its contents change.
-class FluxList<T> extends Flux<List<T>> with ListMixin<T> {
+/// Internal mixin to handle shared batching logic for collections.
+mixin _BatchableCollectionMixin<T> on Flux<T> {
   bool _isBatching = false;
 
+  void batchUpdate(void Function() operations) {
+    _isBatching = true;
+    try {
+      operations();
+    } finally {
+      _isBatching = false;
+      notifySubscribers();
+    }
+  }
+
+  void _notifyIfNotBatching() {
+    if (!_isBatching) {
+      notifySubscribers();
+    }
+  }
+}
+
+/// A reactive list that automatically triggers updates when its contents change.
+class FluxList<T> extends Flux<List<T>> with ListMixin<T>, _BatchableCollectionMixin<List<T>> {
   FluxList(super.initialValue);
 
   @override
-  int get length {
-    return value.length; // value getter tracks dependency
-  }
+  int get length => value.length;
 
   @override
   set length(int newLength) {
@@ -19,9 +36,7 @@ class FluxList<T> extends Flux<List<T>> with ListMixin<T> {
   }
 
   @override
-  T operator [](int index) {
-    return value[index]; // value getter tracks dependency
-  }
+  T operator [](int index) => value[index];
 
   @override
   void operator []=(int index, T newValue) {
@@ -70,9 +85,7 @@ class FluxList<T> extends Flux<List<T>> with ListMixin<T> {
   }
 
   @override
-  List<T> operator +(List<T> other) {
-    return value + other;
-  }
+  List<T> operator +(List<T> other) => value + other;
 
   /// Updates an item at the given index using a transformer function.
   void update(int index, T Function(T current) transformer) {
@@ -110,35 +123,14 @@ class FluxList<T> extends Flux<List<T>> with ListMixin<T> {
       }
     }
   }
-
-  /// Performs multiple operations in a batch, triggering only one notification.
-  void batchUpdate(void Function() operations) {
-    _isBatching = true;
-    try {
-      operations();
-    } finally {
-      _isBatching = false;
-      notifySubscribers();
-    }
-  }
-
-  void _notifyIfNotBatching() {
-    if (!_isBatching) {
-      notifySubscribers();
-    }
-  }
 }
 
 /// A reactive map that automatically triggers updates when its contents change.
-class FluxMap<K, V> extends Flux<Map<K, V>> with MapMixin<K, V> {
-  bool _isBatching = false;
-
+class FluxMap<K, V> extends Flux<Map<K, V>> with MapMixin<K, V>, _BatchableCollectionMixin<Map<K, V>> {
   FluxMap(super.initialValue);
 
   @override
-  V? operator [](Object? key) {
-    return value[key]; // value getter tracks dependency
-  }
+  V? operator [](Object? key) => value[key];
 
   @override
   void operator []=(K key, V newValue) {
@@ -155,9 +147,7 @@ class FluxMap<K, V> extends Flux<Map<K, V>> with MapMixin<K, V> {
   }
 
   @override
-  Iterable<K> get keys {
-    return value.keys; // value getter tracks dependency
-  }
+  Iterable<K> get keys => value.keys;
 
   @override
   V? remove(Object? key) {
@@ -170,7 +160,6 @@ class FluxMap<K, V> extends Flux<Map<K, V>> with MapMixin<K, V> {
   }
 
   /// Updates a value at the given key using a transformer function.
-  /// If the key doesn't exist, does nothing.
   void updateValue(K key, V Function(V current) transformer) {
     if (value.containsKey(key)) {
       value[key] = transformer(value[key] as V);
@@ -204,23 +193,6 @@ class FluxMap<K, V> extends Flux<Map<K, V>> with MapMixin<K, V> {
     }
 
     if (hasChanges) _notifyIfNotBatching();
-  }
-
-  /// Performs multiple operations in a batch, triggering only one notification.
-  void batchUpdate(void Function() operations) {
-    _isBatching = true;
-    try {
-      operations();
-    } finally {
-      _isBatching = false;
-      notifySubscribers();
-    }
-  }
-
-  void _notifyIfNotBatching() {
-    if (!_isBatching) {
-      notifySubscribers();
-    }
   }
 }
 

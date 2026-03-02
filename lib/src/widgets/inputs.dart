@@ -13,20 +13,23 @@ class FxTextField extends FxWidget {
   final Flux<String> signal;
   final String? placeholder;
   final String? label;
+  final bool obscureText;
   final IconData? icon;
+  final IconData? suffixIcon;
+  final VoidCallback? onSuffixTap;
   @override
   final FxStyle style;
   @override
   final FxResponsiveStyle? responsive;
   final InputDecoration? decoration;
   final TextStyle? textStyle;
-  final bool obscureText;
   final TextInputType? keyboardType;
   final int? maxLines;
   final VoidCallback? onSubmitted;
   final List<TextInputFormatter>? inputFormatters;
   final FocusNode? focusNode;
   final List<Validator<String>>? validators;
+  final bool passwordToggle;
 
   const FxTextField({
     super.key,
@@ -36,6 +39,8 @@ class FxTextField extends FxWidget {
     this.placeholder,
     this.label,
     this.icon,
+    this.suffixIcon,
+    this.onSuffixTap,
     this.style = FxStyle.none,
     this.responsive,
     this.decoration,
@@ -47,6 +52,7 @@ class FxTextField extends FxWidget {
     this.inputFormatters,
     this.focusNode,
     this.validators,
+    this.passwordToggle = false,
   });
 
   @override
@@ -77,6 +83,7 @@ class FxTextField extends FxWidget {
     List<TextInputFormatter>? inputFormatters,
     FocusNode? focusNode,
     List<Validator<String>>? validators,
+    bool? passwordToggle,
     String? className,
   }) {
     return FxTextField(
@@ -87,6 +94,8 @@ class FxTextField extends FxWidget {
       placeholder: placeholder ?? this.placeholder,
       label: label ?? this.label,
       icon: icon ?? this.icon,
+      suffixIcon: suffixIcon ?? this.suffixIcon,
+      onSuffixTap: onSuffixTap ?? this.onSuffixTap,
       style: style ?? this.style,
       responsive: responsive ?? this.responsive,
       decoration: decoration ?? this.decoration,
@@ -98,6 +107,7 @@ class FxTextField extends FxWidget {
       inputFormatters: inputFormatters ?? this.inputFormatters,
       focusNode: focusNode ?? this.focusNode,
       validators: validators ?? this.validators,
+      passwordToggle: passwordToggle ?? this.passwordToggle,
     );
   }
 
@@ -108,10 +118,12 @@ class FxTextField extends FxWidget {
 class _FxTextFieldState extends State<FxTextField> {
   late TextEditingController _controller;
   FluxEffect? _subscription;
+  bool _isObscured = true;
 
   @override
   void initState() {
     super.initState();
+    _isObscured = widget.obscureText;
     _controller = TextEditingController(text: widget.signal.value);
 
     // Efficiently bind flux updates to controller
@@ -186,6 +198,17 @@ class _FxTextFieldState extends State<FxTextField> {
         labelText: widget.label,
         hintText: widget.placeholder,
         prefixIcon: widget.icon != null ? Icon(widget.icon) : null,
+        suffixIcon: widget.passwordToggle 
+          ? IconButton(
+              icon: Icon(_isObscured ? Icons.visibility_outlined : Icons.visibility_off_outlined),
+              onPressed: () => setState(() => _isObscured = !_isObscured),
+            )
+          : (widget.suffixIcon != null 
+              ? IconButton(
+                  icon: Icon(widget.suffixIcon),
+                  onPressed: widget.onSuffixTap,
+                )
+              : null),
         errorText: errorText,
         // Allow user to override borders if they explicitly pass a decoration with borders
         border: widget.decoration?.border ?? InputBorder.none,
@@ -208,7 +231,7 @@ class _FxTextFieldState extends State<FxTextField> {
         ),
         child: TextField(
           controller: _controller,
-          obscureText: widget.obscureText,
+          obscureText: _isObscured,
           style: TextStyle(
             color: resolvedStyle.color,
             fontSize: resolvedStyle.fontSize,

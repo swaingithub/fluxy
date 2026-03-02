@@ -1,6 +1,6 @@
 name: fluxy_platform
 description: "A meta-package for the Fluxy framework that includes the core engine and all official plugins."
-version: 1.1.0
+version: 1.2.0
 homepage: https://github.com/swaingithub/fluxy
 repository: https://github.com/swaingithub/fluxy
 issue_tracker: https://github.com/swaingithub/fluxy/issues
@@ -12,7 +12,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  fluxy: ^1.1.0
+  fluxy: ^1.2.0
   fluxy_camera: ^1.1.0
   fluxy_notifications: ^1.1.0
   fluxy_connectivity: ^1.1.0

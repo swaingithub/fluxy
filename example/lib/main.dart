@@ -15,7 +15,7 @@ void main() async {
 
   // 1. Setup the registry (The "Right Way")
   Fluxy.registerRegistry(() => registerFluxyPlugins());
-  
+
   // 2. Scan and register all modules
   Fluxy.autoRegister();
 
@@ -26,10 +26,10 @@ void main() async {
 
   // 4. POWER ON the engine (Initializes all plugins in strict order)
   await Fluxy.init();
-  
+
   FluxyVault.init(salt: 'fluxy_example_secure_salt_2026'); // Secondary Layer
 
-  runApp(Fluxy.debug(child: FluxyExampleApp()));
+  runApp(Fluxy.debug(child: const FluxyExampleApp()));
 }
 
 class FluxyExampleApp extends StatelessWidget {
@@ -39,10 +39,7 @@ class FluxyExampleApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return FluxyApp(
       title: 'Fluxy Framework Example',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        useMaterial3: true,
-      ),
+      theme: ThemeData(primarySwatch: Colors.blue, useMaterial3: true),
       home: const FluxyErrorBoundary(child: HomePage()),
     );
   }
@@ -57,19 +54,38 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   // Reactive state with persistence
-  final counter = flux(0, key: 'counter', persist: true, label: 'counter_value');
-  final userName = flux('', key: 'user_name', persist: true, label: 'user_name');
-  final isConnected = flux(true, key: 'connection_status', label: 'is_connected');
+  final counter = flux(
+    0,
+    key: 'counter',
+    persist: true,
+    label: 'counter_value',
+  );
+  final userName = flux(
+    '',
+    key: 'user_name',
+    persist: true,
+    label: 'user_name',
+  );
+  final isConnected = flux(
+    true,
+    key: 'connection_status',
+    label: 'is_connected',
+  );
   final connectionType = flux(
     FluxyConnectionType.none,
     key: 'connection_type',
     label: 'connection_type',
     fromJson: (j) => FluxyConnectionType.values.byName(j as String),
   );
-  final isAuthenticated = flux(false, key: 'auth_status', label: 'is_authenticated');
-  
+  final isAuthenticated = flux(
+    false,
+    key: 'auth_status',
+    label: 'is_authenticated',
+  );
+  final searchSignal = flux('', label: 'sidebar_search');
+
   Map<String, dynamic>? _savedSnapshot;
-  
+
   // NEW: Resource Management Demo
   final activeUsers = flux(0);
   final resourceStatus = flux('Sleeping');
@@ -98,12 +114,12 @@ class _HomePageState extends State<HomePage> {
   void _initializeConnectivity() {
     // The "Right Way": Use the Unified Platform API (Fx.platform)
     final connectivity = Fx.platform.connectivity;
-    
+
     if (connectivity != null) {
       // Set initial values
       isConnected.value = connectivity.isOnline.value;
       connectionType.value = connectivity.connectionType.value;
-      
+
       // Create reactive subscription to connectivity changes
       FluxEffect(() {
         isConnected.value = connectivity.isOnline.value;
@@ -114,67 +130,94 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Fx.text('Fluxy Framework Demo')
-            .style(FxStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
-        backgroundColor: Colors.blue.shade600,
-        actions: [
-          Fx(() => Fx.icon(
+    return Fx.safe(
+      Fx.dashboard(
+        navbar: Fx.navbar(
+          leading: Builder(
+            builder: (context) {
+              return Fx.icon(
+                Icons.menu_rounded,
+                color: Colors.white,
+                onTap: () => Scaffold.of(context).openDrawer(),
+              );
+            },
+          ),
+          logo: Fx.text('Fluxy Dashboard').style(
+            const FxStyle(
+              color: Colors.white,
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          style: FxStyle(backgroundColor: Colors.blue.shade600),
+          actions: [
+            Fx(
+              () => Fx.icon(
                 isConnected.value ? Icons.wifi : Icons.wifi_off,
                 color: isConnected.value ? Colors.green : Colors.red,
-              ))
-        ],
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Fx.col(
-          gap: 24,
-          children: [
-            // User Authentication Section
-            _buildAuthSection(),
-            
-            // Counter Demo Section
-            _buildCounterSection(),
-            
-            // Connectivity Demo Section
-            _buildConnectivitySection(),
-            
-            // Storage Demo Section
-            _buildStorageSection(),
-            
-            // Platform Features Section
-            _buildPlatformSection(),
-            
-            // Biometric Section
-            _buildBiometricSection(),
-
-            // Industrial Control Center (Kill Switches)
-            _buildControlCenterSection(),
-
-            // NEW: Haptics Demo Section
-            _buildHapticsSection(),
-
-            // NEW: Device Info Section
-            _buildDeviceSection(),
-
-            // NEW: Logger Audit Section
-            _buildLoggerSection(),
-
-            // NEW: Real-Time & Advanced Sections
-            _buildWebSocketSection(),
-            _buildSyncSection(),
-            _buildPresenceSection(),
-            Fx.feature('geo', child: _buildGeoSection()),
-            _buildBridgeSection(),
-            _buildResourceSection(),
-            _buildObservabilitySection(),
-            // NEW: Programmatic Snapshots Demo
-            _buildSnapshotSection(),
-
-            Fx.feature('security', child: _buildSecuritySection()),
-            _buildStabilitySection(),
+              ),
+            ),
           ],
+        ),
+        sidebar: _buildSidebar(),
+        body: Fx.safe(
+          SingleChildScrollView(
+            padding: const EdgeInsets.all(16.0),
+            child: Fx.col(
+              gap: 24,
+              children: [
+                // User Authentication Section
+                _buildAuthSection(),
+
+                // Buttons Showcase Section
+                _buildButtonsSection(),
+
+                // Counter Demo Section
+                _buildCounterSection(),
+
+                // Connectivity Demo Section
+                _buildConnectivitySection(),
+
+                // Storage Demo Section
+                _buildStorageSection(),
+
+                // Platform Features Section
+                _buildPlatformSection(),
+
+                // Biometric Section
+                _buildBiometricSection(),
+
+                // Industrial Control Center (Kill Switches)
+                _buildControlCenterSection(),
+
+                // NEW: Haptics Demo Section
+                _buildHapticsSection(),
+
+                // NEW: Device Info Section
+                _buildDeviceSection(),
+
+                // NEW: Logger Audit Section
+                _buildLoggerSection(),
+
+                // NEW: Web-Style Flex Demo
+                _buildFlexDemoSection(),
+
+                // NEW: Real-Time & Advanced Sections
+                _buildWebSocketSection(),
+                _buildSyncSection(),
+                _buildPresenceSection(),
+                Fx.feature('geo', child: _buildGeoSection()),
+                _buildBridgeSection(),
+                _buildResourceSection(),
+                _buildObservabilitySection(),
+                // NEW: Programmatic Snapshots Demo
+                _buildSnapshotSection(),
+
+                Fx.feature('security', child: _buildSecuritySection()),
+                _buildStabilitySection(),
+              ],
+            ),
+          ),
         ),
       ),
     );
@@ -199,7 +242,9 @@ class _HomePageState extends State<HomePage> {
               color: Colors.teal.shade800,
             ),
           ),
-          Fx.text('Capture the state of all labeled signals and restore it instantly.').muted(),
+          Fx.text(
+            'Capture the state of all labeled signals and restore it instantly.',
+          ).muted(),
           Fx.row(
             gap: 12,
             children: [
@@ -379,7 +424,7 @@ class _HomePageState extends State<HomePage> {
             final typing = presence.typingUsers.value;
             if (typing.isEmpty) return const SizedBox.shrink();
             return Fx.text('Someone is typing...').style(
-              FxStyle(
+              const FxStyle(
                 fontSize: 12,
                 color: Colors.purple,
                 fontStyle: FontStyle.italic,
@@ -603,7 +648,7 @@ class _HomePageState extends State<HomePage> {
             justify: MainAxisAlignment.spaceBetween,
             children: [
               Fx.text('Fluxy X-Ray (Observability)').style(
-                FxStyle(
+                const FxStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                   color: Colors.greenAccent,
@@ -933,11 +978,23 @@ class _HomePageState extends State<HomePage> {
         gap: 12,
         alignItems: CrossAxisAlignment.start,
         children: [
-          Fx.text('Authentication Demo')
-              .style(FxStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.blue.shade800)),
-          Fx(() => Fx.text(
-                isAuthenticated.value ? 'Authenticated' : 'Not Authenticated',
-              ).style(FxStyle(color: isAuthenticated.value ? Colors.green : Colors.red))),
+          Fx.text('Authentication Demo').style(
+            FxStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Colors.blue.shade800,
+            ),
+          ),
+          Fx(
+            () =>
+                Fx.text(
+                  isAuthenticated.value ? 'Authenticated' : 'Not Authenticated',
+                ).style(
+                  FxStyle(
+                    color: isAuthenticated.value ? Colors.green : Colors.red,
+                  ),
+                ),
+          ),
           Fx.row(
             gap: 12,
             children: [
@@ -961,10 +1018,22 @@ class _HomePageState extends State<HomePage> {
         gap: 12,
         alignItems: CrossAxisAlignment.start,
         children: [
-          Fx.text('Reactive State Demo')
-              .style(FxStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.blue.shade800)),
-          Fx(() => Fx.text('Counter: ${counter.value}')
-              .style(FxStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.blue.shade600))),
+          Fx.text('Reactive State Demo').style(
+            FxStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Colors.blue.shade800,
+            ),
+          ),
+          Fx(
+            () => Fx.text('Counter: ${counter.value}').style(
+              FxStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Colors.blue.shade600,
+              ),
+            ),
+          ),
           Fx.row(
             gap: 12,
             children: [
@@ -1028,7 +1097,12 @@ class _HomePageState extends State<HomePage> {
                   Fx(
                     () => Fx.text(
                       isConnected.value ? 'Online' : 'Offline',
-                    ).style(FxStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                    ).style(
+                          const FxStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                   ),
                   Fx(
                     () => Fx.text(
@@ -1067,15 +1141,23 @@ class _HomePageState extends State<HomePage> {
         gap: 12,
         alignItems: CrossAxisAlignment.start,
         children: [
-          Fx.text('Storage Demo')
-              .style(FxStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.blue.shade800)),
+          Fx.text('Storage Demo').style(
+            FxStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Colors.blue.shade800,
+            ),
+          ),
           Fx.field(
             label: 'Enter your name',
             signal: userName,
             placeholder: 'Type your name here...',
           ),
-          Fx(() => Fx.text('Stored Name: ${userName.value.isEmpty ? 'None' : userName.value}')
-              .style(FxStyle(color: Colors.grey.shade700))),
+          Fx(
+            () => Fx.text(
+              'Stored Name: ${userName.value.isEmpty ? 'None' : userName.value}',
+            ).style(FxStyle(color: Colors.grey.shade700)),
+          ),
         ],
       ),
     );
@@ -1092,8 +1174,13 @@ class _HomePageState extends State<HomePage> {
         gap: 12,
         alignItems: CrossAxisAlignment.start,
         children: [
-          Fx.text('Platform Features')
-              .style(FxStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.blue.shade800)),
+          Fx.text('Platform Features').style(
+            FxStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Colors.blue.shade800,
+            ),
+          ),
           Fx.row(
             gap: 12,
             children: [
@@ -1117,9 +1204,17 @@ class _HomePageState extends State<HomePage> {
         gap: 12,
         alignItems: CrossAxisAlignment.start,
         children: [
-          Fx.text('Biometric Authentication')
-              .style(FxStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.blue.shade800)),
-          Fx.successButton('Authenticate with Biometrics', onTap: _authenticateWithBiometrics),
+          Fx.text('Biometric Authentication').style(
+            FxStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Colors.blue.shade800,
+            ),
+          ),
+          Fx.successButton(
+            'Authenticate with Biometrics',
+            onTap: _authenticateWithBiometrics,
+          ),
         ],
       ),
     );
@@ -1146,6 +1241,7 @@ class _HomePageState extends State<HomePage> {
           ),
           Fx.text('Emergency Kill-Switch (Production Safety)').font.xs().bold(),
           Fx.row(
+            responsive: true,
             justify: MainAxisAlignment.spaceBetween,
             children: [
               Fx.text('Geo Module'),
@@ -1176,6 +1272,7 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
           Fx.row(
+            responsive: true,
             justify: MainAxisAlignment.spaceBetween,
             children: [
               Fx.text('Security Module'),
@@ -1214,7 +1311,7 @@ class _HomePageState extends State<HomePage> {
     // Simulate login
     userName.value = 'John Doe';
     isAuthenticated.value = true;
-    
+
     Fx.toast.success('Logged in successfully!');
   }
 
@@ -1222,7 +1319,7 @@ class _HomePageState extends State<HomePage> {
     // Simulate logout
     userName.value = '';
     isAuthenticated.value = false;
-    
+
     Fx.toast.error('Logged out successfully!');
   }
 
@@ -1239,5 +1336,325 @@ class _HomePageState extends State<HomePage> {
   void _authenticateWithBiometrics() async {
     // Simulate biometric authentication
     Fx.toast.success('Biometric authentication successful!');
+  }
+
+  Widget _buildSidebar() {
+    return Fx.sidebar(
+      style: FxStyle(
+        backgroundColor: Colors.white,
+        border: Border(right: BorderSide(color: Colors.grey.shade200)),
+      ),
+      header: Fx.col(
+        gap: 16,
+        alignItems: CrossAxisAlignment.start,
+        children: [
+          Fx.box(
+            style: const FxStyle(
+              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            ),
+            child: Fx.col(
+              gap: 4,
+              alignItems: CrossAxisAlignment.start,
+              children: [
+                Fx.text(
+                  'FLUX KERNEL',
+                ).font.xl2().bold().color(Colors.blue.shade800),
+                Fx.text(
+                  'V 2.5.0-STABLE',
+                ).font.xs().muted().bold().letterSpacing(1.2),
+              ],
+            ),
+          ),
+          // Sidebar Search Integration
+          Fx.box(
+            style: const FxStyle(padding: EdgeInsets.symmetric(horizontal: 12)),
+            child: Fx.input(
+              signal: searchSignal,
+              placeholder: 'Quick search...',
+              icon: Icons.search_rounded,
+              style: FxStyle(
+                backgroundColor: Colors.grey.shade100,
+                borderRadius: BorderRadius.circular(10),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 8,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+      items: [
+        _sidebarCategory('OPERATIONS'),
+        _sidebarItem(
+          Icons.dashboard_outlined,
+          'Status Overview',
+          isSelected: true,
+        ),
+        _sidebarItem(Icons.sensors_rounded, 'Real-time Telemetry'),
+        _sidebarItem(Icons.history_rounded, 'Audit Logs'),
+
+        Fx.gap(16),
+        _sidebarCategory('INFRASTRUCTURE'),
+        _sidebarItem(Icons.security_outlined, 'Security Vault'),
+        _sidebarItem(Icons.sync_outlined, 'Sync Engine'),
+        _sidebarItem(Icons.hub_outlined, 'Node Network'),
+
+        Fx.gap(16),
+        _sidebarCategory('MAINTENANCE'),
+        _sidebarItem(Icons.settings_outlined, 'Kernel Configuration'),
+        _sidebarItem(Icons.update_rounded, 'OTA Management'),
+
+        const Divider(height: 32),
+        _sidebarItem(Icons.help_outline, 'Documentation'),
+      ],
+      footer: Fx.box(
+        style: FxStyle(
+          padding: const EdgeInsets.all(16),
+          backgroundColor: Colors.grey.shade50,
+          border: Border(top: BorderSide(color: Colors.grey.shade200)),
+        ),
+        child: Fx.row(
+          gap: 12,
+          children: [
+            Fx.avatar(
+              fallback: 'SJ',
+              size: FxAvatarSize.sm,
+              style: FxStyle(backgroundColor: Colors.blue.shade100),
+            ),
+            Fx.col(
+              alignItems: CrossAxisAlignment.start,
+              children: [
+                Fx.text('Sarah Jenkins').font.sm().bold(),
+                Fx.text('Principal Architect').font.xs().muted(),
+              ],
+            ),
+            const Spacer(),
+            Fx.icon(
+              Icons.logout_rounded,
+              size: 18,
+              color: Colors.grey.shade600,
+              onTap: _handleLogout,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _sidebarCategory(String label) {
+    return Fx.box(
+      style: const FxStyle(
+        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 4),
+      ),
+      child: Fx.text(label).font.xs().bold().muted().letterSpacing(1.2),
+    );
+  }
+
+  Widget _sidebarItem(IconData icon, String label, {bool isSelected = false}) {
+    return Fx.row(
+      gap: 12,
+      style: FxStyle(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        backgroundColor: isSelected ? Colors.blue.shade50 : Colors.transparent,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      children: [
+        Fx.icon(icon, color: isSelected ? Colors.blue : Colors.grey.shade600),
+        Fx.text(label).style(
+          FxStyle(
+            color: isSelected ? Colors.blue : Colors.grey.shade800,
+            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+          ),
+        ),
+      ],
+    ).onTap(() {
+      Fx.toast.info('Navigating to $label...');
+    });
+  }
+  Widget _buildButtonsSection() {
+    return Fx.box(
+      style: FxStyle(
+        backgroundColor: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        padding: const EdgeInsets.all(20),
+        shadows: FxTokens.shadow.sm,
+      ),
+      child: Fx.col(
+        gap: 20,
+        alignItems: CrossAxisAlignment.start,
+        children: [
+          Fx.text('Fluxy Button System').font.xl().bold().color(Colors.blue.shade800),
+          Fx.text('Industrial components with reactive states and atomic styling.').font.sm().muted(),
+          
+          const Divider(),
+          
+          Fx.text('Variants').font.sm().bold().muted(),
+          Wrap(
+            spacing: 12,
+            runSpacing: 12,
+            children: [
+              Fx.button('Primary', onTap: () {}),
+              Fx.secondaryButton('Secondary', onTap: () {}),
+              Fx.outlineButton('Outline', onTap: () {}),
+              Fx.ghostButton('Ghost', onTap: () {}),
+              Fx.dangerButton('Danger', onTap: () {}),
+              Fx.successButton('Success', onTap: () {}),
+              Fx.textButton('Text Button', onTap: () {}),
+            ],
+          ),
+
+          Fx.text('Sizes').font.sm().bold().muted(),
+          Fx.row(
+            gap: 12,
+            alignItems: CrossAxisAlignment.center,
+            children: [
+              Fx.button('XS').sizeXs(),
+              Fx.button('SM').sizeSm(),
+              Fx.button('MD').sizeMd(),
+              Fx.button('LG').sizeLg(),
+              Fx.button('XL').sizeXl(),
+            ],
+          ),
+
+          Fx.text('States & Features').font.sm().bold().muted(),
+          Wrap(
+            spacing: 12,
+            runSpacing: 12,
+            children: [
+              Fx.button('Loading').loading(),
+              Fx.button('With Icon', onTap: () {}).withIcon(const Icon(Icons.add_rounded, size: 18, color: Colors.white)),
+              Fx.button('Trailing', onTap: () {}).withTrailing(const Icon(Icons.arrow_forward_rounded, size: 18, color: Colors.white)),
+              Fx.button('Rounded', onTap: () {}).rounded,
+              Fx.button('Shadowed', onTap: () {}).shadowLg(),
+              Fx.button('Disabled'), 
+            ],
+          ),
+
+          Fx.text('Custom Styling').font.sm().bold().muted(),
+          Wrap(
+            spacing: 12,
+            runSpacing: 12,
+            children: [
+              Fx.button('Indigo Custom', onTap: () {}).bg(Colors.indigo).rounded,
+              Fx.button('Glassmorphic', onTap: () {}).applyStyle(FxStyle(
+                backgroundColor: Colors.blue.withValues(alpha: 0.1),
+                border: Border.all(color: Colors.blue.withValues(alpha: 0.2)),
+                color: Colors.blue,
+              )),
+              Fx.button('Neumorphic', onTap: () {}).applyStyle(FxStyle(
+                backgroundColor: Colors.grey.shade100,
+                borderRadius: BorderRadius.circular(12),
+                shadows: [
+                  const BoxShadow(
+                    color: Colors.white,
+                    offset: Offset(-4, -4),
+                    blurRadius: 8,
+                  ),
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.1),
+                    offset: const Offset(4, 4),
+                    blurRadius: 8,
+                  ),
+                ],
+                color: Colors.grey.shade800,
+              )),
+            ],
+          ),
+          
+          Fx.button('Full Width Action', onTap: () {}).primary.fullWidth().sizeLg(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFlexDemoSection() {
+    return Fx.box(
+      style: FxStyle(
+        padding: const EdgeInsets.all(20),
+        backgroundColor: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        shadows: Fx.shadow.md,
+      ),
+      child: Fx.col(
+        gap: 16,
+        alignItems: CrossAxisAlignment.start,
+        children: [
+          Fx.row(
+            justify: MainAxisAlignment.spaceBetween,
+            children: [
+              Fx.text('Web-Style Flex Layout').font.xl().bold().color(Colors.blue.shade900),
+              Fx.box(
+                style: FxStyle(
+                  backgroundColor: Colors.blue.shade600,
+                  borderRadius: BorderRadius.circular(4),
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                ),
+                child: Fx.text('NEW').font.xs().bold().color(Colors.white),
+              ),
+            ],
+          ),
+          Fx.text('Testing the new "flex" style property on Box widgets without using Expanded.')
+              .muted(),
+          
+          Fx.box(
+            style: FxStyle(
+              height: 140,
+              backgroundColor: Colors.grey.shade50,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: Colors.grey.shade200),
+              padding: const EdgeInsets.all(8),
+              direction: Axis.horizontal, // Row orientation
+              gap: 8,
+            ),
+            children: [
+              // Fixed width box
+              Fx.box(
+                style: FxStyle(
+                  width: 90,
+                  backgroundColor: Colors.indigo.shade400,
+                  borderRadius: BorderRadius.circular(8),
+                  justifyContent: MainAxisAlignment.center,
+                  alignItems: CrossAxisAlignment.center,
+                ),
+                child: Fx.text('FIXED\n90px').color(Colors.white).textCenter(),
+              ),
+              
+              // Flexible box with flex: 1
+              Fx.box(
+                style: FxStyle(
+                  flex: 1,
+                  backgroundColor: Colors.blue.shade400,
+                  borderRadius: BorderRadius.circular(8),
+                  justifyContent: MainAxisAlignment.center,
+                  alignItems: CrossAxisAlignment.center,
+                ),
+                child: Fx.text('FLEX 1\n(Auto)').color(Colors.white).textCenter(),
+              ),
+              
+              // Flexible box with flex: 2
+              Fx.box(
+                style: FxStyle(
+                  flex: 2,
+                  backgroundColor: Colors.teal.shade400,
+                  borderRadius: BorderRadius.circular(8),
+                  justifyContent: MainAxisAlignment.center,
+                  alignItems: CrossAxisAlignment.center,
+                ),
+                child: Fx.text('FLEX 2\n(Double)').color(Colors.white).textCenter(),
+              ),
+            ],
+          ),
+          
+          Fx.row(
+            gap: 8,
+            children: [
+              const Icon(Icons.info_outline, size: 14, color: Colors.blue),
+              Fx.text('The blue boxes are auto-scaling based on the remaining space.').font.xs().italic(),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 }

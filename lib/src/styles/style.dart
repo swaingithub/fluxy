@@ -338,6 +338,72 @@ class FxStyle {
     );
   }
 
+  /// Returns a copy of this style without flex-related properties.
+  /// Used by the DSL to prevent infinite recursion during expansion lifting.
+  FxStyle withoutExpansion() {
+    return FxStyle(
+      width: width,
+      height: height,
+      minWidth: minWidth,
+      minHeight: minHeight,
+      maxWidth: maxWidth,
+      maxHeight: maxHeight,
+      padding: _padding,
+      margin: _margin,
+      backgroundColor: backgroundColor,
+      gradient: gradient,
+      shadows: _shadows,
+      glass: glass,
+      borderRadius: _borderRadius,
+      border: border,
+      borderTop: borderTop,
+      borderBottom: borderBottom,
+      borderLeft: borderLeft,
+      borderRight: borderRight,
+      justifyContent: _justifyContent,
+      alignItems: _alignItems,
+      mainAxisSize: mainAxisSize,
+      direction: direction,
+      gap: _gap,
+      crossAxisCount: _crossAxisCount,
+      minColumnWidth: minColumnWidth,
+      childAspectRatio: childAspectRatio,
+      alignment: _alignment,
+      clipBehavior: clipBehavior,
+      top: top,
+      right: right,
+      bottom: bottom,
+      left: left,
+      zIndex: zIndex,
+      color: _color,
+      fontSize: _fontSize,
+      fontWeight: _fontWeight,
+      textAlign: _textAlign,
+      fontFamily: fontFamily,
+      overflow: overflow,
+      maxLines: maxLines,
+      letterSpacing: letterSpacing,
+      wordSpacing: wordSpacing,
+      textDecoration: textDecoration,
+      lineHeight: lineHeight,
+      hover: hover,
+      pressed: pressed,
+      transition: transition,
+      cursor: cursor,
+      opacity: _opacity,
+      aspectRatio: aspectRatio,
+      transformScale: transformScale,
+      transformRotation: transformRotation,
+      fit: fit,
+      imageBlur: imageBlur,
+      grayscale: grayscale,
+      loading: loading,
+      error: error,
+      placeholder: placeholder,
+      imageSrc: imageSrc,
+    );
+  }
+
   /// Merges this style with another FxStyle.
   FxStyle merge(FxStyle? other) {
     if (other == null) return this;

@@ -58,6 +58,10 @@ class FxDecorationBuilder {
         style.shadows != null ||
         style.borderRadius != null ||
         style.border != null ||
+        style.borderTop != null ||
+        style.borderBottom != null ||
+        style.borderLeft != null ||
+        style.borderRight != null ||
         style.opacity != null;
   }
 }

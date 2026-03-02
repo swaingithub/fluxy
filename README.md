@@ -1,26 +1,29 @@
 # [PLATFORM] Fluxy Framework
 ### Industrial-Grade Managed Application Platform for Flutter
 
+**[Documentation](https://getfluxy.vercel.app/)** | **[Migration Guide](MIGRATION_GUIDE.md)** | **[Changelog](CHANGELOG.md)**
+
 **Standardize your Flutter engineering with a high-integrity, unified runtime environment.**
 
 Fluxy is not just a library; it is a **Managed Application Platform (MAP)** designed to provide architectural authority to the Flutter ecosystem. It replaces fragmented third-party dependencies with a single, high-performance kernel that manages state, layout stability, platform hardware, and security.
 
 ---
 
-## **v1.1.0 - The Full Engine Update**
+## **v1.2.0 - The Industrial Engine Release**
 
-**Fluxy v1.1.0 launches the complete Stability Kernel™ and 19+ industrial modules!** 
+**Fluxy v1.2.0 introduces the Industrial Engine for enhanced layout safety and real-time developer diagnostics!** 
 
-- **Full Engine Update**: Stability Kernel™ for layout, async, and state protection
-- **Managed Resource Manager**: Automatic lifecycle management for hardware-heavy features
+- **Industrial Engine Update**: Context-aware `FxSafeExpansion` and alignment inference
+- **Reactivity Tracker**: Debug-time audit for missing reactive wrappers
+- **Hot-Reload Routing**: Dynamic route provider for instant developer updates
+- **Stability Kernel™**: Intercepts and auto-repairs layout violations
+- **Managed Resource Manager**: Automated lifecycle for hardware features
 - **Industrial Hardening Suite**: Level-2 Security Vault and Recovery Boundaries
-- **Real-Time Expansion**: `fluxy_websocket`, `fluxy_sync`, and `fluxy_presence`
-- **X-Ray Observability**: Real-time signal churn and rebuild audit metrics
 
 **[Read Migration Guide](MIGRATION_GUIDE.md)**
 
-### Recent Updates (v1.0.1 - v1.1.0)
-- **v1.1.0**: Fluxy Stability Kernel™ & Real-Time Ecosystem
+### Recent Updates (v1.0.1 - v1.2.0)
+- **v1.2.0**: Fluxy Stability Kernel™ & Real-Time Ecosystem
 - **v1.0.1**: Industrial Stability Update with `fluxy_haptics`, `fluxy_logger`, and `fluxy_device`
 
 ---
@@ -30,31 +33,31 @@ Fluxy is not just a library; it is a **Managed Application Platform (MAP)** desi
 ### Core Package
 ```yaml
 dependencies:
-  fluxy: ^1.1.0
+  fluxy: ^1.2.0
 ```
 
 ### Modular Packages (Add as needed)
 ```yaml
 dependencies:
-  fluxy_camera: ^1.1.0       # Camera functionality  
-  fluxy_auth: ^1.1.0         # Authentication and biometrics
-  fluxy_notifications: ^1.1.0 # Push notifications
-  fluxy_storage: ^1.1.0      # Data persistence
-  fluxy_test: ^1.1.0         # Testing utilities
-  fluxy_analytics: ^1.1.0    # Analytics and tracking
-  fluxy_biometric: ^1.1.0    # Biometric authentication
-  fluxy_connectivity: ^1.1.0 # Network connectivity
-  fluxy_permissions: ^1.1.0  # Device permissions
-  fluxy_platform: ^1.1.0     # Unified meta-package
-  fluxy_ota: ^1.1.0          # Over-the-air updates
-  fluxy_haptics: ^1.1.0      # Sensory feedback
-  fluxy_logger: ^1.1.0       # Industrial auditing
-  fluxy_device: ^1.1.0       # Environment awareness
-  fluxy_websocket: ^1.1.0    # Managed WebSockets
-  fluxy_sync: ^1.1.0         # Persistent hydration
-  fluxy_presence: ^1.1.0     # Collaborative state
-  fluxy_geo: ^1.1.0          # Geofencing engine
-  fluxy_stream_bridge: ^1.1.0 # Native Stream DSL
+  fluxy_camera: ^1.2.0       # Camera functionality  
+  fluxy_auth: ^1.2.0         # Authentication and biometrics
+  fluxy_notifications: ^1.2.0 # Push notifications
+  fluxy_storage: ^1.2.0      # Data persistence
+  fluxy_test: ^1.2.0         # Testing utilities
+  fluxy_analytics: ^1.2.0    # Analytics and tracking
+  fluxy_biometric: ^1.2.0    # Biometric authentication
+  fluxy_connectivity: ^1.2.0 # Network connectivity
+  fluxy_permissions: ^1.2.0  # Device permissions
+  fluxy_platform: ^1.2.0     # Unified meta-package
+  fluxy_ota: ^1.2.0          # Over-the-air updates
+  fluxy_haptics: ^1.2.0      # Sensory feedback
+  fluxy_logger: ^1.2.0       # Industrial auditing
+  fluxy_device: ^1.2.0       # Environment awareness
+  fluxy_websocket: ^1.2.0    # Managed WebSockets
+  fluxy_sync: ^1.2.0         # Persistent hydration
+  fluxy_presence: ^1.2.0     # Collaborative state
+  fluxy_geo: ^1.2.0          # Geofencing engine
+  fluxy_stream_bridge: ^1.2.0 # Native Stream DSL
 ```
 
 ### Quick Start
@@ -113,11 +116,13 @@ void main() async {
 }
 ```
 
-**v1.1.0 Modernization:**
-- **Full Engine Update**: Stability Kernel™ active by default
+**v1.2.0 Modernization:**
+- **Industrial Engine**: Context-aware expansion and alignment inference
+- **Reactivity Tracker**: Real-time audit of reactive state management
+- **Hot-Reload Routing**: Dynamic provider for instant developer cycle
+- **Stability Kernel™**: Intercepts and auto-repairs layout violations
 - **Managed Lifecycle**: Automatic resource cleanup via `FluxyResourceManager`
 - **Real-Time Ecosystem**: Native WebSockets and Sync engines
-- **Audit Suite**: Monochromatic logging and real-time observability
 
 ### 2. Reactive State with Persistent Vault
 ```dart
@@ -235,6 +240,7 @@ Fluxy is under active development with a focus on enterprise-grade features.
 *   **[PROG] OTA (Over-the-Air) Style Updates**: Update app branding and themes without a Store release. [EXPERIMENTAL]
 
 ### Recent Releases
+- **v1.2.0** (2026-03-02): Industrial Engine Release
 - **v1.1.0** (2026-02-28): Stability Kernel & Real-Time Expansion
 - **v1.0.1** (2026-02-24): Industrial Stability Update
 - **v1.0.0** (2026-02-23): Modular Architecture with 11+ packages
@@ -252,7 +258,7 @@ We are seeking contribution from the community to make Fluxy the default standar
 *   **[FEEDBACK]**: Document edge cases where the Stability Kernel should intercept.
 *   **[SHARE]**: If Fluxy helped you clear a production deadline, share your success story.
 
-**[DOCS]** Visit the [Full Documentation Site](https://fluxy-doc.vercel.app) for in-depth implementation guides.
+**[DOCS]** Visit the [Official Documentation Site](https://getfluxy.vercel.app/) for in-depth implementation guides.
 
 ---
 

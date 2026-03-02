@@ -97,6 +97,39 @@ class FluxyLayoutGuard {
     return alignment;
   }
 
+  /// NEW: Intelligent Guard for MainAxisSize.
+  /// Decides if the Flex should expand to fill its parent (web-like) or shrink (flutter-like).
+  /// [flexDirection] - The direction of the Column/Row.
+  /// [justify] - The intended alignment.
+  /// [currentSize] - The default/user-specified size.
+  static MainAxisSize guardMainAxisSize(
+    BuildContext context,
+    Axis flexDirection,
+    MainAxisAlignment justify,
+    MainAxisSize currentSize,
+  ) {
+    // If user explicitly set it, respect it (unless it would crash)
+    // Actually, let's make it smarter. If they want centered content, they ALMOST ALWAYS want max size.
+    if (justify == MainAxisAlignment.start) return currentSize;
+
+    final scrollInfo = context.dependOnInheritedWidgetOfExactType<FxScrollInfo>();
+    
+    // If we are in a scrollview and the flex is in the SAME direction as scroll,
+    // we MUST stay at MainAxisSize.min or Flutter will throw 'Vertical viewport was given unbounded height'.
+    if (scrollInfo != null && scrollInfo.direction == flexDirection) {
+      if (currentSize == MainAxisSize.max) {
+         _logViolation(
+          'Infinite Height/Width Alert: switched to MainAxisSize.min', 
+          'Alignment "$justify" requires space. In scrollables, give the Flex a fixed height/width or use Expanded in a bounded parent.'
+        );
+      }
+      return MainAxisSize.min;
+    }
+
+    // Default to Max if we want alignment, to provide the "Web-like" experience.
+    return MainAxisSize.max;
+  }
+
 
   /// Evaluates a Box's dimensions against constraints to prevent infinite size crashes.
   static FxStyle evaluateBoxSafety(BoxConstraints constraints, FxStyle base) {
@@ -219,7 +252,17 @@ class FxSafeExpansion extends StatelessWidget {
     // 1. Determine expansion direction
     // If direction is provided, use it. Otherwise, try to infer from parent FxRow/FxCol.
     final parentFlexDirection = FxFlexInfo.of(context);
-    final effectiveDirection = direction ?? parentFlexDirection ?? Axis.horizontal;
+    
+    // SAFETY CHECK: ParentDataWidget protection.
+    // If we are NOT inside an FxCol or FxRow (no FxFlexInfo), we cannot use Flexible/Expanded.
+    if (parentFlexDirection == null) {
+      if (FluxyLayoutGuard.debugMode) {
+        debugPrint('[KERNEL] [AUDIT] Intercepted illegal expansion: Modifier ".flex()" or ".expanded()" was used outside of an Fx.row() or Fx.col(). Expansion ignored to prevent crash.');
+      }
+      return child;
+    }
+
+    final effectiveDirection = direction ?? parentFlexDirection;
 
     // 2. Check if we are inside a Fluxy Scrollable
     final scrollInfo = context.dependOnInheritedWidgetOfExactType<FxScrollInfo>();

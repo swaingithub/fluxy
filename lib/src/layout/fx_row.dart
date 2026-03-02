@@ -16,13 +16,16 @@ class FxRow extends StatelessWidget {
   const FxRow({
     super.key,
     required this.children,
-    this.justify = MainAxisAlignment.start,
-    this.items = CrossAxisAlignment.center,
+    MainAxisAlignment justify = MainAxisAlignment.start,
+    CrossAxisAlignment items = CrossAxisAlignment.center,
+    MainAxisAlignment? mainAxisAlignment,
+    CrossAxisAlignment? crossAxisAlignment,
     this.gap = 0,
     this.style = FxStyle.none,
     this.size = MainAxisSize.min,
     this.responsive = false,
-  });
+  })  : justify = mainAxisAlignment ?? justify,
+        items = crossAxisAlignment ?? items;
 
   @override
   Widget build(BuildContext context) {
@@ -46,13 +49,20 @@ class FxRow extends StatelessWidget {
       }
     }
 
+    final resolvedSize = FluxyLayoutGuard.guardMainAxisSize(
+      context, 
+      useColumn ? Axis.vertical : Axis.horizontal, 
+      justify, 
+      size
+    );
+
     if (useColumn) {
       content = FxFlexInfo(
         direction: Axis.vertical,
         child: Column(
           mainAxisAlignment: justify,
           crossAxisAlignment: resolvedItems,
-          mainAxisSize: size,
+          mainAxisSize: resolvedSize,
           children: gap > 0 ? spacedChildren : children,
         ),
       );
@@ -62,7 +72,7 @@ class FxRow extends StatelessWidget {
         child: Row(
           mainAxisAlignment: justify,
           crossAxisAlignment: resolvedItems,
-          mainAxisSize: size,
+          mainAxisSize: resolvedSize,
           children: gap > 0 ? spacedChildren : children,
         ),
       );

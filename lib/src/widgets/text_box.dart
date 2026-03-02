@@ -7,12 +7,6 @@ import '../reactive/signal.dart';
 import 'fx_widget.dart';
 
 class TextBox extends FxWidget {
-  final dynamic data;
-  @override
-  final FxStyle style;
-  @override
-  final FxResponsiveStyle? responsive;
-
   const TextBox({
     super.key,
     super.id,
@@ -21,6 +15,12 @@ class TextBox extends FxWidget {
     this.style = FxStyle.none,
     this.responsive,
   });
+
+  final dynamic data;
+  @override
+  final FxStyle style;
+  @override
+  final FxResponsiveStyle? responsive;
 
   @override
   TextBox copyWithStyle(FxStyle additionalStyle) {

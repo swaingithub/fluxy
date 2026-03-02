@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:collection';
 import 'package:flutter/widgets.dart';
+import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'dart:async';
@@ -166,6 +167,18 @@ class Flux<T> {
     if (current != null) {
       _subscribers.add(current);
       current.registerDependency(this);
+    } else if (kDebugMode) {
+      // Reactivity Tracker: Warn if read during build but NOT inside an Fx/Computed
+      if (WidgetsBinding.instance.buildOwner?.debugBuilding ?? false) {
+        debugPrint('┌──────────────────────────────────────────────────────────┐');
+        debugPrint('│ [Sys] [SIGNAL] REACTIVITY ALERT: Missing Fx() Wrapper    │');
+        debugPrint('├──────────────────────────────────────────────────────────┤');
+        debugPrint('│ Flux "${label ?? id}" was read during a Widget build,      │');
+        debugPrint('│ but no reactive builder (Fx) was tracking it.            │');
+        debugPrint('│                                                          │');
+        debugPrint('│ FIX: Wrap your UI code in Fx(() => ...) to make it live. │');
+        debugPrint('└──────────────────────────────────────────────────────────┘');
+      }
     }
   }
 

@@ -3,12 +3,27 @@
 All notable changes to this project will be documented in this file.
 
 **Documentation Links:**
-- [Migration Guide](MIGRATION_GUIDE.md) - How to upgrade from v0.2.6 to v1.0.0
-- [GitHub Repository](https://github.com/swaingithub/fluxy) - Complete documentation and examples
+- [Official Documentation](https://getfluxy.vercel.app/) - Getting started, components, and guides
+- [Migration Guide](MIGRATION_GUIDE.md) - How to upgrade version by version
+- [GitHub Repository](https://github.com/swaingithub/fluxy) - Complete source code and examples
 - [API Reference](https://pub.dev/documentation/fluxy/latest/) - Detailed API documentation
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [1.2.0] - 2026-03-02
+
+### Added
+- **Industrial Engine Enhancements**:
+    - **Context-Aware Flex Safety**: `FxSafeExpansion` now intercepts and prevents `ParentDataWidget` crashes when flex modifiers are used outside of `Fx.row` or `Fx.col`.
+    - **Alignment Aliases**: Added `mainAxisAlignment` and `crossAxisAlignment` alias parameters to `Fx.row`, `Fx.col`, and their underlying widgets for standard Flutter compatibility.
+    - **Smart Alignment Inference**: The `Box` widget now automatically maps flex-style alignment properties into container alignments for single-child centering.
+    - **Reactivity Tracker**: Debug-time diagnostic system that alerts developers via high-fidelity console logs when a signal is read without an `Fx()` reactive wrapper.
+    - **Hot-Reload Routing**: Introduced `FluxyRouter.setRoutesProvider()`, allowing the routing table to be dynamically re-evaluated during Hot Reload for instant route updates.
+
+### Fixed
+- **Modifier Conflict**: Resolved a naming collision by removing the duplicate `.center()` extension in favor of the improved `FxStyleResolver` inference engine.
+- **Horizontal Overflow**: Applied responsive stacking to several sections in the industrial dashboard example.
 
 ## [1.1.0] - 2026-02-28
 

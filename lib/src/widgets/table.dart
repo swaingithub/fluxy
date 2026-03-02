@@ -20,15 +20,6 @@ class FxTableColumn<T> {
 
 /// A premium, responsive data table.
 class FxTable<T> extends FxWidget {
-  final List<T> data;
-  final List<FxTableColumn<T>> columns;
-  final bool striped;
-  final VoidCallback? onRowTap;
-  @override
-  final FxStyle style;
-  @override
-  final FxResponsiveStyle? responsive;
-
   const FxTable({
     super.key,
     super.id,
@@ -40,6 +31,15 @@ class FxTable<T> extends FxWidget {
     this.style = FxStyle.none,
     this.responsive,
   });
+
+  final List<T> data;
+  final List<FxTableColumn<T>> columns;
+  final bool striped;
+  final VoidCallback? onRowTap;
+  @override
+  final FxStyle style;
+  @override
+  final FxResponsiveStyle? responsive;
 
   @override
   FxTable<T> copyWithStyle(FxStyle additionalStyle) {

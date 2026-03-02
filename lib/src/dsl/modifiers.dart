@@ -62,65 +62,7 @@ extension FluxyWidgetExtension on Widget {
             style.flexFit ??
             (style.flexGrow != null ? FlexFit.loose : FlexFit.tight);
 
-        // Create a new style without flex properties to avoid infinite recursion
-        final innerStyle = FxStyle(
-          width: style.width,
-          height: style.height,
-          minWidth: style.minWidth,
-          minHeight: style.minHeight,
-          maxWidth: style.maxWidth,
-          maxHeight: style.maxHeight,
-          padding: style.padding,
-          margin: style.margin,
-          backgroundColor: style.backgroundColor,
-          gradient: style.gradient,
-          shadows: style.shadows,
-          glass: style.glass,
-          borderRadius: style.borderRadius,
-          border: style.border,
-          justifyContent: style.justifyContent,
-          alignItems: style.alignItems,
-          mainAxisSize: style.mainAxisSize,
-          direction: style.direction,
-          // Explicitly omit flex, flexGrow, flexShrink, flexFit
-          gap: style.gap,
-          crossAxisCount: style.crossAxisCount,
-          minColumnWidth: style.minColumnWidth,
-          childAspectRatio: style.childAspectRatio,
-          alignment: style.alignment,
-          clipBehavior: style.clipBehavior,
-          top: style.top,
-          right: style.right,
-          bottom: style.bottom,
-          left: style.left,
-          zIndex: style.zIndex,
-          color: style.color,
-          fontSize: style.fontSize,
-          fontWeight: style.fontWeight,
-          textAlign: style.textAlign,
-          fontFamily: style.fontFamily,
-          overflow: style.overflow,
-          maxLines: style.maxLines,
-          letterSpacing: style.letterSpacing,
-          wordSpacing: style.wordSpacing,
-          textDecoration: style.textDecoration,
-          lineHeight: style.lineHeight,
-          hover: style.hover,
-          pressed: style.pressed,
-          transition: style.transition,
-          cursor: style.cursor,
-          opacity: style.opacity,
-          aspectRatio: style.aspectRatio,
-          transformScale: style.transformScale,
-          transformRotation: style.transformRotation,
-          fit: style.fit,
-          imageBlur: style.imageBlur,
-          grayscale: style.grayscale,
-          loading: style.loading,
-          error: style.error,
-          placeholder: style.placeholder,
-          imageSrc: style.imageSrc,
-        );
+        final innerStyle = style.withoutExpansion();
 
         return FxSafeExpansion(
           flex: flexVal,
@@ -153,6 +95,25 @@ extension FluxyWidgetExtension on Widget {
       }
       return Box(responsive: responsive, child: child);
     });
+  }
+
+  /// Helper to dry up responsive modifiers.
+  Widget _responsiveModifier(
+    FxStyle Function(double v) mapper,
+    double xs,
+    double? md,
+    double? lg,
+  ) {
+    if (md == null && lg == null) {
+      return _applyGenericStyle(mapper(xs));
+    }
+    return _applyResponsive(
+      FxResponsiveStyle(
+        xs: mapper(xs),
+        md: md != null ? mapper(md) : null,
+        lg: lg != null ? mapper(lg) : null,
+      ),
+    );
   }
 
 
@@ -213,108 +174,26 @@ extension FluxyWidgetExtension on Widget {
 
   /// Padding modifier with Tailwind-like responsive overrides.
   /// Example: .p(16, md: 24, lg: 32)
-  Widget p(double xs, {double? md, double? lg}) {
-    if (md == null && lg == null) {
-      return _applyGenericStyle(FxStyle(padding: EdgeInsets.all(xs)));
-    }
-    return _applyResponsive(
-      FxResponsiveStyle(
-        xs: FxStyle(padding: EdgeInsets.all(xs)),
-        md: md != null ? FxStyle(padding: EdgeInsets.all(md)) : null,
-        lg: lg != null ? FxStyle(padding: EdgeInsets.all(lg)) : null,
-      ),
-    );
-  }
+  Widget p(double xs, {double? md, double? lg}) =>
+      _responsiveModifier((v) => FxStyle(padding: EdgeInsets.all(v)), xs, md, lg);
 
-  Widget px(double xs, {double? md, double? lg}) {
-    if (md == null && lg == null) {
-      return _applyGenericStyle(
-        FxStyle(padding: EdgeInsets.symmetric(horizontal: xs)),
-      );
-    }
-    return _applyResponsive(
-      FxResponsiveStyle(
-        xs: FxStyle(padding: EdgeInsets.symmetric(horizontal: xs)),
-        md: md != null
-            ? FxStyle(padding: EdgeInsets.symmetric(horizontal: md))
-            : null,
-        lg: lg != null
-            ? FxStyle(padding: EdgeInsets.symmetric(horizontal: lg))
-            : null,
-      ),
-    );
-  }
+  Widget px(double xs, {double? md, double? lg}) =>
+      _responsiveModifier((v) => FxStyle(padding: EdgeInsets.symmetric(horizontal: v)), xs, md, lg);
 
-  Widget py(double xs, {double? md, double? lg}) {
-    if (md == null && lg == null) {
-      return _applyGenericStyle(
-        FxStyle(padding: EdgeInsets.symmetric(vertical: xs)),
-      );
-    }
-    return _applyResponsive(
-      FxResponsiveStyle(
-        xs: FxStyle(padding: EdgeInsets.symmetric(vertical: xs)),
-        md: md != null
-            ? FxStyle(padding: EdgeInsets.symmetric(vertical: md))
-            : null,
-        lg: lg != null
-            ? FxStyle(padding: EdgeInsets.symmetric(vertical: lg))
-            : null,
-      ),
-    );
-  }
+  Widget py(double xs, {double? md, double? lg}) =>
+      _responsiveModifier((v) => FxStyle(padding: EdgeInsets.symmetric(vertical: v)), xs, md, lg);
 
-  Widget pt(double xs, {double? md, double? lg}) {
-    if (md == null && lg == null) {
-      return _applyGenericStyle(FxStyle(padding: EdgeInsets.only(top: xs)));
-    }
-    return _applyResponsive(
-      FxResponsiveStyle(
-        xs: FxStyle(padding: EdgeInsets.only(top: xs)),
-        md: md != null ? FxStyle(padding: EdgeInsets.only(top: md)) : null,
-        lg: lg != null ? FxStyle(padding: EdgeInsets.only(top: lg)) : null,
-      ),
-    );
-  }
+  Widget pt(double xs, {double? md, double? lg}) =>
+      _responsiveModifier((v) => FxStyle(padding: EdgeInsets.only(top: v)), xs, md, lg);
 
-  Widget pb(double xs, {double? md, double? lg}) {
-    if (md == null && lg == null) {
-      return _applyGenericStyle(FxStyle(padding: EdgeInsets.only(bottom: xs)));
-    }
-    return _applyResponsive(
-      FxResponsiveStyle(
-        xs: FxStyle(padding: EdgeInsets.only(bottom: xs)),
-        md: md != null ? FxStyle(padding: EdgeInsets.only(bottom: md)) : null,
-        lg: lg != null ? FxStyle(padding: EdgeInsets.only(bottom: lg)) : null,
-      ),
-    );
-  }
+  Widget pb(double xs, {double? md, double? lg}) =>
+      _responsiveModifier((v) => FxStyle(padding: EdgeInsets.only(bottom: v)), xs, md, lg);
 
-  Widget pl(double xs, {double? md, double? lg}) {
-    if (md == null && lg == null) {
-      return _applyGenericStyle(FxStyle(padding: EdgeInsets.only(left: xs)));
-    }
-    return _applyResponsive(
-      FxResponsiveStyle(
-        xs: FxStyle(padding: EdgeInsets.only(left: xs)),
-        md: md != null ? FxStyle(padding: EdgeInsets.only(left: md)) : null,
-        lg: lg != null ? FxStyle(padding: EdgeInsets.only(left: lg)) : null,
-      ),
-    );
-  }
+  Widget pl(double xs, {double? md, double? lg}) =>
+      _responsiveModifier((v) => FxStyle(padding: EdgeInsets.only(left: v)), xs, md, lg);
 
-  Widget pr(double xs, {double? md, double? lg}) {
-    if (md == null && lg == null) {
-      return _applyGenericStyle(FxStyle(padding: EdgeInsets.only(right: xs)));
-    }
-    return _applyResponsive(
-      FxResponsiveStyle(
-        xs: FxStyle(padding: EdgeInsets.only(right: xs)),
-        md: md != null ? FxStyle(padding: EdgeInsets.only(right: md)) : null,
-        lg: lg != null ? FxStyle(padding: EdgeInsets.only(right: lg)) : null,
-      ),
-    );
-  }
+  Widget pr(double xs, {double? md, double? lg}) =>
+      _responsiveModifier((v) => FxStyle(padding: EdgeInsets.only(right: v)), xs, md, lg);
 
 
 
@@ -325,108 +204,26 @@ extension FluxyWidgetExtension on Widget {
   Widget paddingY(double v, {double? md, double? lg}) => py(v, md: md, lg: lg);
 
   /// Margin modifier with responsive overrides.
-  Widget m(double xs, {double? md, double? lg}) {
-    if (md == null && lg == null) {
-      return _applyGenericStyle(FxStyle(margin: EdgeInsets.all(xs)));
-    }
-    return _applyResponsive(
-      FxResponsiveStyle(
-        xs: FxStyle(margin: EdgeInsets.all(xs)),
-        md: md != null ? FxStyle(margin: EdgeInsets.all(md)) : null,
-        lg: lg != null ? FxStyle(margin: EdgeInsets.all(lg)) : null,
-      ),
-    );
-  }
+  Widget m(double xs, {double? md, double? lg}) =>
+      _responsiveModifier((v) => FxStyle(margin: EdgeInsets.all(v)), xs, md, lg);
 
-  Widget mx(double xs, {double? md, double? lg}) {
-    if (md == null && lg == null) {
-      return _applyGenericStyle(
-        FxStyle(margin: EdgeInsets.symmetric(horizontal: xs)),
-      );
-    }
-    return _applyResponsive(
-      FxResponsiveStyle(
-        xs: FxStyle(margin: EdgeInsets.symmetric(horizontal: xs)),
-        md: md != null
-            ? FxStyle(margin: EdgeInsets.symmetric(horizontal: md))
-            : null,
-        lg: lg != null
-            ? FxStyle(margin: EdgeInsets.symmetric(horizontal: lg))
-            : null,
-      ),
-    );
-  }
+  Widget mx(double xs, {double? md, double? lg}) =>
+      _responsiveModifier((v) => FxStyle(margin: EdgeInsets.symmetric(horizontal: v)), xs, md, lg);
 
-  Widget my(double xs, {double? md, double? lg}) {
-    if (md == null && lg == null) {
-      return _applyGenericStyle(
-        FxStyle(margin: EdgeInsets.symmetric(vertical: xs)),
-      );
-    }
-    return _applyResponsive(
-      FxResponsiveStyle(
-        xs: FxStyle(margin: EdgeInsets.symmetric(vertical: xs)),
-        md: md != null
-            ? FxStyle(margin: EdgeInsets.symmetric(vertical: md))
-            : null,
-        lg: lg != null
-            ? FxStyle(margin: EdgeInsets.symmetric(vertical: lg))
-            : null,
-      ),
-    );
-  }
+  Widget my(double xs, {double? md, double? lg}) =>
+      _responsiveModifier((v) => FxStyle(margin: EdgeInsets.symmetric(vertical: v)), xs, md, lg);
 
-  Widget mt(double xs, {double? md, double? lg}) {
-    if (md == null && lg == null) {
-      return _applyGenericStyle(FxStyle(margin: EdgeInsets.only(top: xs)));
-    }
-    return _applyResponsive(
-      FxResponsiveStyle(
-        xs: FxStyle(margin: EdgeInsets.only(top: xs)),
-        md: md != null ? FxStyle(margin: EdgeInsets.only(top: md)) : null,
-        lg: lg != null ? FxStyle(margin: EdgeInsets.only(top: lg)) : null,
-      ),
-    );
-  }
+  Widget mt(double xs, {double? md, double? lg}) =>
+      _responsiveModifier((v) => FxStyle(margin: EdgeInsets.only(top: v)), xs, md, lg);
 
-  Widget mb(double xs, {double? md, double? lg}) {
-    if (md == null && lg == null) {
-      return _applyGenericStyle(FxStyle(margin: EdgeInsets.only(bottom: xs)));
-    }
-    return _applyResponsive(
-      FxResponsiveStyle(
-        xs: FxStyle(margin: EdgeInsets.only(bottom: xs)),
-        md: md != null ? FxStyle(margin: EdgeInsets.only(bottom: md)) : null,
-        lg: lg != null ? FxStyle(margin: EdgeInsets.only(bottom: lg)) : null,
-      ),
-    );
-  }
+  Widget mb(double xs, {double? md, double? lg}) =>
+      _responsiveModifier((v) => FxStyle(margin: EdgeInsets.only(bottom: v)), xs, md, lg);
 
-  Widget ml(double xs, {double? md, double? lg}) {
-    if (md == null && lg == null) {
-      return _applyGenericStyle(FxStyle(margin: EdgeInsets.only(left: xs)));
-    }
-    return _applyResponsive(
-      FxResponsiveStyle(
-        xs: FxStyle(margin: EdgeInsets.only(left: xs)),
-        md: md != null ? FxStyle(margin: EdgeInsets.only(left: md)) : null,
-        lg: lg != null ? FxStyle(margin: EdgeInsets.only(left: lg)) : null,
-      ),
-    );
-  }
+  Widget ml(double xs, {double? md, double? lg}) =>
+      _responsiveModifier((v) => FxStyle(margin: EdgeInsets.only(left: v)), xs, md, lg);
 
-  Widget mr(double xs, {double? md, double? lg}) {
-    if (md == null && lg == null) {
-      return _applyGenericStyle(FxStyle(margin: EdgeInsets.only(right: xs)));
-    }
-    return _applyResponsive(
-      FxResponsiveStyle(
-        xs: FxStyle(margin: EdgeInsets.only(right: xs)),
-        md: md != null ? FxStyle(margin: EdgeInsets.only(right: md)) : null,
-        lg: lg != null ? FxStyle(margin: EdgeInsets.only(right: lg)) : null,
-      ),
-    );
-  }
+  Widget mr(double xs, {double? md, double? lg}) =>
+      _responsiveModifier((v) => FxStyle(margin: EdgeInsets.only(right: v)), xs, md, lg);
 
 
 
@@ -437,24 +234,8 @@ extension FluxyWidgetExtension on Widget {
 
 
 
-  Widget rounded(double xs, {double? md, double? lg}) {
-    if (md == null && lg == null) {
-      return _applyGenericStyle(
-        FxStyle(borderRadius: BorderRadius.circular(xs)),
-      );
-    }
-    return _applyResponsive(
-      FxResponsiveStyle(
-        xs: FxStyle(borderRadius: BorderRadius.circular(xs)),
-        md: md != null
-            ? FxStyle(borderRadius: BorderRadius.circular(md))
-            : null,
-        lg: lg != null
-            ? FxStyle(borderRadius: BorderRadius.circular(lg))
-            : null,
-      ),
-    );
-  }
+  Widget rounded(double xs, {double? md, double? lg}) =>
+      _responsiveModifier((v) => FxStyle(borderRadius: BorderRadius.circular(v)), xs, md, lg);
 
   Widget circle() => _applyGenericStyle(
     const FxStyle(borderRadius: BorderRadius.all(Radius.circular(9999))),
@@ -483,29 +264,11 @@ extension FluxyWidgetExtension on Widget {
 
   // --- Dimension Modifiers ---
 
-  Widget w(double xs, {double? md, double? lg}) {
-    if (md == null && lg == null) return _applyGenericStyle(FxStyle(width: xs));
-    return _applyResponsive(
-      FxResponsiveStyle(
-        xs: FxStyle(width: xs),
-        md: md != null ? FxStyle(width: md) : null,
-        lg: lg != null ? FxStyle(width: lg) : null,
-      ),
-    );
-  }
+  Widget w(double xs, {double? md, double? lg}) =>
+      _responsiveModifier((v) => FxStyle(width: v), xs, md, lg);
 
-  Widget h(double xs, {double? md, double? lg}) {
-    if (md == null && lg == null) {
-      return _applyGenericStyle(FxStyle(height: xs));
-    }
-    return _applyResponsive(
-      FxResponsiveStyle(
-        xs: FxStyle(height: xs),
-        md: md != null ? FxStyle(height: md) : null,
-        lg: lg != null ? FxStyle(height: lg) : null,
-      ),
-    );
-  }
+  Widget h(double xs, {double? md, double? lg}) =>
+      _responsiveModifier((v) => FxStyle(height: v), xs, md, lg);
 
   Widget wFull() => _applyGenericStyle(const FxStyle(width: double.infinity));
   Widget hFull() => _applyGenericStyle(const FxStyle(height: double.infinity));
@@ -611,18 +374,8 @@ extension FluxyWidgetExtension on Widget {
 
   FxFontProxy get font => FxFontProxy(this);
 
-  Widget fontSize(double xs, {double? md, double? lg}) {
-    if (md == null && lg == null) {
-      return _applyGenericStyle(FxStyle(fontSize: xs));
-    }
-    return _applyResponsive(
-      FxResponsiveStyle(
-        xs: FxStyle(fontSize: xs),
-        md: md != null ? FxStyle(fontSize: md) : null,
-        lg: lg != null ? FxStyle(fontSize: lg) : null,
-      ),
-    );
-  }
+  Widget fontSize(double xs, {double? md, double? lg}) =>
+      _responsiveModifier((v) => FxStyle(fontSize: v), xs, md, lg);
   Widget fontWeight(FontWeight weight) =>
       _applyGenericStyle(FxStyle(fontWeight: weight));
   Widget color(Color value) => _applyGenericStyle(FxStyle(color: value));

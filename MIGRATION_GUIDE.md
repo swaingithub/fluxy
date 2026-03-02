@@ -186,6 +186,58 @@ final socket = FluxyResourceManager.websocket('wss://api.example.com');
 
 ---
 
+# Migration Guide: Fluxy v1.1.0 → v1.2.0 (Latest)
+
+Fluxy v1.2.0 is a **100% backward compatible** update. It introduces the **Industrial Engine**, which enhances layout stability, developer experience, and hot-reload performance. There are no breaking changes for existing code.
+
+## New Features (Opt-in)
+
+### 1. Robust Hot-Reload Routing
+If you previously used `FluxyRouter.setRoutes()`, you can now switch to `setRoutesProvider()` to allow adding new routes during development without needing a hard restart.
+
+**Before:**
+```dart
+void main() {
+  FluxyRouter.setRoutes(myAppRoutes);
+  runApp(const MyApp());
+}
+```
+
+**After (Industrial Hot-Reload):**
+```dart
+void main() {
+  // Pass a function that returns your routes
+  FluxyRouter.setRoutesProvider(() => myAppRoutes);
+  runApp(const MyApp());
+}
+```
+
+### 2. Standard Flutter Alignment Aliases
+You can now use either `justify`/`items` (Fluxy style) or `mainAxisAlignment`/`crossAxisAlignment` (Flutter style) in your `Fx.row` and `Fx.col` widgets. 
+
+**Both are now valid:**
+```dart
+Fx.row(
+  mainAxisAlignment: MainAxisAlignment.center, // New alias supported
+  justify: MainAxisAlignment.center,          // Original Fluxy style still works
+)
+```
+
+## Stability Engine Upgrades
+
+### Flex Safety (Automatic)
+The `FxSafeExpansion` engine is now active by default. It automatically detects if `.flex()` or `.expanded()` is used in an illegal context (like inside a `Stack` or `Scaffold`). 
+*   **Previous behavior**: App would crash with a `ParentDataWidget` error.
+*   **v1.2.0 behavior**: App intercepts the crash, logs a warning, and renders the child normally.
+
+### Reactivity Tracker (Debug Only)
+In Debug mode, Fluxy will now audit your `build()` methods. If you read a signal's value without an `Fx()` wrapper, a high-fidelity "Reactivity Alert" will appear in your console. 
+*   **Fix**: Simply wrap the UI part using the signal with `Fx(() => ...)`.
+
+## [DONE] Welcome to Fluxy v1.2.0!
+
+Thank you for upgrading! The Industrial Engine makes Fluxy the most forgiving and developer-friendly framework for professional Flutter applications.
+
 ## [DONE] Welcome to Fluxy v1.1.0!
 
 Thank you for upgrading! The new Stability Kernel and real-time modules make Fluxy the most resilient platform for professional Flutter development.
