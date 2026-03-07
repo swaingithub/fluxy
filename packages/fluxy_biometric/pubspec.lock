@@ -180,10 +180,10 @@ packages:
     dependency: "direct main"
     description:
       name: fluxy
-      sha256: cd837ddde3197965eb9ad6bc1cfa5882de7e581944b5837a3a0c7001ec3167f9
+      sha256: ec4ff067ae28d4fc60612b3d4a481ef8754158abf982c8b1bd4013b7f7c6e92f
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.0"
+    version: "1.2.0"
   http:
     dependency: transitive
     description:

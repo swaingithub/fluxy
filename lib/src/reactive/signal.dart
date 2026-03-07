@@ -121,9 +121,8 @@ class FluxyReactiveContext {
     if (!_isBatching && !_isFlushScheduled) {
       _isFlushScheduled = true;
       
-      // Use SchedulerBinding to ensure flushes happen at the end of the frame cycle
-      // This prevents interrupting the layout/paint phase.
-      WidgetsBinding.instance.addPostFrameCallback((_) => _flush());
+      // Use Microtask to batch updates immediately but safely
+      Future.microtask(_flush);
     }
   }
 

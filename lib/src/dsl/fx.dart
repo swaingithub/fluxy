@@ -23,6 +23,7 @@ import '../widgets/badge.dart';
 import '../widgets/fx_image.dart';
 import '../widgets/fx_shimmer.dart';
 import '../widgets/scroll.dart';
+export '../widgets/sidebar.dart';
 
 // Re-export specific styles/tokens for easy access if needed
 export '../styles/style.dart';
@@ -42,6 +43,7 @@ import '../engine/error_pipeline.dart';
 import '../widgets/fx_chart.dart';
 
 export '../widgets/fx_chart.dart';
+export '../widgets/fx_tabs.dart';
 import '../layout/fx_layout.dart';
 import '../engine/stability/stability.dart';
 import '../engine/metrics/observability.dart';
@@ -145,13 +147,9 @@ import 'fx_extensions.dart';
     return Fx(() => FluxyFeatureToggle.isEnabled(key) ? child : fallback);
   }
 
-  /// A common dashboard layout with sidebar and main content.
-  /// Automatically handles Drawer on mobile and Row on desktop.
   static Widget dashboard({
-    required Widget sidebar,
     required Widget body,
     Widget? navbar,
-    bool sidebarVisible = true,
   }) {
     return layout(
       mobile: scaffold(
@@ -159,13 +157,11 @@ import 'fx_extensions.dart';
             ? PreferredSize(
                 preferredSize: const Size.fromHeight(64), child: navbar)
             : null,
-        drawer: Drawer(child: sidebar),
         body: body,
       ),
       desktop: scaffold(
         body: Fx.row(
           children: [
-            if (sidebarVisible) sidebar,
             Expanded(
               child: Fx.col(
                 children: [
@@ -307,29 +303,7 @@ import 'fx_extensions.dart';
     );
   }
 
-  /// A quick sidebar template for desktop.
-  static Widget sidebar({
-    required List<Widget> items,
-    Widget? header,
-    Widget? footer,
-    double width = 280,
-    FxStyle style = FxStyle.none,
-  }) {
-    return Box(
-      style: FxStyle(
-        width: width,
-        height: double.infinity,
-        direction: Axis.vertical,
-        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 12),
-        backgroundColor: Colors.white,
-      ).merge(style),
-      children: [
-        if (header != null) header,
-        Expanded(child: Fx.list(children: items, gap: 4)),
-        if (footer != null) footer,
-      ],
-    );
-  }
+
 
   /// Vertical Layout (Column).
   static Widget col({

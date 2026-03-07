@@ -31,7 +31,7 @@ Add the new packages to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  fluxy: ^1.1.0
+  fluxy: ^1.2.1
   
   # Add these if you were using them before
   fluxy_test: ^1.1.0
@@ -238,6 +238,30 @@ In Debug mode, Fluxy will now audit your `build()` methods. If you read a signal
 
 Thank you for upgrading! The Industrial Engine makes Fluxy the most forgiving and developer-friendly framework for professional Flutter applications.
 
-## [DONE] Welcome to Fluxy v1.1.0!
+---
 
-Thank you for upgrading! The new Stability Kernel and real-time modules make Fluxy the most resilient platform for professional Flutter development.
+# Migration Guide: Fluxy v1.2.0 → v1.2.1 (Current)
+
+Fluxy v1.2.1 is a **design-focused** update that launches the **Elite UI System**. This release is 100% backward compatible. Your existing `FxBottomBar` implementations will automatically upgrade to the new full-width glass dock design.
+
+## Elite Motion Integration
+
+To use the new premium animations, ensure you have the `fluxy_animations` package:
+
+```yaml
+dependencies:
+  fluxy: ^1.2.1
+  fluxy_animations: ^1.2.1
+```
+
+## UI Changes
+
+### 1. Edge-to-Edge Navigation
+The `FxBottomBar` now defaults to a full-width layout. If you need the old "floating pill" style, you can wrap it in a `Padding` widget, but the new dock is the recommended design standard for v1.2.1.
+
+### 2. Stacked Visibility
+Icons and labels are now always visible. No migration code is required for this; the framework handles the transition automatically.
+
+## [DONE] Welcome to Fluxy v1.2.1!
+
+Thank you for being part of the Fluxy ecosystem. v1.2.1 makes your apps look more premium with zero extra effort.

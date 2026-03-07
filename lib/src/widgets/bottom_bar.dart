@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../dsl/fx.dart';
+import '../engine/style_resolver.dart';
+import '../styles/fx_theme.dart';
 
 class FxBottomBar extends StatelessWidget {
   final int currentIndex;
@@ -23,18 +25,27 @@ class FxBottomBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final effectiveActive = activeColor ?? Theme.of(context).primaryColor;
-    final effectiveBase = baseColor ?? Colors.grey.shade400;
+    final isDark = FxTheme.isDarkMode;
+    
+    final effectiveActive = activeColor != null ? FxStyleResolver.resolveColor(context, activeColor!) : Fx.primary;
+    final effectiveBase = baseColor != null ? FxStyleResolver.resolveColor(context, baseColor!) : (isDark ? Colors.white70 : Colors.black54);
 
     return Fx.box(
       style: containerStyle ??
           FxStyle(
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-            backgroundColor: Colors.white,
+            padding: EdgeInsets.fromLTRB(
+              8, 
+              12, 
+              8, 
+              MediaQuery.paddingOf(context).bottom > 0 ? MediaQuery.paddingOf(context).bottom + 8 : 12
+            ),
+            backgroundColor: isDark ? const Color(0xFF1E293B).withValues(alpha: 0.95) : Colors.white.withValues(alpha: 0.95),
+            glass: 20.0,
             borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+            border: Border(top: BorderSide(color: isDark ? Colors.white12 : Colors.black.withValues(alpha: 0.05), width: 1)),
             shadows: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.05),
+                color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.05),
                 blurRadius: 20,
                 offset: const Offset(0, -5),
               ),
@@ -47,66 +58,51 @@ class FxBottomBar extends StatelessWidget {
           final item = entry.value;
           final isActive = index == currentIndex;
 
-          return GestureDetector(
-            onTap: () {
-              if (animate && !isActive) Fx.haptic.light();
-              onTap(index);
-            },
-            behavior: HitTestBehavior.opaque,
-            child: AnimatedContainer(
-              duration: animate ? const Duration(milliseconds: 300) : Duration.zero,
-              curve: Curves.fastOutSlowIn,
-              padding: isActive
-                  ? const EdgeInsets.symmetric(horizontal: 16, vertical: 8)
-                  : const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-              decoration: BoxDecoration(
-                color: isActive
-                    ? effectiveActive.withValues(alpha: 0.1)
-                    : Colors.transparent,
-                borderRadius: BorderRadius.circular(100),
-              ),
-              child: Row(
+          return Expanded(
+            child: GestureDetector(
+              onTap: () => onTap(index),
+              behavior: HitTestBehavior.opaque,
+              child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  if (isActive && item.activeIconWidget != null)
-                    item.activeIconWidget!
-                  else if (item.iconWidget != null)
-                    IconTheme(
-                      data: IconThemeData(
-                        color: isActive ? effectiveActive : effectiveBase,
-                        size: 24,
-                      ),
-                      child: item.iconWidget!,
-                    )
-                  else if (item.icon != null)
-                    Icon(
-                      isActive ? (item.activeIcon ?? item.icon) : item.icon,
-                      color: isActive ? effectiveActive : effectiveBase,
-                      size: 24,
-                    )
-                  else
-                    const SizedBox(width: 24, height: 24),
-
-                  // Smooth label expansion
-                  AnimatedSize(
-                    duration: animate ? const Duration(milliseconds: 300) : Duration.zero,
-                    curve: Curves.easeInOut,
-                    child: Row(
+                  // Subtle Active Background
+                  AnimatedContainer(
+                    duration: animate ? const Duration(milliseconds: 400) : Duration.zero,
+                    curve: Curves.easeOutBack,
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: isActive 
+                          ? effectiveActive.withValues(alpha: 0.1) 
+                          : Colors.transparent,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        if (isActive) ...[
-                          const SizedBox(width: 8),
-                          Text(
-                            item.label,
-                            style: TextStyle(
-                              color: effectiveActive,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 13,
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.clip,
+                        if (isActive && item.activeIconWidget != null)
+                          item.activeIconWidget!
+                        else if (item.iconWidget != null)
+                          item.iconWidget!
+                        else if (item.icon != null)
+                          Icon(
+                            isActive ? (item.activeIcon ?? item.icon) : item.icon,
+                            color: isActive ? effectiveActive : effectiveBase,
+                            size: 24,
+                          )
+                        else
+                          const SizedBox(width: 24, height: 24),
+                        const SizedBox(height: 4),
+                        Text(
+                          item.label,
+                          style: TextStyle(
+                            color: isActive ? effectiveActive : effectiveBase,
+                            fontWeight: isActive ? FontWeight.bold : FontWeight.w500,
+                            fontSize: 12,
                           ),
-                        ],
+                          maxLines: 1,
+                          textAlign: TextAlign.center,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ],
                     ),
                   ),

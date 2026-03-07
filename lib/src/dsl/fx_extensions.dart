@@ -42,4 +42,8 @@ extension FxPlugins on Fx {
   /// Direct access to ota plugin
   /// Usage: `Fx.ota.update()` instead of `Fx.platform.ota.update()`
   static dynamic get ota => Fluxy.find<dynamic>();
+
+  /// Direct access to animations plugin
+  /// Usage: `Fx.animations.fast` instead of `Fx.platform.animations.fast`
+  static dynamic get animations => Fluxy.find<dynamic>();
 }

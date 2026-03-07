@@ -11,6 +11,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.1] - 2026-03-07
+
+### Added
+- **Elite Bottom Bar (Full-Width Glass Dock)**:
+    - **Edge-to-Edge Design**: Redesigned the bottom navigation as a full-width glassmorphic "Dock" for a more integrated native feel.
+    - **Permanent Visibility**: Transitioned to a "Stacked Icon & Text" layout where both labels and icons are always clear and visible.
+    - **Adaptive Safe-Area**: Implemented dynamic bottom padding that automatically adjusts for modern gesture-based navigation bars.
+    - **Optimized Distribution**: Switched to an `Expanded` flex-base for perfectly equal item widths (20% each) preventing text clipping.
+- **Modern "Elite" Animation Primitives**:
+    - **`FxMeshGradient`**: Ultra-modern fluid background with organically moving color blobs.
+    - **`FxAnimatedBorder`**: Premium glowing "light trail" that travels around the perimeter of any container.
+    - **`FxSpotlight`**: Cinematic interactive mask reveal that follows mouse/touch input.
+    - **`FxGooey`**: Metaball-based liquid merge effect where widgets physically "melt" into each other.
+    - **`FxConfetti`**: High-performance organic particle celebrations for interactions.
+
+### Fixed
+- **Bottom Bar Overflow**: Eliminated `RenderFlex` overflow issues when using 5+ navigation items through improved flex distribution.
+- **Icon Support**: Restored support for `iconWidget` and `activeIconWidget` in bottom bar items for high-end custom animations.
+
 ## [1.2.0] - 2026-03-02
 
 ### Added

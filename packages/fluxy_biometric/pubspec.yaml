@@ -1,6 +1,6 @@
 name: fluxy_biometric
 description: Biometric authentication plugin for the Fluxy framework.
-version: 1.2.0
+version: 1.1.0
 homepage: https://github.com/swaingithub/fluxy
 repository: https://github.com/swaingithub/fluxy
 issue_tracker: https://github.com/swaingithub/fluxy/issues

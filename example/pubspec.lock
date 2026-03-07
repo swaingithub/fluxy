@@ -310,112 +310,119 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "1.1.0"
+    version: "1.2.0"
+  fluxy_animations:
+    dependency: "direct main"
+    description:
+      path: "../packages/fluxy_animations"
+      relative: true
+    source: path
+    version: "0.1.0"
   fluxy_auth:
     dependency: "direct main"
     description:
       path: "../packages/fluxy_auth"
       relative: true
     source: path
-    version: "1.1.0"
+    version: "1.2.0"
   fluxy_biometric:
     dependency: "direct main"
     description:
       path: "../packages/fluxy_biometric"
       relative: true
     source: path
-    version: "1.1.0"
+    version: "1.2.0"
   fluxy_camera:
     dependency: "direct main"
     description:
       path: "../packages/fluxy_camera"
       relative: true
     source: path
-    version: "1.1.0"
+    version: "1.2.0"
   fluxy_connectivity:
     dependency: "direct main"
     description:
       path: "../packages/fluxy_connectivity"
       relative: true
     source: path
-    version: "1.1.0"
+    version: "1.2.0"
   fluxy_device:
     dependency: "direct main"
     description:
       path: "../packages/fluxy_device"
       relative: true
     source: path
-    version: "1.1.0"
+    version: "1.2.0"
   fluxy_geo:
     dependency: "direct main"
     description:
       path: "../packages/fluxy_geo"
       relative: true
     source: path
-    version: "1.1.0"
+    version: "1.2.0"
   fluxy_haptics:
     dependency: "direct main"
     description:
       path: "../packages/fluxy_haptics"
       relative: true
     source: path
-    version: "1.1.0"
+    version: "1.2.0"
   fluxy_logger:
     dependency: "direct main"
     description:
       path: "../packages/fluxy_logger"
       relative: true
     source: path
-    version: "1.1.0"
+    version: "1.2.0"
   fluxy_notifications:
     dependency: "direct main"
     description:
       path: "../packages/fluxy_notifications"
       relative: true
     source: path
-    version: "1.1.0"
+    version: "1.2.0"
   fluxy_permissions:
     dependency: "direct main"
     description:
       path: "../packages/fluxy_permissions"
       relative: true
     source: path
-    version: "1.1.0"
+    version: "1.2.0"
   fluxy_presence:
     dependency: "direct main"
     description:
       path: "../packages/fluxy_presence"
       relative: true
     source: path
-    version: "1.1.0"
+    version: "1.2.0"
   fluxy_storage:
     dependency: "direct main"
     description:
       path: "../packages/fluxy_storage"
       relative: true
     source: path
-    version: "1.1.0"
+    version: "1.2.0"
   fluxy_stream_bridge:
     dependency: "direct main"
     description:
       path: "../packages/fluxy_stream_bridge"
       relative: true
     source: path
-    version: "1.1.0"
+    version: "1.2.0"
   fluxy_sync:
     dependency: "direct main"
     description:
       path: "../packages/fluxy_sync"
       relative: true
     source: path
-    version: "1.1.0"
+    version: "1.2.0"
   fluxy_websocket:
     dependency: "direct main"
     description:
       path: "../packages/fluxy_websocket"
       relative: true
     source: path
-    version: "1.1.0"
+    version: "1.2.0"
   geolocator:
     dependency: transitive
     description:

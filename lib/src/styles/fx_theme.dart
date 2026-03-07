@@ -6,6 +6,11 @@ class FxTheme {
   static final Flux<ThemeMode> _mode = flux(
     ThemeMode.system,
     key: 'fx_theme_mode',
+    fromJson: (json) {
+      if (json == 'dark') return ThemeMode.dark;
+      if (json == 'light') return ThemeMode.light;
+      return ThemeMode.system;
+    },
   );
 
   /// Returns the current theme mode.

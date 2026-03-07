@@ -1,6 +1,6 @@
 name: fluxy_platform
 description: "A meta-package for the Fluxy framework that includes the core engine and all official plugins."
-version: 1.2.0
+version: 1.1.0
 homepage: https://github.com/swaingithub/fluxy
 repository: https://github.com/swaingithub/fluxy
 issue_tracker: https://github.com/swaingithub/fluxy/issues

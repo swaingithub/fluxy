@@ -1,6 +1,7 @@
 name: fluxy_example
 description: A comprehensive example demonstrating Fluxy framework capabilities
 version: 1.0.0
+publish_to: none
 
 environment:
   sdk: '>=3.10.0 <4.0.0'
@@ -41,6 +42,8 @@ dependencies:
     path: ../packages/fluxy_stream_bridge
   fluxy_geo:
     path: ../packages/fluxy_geo
+  fluxy_animations:
+    path: ../packages/fluxy_animations
 
 dev_dependencies:
   flutter_test:
@@ -50,6 +53,38 @@ dev_dependencies:
 dependency_overrides:
   fluxy:
     path: ../
+  fluxy_haptics:
+    path: ../packages/fluxy_haptics
+  fluxy_device:
+    path: ../packages/fluxy_device
+  fluxy_logger:
+    path: ../packages/fluxy_logger
+  fluxy_camera:
+    path: ../packages/fluxy_camera
+  fluxy_auth:
+    path: ../packages/fluxy_auth
+  fluxy_notifications:
+    path: ../packages/fluxy_notifications
+  fluxy_storage:
+    path: ../packages/fluxy_storage
+  fluxy_biometric:
+    path: ../packages/fluxy_biometric
+  fluxy_connectivity:
+    path: ../packages/fluxy_connectivity
+  fluxy_permissions:
+    path: ../packages/fluxy_permissions
+  fluxy_websocket:
+    path: ../packages/fluxy_websocket
+  fluxy_sync:
+    path: ../packages/fluxy_sync
+  fluxy_presence:
+    path: ../packages/fluxy_presence
+  fluxy_stream_bridge:
+    path: ../packages/fluxy_stream_bridge
+  fluxy_geo:
+    path: ../packages/fluxy_geo
+  fluxy_animations:
+    path: ../packages/fluxy_animations
 
 flutter:
   uses-material-design: true

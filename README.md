@@ -9,22 +9,20 @@ Fluxy is not just a library; it is a **Managed Application Platform (MAP)** desi
 
 ---
 
-## **v1.2.0 - The Industrial Engine Release**
+## **v1.2.1 - The Elite Motion Release**
 
-**Fluxy v1.2.0 introduces the Industrial Engine for enhanced layout safety and real-time developer diagnostics!** 
+**Fluxy v1.2.1 introduces the Elite UI system and high-end animation primitives for next-gen application design!** 
 
-- **Industrial Engine Update**: Context-aware `FxSafeExpansion` and alignment inference
-- **Reactivity Tracker**: Debug-time audit for missing reactive wrappers
-- **Hot-Reload Routing**: Dynamic route provider for instant developer updates
-- **Stability Kernel™**: Intercepts and auto-repairs layout violations
-- **Managed Resource Manager**: Automated lifecycle for hardware features
-- **Industrial Hardening Suite**: Level-2 Security Vault and Recovery Boundaries
+- **Elite Bottom Bar**: Full-width glassmorphic Dock with always-visible labels.
+- **Elite Animation Primitives**: New `FxMeshGradient`, `FxAnimatedBorder`, `FxSpotlight`, `FxGooey`, and `FxConfetti`.
+- **Industrial Engine Update**: Context-aware `FxSafeExpansion` and alignment inference.
+- **Stability Kernel™**: Intercepts and auto-repairs layout violations.
 
 **[Read Migration Guide](MIGRATION_GUIDE.md)**
 
-### Recent Updates (v1.0.1 - v1.2.0)
-- **v1.2.0**: Fluxy Stability Kernel™ & Real-Time Ecosystem
-- **v1.0.1**: Industrial Stability Update with `fluxy_haptics`, `fluxy_logger`, and `fluxy_device`
+### Recent Updates (v1.2.0 - v1.2.1)
+- **v1.2.1**: Elite UI & High-End Motion Primitives
+- **v1.2.0**: Fluxy Stability Kernel™ & Industrial Engine
 
 ---
 
@@ -33,31 +31,32 @@ Fluxy is not just a library; it is a **Managed Application Platform (MAP)** desi
 ### Core Package
 ```yaml
 dependencies:
-  fluxy: ^1.2.0
+  fluxy: ^1.2.1
 ```
 
 ### Modular Packages (Add as needed)
 ```yaml
 dependencies:
-  fluxy_camera: ^1.2.0       # Camera functionality  
-  fluxy_auth: ^1.2.0         # Authentication and biometrics
-  fluxy_notifications: ^1.2.0 # Push notifications
-  fluxy_storage: ^1.2.0      # Data persistence
-  fluxy_test: ^1.2.0         # Testing utilities
-  fluxy_analytics: ^1.2.0    # Analytics and tracking
-  fluxy_biometric: ^1.2.0    # Biometric authentication
-  fluxy_connectivity: ^1.2.0 # Network connectivity
-  fluxy_permissions: ^1.2.0  # Device permissions
-  fluxy_platform: ^1.2.0     # Unified meta-package
-  fluxy_ota: ^1.2.0          # Over-the-air updates
-  fluxy_haptics: ^1.2.0      # Sensory feedback
-  fluxy_logger: ^1.2.0       # Industrial auditing
-  fluxy_device: ^1.2.0       # Environment awareness
-  fluxy_websocket: ^1.2.0    # Managed WebSockets
-  fluxy_sync: ^1.2.0         # Persistent hydration
-  fluxy_presence: ^1.2.0     # Collaborative state
-  fluxy_geo: ^1.2.0          # Geofencing engine
-  fluxy_stream_bridge: ^1.2.0 # Native Stream DSL
+  fluxy_animations: ^1.2.1   # High-end motion primitives [NEW]
+  fluxy_camera: ^1.1.0       # Camera functionality  
+  fluxy_auth: ^1.1.0         # Authentication and biometrics
+  fluxy_notifications: ^1.1.0 # Push notifications
+  fluxy_storage: ^1.1.0      # Data persistence
+  fluxy_test: ^1.1.0         # Testing utilities
+  fluxy_analytics: ^1.1.0    # Analytics and tracking
+  fluxy_biometric: ^1.1.0    # Biometric authentication
+  fluxy_connectivity: ^1.1.0 # Network connectivity
+  fluxy_permissions: ^1.1.0  # Device permissions
+  fluxy_platform: ^1.1.0     # Unified meta-package
+  fluxy_ota: ^1.1.0          # Over-the-air updates
+  fluxy_haptics: ^1.1.0      # Sensory feedback
+  fluxy_logger: ^1.1.0       # Industrial auditing
+  fluxy_device: ^1.1.0       # Environment awareness
+  fluxy_websocket: ^1.1.0    # Managed WebSockets
+  fluxy_sync: ^1.1.0         # Persistent hydration
+  fluxy_presence: ^1.1.0     # Collaborative state
+  fluxy_geo: ^1.1.0          # Geofencing engine
+  fluxy_stream_bridge: ^1.1.0 # Native Stream DSL
 ```
 
 ### Quick Start
@@ -116,10 +115,10 @@ void main() async {
 }
 ```
 
-**v1.2.0 Modernization:**
+**v1.2.1 Modernization:**
+- **Elite Motion**: High-end fluid and neon animation primitives
+- **Elite UI**: Full-width glassmorphic navigation dock
 - **Industrial Engine**: Context-aware expansion and alignment inference
-- **Reactivity Tracker**: Real-time audit of reactive state management
-- **Hot-Reload Routing**: Dynamic provider for instant developer cycle
 - **Stability Kernel™**: Intercepts and auto-repairs layout violations
 - **Managed Lifecycle**: Automatic resource cleanup via `FluxyResourceManager`
 - **Real-Time Ecosystem**: Native WebSockets and Sync engines
@@ -178,7 +177,8 @@ To maintain architectural integrity, always follow the **Unified Platform API** 
 *   **"UI doesn't update"**: Always wrap your platform-dependent UI in an `Fx(() => ...)` builder.
 *   **"Permission Denied"**: Use the platform helper `Fx.platform.permissions` instead of raw Flutter plugins.
 
-**v1.0.0 Modular Packages:**
+**v1.2.1 Modular Packages:**
+- `fluxy_animations` - Elite motion and fluid UI [NEW]
 - `fluxy_camera` - Camera functionality  
 - `fluxy_auth` - Authentication and biometrics
 - `fluxy_notifications` - Push notifications
@@ -193,6 +193,11 @@ To maintain architectural integrity, always follow the **Unified Platform API** 
 - `fluxy_haptics` - Sensory feedback
 - `fluxy_logger` - Industrial auditing
 - `fluxy_device` - Environment awareness
+- `fluxy_websocket` - Managed WebSockets
+- `fluxy_sync` - Persistent hydration
+- `fluxy_presence` - Collaborative state
+- `fluxy_geo` - Geofencing engine
+- `fluxy_stream_bridge` - Native Stream DSL
 
 **v0.2.5 Platform Modules:**
 - Full compatibility with latest platform versions
@@ -240,6 +245,7 @@ Fluxy is under active development with a focus on enterprise-grade features.
 *   **[PROG] OTA (Over-the-Air) Style Updates**: Update app branding and themes without a Store release. [EXPERIMENTAL]
 
 ### Recent Releases
+- **v1.2.1** (2026-03-07): Elite Motion Release
 - **v1.2.0** (2026-03-02): Industrial Engine Release
 - **v1.1.0** (2026-02-28): Stability Kernel & Real-Time Expansion
 - **v1.0.1** (2026-02-24): Industrial Stability Update

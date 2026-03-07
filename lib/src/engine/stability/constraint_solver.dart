@@ -9,17 +9,9 @@ class FluxyConstraintSolver {
     double maxW = constraints.maxWidth;
     bool solved = false;
 
-    // Fix Infinite Height/Width by clamping to viewport
-    if (maxH == double.infinity) {
-      maxH = viewportSize?.height ?? 800; // Fallback to safe 800 if unknown
-      solved = true;
-      _logFix('Infinite Height', 'Clamped infinite height to ${maxH.toInt()}px to prevent viewport crash.');
-    }
-    if (maxW == double.infinity) {
-      maxW = viewportSize?.width ?? 400; // Fallback to safe 400 if unknown
-      solved = true;
-      _logFix('Infinite Width', 'Clamped infinite width to ${maxW.toInt()}px to prevent viewport crash.');
-    }
+    // It is perfectly legal and required for ScrollViews to pass infinite constraints to their children.
+    // Eagerly clamping them here causes log spam and breaks horizontal/vertical scrolling limits.
+    // We defer to Flutter's native RenderBox solver to throw if actual violations occur.
 
     // Rule: Min must be <= Max
     double minH = constraints.minHeight;
