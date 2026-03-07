@@ -1,6 +1,9 @@
 name: fluxy_animations
 description: High-performance, declarative animations for the Fluxy UI Framework.
 version: 1.2.1
+homepage: https://github.com/swaingithub/fluxy
+repository: https://github.com/swaingithub/fluxy
+issue_tracker: https://github.com/swaingithub/fluxy/issues
 
 
 environment:

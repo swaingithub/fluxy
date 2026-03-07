@@ -171,10 +171,11 @@ packages:
   fluxy:
     dependency: "direct main"
     description:
-      path: "../.."
-      relative: true
-    source: path
-    version: "1.2.0"
+      name: fluxy
+      sha256: ac6a920c1d48647f7a3f1d2be1875d4f07002ee846d524c46244f0a6489a00b9
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.2.1"
   http:
     dependency: transitive
     description:

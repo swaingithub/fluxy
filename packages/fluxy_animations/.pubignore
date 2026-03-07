@@ -1,0 +1,10 @@
+# Standard Pub Ignore
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.metadata
+.packages
+pubspec.lock
+build/
+*.txt
+*.log
