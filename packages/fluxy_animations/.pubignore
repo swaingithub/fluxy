@@ -8,3 +8,10 @@ pubspec.lock
 build/
 *.txt
 *.log
+
+# Negations to override parent ignores
+!pubspec.yaml
+!LICENSE
+!README.md
+!CHANGELOG.md
+!lib/
