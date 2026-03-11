@@ -31,7 +31,7 @@ Fluxy is not just a library; it is a **Managed Application Platform (MAP)** desi
 ### Core Package
 ```yaml
 dependencies:
-  fluxy: ^1.2.1
+  fluxy: ^1.2.2
 ```
 
 ### Modular Packages (Add as needed)

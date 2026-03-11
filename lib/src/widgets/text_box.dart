@@ -96,8 +96,8 @@ class _TextBoxState extends State<TextBox> with ReactiveSubscriberMixin {
       if (FxDecorationBuilder.hasVisuals(s) ||
           s.width != null ||
           s.height != null ||
-          s.padding != s.padding /* always false now but keeping structure */ ||
-          s.margin != s.margin) {
+          s.padding != EdgeInsets.zero ||
+          s.margin != EdgeInsets.zero) {
         current = Container(
           width: s.width,
           height: s.height,

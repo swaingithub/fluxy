@@ -414,12 +414,8 @@ class FxStyle {
       minHeight: other.minHeight,
       maxWidth: other.maxWidth,
       maxHeight: other.maxHeight,
-      padding: other._padding == null || other._padding == EdgeInsets.zero
-          ? null
-          : other._padding,
-      margin: other._margin == null || other._margin == EdgeInsets.zero
-          ? null
-          : other._margin,
+      padding: _mergeInsets(_padding, other._padding),
+      margin: _mergeInsets(_margin, other._margin),
       backgroundColor: other.backgroundColor,
       gradient: other.gradient,
       shadows: other._shadows,
@@ -583,6 +579,17 @@ class FxStyle {
       cursor.hashCode ^
       opacity.hashCode ^
       aspectRatio.hashCode;
+  
+  EdgeInsets? _mergeInsets(EdgeInsets? a, EdgeInsets? b) {
+    if (a == null || a == EdgeInsets.zero) return b;
+    if (b == null || b == EdgeInsets.zero) return a;
+    return EdgeInsets.only(
+      left: b.left != 0 ? b.left : a.left,
+      top: b.top != 0 ? b.top : a.top,
+      right: b.right != 0 ? b.right : a.right,
+      bottom: b.bottom != 0 ? b.bottom : a.bottom,
+    );
+  }
 }
 
 /// A container for responsive styles.

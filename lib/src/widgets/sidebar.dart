@@ -9,6 +9,7 @@ class FxSidebarItem {
   final String label;
   final Widget? trailing;
   final bool isHeader;
+  final VoidCallback? onTap;
 
   const FxSidebarItem({
     this.icon,
@@ -16,7 +17,12 @@ class FxSidebarItem {
     this.iconWidget,
     this.trailing,
     this.isHeader = false,
+    this.onTap,
   });
+}
+
+class FxSidebarHeader extends FxSidebarItem {
+  const FxSidebarHeader({required super.label}) : super(isHeader: true);
 }
 
 class FxSidebar extends StatelessWidget {
@@ -100,7 +106,7 @@ class FxSidebar extends StatelessWidget {
                     );
                   }
 
-                  final isActive = index == currentIndex;
+                  final isActive = currentIndex != null && index == currentIndex;
                   final activeBg = isDark ? effectiveActive.withValues(alpha: 0.15) : effectiveActive.withValues(alpha: 0.1);
 
                   return Material(
@@ -108,7 +114,11 @@ class FxSidebar extends StatelessWidget {
                     child: InkWell(
                       borderRadius: BorderRadius.circular(12),
                       onTap: () {
-                        if (onTap != null) onTap!(index);
+                        if (item.onTap != null) {
+                          item.onTap!();
+                        } else if (onTap != null) {
+                          onTap!(index);
+                        }
                       },
                       hoverColor: isDark ? Colors.white.withValues(alpha: 0.05) : Colors.black.withValues(alpha: 0.05),
                       child: AnimatedContainer(

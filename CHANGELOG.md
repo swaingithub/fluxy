@@ -11,6 +11,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.2] - 2026-03-12
+
+### Fixed
+- **Engine: TextBox Layout Resolver**: Resolved a critical bug where `padding` and `margin` modifiers were being ignored by the rendering engine due to an incorrect identity comparison.
+- **DSL: Layout Consistency**: Standardized modifier priority to ensure predictive alignment when chaining multiple spacing utilities.
+
+### Changed
+- **Package Optimization**: Updated publication rules to strictly exclude internal demonstration assets and auxiliary project folders, reducing the core package size.
+- **Core Stability**: Enhanced internal style resolution guards to prevent layout shifts during reactive state transitions.
+
 ## [1.2.1] - 2026-03-07
 
 ### Added
