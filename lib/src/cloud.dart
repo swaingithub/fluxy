@@ -1,3 +1,4 @@
+// ignore_for_file: avoid_print
 import 'dart:io';
 import 'package:path/path.dart' as p;
 
@@ -6,11 +7,9 @@ class FluxyCloud {
   static const String _b = '\x1B[1m';
   static const String _g = '\x1B[32m';
   static const String _c = '\x1B[36m';
-  static const String _r = '\x1B[31m';
 
   static void _info(String msg) => print('$_c$_b[INFO]$_rs $msg');
   static void _success(String msg) => print('$_g$_b[DONE]$_rs $msg');
-  static void _error(String msg) => print('$_r$_b[FAIL]$_rs $msg');
 
   static Future<void> handle(List<String> args) async {
     _info('Configuring Fluxy Cloud CI/CD Pipeline...');
