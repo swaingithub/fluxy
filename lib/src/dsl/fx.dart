@@ -1047,7 +1047,52 @@ import 'fx_extensions.dart';
   /// Alias for snack
   // static void toast(BuildContext context, String message) => snack(context, message);
 
-  // --- Complex Structure Widgets ---
+  /// A common semantic primitive: Card.
+  static Widget card({
+    required Widget child,
+    FxStyle style = FxStyle.none,
+  }) {
+    return Box(
+      style: FxStyle(
+        backgroundColor: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        shadows: FxTokens.shadow.md,
+        padding: const EdgeInsets.all(16),
+      ).merge(style),
+      child: child,
+    );
+  }
+
+  /// A common semantic primitive: List Tile.
+  static Widget listTile({
+    Widget? leading,
+    required Widget title,
+    Widget? subtitle,
+    Widget? trailing,
+    FxStyle style = FxStyle.none,
+    VoidCallback? onTap,
+  }) {
+    return Fx.row(
+      alignItems: CrossAxisAlignment.center,
+      style: const FxStyle(
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      ).merge(style),
+      children: [
+        if (leading != null) leading.margin(0, md: 0, lg: 0), // Just to use padding/margin if needed, let's use spacing manually
+        if (leading != null) Fx.gap(12),
+        Fx.expand(child: Fx.col(
+          alignItems: CrossAxisAlignment.start,
+          gap: 4,
+          children: [
+            title,
+            if (subtitle != null) subtitle,
+          ],
+        )),
+        if (trailing != null) Fx.gap(12),
+        if (trailing != null) trailing,
+      ],
+    ).onTapSafe(() { if(onTap != null) onTap(); });
+  }
 
   /// App Bar wrapper.
   static PreferredSizeWidget appBar({

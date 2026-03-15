@@ -2,10 +2,10 @@
 import 'dart:io';
 import 'package:args/args.dart';
 import 'package:path/path.dart' as p;
+import 'dart:convert';
 import 'package:fluxy/src/cloud.dart';
 
-
-const String version = '1.2.0';
+const String version = '1.2.3';
 
 const String _rs = '\x1B[0m';
 const String _b = '\x1B[1m';
@@ -191,15 +191,22 @@ Future<void> _handleInit(List<String> args) async {
   Directory(p.join(coreDir.path, 'registry')).createSync();
 
   _step('CORE', 'Injecting Fluxy Framework into pubspec...');
-  await Process.run('flutter', ['pub', 'add', 'fluxy'], workingDirectory: projectDir.path, runInShell: true);
+  await Process.run(
+    'flutter',
+    ['pub', 'add', 'fluxy'],
+    workingDirectory: projectDir.path,
+    runInShell: true,
+  );
 
   // Write Templates
   File(p.join(libDir.path, 'main.dart')).writeAsStringSync(_fluxyMainTemplate);
-  File(p.join(coreDir.path, 'theme', 'app_theme.dart')).writeAsStringSync(_coreThemeTemplate);
+  File(
+    p.join(coreDir.path, 'theme', 'app_theme.dart'),
+  ).writeAsStringSync(_coreThemeTemplate);
   File(
     p.join(testDir.path, 'fluxy_boot_test.dart'),
   ).writeAsStringSync(_fluxyTestTemplate);
-  
+
   _step('SYNC', 'Bootstrapping local plugin registry...');
   // Force a registry regeneration in the new project
   final current = Directory.current.path;
@@ -210,8 +217,74 @@ Future<void> _handleInit(List<String> args) async {
   _step('FEAT', 'Building industrial-standard home feature...');
   await _createFeature(projectDir.path, 'home');
 
+  _step('BRAND', 'Applying Industrial Fluxy Application Icon...');
+  _applyFluxyAppIcon(projectDir.path);
+
   _success('Fluxy project "$_b$projectName$_rs" is ready for production.');
   print('$_c$_b[NEXT]$_rs cd $projectName && fluxy run');
+}
+
+void _applyFluxyAppIcon(String projectPath) {
+  try {
+    // 1. Write the official Fluxy Icon to assets
+    final assetDir = Directory(p.join(projectPath, 'assets'));
+    if (!assetDir.existsSync()) assetDir.createSync();
+
+    // Base64 Encoded Official Fluxy Navy/Cyan Icon
+    const String b64Logo =
+        "iVBORw0KGgoAAAANSUhEUgAABAAAAAQACAIAAADwf7zUAAAXDElEQVR4nO3bK3IkRwBFUYOJELSYZwu2mJmoluEFehmiYmYOb8HQVMxAERqNRp/+VFdm1T1nAd0J362s+vLzL7/9BAAANHwZfQAAAGA9AgAAAEIEAAAAhAgAAAAIEQAAABAiAAAAIEQAAABAiAAAAIAQAQAAACECAAAAQgQAAACECAAAAAgRAAAAECIAAAAgRAAAAECIAAAAgBABAAAAIQIAAABCBAAAAIQIAAAACBEAAAAQIgAAACBEAAAAQIgAAACAEAEAAAAhAgAAAEIEAAAAhAgAAAAIEQAAABAiAAAAIEQAAABAiAAAAIAQAQAAACECAAAAQgQAAACECAAAAAgRAAAAECIAAAAgRAAAAECIAAAAgBABAAAAIQIAAABCBAAAAIQIAAAACBEAAAAQIgAAACBEAAAAQIgAAACAEAEAAAAhAgAAAEIEAAAAhAgAAAAIEQAAABAiAAAAIEQAAABAiAAAAIAQAQAAACECAAAAQgQAAACECAAAAAgRAAAAECIAAAAgRAAAAECIAAAAgBABAAAAIQIAAABCBAAAAIQIAAAACBEAAAAQIgAAACBEAAAAQIgAAACAEAEAAAAhAgAAAEIEAAAAhAgAAAAIEQAAABAiAAAAIEQAAABAiAAAAIAQAQAAACECAAAAQgQAAACECAAAAAgRAAAAECIAAAAgRAAAAECIAAAAgBABAAAAIQIAAABCBAAAAIQIAAAACBEAAAAQIgAAACBEAAAAQIgAAACAEAEAAAAhAgAAAEIEAAAAhAgAAAAIEQAAABAiAAAAIEQAAABAiAAAAIAQAQAAACECAAAAQgQAAACECAAAAAgRAAAAECIAAAAgRAAAAECIAAAAgBABAAAAIQIAAABCBAAAAIQIAAAACBEAAAAQIgAAACBEAAAAQIgAAACAEAEAAAAhAgAAAEIEAAAAhAgAAAAIEQAAABAiAAAAIEQAAABAiAAAAIAQAQAAACECAAAAQgQAAACECAAAAAgRAAAAECIAAAAgRAAAAECIAAAAgBABAAAAIQIAAABCBAAAAIQIAAAACBEAAAAQIgAAACBEAAAAQIgAAACAEAEAAAAhAgAAAEIEAAAAhAgAAAAIEQAAABAiAAAAIEQAAABAiAAAAIAQAQAAACECAAAAQgQAAACECAAAAAgRAAAAECIAAAAgRAAAAECIAAAAgBABAAAAIQIAAABCBAAAAIQIAAAACBEAAAAQIgAAACBEAAAAQIgAAACAEAEAAAAhAgAAAEIEAAAAhAgAAAAIEQAAABAiAAAAIEQAAABAiAAAAIAQAQAAACECAAAAQgQAAACECAAAAAgRAAAAECIAAAAgRAAAAECIAAAAgBABAAAAIQIAAABCBAAAAIQIAAAACBEAAAAQIgAAACBEAAAAQIgAAACAEAEAAAAhAgAAAEIEAAAAhAgAAAAIEQAAABAiAAAAIEQAAABAiAAAAIAQAQAAACECAAAAQgQAAACECAAAAAgRAAAAECIAAAAgRAAAAECIAAAAgBABAAAAIQIAAABCBAAAAIQIAAAACBEAAAAQIgAAACBEAAAAQIgAAACAEAEAAAAhAgAAAEIEAAAAhAgAAAAIEQAAABAiAAAAIEQAAABAiAAAAIAQAQAAACECAAAAQgQAAACECAAAAAgRAAAAECIAAAAgRAAAAECIAAAAgBABAAAAIQIAAABCBAAAAIQIAAAACBEAAAAQIgAAACBEAAAAQIgAAACAEAEAAAAhAgAAAEIEAAAAhAgAAAAIEQAAABAiAAAAIEQAAABAiAAAAIAQAQAAACECAAAAQgQAAACECAAAAAgRAAAAECIAAAAgRAAAAECIAAAAgBABAAAAIQIAAABCBAAAAIQIAAAACBEAAAAQIgAAACBEAAAAQIgAAACAEAEAAAAhAgAAAEIEAAAAhAgAAAAIEQAAABAiAAAAIEQAAABAiAAAAIAQAQAAACECAAAAQgQAAACECAAAAAgRAAAAECIAAAAgRAAAAECIAAAAgBABAAAAIQIAAABCBAAAAIQIAAAACBEAAAAQIgAAACBEAAAAQIgAAACAEAEAAAAhAgAAAEIEAAAAhAgAAAAIEQAAABAiAAAAIEQAAABAiAAAAIAQAQBsyfXXm9FHAIBtEwAAABAiAAAAIEQAAABAiAAAAIAQAQAAACECAAAAQgQAAACECAAAAAgRAAAAECIAAAAgRAAAAECIAAAAgBABAAAAIQIAAABCBAAAAIQIAAAACBEAAAAQIgAAACBEAAAAQIgAAACAEAEAAAAhAgAAAEIEAAAAhAgAAAAIEQAAABAiAAAAIEQAAABAiAAAAIAQAQAAACECAAAAQgQAAACECAAAAAgRAAAAECIAAAAgRAAAAECIAAAAgBABAAAAIQIAAABCBAAAAIQIAAAACBEAAAAQIgAAACBEAAAAQIgAAACAEAEAAAAhAgAAAEIEAAAAhAgAAAAIEQAAABAiAAAAIEQAAABAiAAAAIAQAQAAACECAAAAQgQAAACECAAAAAgRAAAAECIAAAAgRAAAAECIAAAAgBABAAAAIQIAAABCBAAAAIQIAAAACBEAAAAQIgAAACBEAAAAQIgAAACAEAEAAAAhAgAAAEIEAAAAhAgAAAAIEQAAABAiAAAAIEQAAABAiAAAAIAQAQAAACECAAAAQgQAAACECAAAAAgRAAAAECIAAAAgRAAAAECIAAAAgBABAAAAIQIAAABCBAAAAIQIAAAACBEAAAAQIgAAACBEAAAAQIgAAACAEAEAAAAhAgAAAEIEAAAAhAgAAAAIEQAAABAiAAAAIEQAAABAiAAAAIAQAQAAACECAAAAQgQAAACECAAAAAgRAAAAECIAAAAgRAAAAECIAAAAgBABAAAAIQIAAABCBAAAAIQIAAAACBEAAAAQIgAAACBEAAAAQIgAAACAEAEAAAAhAgAAAEIEAAAAhAgAAAAIEQAAABAiAAAAIEQAAJtxe//4659/jT4FrOSfP34ffQRgnwQAAACECAAAAAgRAAAAECIAAAAgRAAAAECIAAAAgBABAAAAIQIAAABCBAAAAIQIAAAACBEAAAAQIgAAACBEAAAAQIgAAACAEAEAAAAhAgAAAEIEAAAAhAgAAAAIEQAAABAiAAAAIEQAAABAiAAAAIAQAQAAACECAAAAQgQAAACECAAAAAgRAAAAECIAAAAgRAAAAECIAAAAgBABAAAAIQIAAABCBAAAAIQIAAAACBEAAAAQIgAAACBEAAAAQIgAAACAEAEAAAAhAgAAAEIEAAAAhAgAAAAIEQAAABAiAAAAIEQAAABAiAAAAIAQAQAAACECAAAAQgQAAACECAAAAAgRAAAAECIAAAAgRAAAAECIAAAAgBABAAAAIQIAAABCBAAAAIQIAAAACBEAAAAQIgAAACBEAAAAQIgAAACAEAEAAAAhAgAAAEIEAAAAhAgAAAAIEQAAABAiAAAAIEQAAABAiAAAAIAQAQAAACECAAAAQgQAAACECAAAAAgRAAAAECIAAAAgRAAAAECIAAAAgBABAAAAIQIAAABCBAAAAIQIAAAACBEAAAAQIgAAACBEAAAAQIgAAACAEAEAAAAhAgAAAEIEAAAAhAgAAAAIEQAAABAiAAAAIEQAAABAiAAAAIAQAQAAACECAAAAQgQAAACECAAAAAgRAAAAECIAAAAgRAAAAECIAAAAgBABAAAAIQIAAABCBAAAAIQIAAAACBEAAAAQIgAAACBEAAAAQIgAAACAEAEAAAAhAgAAAEIEAAAAhAgAAAAIEQAAABAiAAAAIEQAAABAiAAAAIAQAQAAACECAAAAQgQAAACECAAAAAgRAAAAECIAAAAgRAAAAECIAAAAgBABAAAAIQIAAABCBAAAAIQIAAAACBEAAAAQIgAAACBEAAAAQIgAAACAEAEAAAAhAgAAAEIEAAAAhAgAAAAIEQAAABAiAAAAIEQAAABAiAAAAIAQAQAAACECAAAAQgQAAACECAAAAAgRAAAAECIAAAAgRAAAAECIAAAAgBABAAAAIQIAAABCBAAAAIQIAAAACBEAAAAQIgAAACBEAAAAQIgAAACAEAEAAAAhAgAAAEIEAAAAhAgAAAAIEQAAABAiAAAAIEQAAABAiAAAAIAQAQAAACECAAAAQgQAAACECAAAAAgRAAAAECIAAAAgRAAAAECIAAAAgBABAAAAIQIAAABCBAAAAIQIAAAACBEAAAAQIgAAACBEAAAAQIgAAACAEAEAAAAhAgAAAEIEAAAAhAgAAAAIEQAAABAiAAAAIEQAAABAiAAAAIAQAQAAACECAAAAQgQAAACECAAAAAgRAAAAECIAAAAgRAAAAECIAAAAgBABAAAAIQIAAABCBAAAAIQIAAAACBEAAAAQIgAAACBEAAAAQIgAAACAEAEAAAAhAgAAAEIEAAAAhAgAAAAIEQAAABAiAAAAIEQAAABAiAAAAIAQAQAAACECAAAAQgQAAACECAAAAAgRAAAAECIAAAAgRAAAAECIAAAAgBABAGzGw93V9deb0acAgG0TAAAAECIAAAAgRAAAAECIAAAAgBABAAAAIQIAAABCBAAAAIQIAAAACBEAAAAQIgAAACBEAAAAQIgAAACAEAEAAAAhAgAAAEIEAAAAhAgAAAAIEQAAABAiAAAAIEQAAABAiAAAAIAQAQAAACECAAAAQgQAAACECAAAAAgRAAAAECIAAAAgRAAAAECIAAAAgBABAAAAIQIAAABCBAAAAIQI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AAAhAgAAAEIEAAAAhAgAAAAIEQAAABAiAAAAIEQAAABAiAAAAIAQAQAAACECAAAAQgQAAACECAAAAAgRAAAAECIAAAAgRAAAAECIAAAAgBABAAAAIQIAAABCBAAAAIQIAAAACBEAAAAQIgAAACBEAAAAQIgAAACAEAEAAAAhAgAAAEIEAAAAhAgAAAAIEQAAABAiAAAAIEQAAABAiAAAAIAQAQAAACECAAAAQgQAAACECAAAAAgRAAAAECIAAAAgRAAAAECIAAAAgBABAAAAIQIAAABCBAAAAIQIAAAACBEAAAAQIgAAACBEAAAAQIgAAACAEAEAAAAhAgAAAEIEAAAAhAgAAAAIEQAAABAiAAAAIEQAAABAiAAAAIAQAQAAACECAAAAQgQAAACECAAAAAgRAAAAECIAAAAgRAAAAECIAAAAgBABAAAAIQIAAABCBAAAAIQIAAAACBEAAAAQIgAAACBEAAAAQIgAAACAEAEAAAAhAgAAAEIEAAAAhAgAAAAIEQAAABAiAAAAIEQAAABAiAAAAIAQAQAAACECAAAAQgQAAACECAAAAAgRAAAAECIAAAAgRAAAAECIAAAAgBABAAAAIQIAAABCBAAAAIQIAAAACBEAAAAQIgAAACBEAAAAQIgAAACAEAEAAAAhAgAAAEIEAAAAhAgAAAAIEQAAABAiAAAAIEQAAABAiAAAAIAQAQAAACECAAAAQgQAAACECAAAAAgRAAAAECIAAAAgRAAAAECIAAAAgBABAAAAIQIAAABCBAAAAIQIAAAACBEAAAAQIgAAACBEAAAAQIgAAACAEAEAAAAhAgAAAEIEAAAAhAgAAAAIEQAAABAiAAAAIEQAAABAiAAAAIAQAQAAACECAAAAQgQAAACECAAAAAgRAAAAECIAAAAgRAAAAECIAAAAgBABAAAAIQIAAABCBAAAAIQIAAAACBEAAAAQIgAAACBEAAAAQIgAAACAEAEAAAAhAgAAAEIEAAAAhAgAAAAIEQAAABAiAAAAIEQAAABAiAAAAIAQAQAAACECAAAAQgQAAACECAAAAAgRAAAAECIAAAAgRAAAAECIAAAAgBABAAAAIQIAAABCBAAAAIQIAAAACBEAAAAQIgAAACBEAAAAQIgAAACAEAEAAAAhAgAAAEIEAAAAhAgAAAAIEQAAABAiAAAAIEQAAABAiAAAAIAQAQAAACECAAAAQgQAAACECAAAAAgRAAAAECIAAAAgRAAAAECIAAAAgBABAAAAIQIAAABCBAAAAIQIAAAACBEAAAAQIgAAACBEAAAAQIgAAACAEAEAAAAhAgAAAEIEAAAAhAgAAAAIEQAAABAiAAAAIEQAAABAiAAAAIAQAQAAACECAAAAQgQAAACECAAAAAgRAAAAECIAAAAgRAAAAECIAAAAgBABAAAAIQIAAABCBAAAAIQIAAAACBEAAAAQIgAAACBEAAAAQIgAAACAEAEAAAAhAgAAAEIEAAAAhAgAAAAIEQAAABAiAAAAIEQAAABAiAAAAIAQAQAAACECAAAAQgQAAACECAAAAAgRAAAAECIAAAAgRAAAAECIAAAAgBABAAAAIQIAAABCBAAAAIQIAAAACBEAAAAQIgAAACBEAAAAQIgAAACAkP8BedZraavUpcAAAAAASUVORK5CYII=";
+    File(p.join(assetDir.path, 'fluxy_logo.png')).writeAsBytesSync(
+      // Decode Base64 into pure raw PNG bytes instantaneously
+      <int>[
+        ...b64Logo.codeUnits.map((e) => e.toInt()),
+      ], // Dummy fallback array format if needed
+    );
+
+    // Write real decode logic
+    File(
+      p.join(assetDir.path, 'fluxy_logo.png'),
+    ).writeAsBytesSync(const Base64Decoder().convert(b64Logo));
+
+    // 2. Inject `flutter_launcher_icons` to pubspec.yaml
+    final File pubspecFile = File(p.join(projectPath, 'pubspec.yaml'));
+    if (pubspecFile.existsSync()) {
+      var content = pubspecFile.readAsStringSync();
+      // Only inject if it doesn't already exist
+      if (!content.contains('flutter_launcher_icons:')) {
+        content = content.replaceFirst('dev_dependencies:', '''dev_dependencies:
+  flutter_launcher_icons: ^0.13.1''');
+
+        content += '''\n
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/fluxy_logo.png"
+  min_sdk_android: 21
+''';
+        pubspecFile.writeAsStringSync(content);
+
+        // Ensure dependencies are downloaded
+        Process.runSync(
+          'flutter',
+          ['pub', 'get'],
+          workingDirectory: projectPath,
+          runInShell: true,
+        );
+
+        // Apply the official branding globally
+        Process.runSync(
+          'dart',
+          ['run', 'flutter_launcher_icons'],
+          workingDirectory: projectPath,
+          runInShell: true,
+        );
+      }
+    }
+  } catch (e) {
+    _info(
+      'Note: Could not automatically generate Fluxy logo. Skipping branding layer.',
+    );
+  }
 }
 
 Future<void> _handleGenerate(List<String> args) async {
@@ -220,7 +293,7 @@ Future<void> _handleGenerate(List<String> args) async {
     return;
   }
   final name = args.first.toLowerCase();
-  
+
   if (name == 'plugin') {
     if (args.length < 2) {
       _error('Plugin name required. Usage: fluxy g plugin <name>');
@@ -229,7 +302,7 @@ Future<void> _handleGenerate(List<String> args) async {
     await _createPlugin(args[1].toLowerCase());
     return;
   }
-  
+
   if (name == 'layout') {
     if (args.length < 2) {
       _error('Layout name required. Usage: fluxy g layout <name>');
@@ -267,7 +340,8 @@ Future<void> _handleGenerate(List<String> args) async {
 }
 
 Future<void> _createPlugin(String name) async {
-  final pluginDir = Directory(p.join('lib', 'plugins'))..createSync(recursive: true);
+  final pluginDir = Directory(p.join('lib', 'plugins'))
+    ..createSync(recursive: true);
   final camel = name[0].toUpperCase() + name.substring(1);
   final fileName = '${name}_plugin.dart';
 
@@ -297,8 +371,13 @@ class ${camel}Plugin extends FluxyPlugin {
   _info('To use: Fluxy.register(${camel}Plugin()); in main.dart');
 }
 
-Future<void> _createFeature(String path, String name, {String type = 'default'}) async {
-  final featDir = Directory(p.join(path, 'lib', 'features', name))..createSync(recursive: true);
+Future<void> _createFeature(
+  String path,
+  String name, {
+  String type = 'default',
+}) async {
+  final featDir = Directory(p.join(path, 'lib', 'features', name))
+    ..createSync(recursive: true);
   final camel = name[0].toUpperCase() + name.substring(1);
 
   if (type == 'login') {
@@ -677,23 +756,38 @@ Future<void> _handleRun(List<String> args) async {
   await _regeneratePluginRegistry();
 
   _step('RUN', 'Launching Industrial Fluxy Engine...');
-  await Process.start('flutter', ['run', ...args], mode: ProcessStartMode.inheritStdio, runInShell: true);
+  await Process.start(
+    'flutter',
+    ['run', ...args],
+    mode: ProcessStartMode.inheritStdio,
+    runInShell: true,
+  );
 }
 
 Future<void> _handleDoctor() async {
   _printBanner();
   _step('DOCTOR', 'Inspecting Fluxy Architectural Health...');
-  
+
   _info('Checking Modular Integration...');
   await _regeneratePluginRegistry();
-  
+
   print('\n$_bl$_b[ENV]$_rs Flutter Environment Status:');
-  await Process.start('flutter', ['doctor'], mode: ProcessStartMode.inheritStdio, runInShell: true);
+  await Process.start(
+    'flutter',
+    ['doctor'],
+    mode: ProcessStartMode.inheritStdio,
+    runInShell: true,
+  );
 }
 
 Future<void> _handleBuild(List<String> args) async {
   if (args.isEmpty) return;
-  await Process.start('flutter', ['build', ...args], mode: ProcessStartMode.inheritStdio, runInShell: true);
+  await Process.start(
+    'flutter',
+    ['build', ...args],
+    mode: ProcessStartMode.inheritStdio,
+    runInShell: true,
+  );
 }
 
 Future<void> _handleDeploy() async =>
@@ -746,7 +840,8 @@ class AppTheme {
 """;
 
 Future<void> _createLayout(String name) async {
-  final layoutDir = Directory(p.join('lib', 'core', 'layouts'))..createSync(recursive: true);
+  final layoutDir = Directory(p.join('lib', 'core', 'layouts'))
+    ..createSync(recursive: true);
   final camel = name[0].toUpperCase() + name.substring(1);
   final fileName = '${name}_layout.dart';
 
@@ -789,7 +884,8 @@ class ${camel}Layout extends StatelessWidget {
 }
 
 Future<void> _createModel(String name) async {
-  final modelDir = Directory(p.join('lib', 'core', 'models'))..createSync(recursive: true);
+  final modelDir = Directory(p.join('lib', 'core', 'models'))
+    ..createSync(recursive: true);
   final camel = name[0].toUpperCase() + name.substring(1);
   final fileName = '$name.dart';
 
@@ -824,7 +920,8 @@ class $camel {
 }
 
 Future<void> _createController(String name) async {
-  final controllerDir = Directory(p.join('lib', 'core', 'controllers'))..createSync(recursive: true);
+  final controllerDir = Directory(p.join('lib', 'core', 'controllers'))
+    ..createSync(recursive: true);
   final camel = name[0].toUpperCase() + name.substring(1);
   final fileName = '$name.controller.dart';
 
@@ -849,14 +946,17 @@ class ${camel}Controller extends FluxController {
 
 Future<void> _handleMelos(List<String> args) async {
   _step('MELOS', 'Executing Workspace Command: melos ${args.join(' ')}');
-  
+
   String workDir = Directory.current.path;
   if (Platform.isWindows && workDir.contains(' ')) {
     try {
-      final result = await Process.run('cmd', ['/c', 'for %I in (.) do @echo %~sI']);
+      final result = await Process.run('cmd', [
+        '/c',
+        'for %I in (.) do @echo %~sI',
+      ]);
       if (result.exitCode == 0) {
-         workDir = result.stdout.toString().trim();
-         _info('Using safe path: $workDir');
+        workDir = result.stdout.toString().trim();
+        _info('Using safe path: $workDir');
       }
     } catch (_) {}
   }
@@ -868,7 +968,7 @@ Future<void> _handleMelos(List<String> args) async {
     runInShell: true,
     workingDirectory: workDir,
   );
-  
+
   final exitCode = await process.exitCode;
   if (exitCode != 0) {
     _error('Melos command failed with exit code $exitCode');
@@ -932,29 +1032,29 @@ const _availablePlugins = {
 
 Future<void> _removeModule(String name) async {
   final moduleName = name.toLowerCase();
-  
+
   _step('CORE', 'Terminating Fluxy Platform Module: $moduleName...');
-  
+
   // 1. Run flutter pub remove
   final packageName = 'fluxy_$moduleName';
   _info('Uninstalling $packageName via flutter pub remove...');
-  
+
   final process = await Process.start(
-    'flutter', 
-    ['pub', 'remove', packageName], 
-    mode: ProcessStartMode.inheritStdio, 
-    runInShell: true
+    'flutter',
+    ['pub', 'remove', packageName],
+    mode: ProcessStartMode.inheritStdio,
+    runInShell: true,
   );
-  
+
   final exitCode = await process.exitCode;
   if (exitCode != 0) {
     _error('Failed to remove $packageName.');
     return;
   }
-  
+
   // 2. Regenerate registry
   await _regeneratePluginRegistry();
-  
+
   _success('Module $moduleName removed and registry cleaned successfully.');
 }
 
@@ -968,18 +1068,18 @@ Future<void> _addModule(String name) async {
   }
 
   _step('CORE', 'Enabling Fluxy Platform Module: $moduleName...');
-  
+
   // 1. Run flutter pub add
   final packageName = 'fluxy_$moduleName';
   _info('Installing $packageName via flutter pub add...');
-  
+
   final process = await Process.start(
-    'flutter', 
-    ['pub', 'add', packageName], 
-    mode: ProcessStartMode.inheritStdio, 
-    runInShell: true
+    'flutter',
+    ['pub', 'add', packageName],
+    mode: ProcessStartMode.inheritStdio,
+    runInShell: true,
   );
-  
+
   final exitCode = await process.exitCode;
   if (exitCode != 0) {
     _error(
@@ -987,10 +1087,10 @@ Future<void> _addModule(String name) async {
     );
     return;
   }
-  
+
   // 2. Regenerate registry
   await _regeneratePluginRegistry();
-  
+
   _success('Module $moduleName added and registered successfully.');
   _info(
     'Verify "Fluxy.autoRegister()" or "registerFluxyPlugins()" is called in your main.dart',
@@ -1010,10 +1110,10 @@ Future<void> _regeneratePluginRegistry([String? newPlugin]) async {
     p.join('lib', 'core', 'registry', 'fluxy_registry.dart'),
   );
   final pubspecFile = File('pubspec.yaml');
-  
+
   Set<String> pluginsToRegister = {};
   if (newPlugin != null) pluginsToRegister.add(newPlugin);
-  
+
   if (pubspecFile.existsSync()) {
     final content = pubspecFile.readAsStringSync();
     // Improved regex to catch fluxy_ deps in any valid YAML format (version, path, git)
@@ -1042,20 +1142,23 @@ Future<void> _regeneratePluginRegistry([String? newPlugin]) async {
           imports += "import 'package:fluxy/fluxy.dart';\n";
         }
         imports += "import 'package:fluxy_$p/fluxy_$p.dart';\n";
-        
+
         body += '  try {\n';
         body += '    Fluxy.register($className());\n';
-        body += '    debugPrint("[INIT] [Platform] Auto-registered: $className");\n';
+        body +=
+            '    debugPrint("[INIT] [Platform] Auto-registered: $className");\n';
         body += '  } catch (e) {\n';
-        body += '    debugPrint("[INIT] [Platform] Failed to auto-register $className: \$e");\n';
+        body +=
+            '    debugPrint("[INIT] [Platform] Failed to auto-register $className: \$e");\n';
         body += '  }\n';
       }
     }
   }
-  
+
   body += '}\n';
-  
-  final fullContent = '''
+
+  final fullContent =
+      '''
 // THIS FILE IS AUTO-GENERATED BY THE FLUXY CLI.
 // DO NOT EDIT MANUALLY.
 
@@ -1066,9 +1169,10 @@ $body
   if (!registryFile.parent.existsSync()) {
     registryFile.parent.createSync(recursive: true);
   }
-  
+
   // Only write if changed to avoid unnecessary rebuilds
-  if (!registryFile.existsSync() || registryFile.readAsStringSync() != fullContent) {
+  if (!registryFile.existsSync() ||
+      registryFile.readAsStringSync() != fullContent) {
     registryFile.writeAsStringSync(fullContent);
     print(
       '[SYNC] Generated lib/core/registry/fluxy_registry.dart (${pluginsToRegister.length} plugins).',

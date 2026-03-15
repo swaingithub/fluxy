@@ -17,6 +17,7 @@ export 'src/routing/fluxy_router.dart';
 export 'src/i18n/fluxy_i18n.dart';
 
 export 'src/engine/haptics.dart';
+export 'src/engine/tailwind_parser.dart';
 
 export 'src/feedback/overlays.dart';
 

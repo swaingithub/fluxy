@@ -16,6 +16,7 @@ import '../engine/lift_engine.dart';
 import '../engine/layout_guard.dart';
 import '../engine/stability/interaction_guard.dart';
 import '../engine/haptics.dart';
+import '../engine/tailwind_parser.dart';
 import 'fx.dart';
 
 extension FluxyStringExtension on String {
@@ -86,6 +87,9 @@ extension FluxyWidgetExtension on Widget {
 
   /// Applies a custom style object to the widget.
   Widget style(FxStyle style) => _applyGenericStyle(style);
+
+  /// Applies Tailwind utility classes to the widget.
+  Widget tw(String classes) => _applyGenericStyle(Tailwind.parse(classes));
 
   /// Internal helper to apply responsive style.
   Widget _applyResponsive(FxResponsiveStyle responsive) {

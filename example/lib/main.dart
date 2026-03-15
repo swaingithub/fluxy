@@ -693,24 +693,13 @@ class UserProfilePage extends StatelessWidget {
                   gap: 12,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    FxAvatar(
+                    Fx.avatar(
                       image: 'https://i.pravatar.cc/150?img=11',
                       fallback: 'JS',
                       size: FxAvatarSize.xl,
                     ),
-                    Fx.text('Jane Smith').style(
-                      FxStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                        color: isDark ? Colors.white : Colors.black87,
-                      ),
-                    ),
-                    Fx.text('jane.smith@fluxyui.com').style(
-                      FxStyle(
-                        fontSize: 14,
-                        color: isDark ? Colors.white54 : Colors.black54,
-                      ),
-                    ),
+                    Fx.text('Jane Smith').tw('text-2xl font-bold ${isDark ? "text-white" : "text-black"}'),
+                    Fx.text('jane.smith@fluxyui.com').tw('text-sm opacity-50'),
                   ],
                 ),
 
@@ -807,31 +796,14 @@ class UserProfilePage extends StatelessWidget {
     required bool isDark,
     bool showArrow = true,
   }) {
-    return Fx.box(
-      style: const FxStyle(padding: EdgeInsets.all(16)),
-      child: Fx.row(
-        justify: MainAxisAlignment.spaceBetween,
-        children: [
-          Fx.row(
-            gap: 16,
-            children: [
-              Fx.icon(icon, color: isDark ? Colors.white70 : Colors.black54),
-              Fx.text(title).style(
-                FxStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                  color: isDark ? Colors.white : Colors.black87,
-                ),
-              ),
-            ],
-          ),
-          if (showArrow)
-            Fx.icon(
-              Icons.chevron_right_rounded,
-              color: isDark ? Colors.white30 : Colors.black38,
-            ),
-        ],
-      ),
+    return Fx.listTile(
+      leading: Fx.icon(icon, color: isDark ? Colors.white70 : Colors.black54),
+      title: Fx.text(title).tw('text-base font-medium ${isDark ? "text-white" : "text-black"}'),
+      trailing: showArrow ? Fx.icon(
+        Icons.chevron_right_rounded,
+        color: isDark ? Colors.white30 : Colors.black38,
+      ) : null,
+      onTap: () {},
     );
   }
 }
@@ -1170,36 +1142,15 @@ class CartAndCheckoutPage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 // Order Summary Card
-                Fx.box(
+                Fx.card(
                   style: FxStyle(
-                    backgroundColor: isDark
-                        ? const Color(0xFF1E293B)
-                        : Colors.white,
-                    borderRadius: BorderRadius.circular(16),
-                    padding: const EdgeInsets.all(20),
-                    border: Border.all(
-                      color: isDark ? Colors.white12 : Colors.black12,
-                    ),
-                    shadows: isDark
-                        ? []
-                        : [
-                            BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.05),
-                              blurRadius: 10,
-                              offset: const Offset(0, 4),
-                            ),
-                          ],
+                    backgroundColor: isDark ? const Color(0xFF1E293B) : Colors.white,
+                    border: Border.all(color: isDark ? Colors.white12 : Colors.black12),
                   ),
                   child: Fx.col(
                     gap: 16,
                     children: [
-                      Fx.text('Order Summary').style(
-                        FxStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: isDark ? Colors.white : Colors.black87,
-                        ),
-                      ),
+                      Fx.text('Order Summary').tw('text-lg font-bold ${isDark ? "text-white" : "text-black"}'),
                       _buildCartItem('Fluxy Earbuds Pro', '\$199.00', isDark),
                       _buildCartItem('Magnetic Charger', '\$49.00', isDark),
                       Divider(
@@ -1209,19 +1160,8 @@ class CartAndCheckoutPage extends StatelessWidget {
                       Fx.row(
                         justify: MainAxisAlignment.spaceBetween,
                         children: [
-                          Fx.text('Total').style(
-                            FxStyle(
-                              fontSize: 16,
-                              color: isDark ? Colors.white54 : Colors.black54,
-                            ),
-                          ),
-                          Fx.text('\$248.00').style(
-                            FxStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                              color: Fx.primary,
-                            ),
-                          ),
+                          Fx.text('Total').tw('text-base opacity-50'),
+                          Fx.text('\$248.00').tw('text-2xl font-bold text-blue-500'),
                         ],
                       ),
                     ],

@@ -57,11 +57,26 @@ class Tailwind {
     }
     if (util.startsWith('text-')) {
       final val = util.substring(5);
-      // Check if it's a color or a size
+      // Check alignments
+      if (val == 'center') return const FxStyle(textAlign: TextAlign.center);
+      if (val == 'left') return const FxStyle(textAlign: TextAlign.left);
+      if (val == 'right') return const FxStyle(textAlign: TextAlign.right);
+      if (val == 'justify') return const FxStyle(textAlign: TextAlign.justify);
+      // Check if it's a size
       if (['xs', 'sm', 'base', 'lg', 'xl', '2xl', '3xl'].contains(val)) {
         return FxStyle(fontSize: _toFontSize(val));
       }
       return FxStyle(color: _toColor(val));
+    }
+    
+    // Font Weights
+    if (util.startsWith('font-')) {
+      final val = util.substring(5);
+      if (val == 'bold') return const FxStyle(fontWeight: FontWeight.bold);
+      if (val == 'semibold') return const FxStyle(fontWeight: FontWeight.w600);
+      if (val == 'medium') return const FxStyle(fontWeight: FontWeight.w500);
+      if (val == 'normal') return const FxStyle(fontWeight: FontWeight.normal);
+      if (val == 'light') return const FxStyle(fontWeight: FontWeight.w300);
     }
 
     // Borders & Radius: rounded-lg, border-2, border-blue-500
@@ -89,6 +104,14 @@ class Tailwind {
     // Flex: flex-row, flex-col, gap-4, items-center, justify-center
     if (util == 'flex-row') return const FxStyle(direction: Axis.horizontal);
     if (util == 'flex-col') return const FxStyle(direction: Axis.vertical);
+    if (util.startsWith('flex-')) {
+      final val = util.substring(5);
+      if (val == '1') return const FxStyle(flex: 1, flexFit: FlexFit.tight);
+      if (val == 'auto') return const FxStyle(flex: 1, flexFit: FlexFit.loose);
+      if (val == 'none') return const FxStyle(flex: 0, flexFit: FlexFit.loose);
+      final intVal = int.tryParse(val);
+      if (intVal != null) return FxStyle(flex: intVal, flexFit: FlexFit.tight);
+    }
     if (util.startsWith('gap-')) {
       return FxStyle(gap: _toSize(util.substring(4)));
     }
@@ -97,6 +120,41 @@ class Tailwind {
     }
     if (util.startsWith('justify-')) {
       return FxStyle(justifyContent: _toMainAlign(util.substring(8)));
+    }
+
+    // Positioning
+    if (util.startsWith('z-')) {
+      final val = double.tryParse(util.substring(2));
+      if (val != null) return FxStyle(zIndex: val);
+    }
+    if (util.startsWith('top-')) return FxStyle(top: _toSize(util.substring(4)));
+    if (util.startsWith('bottom-')) return FxStyle(bottom: _toSize(util.substring(7)));
+    if (util.startsWith('left-')) return FxStyle(left: _toSize(util.substring(5)));
+    if (util.startsWith('right-')) return FxStyle(right: _toSize(util.substring(6)));
+
+    // Shadows
+    if (util.startsWith('shadow')) {
+      if (util == 'shadow') return const FxStyle(shadows: [BoxShadow(color: Colors.black12, blurRadius: 4, offset: Offset(0, 2))]);
+      if (util == 'shadow-md') return const FxStyle(shadows: [BoxShadow(color: Colors.black12, blurRadius: 6, offset: Offset(0, 4))]);
+      if (util == 'shadow-lg') return const FxStyle(shadows: [BoxShadow(color: Colors.black26, blurRadius: 10, offset: Offset(0, 6))]);
+      if (util == 'shadow-xl') return const FxStyle(shadows: [BoxShadow(color: Colors.black38, blurRadius: 20, offset: Offset(0, 10))]);
+      if (util == 'shadow-none') return const FxStyle(shadows: []);
+    }
+
+    // Opacity
+    if (util.startsWith('opacity-')) {
+      final val = double.tryParse(util.substring(8));
+      if (val != null) return FxStyle(opacity: val / 100);
+    }
+
+    // Transforms
+    if (util.startsWith('scale-')) {
+      final val = double.tryParse(util.substring(6));
+      if (val != null) return FxStyle(transformScale: val / 100);
+    }
+    if (util.startsWith('rotate-')) {
+      final val = double.tryParse(util.substring(7));
+      if (val != null) return FxStyle(transformRotation: val * 3.14159 / 180);
     }
 
     return FxStyle.none;
