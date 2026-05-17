@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
-import '../dsl/fx.dart';
 
 /// The easiest Audio Player for Fluxy.
 /// Simple one-liner for background music or sound effects.

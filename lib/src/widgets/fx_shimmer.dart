@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../styles/style.dart';
-import '../motion/fx_motion.dart';
 import '../widgets/box.dart';
 
 /// A premium shimmer effect for Fluxy.
