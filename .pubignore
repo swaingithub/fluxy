@@ -59,3 +59,5 @@ analysis_report.txt
 lib_analysis.txt
 analyze_results.txt
 travel_app/
+webstore/
+publish_log.txt
