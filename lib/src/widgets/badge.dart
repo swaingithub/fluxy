@@ -12,6 +12,7 @@ class FxBadge extends FxWidget {
   final Color? textColor;
   final double? size;
   final Offset offset;
+  final bool show; // Added show property
   @override
   final FxStyle style;
   @override
@@ -28,6 +29,7 @@ class FxBadge extends FxWidget {
     this.textColor,
     this.size,
     this.offset = const Offset(8, -8),
+    this.show = true, // Defaults to true
     this.style = FxStyle.none,
     this.responsive,
   });
@@ -52,6 +54,7 @@ class FxBadge extends FxWidget {
     Color? textColor,
     double? size,
     Offset? offset,
+    bool? show,
     FxStyle? style,
     FxResponsiveStyle? responsive,
     String? className,
@@ -66,6 +69,7 @@ class FxBadge extends FxWidget {
       textColor: textColor ?? this.textColor,
       size: size ?? this.size,
       offset: offset ?? this.offset,
+      show: show ?? this.show,
       style: style ?? this.style,
       responsive: responsive ?? this.responsive,
       child: child ?? this.child,
@@ -92,11 +96,12 @@ class _FxBadgeState extends State<FxBadge> {
         clipBehavior: Clip.none,
         children: [
           widget.child,
-          Positioned(
-            top: widget.offset.dy,
-            right: -widget.offset.dx,
-            child: _buildBadge(),
-          ),
+          if (widget.show)
+            Positioned(
+              top: widget.offset.dy,
+              right: -widget.offset.dx,
+              child: _buildBadge(),
+            ),
         ],
       ),
     );

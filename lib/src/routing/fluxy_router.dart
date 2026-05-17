@@ -297,7 +297,10 @@ class FluxyRouter {
       );
       return null;
     }
-    return state.pushNamed<T>(routeName, arguments: arguments);
+    
+    // CRITICAL WEB FIX: Defer the push to prevent synchronous RenderBox reconstruction 
+    // overlapping sequentially with pending DOM Focus microtask queries.
+    return await Future.microtask(() => state.pushNamed<T>(routeName, arguments: arguments));
   }
 
   /// Replaces current page with a new one.

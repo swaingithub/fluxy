@@ -26,6 +26,20 @@ class FluxyConstraintSolver {
       solved = true;
     }
 
+    // Solve "Dual Infinity" crashes instantly.
+    // If flutter tries to enforce an exact Infinity constraint (min == max == infinity),
+    // it causes BoxConstraints forces infinite height crash.
+    if (minH == double.infinity) {
+      minH = 0.0;
+      maxH = 0.0;
+      solved = true;
+    }
+    if (minW == double.infinity) {
+      minW = 0.0;
+      maxW = 0.0;
+      solved = true;
+    }
+
     if (solved) {
        _logFix('Constraint Normalization', 'Layout constraints normalized to prevent immediate Flutter termination.');
     }

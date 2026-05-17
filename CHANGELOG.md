@@ -11,6 +11,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.0] - 2026-05-17
+
+### Added
+- **Supreme Web Evolution**: Built specifically for industrial-grade web execution.
+- **Cinematic Modals (Kinetic Modals)**: Floating dismiss buttons that are never blocked by content, providing a premium video/image overlay experience for the web.
+- **Source-Aware Media**: High-performance image and video rendering that automatically switches between local and network assets.
+- **Engine Stability for Web**: Implemented strict/relaxed modes and fixed `window.dart` engine assertions for zero-crash web layouts.
+- **FxWeb Primitives**: Introduced the dedicated `FxWeb` class with components optimized for desktop web (`container`, `navbar`, `drawer`, `hero`, `carousel`, `accordion`, `split`, `responsiveGrid`).
+- **Webstore Template Base**: Advanced responsive grids, cross-platform video rendering (`Fx.video`), and comprehensive web layout patterns (`Fx.shell`, custom slide-overs).
+
+### Changed
+- **Web Layout Paradigm**: Promoted the "Master Layout" (shell + drawer + navbar) approach over individual page scaffolding for cleaner and more performant web architectures.
+- **Chainable DSL Evolution**: Further extended the `FxStyle` chainable API allowing complex web UI sections to be built in half the code.
+
 ## [1.2.3] - 2026-03-16
 
 ### Added

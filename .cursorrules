@@ -1,0 +1,32 @@
+# Fluxy AI Guidelines
+
+When generating or refactoring Flutter code using the Fluxy framework, ALWAYS adhere to the following rules:
+
+1. **Use Fluxy DSL**: Never use standard Flutter UI widgets like `Container`, `Padding`, `SizedBox`, `Row`, `Column`, `ElevatedButton`. 
+2. **Component Mapping**:
+   - `Container/SizedBox` -> `Fx.box()` or `Fx.container()`
+   - `Row/Column` -> `Fx.row()` / `Fx.column()` or `Fx.flex()`
+   - `Text` -> `Fx.text('...')`
+   - `ElevatedButton/TextButton` -> `Fx.button('...')`, `Fx.textButton('...')`
+   - `TextField` -> `Fx.input()`
+3. **Styling Rules**:
+   - Use Tailwind utility syntax: `.tw('bg-blue-500 p-4 rounded-lg flex-row items-center')`
+   - Alternatively use fluent modifiers: `.padding(16).background(Colors.blue).rounded(8)`
+   - Never use `EdgeInsets` or `BoxDecoration` directly if a Fluxy modifier exists.
+4. **Spacing Options**: Use `.p(16)` for padding, `.m(8)` for margins. Use explicit directions like `.pt(10)`, `.mb(5)`, `.px(12)`.
+5. **State Management**:
+   - Always extend `FluxController`.
+   - Use `flux(initialValue)` for reactive variables instead of `Rx` or `ValueNotifier`.
+   - Access values via `.value`.
+6. **Error Handling**: Use `FluxyError.report(e, stack)` for global logging rather than simple `print()`.
+
+**Example of correct Fluxy UI:**
+```dart
+Fx.column(
+  children: [
+    Fx.text('Welcome').font.xl3().bold().tw('mb-4 text-blue-600'),
+    Fx.input(placeholder: 'Enter Email'),
+    Fx.button('Submit', onTap: () {}).tw('mt-6 bg-black w-full')
+  ]
+).tw('p-6 bg-white rounded-xl shadow-md')
+```

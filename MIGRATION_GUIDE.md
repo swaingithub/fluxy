@@ -265,3 +265,54 @@ Icons and labels are now always visible. No migration code is required for this;
 ## [DONE] Welcome to Fluxy v1.2.1!
 
 Thank you for being part of the Fluxy ecosystem. v1.2.1 makes your apps look more premium with zero extra effort.
+
+---
+
+# Migration Guide: Fluxy v1.2.1 → v1.3.0 (Current)
+
+Fluxy v1.3.0 brings the **Supreme Web Evolution**, optimizing Fluxy to be a world-class framework for the browser. This update is **100% backward compatible** for your mobile implementations. 
+
+## Web Migration (Opt-in)
+
+If you are deploying to the web, we recommend adopting the new `FxWeb` primitives for better performance and a more native browser feel.
+
+### 1. Shift to Web Layouts
+Instead of using standard Flutter containers, wrap your web sections in `FxWeb.container()` to prevent infinite width/height assertions that are common in browser environments.
+
+**Before:**
+```dart
+Fx.col(
+  children: [
+    // Content...
+  ]
+)
+```
+
+**After (Web Optimized):**
+```dart
+FxWeb.container(
+  maxWidth: 1200,
+  child: Fx.col(
+    children: [
+      // Content...
+    ]
+  )
+)
+```
+
+### 2. Cinematic Modals
+For media-heavy web experiences, swap `Fx.image()` overlay popups with the new **Kinetic Modal** engine which ensures floating dismiss buttons are never blocked.
+
+```dart
+Fx.modal(
+  context,
+  child: Fx.video(
+    url: '...',
+    showControls: true, // Native cinematic controls
+  ),
+);
+```
+
+## [DONE] Welcome to Fluxy v1.3.0!
+
+With v1.3.0, Fluxy provides unparalleled execution stability and premium aesthetics for web deployments.

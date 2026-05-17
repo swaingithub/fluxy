@@ -1,6 +1,5 @@
 import 'dart:ui';
 import 'package:flutter/widgets.dart';
-import 'package:vector_math/vector_math_64.dart' show Vector3;
 import '../styles/style.dart';
 import '../engine/style_resolver.dart';
 import '../engine/decoration_builder.dart';
@@ -151,28 +150,35 @@ class _BoxState extends State<Box> with ReactiveSubscriberMixin {
       current = AspectRatio(aspectRatio: aspectVal, child: current);
     }
 
-    // Apply Transformation (Scale/Rotation)
+    // Setup Matrices for Transformations natively
+    Matrix4? transformMat;
     if (s.transformScale != null || s.transformRotation != null) {
-      current = Transform(
-        alignment: Alignment.center,
-        transform: Matrix4.identity()
-          ..scaleByVector3(Vector3(
-            s.transformScale ?? 1.0, 
-            s.transformScale ?? 1.0, 
-            1.0,
-          ))
-          ..rotateZ(s.transformRotation ?? 0.0),
-        child: current,
-      );
+      transformMat = Matrix4.identity()
+        ..scale(s.transformScale ?? 1.0, s.transformScale ?? 1.0, 1.0)
+        ..rotateZ(s.transformRotation ?? 0.0);
+    } else if (s.transition != null) {
+      // CRITICAL: AnimatedContainer cannot interpolate from a Matrix4 to null. 
+      // If a transition is active, we MUST supply a baseline Matrix4.identity() 
+      // so it can safely animate back to 1.0 when hover ends.
+      transformMat = Matrix4.identity();
     }
 
     // Apply Visuals using FxDecorationBuilder
     final transitionVal = s.transition;
-    if (transitionVal != null) {
+    
+    // CRITICAL: AnimatedContainer intrinsically corrupts the Flutter Layout 
+    // engine (resulting in NaN bounds and NEEDS-LAYOUT cascade failures) if it tries 
+    // to interpolate a structural dimension from a finite number to double.infinity.
+    // If either bounds are infinity, we bypass the transition natively for dimensions.
+    final bool hasInfiniteBounds = s.width == double.infinity || s.height == double.infinity;
+
+    if (transitionVal != null && !hasInfiniteBounds) {
       current = AnimatedContainer(
         duration: transitionVal,
         width: s.width,
         height: s.height,
+        transform: transformMat,
+        transformAlignment: transformMat != null ? Alignment.center : null,
         constraints: BoxConstraints(
           minWidth: s.minWidth ?? 0.0,
           minHeight: s.minHeight ?? 0.0,
@@ -190,6 +196,8 @@ class _BoxState extends State<Box> with ReactiveSubscriberMixin {
       current = Container(
         width: s.width,
         height: s.height,
+        transform: transformMat,
+        transformAlignment: transformMat != null ? Alignment.center : null,
         constraints: BoxConstraints(
           minWidth: s.minWidth ?? 0.0,
           minHeight: s.minHeight ?? 0.0,

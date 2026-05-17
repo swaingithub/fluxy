@@ -34,8 +34,13 @@ class _RenderStabilityGuard extends RenderProxyBox {
       final solvedConstraints = FluxyConstraintSolver.solve(constraints, viewportSize: viewportSize);
       _validateConstraints(solvedConstraints);
       
-      child!.layout(solvedConstraints, parentUsesSize: true);
-      size = child!.size;
+      try {
+        child!.layout(solvedConstraints, parentUsesSize: true);
+        size = child!.size;
+      } catch (e) {
+        debugPrint('[KERNEL] [PANIC] Layout completely aborted internally by Flutter: $e');
+        size = solvedConstraints.smallest; // Fallback to prevent hasSize crashes 
+      }
 
       // Post-layout geometry validation
       _validateGeometry();

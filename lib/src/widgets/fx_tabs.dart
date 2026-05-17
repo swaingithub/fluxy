@@ -41,70 +41,31 @@ class FxTabBar extends StatelessWidget {
                 onChanged?.call(index);
               },
               child: AnimatedContainer(
-                duration: const Duration(milliseconds: 400),
+                duration: const Duration(milliseconds: 300),
                 curve: Curves.easeOutCubic,
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 12),
                 decoration: BoxDecoration(
                   color: isSelected 
-                      ? (isDark ? Colors.white.withValues(alpha: 0.08) : Colors.black.withValues(alpha: 0.05))
-                      : Colors.transparent,
-                  // Asymmetrical / leaf border radius when active for a unique look
-                  borderRadius: isSelected 
-                      ? const BorderRadius.only(
-                          topLeft: Radius.circular(24),
-                          bottomRight: Radius.circular(24),
-                          topRight: Radius.circular(6),
-                          bottomLeft: Radius.circular(6),
-                        )
-                      : BorderRadius.circular(12),
+                      ? const Color(0xFF0F172A) // Premium Dark Slate for active state
+                      : (isDark ? Colors.white.withValues(alpha: 0.05) : Colors.white),
+                  borderRadius: BorderRadius.circular(999), // Clean Pill Shape
                   border: Border.all(
                     color: isSelected 
-                        ? Fx.primary.withValues(alpha: 0.9) 
-                        : (isDark ? Colors.white.withValues(alpha: 0.05) : Colors.black.withValues(alpha: 0.08)),
+                        ? const Color(0xFF0F172A) 
+                        : (isDark ? Colors.white.withValues(alpha: 0.1) : const Color(0xFFE2E8F0)),
                     width: 1.5,
                   ),
-                  boxShadow: isSelected ? [
-                    BoxShadow(
-                      color: Fx.primary.withValues(alpha: 0.25),
-                      blurRadius: 16,
-                      spreadRadius: 2,
-                      offset: const Offset(4, 4),
-                    )
-                  ] : [],
+                  boxShadow: [],
                 ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    // Expanding tiny glowing dot indicator
-                    AnimatedContainer(
-                      duration: const Duration(milliseconds: 300),
-                      curve: Curves.easeOutCubic,
-                      width: isSelected ? 8 : 0,
-                      height: 8,
-                      margin: EdgeInsets.only(right: isSelected ? 10 : 0),
-                      decoration: BoxDecoration(
-                        color: Fx.primary,
-                        shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Fx.primary,
-                            blurRadius: 8,
-                            spreadRadius: 2,
-                          )
-                        ]
-                      ),
-                    ),
-                    Fx.text(tab).style(
-                      FxStyle(
-                        color: isSelected 
-                            ? (isDark ? Colors.white : Fx.primary.withOpacity(0.9)) 
-                            : Fx.textColor.withValues(alpha: 0.6),
-                        fontWeight: isSelected ? FontWeight.w900 : FontWeight.w600,
-                        letterSpacing: 0.5,
-                        fontSize: 15,
-                      ),
-                    ),
-                  ],
+                child: Fx.text(tab).style(
+                  FxStyle(
+                    color: isSelected 
+                        ? Colors.white
+                        : Fx.textColor.withValues(alpha: 0.6),
+                    fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
+                    letterSpacing: 0.2,
+                    fontSize: 15,
+                  ),
                 ),
               ),
             );

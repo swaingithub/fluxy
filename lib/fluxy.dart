@@ -46,6 +46,7 @@ export 'src/reactive/forms.dart';
 // --- UI & Styling ---
 
 export 'src/dsl/fx.dart';
+export 'src/dsl/web.dart';
 
 export 'src/styles/style.dart';
 
@@ -76,6 +77,8 @@ export 'src/widgets/button.dart';
 export 'src/widgets/inputs.dart';
 
 export 'src/widgets/text_box.dart';
+
+export 'src/widgets/link.dart';
 
 export 'src/widgets/dropdown.dart';
 

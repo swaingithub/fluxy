@@ -1,0 +1,77 @@
+{
+  "Fluxy Box": {
+    "prefix": "fxbox",
+    "body": [
+      "Fx.box(",
+      "  child: ${1:Widget},",
+      ").tw('${2:p-4 bg-white rounded-md}')"
+    ],
+    "description": "Create a stylized Fluxy Box container"
+  },
+  "Fluxy Column": {
+    "prefix": "fxcol",
+    "body": [
+      "Fx.column(",
+      "  children: [",
+      "    ${1:// content}",
+      "  ],",
+      ").tw('${2:gap-4}')"
+    ],
+    "description": "Create a vertical FlexBox"
+  },
+  "Fluxy Row": {
+    "prefix": "fxrow",
+    "body": [
+      "Fx.row(",
+      "  children: [",
+      "    ${1:// content}",
+      "  ],",
+      ").tw('${2:gap-4 items-center}')"
+    ],
+    "description": "Create a horizontal FlexBox"
+  },
+  "Fluxy Heading": {
+    "prefix": "fxh2",
+    "body": [
+      "Fx.text('${1:Heading}').font.xl3().bold().tw('${2:mb-4 text-slate-800}'),"
+    ],
+    "description": "A styled Fluxy heading text"
+  },
+  "Fluxy Primary Button": {
+    "prefix": "fxbtn",
+    "body": [
+      "Fx.button('${1:Submit}', onTap: () {",
+      "  $2",
+      "}).tw('${3:w-full bg-blue-600 rounded-lg}')"
+    ],
+    "description": "Create a Fluxy primary interactive button"
+  },
+  "Fluxy Input Field": {
+    "prefix": "fxinput",
+    "body": [
+      "Fx.input(",
+      "  placeholder: '${1:Enter value...}',",
+      "  icon: ${2:Icons.edit},",
+      ").tw('${3:mb-4}')"
+    ],
+    "description": "Create a stylized responsive input field"
+  },
+  "Flux Controller Class": {
+    "prefix": "fxcontroller",
+    "body": [
+      "import 'package:fluxy/fluxy.dart';",
+      "",
+      "class ${1:MyResource}Controller extends FluxController {",
+      "  final ${2:stateVar} = flux(${3:''});",
+      "  final isLoading = flux(false);",
+      "",
+      "  @override",
+      "  void onInit() {",
+      "    super.onInit();",
+      "    ${4:// init logic}",
+      "  }",
+      "}"
+    ],
+    "description": "Scaffold a new FluxController"
+  }
+}

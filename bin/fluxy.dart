@@ -138,6 +138,8 @@ void printUsage(ArgParser parser) {
   print('  generate plugin <name>  Create a new Fluxy plugin scaffold.');
   print('  generate layout <name>  Create a responsive layout template.');
   print('  generate model <name>  Create a reactive data model.');
+  print('  generate ai-rules      Create an AI configuration file (.cursorrules).');
+  print('  generate snippets      Create a VS Code snippets file for Fluxy.');
   print('  run              Launch the application.');
   print('  serve            Start a local OTA development server.');
   print('  build            Compile the application.');
@@ -330,6 +332,16 @@ Future<void> _handleGenerate(List<String> args) async {
     return;
   }
 
+  if (name == 'ai-rules') {
+    await _createAiRules();
+    return;
+  }
+
+  if (name == 'snippets') {
+    await _createSnippets();
+    return;
+  }
+
   // Default to feature generation
   final type = args.length > 1 ? args[1].toLowerCase() : 'default';
 
@@ -337,6 +349,130 @@ Future<void> _handleGenerate(List<String> args) async {
     'Generating industrial ${type == "default" ? "" : "$type "}feature: $name...',
   );
   await _createFeature('.', name, type: type);
+}
+
+Future<void> _createAiRules() async {
+  final file = File('.cursorrules');
+  file.writeAsStringSync('''
+# Fluxy AI Guidelines
+
+When generating or refactoring Flutter code using the Fluxy framework, ALWAYS adhere to the following rules:
+
+1. **Use Fluxy DSL**: Never use standard Flutter UI widgets like `Container`, `Padding`, `SizedBox`, `Row`, `Column`, `ElevatedButton`. 
+2. **Component Mapping**:
+   - `Container/SizedBox` -> `Fx.box()` or `Fx.container()`
+   - `Row/Column` -> `Fx.row()` / `Fx.column()` or `Fx.flex()`
+   - `Text` -> `Fx.text('...')`
+   - `ElevatedButton/TextButton` -> `Fx.button('...')`, `Fx.textButton('...')`
+   - `TextField` -> `Fx.input()`
+3. **Styling Rules**:
+   - Use Tailwind utility syntax: `.tw('bg-blue-500 p-4 rounded-lg flex-row items-center')`
+   - Alternatively use fluent modifiers: `.padding(16).background(Colors.blue).rounded(8)`
+   - Never use `EdgeInsets` or `BoxDecoration` directly if a Fluxy modifier exists.
+4. **Spacing Options**: Use `.p(16)` for padding, `.m(8)` for margins. Use explicit directions like `.pt(10)`, `.mb(5)`, `.px(12)`.
+5. **State Management**:
+   - Always extend `FluxController`.
+   - Use `flux(initialValue)` for reactive variables instead of `Rx` or `ValueNotifier`.
+   - Access values via `.value`.
+6. **Error Handling**: Use `FluxyError.report(e, stack)` for global logging rather than simple `print()`.
+
+**Example of correct Fluxy UI:**
+```dart
+Fx.column(
+  children: [
+    Fx.text('Welcome').font.xl3().bold().tw('mb-4 text-blue-600'),
+    Fx.input(placeholder: 'Enter Email'),
+    Fx.button('Submit', onTap: () {}).tw('mt-6 bg-black w-full')
+  ]
+).tw('p-6 bg-white rounded-xl shadow-md')
+```
+''');
+  _success('Generated AI rules: .cursorrules');
+}
+
+Future<void> _createSnippets() async {
+  final file = File('.vscode/fluxy.code-snippets');
+  if (!file.parent.existsSync()) file.parent.createSync();
+  file.writeAsStringSync('''
+{
+  "Fluxy Box": {
+    "prefix": "fxbox",
+    "body": [
+      "Fx.box(",
+      "  child: \\\${1:Widget},",
+      ").tw('\\\${2:p-4 bg-white rounded-md}')"
+    ],
+    "description": "Create a stylized Fluxy Box container"
+  },
+  "Fluxy Column": {
+    "prefix": "fxcol",
+    "body": [
+      "Fx.column(",
+      "  children: [",
+      "    \\\${1:// content}",
+      "  ],",
+      ").tw('\\\${2:gap-4}')"
+    ],
+    "description": "Create a vertical FlexBox"
+  },
+  "Fluxy Row": {
+    "prefix": "fxrow",
+    "body": [
+      "Fx.row(",
+      "  children: [",
+      "    \\\${1:// content}",
+      "  ],",
+      ").tw('\\\${2:gap-4 items-center}')"
+    ],
+    "description": "Create a horizontal FlexBox"
+  },
+  "Fluxy Heading": {
+    "prefix": "fxh2",
+    "body": [
+      "Fx.text('\\\${1:Heading}').font.xl3().bold().tw('\\\${2:mb-4 text-slate-800}'),"
+    ],
+    "description": "A styled Fluxy heading text"
+  },
+  "Fluxy Primary Button": {
+    "prefix": "fxbtn",
+    "body": [
+      "Fx.button('\\\${1:Submit}', onTap: () {",
+      "  \\\$2",
+      "}).tw('\\\${3:w-full bg-blue-600 rounded-lg}')"
+    ],
+    "description": "Create a Fluxy primary interactive button"
+  },
+  "Fluxy Input Field": {
+    "prefix": "fxinput",
+    "body": [
+      "Fx.input(",
+      "  placeholder: '\\\${1:Enter value...}',",
+      "  icon: \\\${2:Icons.edit},",
+      ").tw('\\\${3:mb-4}')"
+    ],
+    "description": "Create a stylized responsive input field"
+  },
+  "Flux Controller Class": {
+    "prefix": "fxcontroller",
+    "body": [
+      "import 'package:fluxy/fluxy.dart';",
+      "",
+      "class \\\${1:MyResource}Controller extends FluxController {",
+      "  final \\\${2:stateVar} = flux(\\\${3:''});",
+      "  final isLoading = flux(false);",
+      "",
+      "  @override",
+      "  void onInit() {",
+      "    super.onInit();",
+      "    \\\${4:// init logic}",
+      "  }",
+      "}"
+    ],
+    "description": "Scaffold a new FluxController"
+  }
+}
+''');
+  _success('Generated Snippets: .vscode/fluxy.code-snippets');
 }
 
 Future<void> _createPlugin(String name) async {

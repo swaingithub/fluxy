@@ -9,20 +9,20 @@ Fluxy is not just a library; it is a **Managed Application Platform (MAP)** desi
 
 ---
 
-## **v1.2.1 - The Elite Motion Release**
+## **v1.3.0 - Supreme Web Evolution**
 
-**Fluxy v1.2.1 introduces the Elite UI system and high-end animation primitives for next-gen application design!** 
+**Fluxy v1.3.0 introduces industrial-grade Web execution and Cinematic Modal capabilities!** 
 
-- **Elite Bottom Bar**: Full-width glassmorphic Dock with always-visible labels.
-- **Elite Animation Primitives**: New `FxMeshGradient`, `FxAnimatedBorder`, `FxSpotlight`, `FxGooey`, and `FxConfetti`.
-- **Industrial Engine Update**: Context-aware `FxSafeExpansion` and alignment inference.
-- **Stability Kernel™**: Intercepts and auto-repairs layout violations.
+- **Cinematic Modals (Kinetic Modals)**: Floating dismiss buttons that are never blocked by content, providing a premium video/image overlay experience for the web.
+- **Source-Aware Media**: High-performance image and video rendering that automatically switches between local and network assets.
+- **Engine Stability for Web**: Implemented strict/relaxed modes and fixed `window.dart` engine assertions for zero-crash web layouts.
+- **FxWeb Primitives**: Introduced the dedicated `FxWeb` class with components optimized for desktop web (`container`, `navbar`, `drawer`, `hero`, `carousel`, `accordion`, `split`, `responsiveGrid`).
 
 **[Read Migration Guide](MIGRATION_GUIDE.md)**
 
-### Recent Updates (v1.2.0 - v1.2.1)
+### Recent Updates (v1.3.0 - v1.2.1)
+- **v1.3.0**: Supreme Web Evolution & Cinematic Modals
 - **v1.2.1**: Elite UI & High-End Motion Primitives
-- **v1.2.0**: Fluxy Stability Kernel™ & Industrial Engine
 
 ---
 
@@ -31,7 +31,7 @@ Fluxy is not just a library; it is a **Managed Application Platform (MAP)** desi
 ### Core Package
 ```yaml
 dependencies:
-  fluxy: ^1.2.2
+  fluxy: ^1.3.0
 ```
 
 ### Modular Packages (Add as needed)

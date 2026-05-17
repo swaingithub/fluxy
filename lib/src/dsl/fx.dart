@@ -14,6 +14,7 @@ import '../reactive/signal.dart';
 import '../reactive/async_signal.dart';
 import '../widgets/inputs.dart'; // Existing FxTextField
 import '../widgets/button.dart'; // FxButton
+import '../widgets/link.dart'; // FxLink
 import '../motion/fx_motion.dart';
 import '../routing/fluxy_router.dart';
 import '../widgets/dropdown.dart';
@@ -49,6 +50,8 @@ import '../engine/stability/stability.dart';
 import '../engine/metrics/observability.dart';
 import '../engine/stability/feature_toggle.dart';
 import '../engine/layout_guard.dart'; // Corrected import
+import '../widgets/fx_video.dart';
+import '../widgets/fx_audio.dart';
 
 // Import plugin extensions for direct access to modular packages
 // ignore: unused_import
@@ -141,6 +144,16 @@ import 'fx_extensions.dart';
     Widget? desktop,
   }) => FxLayout(mobile: mobile, tablet: tablet, desktop: desktop);
   
+  /// Helper to check if current screen is Mobile (< 768)
+  static bool isMobile(BuildContext context) => MediaQuery.sizeOf(context).width < 768;
+
+  /// Helper to check if current screen is Tablet (768 - 1024)
+  static bool isTablet(BuildContext context) => MediaQuery.sizeOf(context).width >= 768 && MediaQuery.sizeOf(context).width < 1024;
+
+  /// Helper to check if current screen is Desktop (>= 1024)
+  static bool isDesktop(BuildContext context) => MediaQuery.sizeOf(context).width >= 1024;
+
+
   /// A reactive feature-toggle wrapper.
   /// If [key] is disabled via FluxyFeatureToggle, this returns [fallback] (default: empty).
   static Widget feature(String key, {required Widget child, Widget fallback = const SizedBox.shrink()}) {
@@ -305,6 +318,65 @@ import 'fx_extensions.dart';
 
 
 
+  /// A shimmering effect for loading states.
+  static Widget shimmer({required Widget child, bool enabled = true}) {
+    return FxShimmer(enabled: enabled, child: child);
+  }
+
+  /// Effortless Video Player.
+  static Widget video({
+    required String url,
+    bool autoPlay = true,
+    bool loop = true,
+    bool muted = true,
+    double? width,
+    double? height,
+    double? aspectRatio,
+    String? poster,
+    bool showControls = false,
+    Widget? overlay,
+    VoidCallback? onPlay,
+    VoidCallback? onPause,
+    VoidCallback? onFinished,
+    BoxFit fit = BoxFit.cover,
+    double radius = 0,
+  }) {
+    return FxVideo(
+      url: url,
+      autoPlay: autoPlay,
+      loop: loop,
+      isMuted: muted,
+      videoWidth: width,
+      videoHeight: height,
+      aspectRatio: aspectRatio,
+      poster: poster,
+      showControls: showControls,
+      overlay: overlay,
+      onPlay: onPlay,
+      onPause: onPause,
+      onFinished: onFinished,
+      fit: fit,
+      radius: radius,
+    );
+  }
+
+  /// Effortless Audio Player.
+  static Widget audio({
+    required String url,
+    bool autoPlay = true,
+    bool loop = false,
+    double volume = 1.0,
+    Widget? child,
+  }) {
+    return FxAudio(
+      url: url,
+      autoPlay: autoPlay,
+      loop: loop,
+      volume: volume,
+      child: child,
+    );
+  }
+
   /// Vertical Layout (Column).
   static Widget col({
     required List<Widget> children,
@@ -433,6 +505,44 @@ import 'fx_extensions.dart';
       style: style,
       className: className,
       responsive: responsive,
+    );
+  }
+
+  /// Creates an interactive web-style link.
+  static Widget link(
+    dynamic label, {
+    VoidCallback? onTap,
+    String? to,
+    FxStyle style = FxStyle.none,
+    String? className,
+    FxResponsiveStyle? responsive,
+  }) {
+    return FxLink(
+      label: label,
+      onTap: onTap,
+      to: to,
+      style: style,
+      className: className,
+      responsive: responsive,
+    );
+  }
+
+  /// Creates a navigational web-style link that styles itself if active.
+  static Widget navLink(
+    dynamic label, {
+    required String to,
+    FxStyle style = FxStyle.none,
+    FxStyle activeStyle = FxStyle.none,
+    String? className,
+    String? activeClassName,
+  }) {
+    return FxNavLink(
+      label: label,
+      to: to,
+      style: style,
+      activeStyle: activeStyle,
+      className: className,
+      activeClassName: activeClassName,
     );
   }
 
@@ -955,20 +1065,61 @@ import 'fx_extensions.dart';
     required Widget child,
     bool barrierDismissible = true,
     Color? barrierColor,
-    double? maxWidth, // Responsive constraint
+    double? maxWidth,
   }) {
     return showDialog<T>(
       context: context,
       barrierDismissible: barrierDismissible,
-      barrierColor: barrierColor,
-      builder: (context) => Dialog(
+      barrierColor: barrierColor ?? Colors.black.withOpacity(0.8),
+      builder: (dialogContext) => Dialog(
         backgroundColor: Colors.transparent,
-        insetPadding: const EdgeInsets.all(16),
-        child: ConstrainedBox(
-          constraints: BoxConstraints(
-            maxWidth: maxWidth ?? 500, // Default to 500px max on wide screens
+        elevation: 0,
+        insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 40),
+        child: Center(
+          child: SafeArea(
+            child: Material(
+              type: MaterialType.transparency,
+              child: Stack(
+                clipBehavior: Clip.none,
+                alignment: Alignment.topRight,
+                children: [
+                  ConstrainedBox(
+                    constraints: BoxConstraints(
+                      maxWidth: maxWidth ?? 1100,
+                    ),
+                    child: child,
+                  ),
+                  Positioned(
+                    top: -20,
+                    right: -20,
+                    child: Fx.box(
+                      onTap: () {
+                        Navigator.of(dialogContext).pop();
+                      },
+                      style: const FxStyle(
+                        padding: EdgeInsets.all(12),
+                        backgroundColor: Colors.white,
+                        shadows: [
+                          BoxShadow(
+                            color: Colors.black26,
+                            blurRadius: 12,
+                            offset: Offset(0, 4),
+                          ),
+                        ],
+                        borderRadius: BorderRadius.all(Radius.circular(100)),
+                        cursor: SystemMouseCursors.click,
+                      ),
+                      child: Fx.icon(
+                        Icons.close,
+                        color: Colors.black,
+                        size: 24,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
-          child: child,
         ),
       ),
     );
@@ -1398,6 +1549,46 @@ import 'fx_extensions.dart';
     required Widget Function(T data) data,
   }) {
     return signal.on(loading: loading, data: data, error: error);
+  }
+
+  /// Functional wrapper for `StreamBuilder` that mimics Next.js Suspsense
+  static Widget stream<T>(
+    Stream<T> stream, {
+    required Widget Function(T) data,
+    Widget Function(dynamic)? error,
+    Widget? loading,
+  }) {
+    return StreamBuilder<T>(
+      stream: stream,
+      builder: (context, snapshot) {
+        if (snapshot.hasError) return error?.call(snapshot.error) ?? const SizedBox.shrink();
+        if (snapshot.hasData) return data(snapshot.data as T);
+        return loading ?? const CircularProgressIndicator();
+      },
+    );
+  }
+
+  /// Suspense Wrapper mimicking React's <Suspense fallback={<Loader />}>
+  static Widget suspense<T>({
+    required Future<T>? future,
+    required Widget fallback,
+    required Widget Function(T data) child,
+    Widget Function(dynamic error)? error,
+  }) {
+    return FutureBuilder<T>(
+      future: future,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return fallback;
+        } else if (snapshot.hasError) {
+          if (error != null) return error(snapshot.error);
+          return Center(child: Text('Error loading data.', style: const TextStyle(color: Colors.red)));
+        } else if (snapshot.hasData) {
+          return child(snapshot.data as T);
+        }
+        return fallback;
+      },
+    );
   }
 
   // Navigation
